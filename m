@@ -1,390 +1,283 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <amr.mohamed@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CA8C2BA15
-	for <webhook@archiver.kernel.org>; Mon, 17 Jun 2024 13:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7985DC2BA18
+	for <webhook@archiver.kernel.org>; Mon, 17 Jun 2024 16:32:27 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.56709.1718630799006045383
+ by mx.groups.io with SMTP id smtpd.web11.61202.1718641938473633979
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 17 Jun 2024 06:26:39 -0700
+ Mon, 17 Jun 2024 09:32:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: amr.mohamed@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE75BDA7
-	for <meta-arm@lists.yoctoproject.org>; Mon, 17 Jun 2024 06:26:57 -0700 (PDT)
-Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E4F333F64C
-	for <meta-arm@lists.yoctoproject.org>; Mon, 17 Jun 2024 06:26:32 -0700 (PDT)
-From: Ross Burton <ross.burton@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 745D7FEC;
+	Mon, 17 Jun 2024 09:32:42 -0700 (PDT)
+Received: from e125330.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C7D573F64C;
+	Mon, 17 Jun 2024 09:32:16 -0700 (PDT)
+From: amr.mohamed@arm.com
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp/edk2-firmware: work around alignment problem with EDK/qemu
-Date: Mon, 17 Jun 2024 13:26:30 +0000
-Message-Id: <20240617132630.520988-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
+Cc: Amr Mohamed <amrmoh01@e125330.arm.com>,
+	Amr Mohamed <amr.mohamed@arm.com>
+Subject: [PATCH] arm-systemready/linux-distros: Add a third Linux distribution installation
+Date: Mon, 17 Jun 2024 17:32:08 +0100
+Message-Id: <20240617163208.15368-1-amr.mohamed@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 17 Jun 2024 13:26:46 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5806
+ <meta-arm@lists.yoctoproject.org>; Mon, 17 Jun 2024 16:32:27 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5807
 
-Since switching to master, EDK2 is doing an unaligned access to memory
-when drawing the boot logo which causes qemu 9.0.0 (since 728b923f54) to
-raise an exception.
+From: Amr Mohamed <amrmoh01@e125330.arm.com>
 
-There is upstream discussion about where and what the underling bug here
-actually is, but until that is resolved we can simply align the logo.
+Add Fedora distribution version 39.1.5 installation to fulfill
+the SystemReady IR.
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+Signed-off-by: Amr Mohamed <amr.mohamed@arm.com>
 ---
- .../uefi/edk2-firmware-sbsa-ref.inc           |   7 +
- ...LogoLib-align-logo-coords-to-be-even.patch | 302 ++++++++++++++++++
- 2 files changed, 309 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/uefi/files/0001-BootLogoLib-al=
-ign-logo-coords-to-be-even.patch
+ ci/arm-systemready-ir-acs.yml                 |   1 +
+ kas/arm-systemready-linux-distros-fedora.yml  |   7 ++
+ .../arm-systemready-linux-distros-fedora.bb   | 103 ++++++++++++++++++
+ 3 files changed, 111 insertions(+)
+ create mode 100644 kas/arm-systemready-linux-distros-fedora.yml
+ create mode 100644 meta-arm-systemready/recipes-test/arm-systemready-lin=
+ux-distros/arm-systemready-linux-distros-fedora.bb
 
-diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-sbsa-ref.inc b/met=
-a-arm-bsp/recipes-bsp/uefi/edk2-firmware-sbsa-ref.inc
-index 450f6af2..f251aa46 100644
---- a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-sbsa-ref.inc
-+++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-sbsa-ref.inc
-@@ -1,5 +1,11 @@
- COMPATIBLE_MACHINE:sbsa-ref =3D "sbsa-ref"
-=20
-+FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files:"
-+
-+SRC_URI:append =3D " file://0001-BootLogoLib-align-logo-coords-to-be-even.=
-patch"
-+# Need to use git as the BootLogo fix includes a binary patch, which quilt=
- cannot handle
-+PATCHTOOL =3D "git"
-+
- DEPENDS:append:sbsa-ref     =3D " trusted-firmware-a coreutils-native"
-=20
- EDK2_PLATFORM:sbsa-ref      =3D "SbsaQemu"
-@@ -17,3 +23,4 @@ do_install:append:sbsa-ref() {
-     # QEMU requires that the images be minimum of 256M in size
-     truncate -s 256M ${D}/firmware/SBSA_FLASH*.fd
- }
-+
-diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/0001-BootLogoLib-align-log=
-o-coords-to-be-even.patch b/meta-arm-bsp/recipes-bsp/uefi/files/0001-BootLo=
-goLib-align-logo-coords-to-be-even.patch
+diff --git a/ci/arm-systemready-ir-acs.yml b/ci/arm-systemready-ir-acs.ym=
+l
+index 9eaf4037..e31a264b 100644
+--- a/ci/arm-systemready-ir-acs.yml
++++ b/ci/arm-systemready-ir-acs.yml
+@@ -16,3 +16,4 @@ target:
+   - arm-systemready-ir-acs
+   - arm-systemready-linux-distros-debian
+   - arm-systemready-linux-distros-opensuse
++  - arm-systemready-linux-distros-fedora
+diff --git a/kas/arm-systemready-linux-distros-fedora.yml b/kas/arm-syste=
+mready-linux-distros-fedora.yml
 new file mode 100644
-index 00000000..bb8abdd6
+index 00000000..b2b23d78
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/uefi/files/0001-BootLogoLib-align-logo-coord=
-s-to-be-even.patch
-@@ -0,0 +1,302 @@
-+From 84195804a1631c88c1356438d22f4a51681d8c55 Mon Sep 17 00:00:00 2001
-+From: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
-+Date: Mon, 17 Jun 2024 10:30:07 +0200
-+Subject: [PATCH] BootLogoLib: align logo coords to be even
++++ b/kas/arm-systemready-linux-distros-fedora.yml
+@@ -0,0 +1,7 @@
++header:
++  version: 16
++  includes:
++    - kas/arm-systemready-firmware.yml
 +
-+If we draw logo at odd coords then BootLogoLib goes into exception and
-+boot process ends:
++target:
++  - arm-systemready-linux-distros-fedora
+diff --git a/meta-arm-systemready/recipes-test/arm-systemready-linux-dist=
+ros/arm-systemready-linux-distros-fedora.bb b/meta-arm-systemready/recipe=
+s-test/arm-systemready-linux-distros/arm-systemready-linux-distros-fedora=
+.bb
+new file mode 100644
+index 00000000..25990b30
+--- /dev/null
++++ b/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
+-systemready-linux-distros-fedora.bb
+@@ -0,0 +1,103 @@
++require arm-systemready-linux-distros.inc
 +
-+Synchronous Exception at 0x00000101FB943E48
-+PC 0x0101FB943E48 (0x0101FB93F000+0x00004E48) [ 0] QemuVideoDxe.dll
-+PC 0x0101FB943314 (0x0101FB93F000+0x00004314) [ 0] QemuVideoDxe.dll
-+PC 0x0101FB92F798 (0x0101FB92D000+0x00002798) [ 1] ConSplitterDxe.dll
-+PC 0x0101FBA96BC4 (0x0101FBA8E000+0x00008BC4) [ 2] BdsDxe.dll
-+PC 0x0101FF7FDF50 (0x0101FF7F3000+0x0000AF50) [ 3] DxeCore.dll
++# The Fedora project does not provide a license manifest for the distrib=
+uted ISO images.
++# The following list only contains the SPDX license identifiers found on=
+ the rpm
++# packages from the ISO image and is not exhaustive.
++# For more information about Fedora licenses, including the non-free one=
+s, refer to
++# https://docs.fedoraproject.org/en-US/legal/fedora-linux-license/.
++LICENSE =3D "GPL-1.0-only & GPL-1.0-or-later & GPL-2.0-only &  GPL-2.0-o=
+r-later & GPL-2.0-with-font-exception \
++           & GPL-2.0-with-GCC-exception & GPL-3.0-only & GPL-3.0-or-late=
+r & GPL-3-with-bison-exception \
++           & LGPL-2.0-only & LGPL-2.0-or-later & LGPL-2.1-only & LGPL-2.=
+1-or-later & LGPL-3.0-only & LGPL-3.0-or-later \
++           & 0BSD & BSD-2-Clause & BSD-3-Clause & BSD-3-Clause-Modificat=
+ion & BSD-4-Clause & BSD-4-Clause-UC \
++           & ClArtistic & Artistic-2.0 & Artistic-1.0-Perl & Apache-2.0 =
+& Apache-2.0-with-LLVM-exception & Zlib \
++           & zlib-acknowledgement & Sleepycat & MIT & MIT-open-group & M=
+IT-Modern-Variant & Unlicense & ISC \
++           & AFL-2.1 & AGPL-3.0-only & AGPL-3.0-or-later & FSFAP & MPL-1=
+.1 & MPL-2.0 & CC-BY-3.0 & CC-BY-4.0 \=20
++           & CC-BY-SA-4.0 & CC0-1.0 & NCSA & APSL-2.0 & IJG & psutils & =
+Sendmail & blessing & NTP & BSL-1.0 \
++           & GFDL-1.1-or-later & GFDL-1.2-or-later & GFDL-1.3 & GFDL-1.3=
+-or-later & GFDL-1.3-no-invariants-or-later \
++           & NPL-1.1 & libtiff & Vim & curl & EUPL-1.1 & OFL-1.1 & OFL-1=
+.1-RFN & FTL & Info-ZIP & Interbase-1.0 \
++           & Unicode-DFS-2016 & SISSL & LPPL-1.3a & SGI-B-2.0 & PSF-2.0 =
+& X11 & OLDAP-2.8 & PostgreSQL & OPUBL-1.0"
 +
-+This change resizes logo from 193x58 to 194x58px to make it's sizes
-+even. And if coords are odd then they are bumped a bit to make things
-+work.
++LIC_FILES_CHKSUM =3D "\
++file://${COMMON_LICENSE_DIR}/GPL-1.0-only;md5=3De9e36a9de734199567a4d769=
+498f743d \
++file://${COMMON_LICENSE_DIR}/GPL-1.0-or-later;md5=3D30c0b8a5048cc2f4be5f=
+f15ef0d8cf61 \
++file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=3D801f80980d171dd642561083=
+3a22dbe6 \
++file://${COMMON_LICENSE_DIR}/GPL-2.0-or-later;md5=3Dfed54355545ffd980b81=
+4dab4a3b312c \
++file://${COMMON_LICENSE_DIR}/GPL-2.0-with-font-exception;md5=3Dbf93e21a5=
+13f6f923474e62fb920434d \
++file://${COMMON_LICENSE_DIR}/GPL-2.0-with-GCC-exception;md5=3D14c4291113=
+2e8c9008911385aede6449 \
++file://${COMMON_LICENSE_DIR}/GPL-3.0-only;md5=3Dc79ff39f19dfec6d293b95de=
+a7b07891 \
++file://${COMMON_LICENSE_DIR}/GPL-3.0-or-later;md5=3D1c76c4cc354acaac30ed=
+4d5eefea7245 \
++file://${COMMON_LICENSE_DIR}/GPL-3-with-bison-exception;md5=3D6e1bac3dc2=
+1fcc4fa049cf5c407eb7a2 \
++file://${COMMON_LICENSE_DIR}/LGPL-2.0-only;md5=3D9427b8ccf5cf3df47c29110=
+424c9641a \
++file://${COMMON_LICENSE_DIR}/LGPL-2.0-or-later;md5=3D6d2d9952d88b50a51a5=
+c73dc431d06c7 \
++file://${COMMON_LICENSE_DIR}/LGPL-2.1-only;md5=3D1a6d268fd218675ffea8be5=
+56788b780 \
++file://${COMMON_LICENSE_DIR}/LGPL-2.1-or-later;md5=3D2a4f4fd2128ea2f6504=
+7ee63fbca9f68 \
++file://${COMMON_LICENSE_DIR}/LGPL-3.0-only;md5=3Dbfccfe952269fff2b407dd1=
+1f2f3083b \
++file://${COMMON_LICENSE_DIR}/LGPL-3.0-or-later;md5=3Dc51d3eef3be114124d1=
+1349ca0d7e117 \
++file://${COMMON_LICENSE_DIR}/0BSD;md5=3Df667a3c3830a55a17ec3067709f4526c=
+ \
++file://${COMMON_LICENSE_DIR}/BSD-2-Clause;md5=3Dcb641bc04cda31daea161b1b=
+c15da69f \
++file://${COMMON_LICENSE_DIR}/BSD-3-Clause;md5=3D550794465ba0ec5312d6919e=
+203a55f9 \
++file://${COMMON_LICENSE_DIR}/BSD-3-Clause-Modification;md5=3D27b46022df7=
+bdef61a1e404fc3573f83 \
++file://${COMMON_LICENSE_DIR}/BSD-4-Clause;md5=3D624d9e67e8ac41a78f6b6c2c=
+55a83a2b \
++file://${COMMON_LICENSE_DIR}/BSD-4-Clause-UC;md5=3D1da3cf8ad50cd8d5d1de3=
+cfc53196d01 \
++file://${COMMON_LICENSE_DIR}/ClArtistic;md5=3Df633bbf0697ec33066b83adfa9=
+ebe51d \
++file://${COMMON_LICENSE_DIR}/Artistic-2.0;md5=3D8bbc66f0ba93cec26ef52611=
+7e280266 \
++file://${COMMON_LICENSE_DIR}/Artistic-1.0-Perl;md5=3D8feedd169dbd5738981=
+843bd7d931f9f \
++file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=3D89aea4e17d99a7cacdbeed46a0=
+096b10 \
++file://${COMMON_LICENSE_DIR}/Apache-2.0-with-LLVM-exception;md5=3D0bcd48=
+c3bdfef0c9d9fd17726e4b7dab \
++file://${COMMON_LICENSE_DIR}/Zlib;md5=3D87f239f408daca8a157858e192597633=
+ \
++file://${COMMON_LICENSE_DIR}/zlib-acknowledgement;md5=3Dc76c64e2cf99efcf=
+b5e2b26aa86b12e6 \
++file://${COMMON_LICENSE_DIR}/Sleepycat;md5=3D1cbb64231c94198653282f3ccab=
+88ffb \
++file://${COMMON_LICENSE_DIR}/MIT;md5=3D0835ade698e0bcf8506ecda2f7b4f302 =
+\
++file://${COMMON_LICENSE_DIR}/MIT-open-group;md5=3Da7c50bba311e4b09d48a52=
+6eedcef837 \
++file://${COMMON_LICENSE_DIR}/MIT-Modern-Variant;md5=3D272dea2b6758600297=
+8254bc04648ab2 \
++file://${COMMON_LICENSE_DIR}/Unlicense;md5=3D7246f848faa4e9c9fc0ea91122d=
+6e680 \
++file://${COMMON_LICENSE_DIR}/ISC;md5=3Df3b90e78ea0cffb20bf5cca7947a896d =
+\
++file://${COMMON_LICENSE_DIR}/AFL-2.1;md5=3De40039b90e182a056bcd9ad3e47dd=
+d71 \
++file://${COMMON_LICENSE_DIR}/AGPL-3.0-only;md5=3D73f1eb20517c55bf9493b7d=
+d6e480788 \
++file://${COMMON_LICENSE_DIR}/AGPL-3.0-or-later;md5=3Da4af3f9f0c0fc9de318=
+e4df46665906e \
++file://${COMMON_LICENSE_DIR}/FSFAP;md5=3D232368338ef6dc99de71c2e05ff1217=
+6 \
++file://${COMMON_LICENSE_DIR}/MPL-1.1;md5=3D1d38e87ed8d522c49f04e1efe0fab=
+3ab \
++file://${COMMON_LICENSE_DIR}/MPL-2.0;md5=3D815ca599c9df247a0c7f619bab123=
+dad \
++file://${COMMON_LICENSE_DIR}/CC-BY-3.0;md5=3Ddfa02b5755629022e267f10b9c0=
+a2ab7 \
++file://${COMMON_LICENSE_DIR}/CC-BY-4.0;md5=3D9b33bbd06fb58995fb0e299cd38=
+d1838 \
++file://${COMMON_LICENSE_DIR}/CC-BY-SA-4.0;md5=3D4084714af41157e38872e798=
+eb3fe1b1 \
++file://${COMMON_LICENSE_DIR}/CC0-1.0;md5=3D0ceb3372c9595f0a8067e55da801e=
+4a1 \
++file://${COMMON_LICENSE_DIR}/NCSA;md5=3D1b5fdec70ee13ad8a91667f16c1959d7=
+ \
++file://${COMMON_LICENSE_DIR}/APSL-2.0;md5=3Df9e4701d9a216a87ba145bbe25f5=
+4c58 \
++file://${COMMON_LICENSE_DIR}/IJG;md5=3Dd9fc5ebaa95c14466091d25e0d34e688 =
+\
++file://${COMMON_LICENSE_DIR}/psutils;md5=3D29046009c1f269661e7b74196fb8f=
+6a0 \
++file://${COMMON_LICENSE_DIR}/Sendmail;md5=3D8037c42e05a5d4bfce06a44729fb=
+6f1a \
++file://${COMMON_LICENSE_DIR}/blessing;md5=3Dd5407b61870d6dc19d0bdc04ae4c=
+c654 \
++file://${COMMON_LICENSE_DIR}/NTP;md5=3D0926fd147301b2a65e45e21adb3a6f14 =
+\
++file://${COMMON_LICENSE_DIR}/BSL-1.0;md5=3D65a7df9ad57aacf825fd252c4c332=
+88c \
++file://${COMMON_LICENSE_DIR}/GFDL-1.1-or-later;md5=3D03322744a1a73f36ebf=
+29f98cced39a4 \
++file://${COMMON_LICENSE_DIR}/GFDL-1.2-or-later;md5=3D9f58808219e9a42ff12=
+28309d6f83dc6 \
++file://${COMMON_LICENSE_DIR}/GFDL-1.3;md5=3D1083add59b39991c748ea70a9216=
+6959 \
++file://${COMMON_LICENSE_DIR}/GFDL-1.3-or-later;md5=3De0771ae6a62dc8a2e50=
+b1d450fea66b7 \
++file://${COMMON_LICENSE_DIR}/GFDL-1.3-no-invariants-or-later;md5=3De0771=
+ae6a62dc8a2e50b1d450fea66b7 \
++file://${COMMON_LICENSE_DIR}/NPL-1.1;md5=3Df9c017c062c1b02462efb915d9f2c=
+b63 \
++file://${COMMON_LICENSE_DIR}/libtiff;md5=3Db99383975855adc28712577c9cd56=
+485 \
++file://${COMMON_LICENSE_DIR}/Vim;md5=3D676d28582e2dca824e7e309a9865eeb1 =
+\
++file://${COMMON_LICENSE_DIR}/curl;md5=3Df7adb1397db248527ffed14d947e445c=
+ \
++file://${COMMON_LICENSE_DIR}/EUPL-1.1;md5=3D3f12b8134016fd7ba5a010afd690=
+abaa \
++file://${COMMON_LICENSE_DIR}/OFL-1.1;md5=3Dfac3a519e5e9eb96316656e0ca4f2=
+b90 \
++file://${COMMON_LICENSE_DIR}/OFL-1.1-RFN;md5=3D2680fce30f17e5fed9bcebd93=
+36e5b78 \
++file://${COMMON_LICENSE_DIR}/FTL;md5=3Df0bf6b09ee8b02121ed10709d9e49d8b =
+\
++file://${COMMON_LICENSE_DIR}/Info-ZIP;md5=3D83a1c8ea099b3b58beb6e55dcbe4=
+c15f \
++file://${COMMON_LICENSE_DIR}/Interbase-1.0;md5=3Df65304bc0e87e6700fe1e4a=
+b5affdc6f \
++file://${COMMON_LICENSE_DIR}/Unicode-DFS-2016;md5=3D907371994d651afe53e9=
+8adc27824669 \
++file://${COMMON_LICENSE_DIR}/SISSL;md5=3Dfded06bff75eb4a2899bd051e2e128f=
+5 \
++file://${COMMON_LICENSE_DIR}/LPPL-1.3a;md5=3D8e2e8e1428b39cd78927c2ad287=
+34ff7 \
++file://${COMMON_LICENSE_DIR}/SGI-B-2.0;md5=3D5f5dd7bd973dff1594131b1e9c7=
+981f1 \
++file://${COMMON_LICENSE_DIR}/PSF-2.0;md5=3D76c1502273262a5ebefb50dfb20d7=
+c4f \
++file://${COMMON_LICENSE_DIR}/X11;md5=3D87f08485cf6ba3c63a00eda8ecba7f1d =
+\
++file://${COMMON_LICENSE_DIR}/OLDAP-2.8;md5=3Dbb28ada4fbb5c3f52c233899b2e=
+410a5 \
++file://${COMMON_LICENSE_DIR}/PostgreSQL;md5=3Da9c78964f52e27f4c01140a1a1=
+6da8e2 \
++file://${COMMON_LICENSE_DIR}/OPUBL-1.0;md5=3D99367d4750dbf0ae6cc74209ddd=
+52f6d \
++"
 +
-+Signed-off-by: Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
++ARM_SYSTEMREADY_LINUX_DISTRO_INSTALL_SIZE =3D "6144"
 +
-+This is a temporary workaround for an alignment problem in EDK2/qemu, see =
- the
-+discussion at https://mail.gnu.org/archive/html/qemu-devel/2024-06/msg0296=
-4.html.
-+
-+Upstream-Status: Inappropriate [workaround]
-+Signed-off-by: Ross Burton <ross.burton@arm.com>
-+---
-+ .../Library/BootLogoLib/BootLogoLib.c         |   4 ++++
-+ MdeModulePkg/Logo/Logo.bmp                    | Bin 12446 -> 34010 bytes
-+ 2 files changed, 4 insertions(+)
-+
-+diff --git a/MdeModulePkg/Library/BootLogoLib/BootLogoLib.c b/MdeModulePkg=
-/Library/BootLogoLib/BootLogoLib.c
-+index 478ec2d40e..3b7b5f3146 100644
-+--- a/MdeModulePkg/Library/BootLogoLib/BootLogoLib.c
-++++ b/MdeModulePkg/Library/BootLogoLib/BootLogoLib.c
-+@@ -205,6 +205,10 @@ BootLogoEnableLogo (
-+     DestX +=3D OffsetX;=0D
-+     DestY +=3D OffsetY;=0D
-+ =0D
-++    // align logo to even coords=0D
-++    if (DestX % 2 !=3D 0) DestX++;=0D
-++    if (DestY % 2 !=3D 0) DestY++;=0D
-++=0D
-+     if ((DestX >=3D 0) && (DestY >=3D 0)) {=0D
-+       if (GraphicsOutput !=3D NULL) {=0D
-+         Status =3D GraphicsOutput->Blt (=0D
-+diff --git a/MdeModulePkg/Logo/Logo.bmp b/MdeModulePkg/Logo/Logo.bmp
-+index 3e85229e17595ba1f9c59e13692a4f8362ebc850..136345a56ac44e3ea8d3c91114=
-b5a2676dc90e2a 100644
-+GIT binary patch
-+literal 34010
-+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
-+
-+literal 12446
-+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
-+
-+--=20
-+2.34.1
-+
++PV =3D "39.1.5"
++SRC_URI =3D "https://download.fedoraproject.org/pub/fedora/linux/release=
+s/39/Server/aarch64/iso/Fedora-Server-dvd-aarch64-39-1.5.iso;unpack=3D0;d=
+ownloadfilename=3D${ISO_IMAGE_NAME}.iso"
++SRC_URI[sha256sum] =3D "d19dc2a39758155fa53e6fd555d0d173ccc8175b55dea480=
+02d499f39cb30ce0"
 --=20
-2.34.1
+2.25.1
 
 
