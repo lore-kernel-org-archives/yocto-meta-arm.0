@@ -2,26 +2,26 @@ Return-Path: <harsimransingh.tungal@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6982EC2BA15
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C5BC2BBCA
 	for <webhook@archiver.kernel.org>; Tue, 18 Jun 2024 10:08:22 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.82595.1718705295614275063
+ by mx.groups.io with SMTP id smtpd.web10.83081.1718705301342708402
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 18 Jun 2024 03:08:15 -0700
+ Tue, 18 Jun 2024 03:08:21 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: harsimransingh.tungal@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D44561042;
-	Tue, 18 Jun 2024 03:08:39 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC01ADA7;
+	Tue, 18 Jun 2024 03:08:45 -0700 (PDT)
 Received: from e132995.cambridge.arm.com (e132995.arm.com [10.1.30.21])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73BB73F6A8;
-	Tue, 18 Jun 2024 03:08:14 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 679AC3F6A8;
+	Tue, 18 Jun 2024 03:08:20 -0700 (PDT)
 From: harsimransingh.tungal@arm.com
 To: meta-arm@lists.yoctoproject.org
 Cc: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-Subject: [PATCH 2/5] arm-bsp/u-boot: corstone1000: Enable secondary cores for Corstone-1000 FVP
-Date: Tue, 18 Jun 2024 11:07:54 +0100
-Message-Id: <20240618100757.819376-3-harsimransingh.tungal@arm.com>
+Subject: [PATCH 5/5] ci,arm-bsp: corstone1000: New MACHINE_FEATURES for Corstone-1000 FVP multicore
+Date: Tue, 18 Jun 2024 11:07:57 +0100
+Message-Id: <20240618100757.819376-6-harsimransingh.tungal@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240618100757.819376-1-harsimransingh.tungal@arm.com>
 References: <20240618100757.819376-1-harsimransingh.tungal@arm.com>
@@ -31,110 +31,93 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 18 Jun 2024 10:08:22 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5812
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5815
 
 From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 
-This changeset adds secondary cpu nodes for Corstone-1000 FVP dts.
+Introduce `corstone1000_fvp_smp` as a value of the `MACHINE_FEATURES`
+variable to support Corstone-1000 FVP Symmetric Multiprocessing.
+
+A new YAML file is created to add this new machine only for the FVP
+variant of the target platform.
+
+The multicore feature is enabled in TrustedFirmware-A,
+TrustedFirmware-M, and OP-TEE based on this machine feature.
 
 Signed-off-by: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 ---
- .../u-boot/u-boot-corstone1000.inc            |  1 +
- ...dd-secondary-cores-cpu-nodes-for-FVP.patch | 63 +++++++++++++++++++
- 2 files changed, 64 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
-049-corstone1000-Add-secondary-cores-cpu-nodes-for-FVP.patch
+ kas/corstone1000-fvp-multicore.yml                        | 8 ++++++++
+ .../trusted-firmware-a-corstone1000.inc                   | 1 +
+ .../trusted-firmware-m-corstone1000.inc                   | 1 +
+ .../optee/optee-os-corstone1000-common.inc                | 2 ++
+ 4 files changed, 12 insertions(+)
+ create mode 100644 kas/corstone1000-fvp-multicore.yml
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc b/me=
-ta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc
-index 82049c43..7d8155d4 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc
-@@ -64,6 +64,7 @@ SRC_URI:append =3D " \
-     file://0046-Corstone1000-Change-MMCOMM-buffer-location.patch		  \
-     file://0047-corstone1000-dts-add-external-system-node.patch \
-     file://0048-corstone1000-Enable-UEFI-Secure-boot.patch 			  \
-+    file://0049-corstone1000-Add-secondary-cores-cpu-nodes-for-FVP.patch=
-	  \
-     "
-=20
- do_configure:append() {
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0049-cor=
-stone1000-Add-secondary-cores-cpu-nodes-for-FVP.patch b/meta-arm-bsp/reci=
-pes-bsp/u-boot/u-boot/corstone1000/0049-corstone1000-Add-secondary-cores-=
-cpu-nodes-for-FVP.patch
+diff --git a/kas/corstone1000-fvp-multicore.yml b/kas/corstone1000-fvp-mu=
+lticore.yml
 new file mode 100644
-index 00000000..0e90f577
+index 00000000..d806bb11
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0049-corstone10=
-00-Add-secondary-cores-cpu-nodes-for-FVP.patch
-@@ -0,0 +1,63 @@
-+From 68708d6b4953f58a0484b9a83efa8318747cea80 Mon Sep 17 00:00:00 2001
-+From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-+Date: Thu, 9 May 2024 14:16:55 +0000
-+Subject: [PATCH] arm: dts: corstone1000: enable secondary cores for FVP
++++ b/kas/corstone1000-fvp-multicore.yml
+@@ -0,0 +1,8 @@
++# yaml-language-server: $schema=3Dhttps://raw.githubusercontent.com/siem=
+ens/kas/master/kas/schema-kas.json
 +
-+Add the secondary cores nodes in the dts file
++header:
++  version: 14
 +
-+Upstream-Status: Submitted [https://lore.kernel.org/all/20240612100421.4=
-7938-1-harsimransingh.tungal@arm.com/]
-+Signed-off-by: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-+---
-+ arch/arm/dts/corstone1000-fvp.dts | 25 +++++++++++++++++++++++++
-+ arch/arm/dts/corstone1000.dtsi    |  2 +-
-+ 2 files changed, 26 insertions(+), 1 deletion(-)
++local_conf_header:
++  fvp-multicore: |
++    MACHINE_FEATURES +=3D "corstone1000_fvp_smp"
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
+-a-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted=
+-firmware-a-corstone1000.inc
+index b19e52aa..0e57b0b7 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
+tone1000.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
+tone1000.inc
+@@ -55,3 +55,4 @@ EXTRA_OEMAKE:append =3D " \
+                         BL32=3D${RECIPE_SYSROOT}/${nonarch_base_libdir}/=
+firmware/tee-pager_v2.bin \
+                         FVP_USE_GIC_DRIVER=3DFVP_GICV2 \
+                         "
++EXTRA_OEMAKE:append:corstone1000-fvp =3D "${@bb.utils.contains('MACHINE_=
+FEATURES', 'corstone1000_fvp_smp', 'ENABLE_MULTICORE=3D1', '', d)}"
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware=
+-m-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted=
+-firmware-m-corstone1000.inc
+index b362461e..4777251d 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
+tone1000.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
+tone1000.inc
+@@ -10,6 +10,7 @@ TFM_DEBUG =3D "1"
+ TFM_PLATFORM_IS_FVP ?=3D "FALSE"
+ EXTRA_OECMAKE +=3D "-DPLATFORM_IS_FVP=3D${TFM_PLATFORM_IS_FVP}"
+ EXTRA_OECMAKE +=3D "-DCC312_LEGACY_DRIVER_API_ENABLED=3DOFF"
++EXTRA_OECMAKE:append:corstone1000-fvp =3D " -DENABLE_MULTICORE=3D${@bb.u=
+tils.contains('MACHINE_FEATURES', 'corstone1000_fvp_smp', 'TRUE', 'FALSE'=
+, d)}"
+=20
+ SRC_URI +=3D " \
+             file://0001-arm-trusted-firmware-m-disable-address-warnings-=
+into.patch \
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-co=
+mmon.inc b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-comm=
+on.inc
+index 4f4ed12a..1cc0335c 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.in=
+c
++++ b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.in=
+c
+@@ -17,3 +17,5 @@ EXTRA_OEMAKE +=3D " CFG_TEE_BENCHMARK=3Dn"
+ EXTRA_OEMAKE +=3D " CFG_CORE_SEL1_SPMC=3Dy CFG_CORE_FFA=3Dy"
+=20
+ EXTRA_OEMAKE +=3D " CFG_WITH_SP=3Dy"
 +
-+diff --git a/arch/arm/dts/corstone1000-fvp.dts b/arch/arm/dts/corstone10=
-00-fvp.dts
-+index 26b0f1b3ce..3076fb9f34 100644
-+--- a/arch/arm/dts/corstone1000-fvp.dts
-++++ b/arch/arm/dts/corstone1000-fvp.dts
-+@@ -49,3 +49,28 @@
-+ 		clock-names =3D "smclk", "apb_pclk";
-+ 	};
-+ };
-++
-++&cpus {
-++	cpu1: cpu@1 {
-++		device_type =3D "cpu";
-++		compatible =3D "arm,cortex-a35";
-++		reg =3D <0x1>;
-++		enable-method =3D "psci";
-++		next-level-cache =3D <&L2_0>;
-++	};
-++	cpu2: cpu@2 {
-++		device_type =3D "cpu";
-++		compatible =3D "arm,cortex-a35";
-++		reg =3D <0x2>;
-++		enable-method =3D "psci";
-++		next-level-cache =3D <&L2_0>;
-++	};
-++	cpu3: cpu@3 {
-++		device_type =3D "cpu";
-++		compatible =3D "arm,cortex-a35";
-++		reg =3D <0x3>;
-++		enable-method =3D "psci";
-++		next-level-cache =3D <&L2_0>;
-++	};
-++};
-++
-+diff --git a/arch/arm/dts/corstone1000.dtsi b/arch/arm/dts/corstone1000.=
-dtsi
-+index 1e0ec075e4..5d9d95b21c 100644
-+--- a/arch/arm/dts/corstone1000.dtsi
-++++ b/arch/arm/dts/corstone1000.dtsi
-+@@ -21,7 +21,7 @@
-+ 		stdout-path =3D "serial0:115200n8";
-+ 	};
-+=20
-+-	cpus {
-++	cpus: cpus {
-+ 		#address-cells =3D <1>;
-+ 		#size-cells =3D <0>;
-+=20
-+--=20
-+2.25.1
-+
++EXTRA_OEMAKE:append:corstone1000-fvp =3D "${@bb.utils.contains('MACHINE_=
+FEATURES', 'corstone1000_fvp_smp', 'CFG_TEE_CORE_NB_CORE=3D4', '', d)}"
 --=20
 2.25.1
 
