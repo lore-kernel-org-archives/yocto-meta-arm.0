@@ -2,26 +2,26 @@ Return-Path: <harsimransingh.tungal@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA8BC27C4F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52715C2BBCA
 	for <webhook@archiver.kernel.org>; Tue, 18 Jun 2024 15:27:44 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.89534.1718724453958392489
+ by mx.groups.io with SMTP id smtpd.web10.89538.1718724461274516745
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 18 Jun 2024 08:27:34 -0700
+ Tue, 18 Jun 2024 08:27:41 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: harsimransingh.tungal@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DC4FDA7;
-	Tue, 18 Jun 2024 08:27:58 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8899BDA7;
+	Tue, 18 Jun 2024 08:28:05 -0700 (PDT)
 Received: from e132995.cambridge.arm.com (e132995.arm.com [10.1.30.21])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9A0A3F6A8;
-	Tue, 18 Jun 2024 08:27:32 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 109C73F6A8;
+	Tue, 18 Jun 2024 08:27:39 -0700 (PDT)
 From: harsimransingh.tungal@arm.com
 To: meta-arm@lists.yoctoproject.org
 Cc: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-Subject: [PATCH v2 1/5] arm-bsp/optee: corstone1000: Remove MMCOMM buffer address
-Date: Tue, 18 Jun 2024 16:27:20 +0100
-Message-Id: <20240618152724.7273-2-harsimransingh.tungal@arm.com>
+Subject: [PATCH v2 5/5] ci,arm-bsp: corstone1000: New MACHINE_FEATURES for Corstone-1000 FVP multicore
+Date: Tue, 18 Jun 2024 16:27:24 +0100
+Message-Id: <20240618152724.7273-6-harsimransingh.tungal@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240618152724.7273-1-harsimransingh.tungal@arm.com>
 References: <20240618152724.7273-1-harsimransingh.tungal@arm.com>
@@ -31,97 +31,93 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 18 Jun 2024 15:27:44 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5820
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5824
 
 From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 
-Remove MMCOMM buffer address and its mapping, as it is not being used any=
-more
+Introduce `corstone1000_fvp_smp` as a value of the `MACHINE_FEATURES`
+variable to support Corstone-1000 FVP Symmetric Multiprocessing.
+
+A new YAML file is created to add this new machine only for the FVP
+variant of the target platform.
+
+The multicore feature is enabled in TrustedFirmware-A,
+TrustedFirmware-M, and OP-TEE based on this machine feature.
 
 Signed-off-by: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 ---
- ...one1000-Remove-MMCOMM-buffer-address.patch | 43 +++++++++++++++++++
- .../optee/optee-os-corstone1000-common.inc    |  1 +
- 2 files changed, 44 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/co=
-rstone1000/0003-plat-corstone1000-Remove-MMCOMM-buffer-address.patch
+ kas/corstone1000-fvp-multicore.yml                        | 8 ++++++++
+ .../trusted-firmware-a-corstone1000.inc                   | 1 +
+ .../trusted-firmware-m-corstone1000.inc                   | 1 +
+ .../optee/optee-os-corstone1000-common.inc                | 2 ++
+ 4 files changed, 12 insertions(+)
+ create mode 100644 kas/corstone1000-fvp-multicore.yml
 
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1=
-000/0003-plat-corstone1000-Remove-MMCOMM-buffer-address.patch b/meta-arm-=
-bsp/recipes-security/optee/files/optee-os/corstone1000/0003-plat-corstone=
-1000-Remove-MMCOMM-buffer-address.patch
+diff --git a/kas/corstone1000-fvp-multicore.yml b/kas/corstone1000-fvp-mu=
+lticore.yml
 new file mode 100644
-index 00000000..e493ee1a
+index 00000000..d806bb11
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/000=
-3-plat-corstone1000-Remove-MMCOMM-buffer-address.patch
-@@ -0,0 +1,43 @@
-+From 2fadadf1075c95b2955f047fa0387b39612f7b30 Mon Sep 17 00:00:00 2001
-+From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-+Date: Thu, 30 May 2024 13:37:38 +0000
-+Subject: [PATCH] plat-corstone1000: Remove MMCOMM buffer address
++++ b/kas/corstone1000-fvp-multicore.yml
+@@ -0,0 +1,8 @@
++# yaml-language-server: $schema=3Dhttps://raw.githubusercontent.com/siem=
+ens/kas/master/kas/schema-kas.json
 +
-+Remove MMCOMM buffer address and mapping, as it is not being used anymor=
-e
++header:
++  version: 14
 +
-+Upstream-Status: Backport [In v3, https://github.com/OP-TEE/optee_os/com=
-mit/eaee88fbcac6dcc15fe1d1a758b53eb2b66cfc60]
-+Signed-off-by: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-+---
-+ core/arch/arm/plat-corstone1000/main.c            | 1 -
-+ core/arch/arm/plat-corstone1000/platform_config.h | 3 ---
-+ 2 files changed, 4 deletions(-)
-+
-+diff --git a/core/arch/arm/plat-corstone1000/main.c b/core/arch/arm/plat=
--corstone1000/main.c
-+index b3861c4c8..61171b9a9 100644
-+--- a/core/arch/arm/plat-corstone1000/main.c
-++++ b/core/arch/arm/plat-corstone1000/main.c
-+@@ -15,7 +15,6 @@
-+ static struct pl011_data console_data __nex_bss;
-+=20
-+ register_ddr(DRAM0_BASE, DRAM0_SIZE);
-+-register_ddr(MM_COMM_BUF_BASE, MM_COMM_BUF_SIZE);
-+=20
-+ register_phys_mem_pgdir(MEM_AREA_IO_SEC, CONSOLE_UART_BASE, PL011_REG_S=
-IZE);
-+ register_phys_mem_pgdir(MEM_AREA_IO_SEC, GICD_BASE, GIC_DIST_REG_SIZE);
-+diff --git a/core/arch/arm/plat-corstone1000/platform_config.h b/core/ar=
-ch/arm/plat-corstone1000/platform_config.h
-+index 6653d38bc..f59c93a14 100644
-+--- a/core/arch/arm/plat-corstone1000/platform_config.h
-++++ b/core/arch/arm/plat-corstone1000/platform_config.h
-+@@ -26,9 +26,6 @@
-+ #define GICD_BASE		(GIC_BASE + GICD_OFFSET)
-+ #define GICC_BASE		(GIC_BASE + GICC_OFFSET)
-+=20
-+-#define MM_COMM_BUF_BASE	0x02000000
-+-#define MM_COMM_BUF_SIZE	0x1000
-+-
-+ #define UART_BAUDRATE		115200
-+ #define CONSOLE_BAUDRATE	UART_BAUDRATE
-+=20
-+--=20
-+2.34.1
-+
++local_conf_header:
++  fvp-multicore: |
++    MACHINE_FEATURES +=3D "corstone1000_fvp_smp"
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
+-a-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted=
+-firmware-a-corstone1000.inc
+index b19e52aa..c53bc6cd 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
+tone1000.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
+tone1000.inc
+@@ -55,3 +55,4 @@ EXTRA_OEMAKE:append =3D " \
+                         BL32=3D${RECIPE_SYSROOT}/${nonarch_base_libdir}/=
+firmware/tee-pager_v2.bin \
+                         FVP_USE_GIC_DRIVER=3DFVP_GICV2 \
+                         "
++EXTRA_OEMAKE:append:corstone1000-fvp =3D "${@bb.utils.contains('MACHINE_=
+FEATURES', 'corstone1000_fvp_smp', ' ENABLE_MULTICORE=3D1', '', d)}"
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware=
+-m-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted=
+-firmware-m-corstone1000.inc
+index b362461e..4777251d 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
+tone1000.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
+tone1000.inc
+@@ -10,6 +10,7 @@ TFM_DEBUG =3D "1"
+ TFM_PLATFORM_IS_FVP ?=3D "FALSE"
+ EXTRA_OECMAKE +=3D "-DPLATFORM_IS_FVP=3D${TFM_PLATFORM_IS_FVP}"
+ EXTRA_OECMAKE +=3D "-DCC312_LEGACY_DRIVER_API_ENABLED=3DOFF"
++EXTRA_OECMAKE:append:corstone1000-fvp =3D " -DENABLE_MULTICORE=3D${@bb.u=
+tils.contains('MACHINE_FEATURES', 'corstone1000_fvp_smp', 'TRUE', 'FALSE'=
+, d)}"
+=20
+ SRC_URI +=3D " \
+             file://0001-arm-trusted-firmware-m-disable-address-warnings-=
+into.patch \
 diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-co=
 mmon.inc b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-comm=
 on.inc
-index 260abc05..4f4ed12a 100644
+index 4f4ed12a..22289087 100644
 --- a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.in=
 c
 +++ b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.in=
 c
-@@ -2,6 +2,7 @@ FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/optee-os/c=
-orstone1000:"
- SRC_URI:append =3D " \
-                   file://0001-Handle-logging-syscall.patch \
-                   file://0002-increase-tzdram-size.patch \
-+                  file://0003-plat-corstone1000-Remove-MMCOMM-buffer-add=
-ress.patch \
- 		  "
+@@ -17,3 +17,5 @@ EXTRA_OEMAKE +=3D " CFG_TEE_BENCHMARK=3Dn"
+ EXTRA_OEMAKE +=3D " CFG_CORE_SEL1_SPMC=3Dy CFG_CORE_FFA=3Dy"
 =20
- COMPATIBLE_MACHINE =3D "corstone1000"
+ EXTRA_OEMAKE +=3D " CFG_WITH_SP=3Dy"
++
++EXTRA_OEMAKE:append:corstone1000-fvp =3D "${@bb.utils.contains('MACHINE_=
+FEATURES', 'corstone1000_fvp_smp', ' CFG_TEE_CORE_NB_CORE=3D4', '', d)}"
 --=20
 2.25.1
 
