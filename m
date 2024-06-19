@@ -2,83 +2,101 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7734C27C4F
-	for <webhook@archiver.kernel.org>; Tue, 18 Jun 2024 17:56:47 +0000 (UTC)
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
- by mx.groups.io with SMTP id smtpd.web11.980.1718733400140365064
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63F8C27C53
+	for <webhook@archiver.kernel.org>; Wed, 19 Jun 2024 12:46:43 +0000 (UTC)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+ by mx.groups.io with SMTP id smtpd.web10.20160.1718801200254753391
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 18 Jun 2024 10:56:40 -0700
+ Wed, 19 Jun 2024 05:46:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=0eQbr8v+;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.181, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-43ffbc0927fso30193931cf.3
-        for <meta-arm@lists.yoctoproject.org>; Tue, 18 Jun 2024 10:56:40 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=FsuoAsfF;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.172, mailfrom: jdmason@kudzu.us)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dfa6e0add60so7237914276.3
+        for <meta-arm@lists.yoctoproject.org>; Wed, 19 Jun 2024 05:46:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1718733399; x=1719338199; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1718801199; x=1719405999; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=obgfjk45/Q791GT3oRjLrrcoQmrXGpIXM9MuKTbDx6w=;
-        b=0eQbr8v+l4GGXtEQkNBz/l2tst2O49ALVhm7IiUjNKDjvT8M79RnriSKnyKuhmTbiX
-         twMBudgoWbyD4hyaH3ZToxBjNddYExmpN62FFtT2KMb3syEj3W9RTqoJ1UtDwx4sxqui
-         wINrogb7Kfq5ByKK/CHFtRJ0gFzZLn+C3gGyd+ERg1BuL+WJu1e3lNlZd724AS1PgDPB
-         5RZ2TCwXZpTSfQJhfCWjXIegSCBu0ycxu2/6ndpKxxIK3oomXrWNiXP1QpPqZonDY/P/
-         TJ9JcC/MjDbL2zWGcXXX1zDO2OTubYlBMhkLq0nJzQEBbGTVcmC5hSHeIPUitqkwMf5S
-         jPdA==
+        bh=CQtIqLSnIPEuIcvG6UGOjO2JHcQvi5m9QormGK2cqNY=;
+        b=FsuoAsfFiP/JqgMOcE8cFnII/0VNf2k8LJ+QxPHOZqzLQsHBvEg99WMgWr1uE0ptYA
+         JmsUrRbqAb64F6RaU/Dxl7jzTt7JOEGAWzmbve891667fe0WJVtYju28AfEwrjQt0mX7
+         hbLvEUQ6gHALPoCdLNnrSiZyC/7jV6X7Y/ZJa/cLJ1+RNcww0sMvco1n4XS55MlESLOG
+         lI/bFiBckK8QeTQfFcrC1HktZr3cAUDLPE/gzEOAow5ks8Ih8t46W16Uxkv4Xti3Jnwj
+         JvoyMmhedT7zYVzTqNhL+6q1QNStk4RU3scKuT1QzArjwSwha37YR5/q/xC02/KqnOQM
+         DJSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718733399; x=1719338199;
+        d=1e100.net; s=20230601; t=1718801199; x=1719405999;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=obgfjk45/Q791GT3oRjLrrcoQmrXGpIXM9MuKTbDx6w=;
-        b=sZ5+8pSSw4OtxLTQlut7mQp128SlFzjL9t11faWs/ubDR/fFTmOKCJNJcbvF3efjmi
-         HlJpeRQjypwQRly95ixsjAP6vmzICqeguT87rZtPFJd9U2KHPkmYQJjphv4Uk90ymSob
-         BK5cddXRbZkfZvHTW//a9vY296J1ZNBJDKEOildgw77sblKL/cVldOJCckG08U8nhVrL
-         NRr8K93C1X1GHpN92NmCgPpBbt7MiZ5KJibjNACcvFeRQfsi8+EEK3fMPQQIlKdh2O32
-         ChlLVbM6cg7mauCAbzdJVgkpKUjWcwLXaoFacRIv6LTlP9uq3YoPSttTnrcSRvIxEaTk
-         A1fg==
-X-Gm-Message-State: AOJu0Yywis1m9u1BffkNuHIe8i/Z+BhHeReDeybb/V5OTjldJeRAZktB
-	LKviCVDc7I+7aL9hnSRxAbJFeb+LF77DgfRnsQQVxGeojQqj9Bf+XdaDM5EEq6cDqtvevMvxsC0
+        bh=CQtIqLSnIPEuIcvG6UGOjO2JHcQvi5m9QormGK2cqNY=;
+        b=EuX06BtMkVAyreR/2ooPr2o0J3i7H6OyvFOv8jqGXEMyRxPpnQFfDW3G0oq8DD7VKZ
+         ko7d2C4KnKtbjcLaZdQYsL4KMzEg3r+NbVI5mjDg1LJ5TQe9R690UiTEHVALcexoMEdv
+         cVyDEtUyW7RPx2HeOiV/sQMqLwkTEOjj4+tKrosYRqcb74+289kR9E12WOC/HUx8YwHr
+         4rnhra0lMXjbIjhHWlMoe+8NDRI0RJs2scwZaORmZlAf/Mq8K7EkFUVJBwTL9jRtvCB6
+         MGe3WfF3iZsacx+EGN68eSpvHFNPFaveABYeK7DRbqSt9LD1d8umlAuwxSyt2t4ROU8g
+         ol+A==
+X-Gm-Message-State: AOJu0YwYGNvAeclvxoxyuxG0UMG19cJ9AB6om3+txDc9ZCsJo6L5dy4v
+	Zxld/qbRZ63fbHshJRWT6zF1OWa2AlPby+iOBJSpd+xbosXtAofs3n/n4HusZ2+lkherJauF7ag
 	=
-X-Google-Smtp-Source: AGHT+IFf+nXwsC3SKMuYy5gctuTiIs5b52kbXdjbIwvOEf4keXggdbtItSaMCITNk/9XQVVv0OND0Q==
-X-Received: by 2002:a05:622a:103:b0:444:a783:8043 with SMTP id d75a77b69052e-444a7a3cee3mr7269911cf.24.1718733398866;
-        Tue, 18 Jun 2024 10:56:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF5VC7wLHBMlk23Hv8Y+2TGrTLCrOaGVyW/b5YOjwnEVyaMf5JLmUArWF+HJLohAX6kFg8BYg==
+X-Received: by 2002:a25:aaa9:0:b0:dff:2e22:a185 with SMTP id 3f1490d57ef6-e02be10254fmr2668034276.9.1718801199052;
+        Wed, 19 Jun 2024 05:46:39 -0700 (PDT)
 Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-441f2ff9ef8sm58221651cf.89.2024.06.18.10.56.38
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-dff048522f9sm2663455276.5.2024.06.19.05.46.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 10:56:38 -0700 (PDT)
+        Wed, 19 Jun 2024 05:46:38 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Andrey Zhizhikin <andrey.z@gmail.com>
-Subject: Re: [PATCH] optee-client: Switch away from S = WORKDIR
-Date: Tue, 18 Jun 2024 13:56:09 -0400
-Message-Id: <171873337046.2601380.276678688711417099.b4-ty@arm.com>
+	harsimransingh.tungal@arm.com
+Subject: Re: [PATCH 0/5] arm-bsp: corstone1000: Enable multicore support for FVP
+Date: Wed, 19 Jun 2024 08:46:29 -0400
+Message-Id: <171880119295.2085664.9488545794297284080.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240528202916.3082271-1-andrey.z@gmail.com>
-References: <20240528202916.3082271-1-andrey.z@gmail.com>
+In-Reply-To: <20240618100757.819376-1-harsimransingh.tungal@arm.com>
+References: <20240618100757.819376-1-harsimransingh.tungal@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 18 Jun 2024 17:56:47 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5830
+ <meta-arm@lists.yoctoproject.org>; Wed, 19 Jun 2024 12:46:43 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5832
 
 
-On Tue, 28 May 2024 22:29:16 +0200, Andrey Zhizhikin wrote:
-> Since OE-Core commit 32cba1cc916a ("insane: Error for S == WORKDIR")
-> usage of WORKDIR in tasks is fatal, and shall be replaced with UNPACKDIR.
-> Similar change is introduced in OE-Core commit d9328e3b0b06 ("recipes:
-> Switch away from S = WORKDIR"), follow the same pattern for OP-TEE client.
+On Tue, 18 Jun 2024 11:07:52 +0100, harsimransingh.tungal@arm.com wrote:
+> From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 > 
+> This changeset incorporates the multicore support for Corstone-1000 FVP.
 > 
+> Harsimran Singh Tungal (5):
+>   arm-bsp/optee: corstone1000: Remove MMCOMM buffer address
+>   arm-bsp/u-boot: corstone1000: Enable secondary cores for Corstone-1000
+>     FVP
+>   arm-bsp/trusted-firmware-a: corstone1000: Multicore support for
+>     Corstone-1000 FVP
+>   arm-bsp/trusted-firmware-m: corstone1000: Multicore support for
+>     Corstone-1000 FVP
+>   ci,arm-bsp: corstone1000: New MACHINE_FEATURES for Corstone-1000 FVP
+>     multicore
+> 
+> [...]
 
 Applied, thanks!
 
-[1/1] optee-client: Switch away from S = WORKDIR
-      commit: 30872ba12abaab0a53e332a33429e602be30e249
+[1/5] arm-bsp/optee: corstone1000: Remove MMCOMM buffer address
+      commit: 3e13dfa18a78b7ccd14f9d75a633b46655423170
+[2/5] arm-bsp/u-boot: corstone1000: Enable secondary cores for Corstone-1000 FVP
+      commit: c42a7ffd3ec83f7b81c908a0540f2084c274d0eb
+[3/5] arm-bsp/trusted-firmware-a: corstone1000: Multicore support for Corstone-1000 FVP
+      commit: 3eaa5c632c40c5f1eaf1c5e8830c40313177a11c
+[4/5] arm-bsp/trusted-firmware-m: corstone1000: Multicore support for Corstone-1000 FVP
+      commit: e437bc8f7d853be5d69b57382d9c8b7b964dda1e
+[5/5] ci,arm-bsp: corstone1000: New MACHINE_FEATURES for Corstone-1000 FVP multicore
+      commit: bd9fc4bbfca00be91b1cedde986adb9582ea60a9
 
 Best regards,
 -- 
