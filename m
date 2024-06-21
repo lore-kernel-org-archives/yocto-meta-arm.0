@@ -1,157 +1,84 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F235FC2BA1A
-	for <webhook@archiver.kernel.org>; Thu, 20 Jun 2024 13:29:10 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.47491.1718890148852542359
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E591C27C4F
+	for <webhook@archiver.kernel.org>; Fri, 21 Jun 2024 12:57:40 +0000 (UTC)
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+ by mx.groups.io with SMTP id smtpd.web10.72356.1718974655095846667
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 20 Jun 2024 06:29:09 -0700
+ Fri, 21 Jun 2024 05:57:35 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AD78DA7
-	for <meta-arm@lists.yoctoproject.org>; Thu, 20 Jun 2024 06:29:33 -0700 (PDT)
-Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0A3F73F73B
-	for <meta-arm@lists.yoctoproject.org>; Thu, 20 Jun 2024 06:29:07 -0700 (PDT)
-From: Ross Burton <ross.burton@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH][scarthgap] Revert "CI: temporarily backport the procps fix"
-Date: Thu, 20 Jun 2024 14:29:05 +0100
-Message-Id: <20240620132905.2302670-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=0rvdVyt5;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.180, mailfrom: jdmason@kudzu.us)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-632bcf111ffso19573527b3.3
+        for <meta-arm@lists.yoctoproject.org>; Fri, 21 Jun 2024 05:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1718974654; x=1719579454; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f5jHeYYWcA7KS8HTe8PRVLC7sGXL0EjDsx8+NtpuczM=;
+        b=0rvdVyt5CIza3s6kvr8LpAh96U+22Soptfd6mEpt/6QgSotK7YnXNJZf93Oa3tKo/S
+         O4WWywewY0Xy/RPqnfJumhL9UZ7I6thLgSyvaG21xx05+7nGoTpCty4iV5kXLd5UVEQv
+         lb1iLP/Lpz6Qm72JpFu+rwRT9dK20pH7fCc/RNyJiDhGG+nKNZX1WnWVR6dyybekjCTT
+         duuq6+p75REAjyhivccCpyxh/motNljNj5ZT3QyHoBlbjua++PYRxUvmZa73KRboDk4w
+         k17aqUdRUF8WwqgVAb7GZ+MV5Juf3u1BC7299JrnsKH1uwsoMan+zvG19uJqnP4HbcLl
+         tXDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718974654; x=1719579454;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f5jHeYYWcA7KS8HTe8PRVLC7sGXL0EjDsx8+NtpuczM=;
+        b=kGQBd1fSN9+zpiUsOrj+jwNsfXNX5ymDLEWC3KEND3j0zHpAJIVEIqdzFPnZFxvnMg
+         rDjDGFcH5uN+4/j+nPlfyuoh5178GKjii6+QPig29F9pp7zrCHzhDHgT3xJHKn2rlLWJ
+         /yMd+bSA++xN4/a/YCVC2dsfd0y+lxWn84bq8g2clniUSj+V8PBYUYi0bewSfLirS3h0
+         +ZxBbw1tc6Z5JCaNOISHw8VsvG48jhWabbfCKcsjb8K/XCmtr33N39uWCcGaq9Jg1/aT
+         xBfEIn/4GMFftW+8Zh6MByMR4G8ZrPywX33bQKQHSfSuJ3wdjk1AUk3BIwzB9XQbPhaW
+         6Qog==
+X-Gm-Message-State: AOJu0YymC1FCyppku28vHFYII5ZXYXk8JqHmVtBIcCC0v5WY/uBdbZVI
+	Jiqg87DBMEwzLsGKjkMwl4CteyB8/5Rz+g7vb46aiIGXF3a8DJj2RBIUTqqlvdpeXzj5mU7t7Ao
+	=
+X-Google-Smtp-Source: AGHT+IFd9byXVpjCT+fxAPjSVAdJ5NHz5EMxF3C+ynEQ+P8bwDoetQdMrr+ppUSfiWh/TMvY1ryAFQ==
+X-Received: by 2002:a0d:eb41:0:b0:61a:cd65:3010 with SMTP id 00721157ae682-63a8e1dcaedmr82478707b3.30.1718974654035;
+        Fri, 21 Jun 2024 05:57:34 -0700 (PDT)
+Received: from localhost ([136.54.20.50])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-63f15f63cdbsm3242007b3.133.2024.06.21.05.57.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jun 2024 05:57:33 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] arm/qemuarm64-secureboot: fix qemu parameter
+Date: Fri, 21 Jun 2024 08:57:26 -0400
+Message-Id: <171897464586.4086829.6986156239506346153.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240620125541.70574-1-jon.mason@arm.com>
+References: <20240620125541.70574-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 20 Jun 2024 13:29:10 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5839
+ <meta-arm@lists.yoctoproject.org>; Fri, 21 Jun 2024 12:57:40 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5841
 
-This procps fix has been merged upstream in oe-core aaced482, so we can
-remove this patch now.
 
-This reverts commit fef5eafc0858b790df22b7e4025f8efcde1d84b2.
+On Thu, 20 Jun 2024 08:55:41 -0400, Jon Mason wrote:
+> QEMU has deprecated the no-acpi parameter, in favor of "acpi=off" machine
+> setting.  Modify the machine conf to use the new method.
+> 
+> 
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- ...-with-new-glibc-but-old-kernel-heade.patch | 79 -------------------
- ci/base.yml                                   |  4 -
- 2 files changed, 83 deletions(-)
- delete mode 100644 0001-procps-fix-build-with-new-glibc-but-old-kernel-h=
-eade.patch
+Applied, thanks!
 
-diff --git a/0001-procps-fix-build-with-new-glibc-but-old-kernel-heade.pa=
-tch b/0001-procps-fix-build-with-new-glibc-but-old-kernel-heade.patch
-deleted file mode 100644
-index 3ab3dea3..00000000
---- a/0001-procps-fix-build-with-new-glibc-but-old-kernel-heade.patch
-+++ /dev/null
-@@ -1,79 +0,0 @@
--From 42358d889ed652a8c386862f8c65e5fbe7484de2 Mon Sep 17 00:00:00 2001
--From: Ross Burton <ross.burton@arm.com>
--Date: Fri, 26 Apr 2024 10:38:28 +0000
--Subject: [PATCH] procps: fix build with new glibc but old kernel headers
--
--If you're building procps with a newer glibc (with pidfd_open()) but
--older kernel headers (say 4.x, before __NR_pidfd_open) then procps will
--fail to build because of a typo in configure.ac.
--
--Signed-off-by: Ross Burton <ross.burton@arm.com>
-----
-- .../procps/procps/pidfd.patch                 | 42 +++++++++++++++++++
-- meta/recipes-extended/procps/procps_4.0.4.bb  |  1 +
-- 2 files changed, 43 insertions(+)
-- create mode 100644 meta/recipes-extended/procps/procps/pidfd.patch
--
--diff --git a/meta/recipes-extended/procps/procps/pidfd.patch b/meta/reci=
-pes-extended/procps/procps/pidfd.patch
--new file mode 100644
--index 00000000000..f5e8183e547
----- /dev/null
--+++ b/meta/recipes-extended/procps/procps/pidfd.patch
--@@ -0,0 +1,42 @@
--+From c8f625e085b8249cc009e8b19c3a19100217eb35 Mon Sep 17 00:00:00 2001
--+From: Ross Burton <ross.burton@arm.com>
--+Date: Thu, 25 Apr 2024 13:33:15 +0000
--+Subject: [PATCH] Fix pidfd_open detection
--+
--+This check for pidfd_open uses AC_CHECK_FUNC which just runs the specif=
-ied code, but=20
--+src/pgrep.c checks HAVE_PIDFD_OPEN which will only be defined by AC_CHE=
-CK_FUNCS.
--+
--+Also pidfd_open is defined in sys/pidfd.h so that needs including.
--+
--+Upstream-Status: Pending
--+Signed-off-by: Ross Burton <ross.burton@arm.com>
--+---
--+
--+diff --git a/configure.ac b/configure.ac
--+index fec27e3f..024731c7 100644
--+--- a/configure.ac
--++++ b/configure.ac
--+@@ -170,7 +170,7 @@ AC_TRY_COMPILE([#include <errno.h>],
--+ 		AC_MSG_RESULT(yes),
--+ 		AC_MSG_RESULT(no))
--+=20
--+-AC_CHECK_FUNC([pidfd_open], [enable_pidwait=3Dyes], [
--++AC_CHECK_FUNCS([pidfd_open], [enable_pidwait=3Dyes], [
--+   AC_MSG_CHECKING([for __NR_pidfd_open])
--+   AC_COMPILE_IFELSE([AC_LANG_SOURCE([
--+ #include <sys/syscall.h>
--+diff --git a/src/pgrep.c b/src/pgrep.c
--+index d8e57dff..c5211aec 100644
--+--- a/src/pgrep.c
--++++ b/src/pgrep.c
--+@@ -44,7 +44,9 @@
--+
--+ #ifdef ENABLE_PIDWAIT
--+ #include <sys/epoll.h>
--+-#ifndef HAVE_PIDFD_OPEN
--++#ifdef HAVE_PIDFD_OPEN
--++#include <sys/pidfd.h>
--++#else
--+ #include <sys/syscall.h>
--+ #endif /* !HAVE_PIDFD_OPEN */
--+ #endif
--diff --git a/meta/recipes-extended/procps/procps_4.0.4.bb b/meta/recipes=
--extended/procps/procps_4.0.4.bb
--index 800384f22f7..ec8c4b0261b 100644
----- a/meta/recipes-extended/procps/procps_4.0.4.bb
--+++ b/meta/recipes-extended/procps/procps_4.0.4.bb
--@@ -14,6 +14,7 @@ inherit autotools gettext pkgconfig update-alternative=
-s
--=20
-- SRC_URI =3D "git://gitlab.com/procps-ng/procps.git;protocol=3Dhttps;bra=
-nch=3Dmaster \
--            file://sysctl.conf \
--+           file://pidfd.patch \
--            "
-- SRCREV =3D "4ddcef2fd843170c8e2d59a83042978f41037a2b"
--=20
----=20
--2.34.1
--
-diff --git a/ci/base.yml b/ci/base.yml
-index 863159e1..a3e2c68b 100644
---- a/ci/base.yml
-+++ b/ci/base.yml
-@@ -21,10 +21,6 @@ repos:
-     layers:
-       meta:
-       meta-poky:
--    patches:
--      procps:
--        path: 0001-procps-fix-build-with-new-glibc-but-old-kernel-heade.=
-patch
--        repo: meta-arm
-=20
- env:
-   BB_LOGCONFIG: ""
---=20
-2.34.1
+[1/1] arm/qemuarm64-secureboot: fix qemu parameter
+      commit: 8024166d6cbbff996c1ab6f1b30f28a01ae5fe8f
 
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
