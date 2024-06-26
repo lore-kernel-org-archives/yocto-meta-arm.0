@@ -1,71 +1,54 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F36C2BD09
-	for <webhook@archiver.kernel.org>; Mon, 24 Jun 2024 14:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0CCC3064D
+	for <webhook@archiver.kernel.org>; Wed, 26 Jun 2024 15:43:31 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.141812.1719238559279563649
+ by mx.groups.io with SMTP id smtpd.web10.30410.1719416607999371087
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 24 Jun 2024 07:15:59 -0700
+ Wed, 26 Jun 2024 08:43:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6EAADA7
-	for <meta-arm@lists.yoctoproject.org>; Mon, 24 Jun 2024 07:16:23 -0700 (PDT)
-Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A2BC13F73B
-	for <meta-arm@lists.yoctoproject.org>; Mon, 24 Jun 2024 07:15:58 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61E89339
+	for <meta-arm@lists.yoctoproject.org>; Wed, 26 Jun 2024 08:43:52 -0700 (PDT)
+Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 292DF3F73B
+	for <meta-arm@lists.yoctoproject.org>; Wed, 26 Jun 2024 08:43:27 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-toolchain: fix for WORKDIR changes
-Date: Mon, 24 Jun 2024 10:15:57 -0400
-Message-Id: <20240624141557.34033-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+Subject: [PATCH] CI: update to Kas 4.4 image
+Date: Wed, 26 Jun 2024 16:43:25 +0100
+Message-Id: <20240626154325.2165430-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 24 Jun 2024 14:16:02 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5842
+ <meta-arm@lists.yoctoproject.org>; Wed, 26 Jun 2024 15:43:31 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5843
 
-Fallout from the upstream WORKDIR changes.  do_copy_locale expects
-SUPPORTED to be in WORKDIR, but recent changes have made it so that the
-source/unpack location is no  longer WORKDIR and cannot be pointed to
-be such.  So, do this copy manually here.
+The Kas 4.4 image includes the websocket module, needed to use the
+public hashserv/sstate.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../external-arm-toolchain/external-arm-toolchain.bb      | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .gitlab-ci.yml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/e=
-xternal-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-a=
-rm-toolchain/external-arm-toolchain.bb
-index 49ad74427010..1e8c1116e834 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external=
--arm-toolchain.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external=
--arm-toolchain.bb
-@@ -56,8 +56,16 @@ PV =3D "${EAT_VER_MAIN}"
- BINV =3D "${EAT_VER_GCC}"
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index 506cb487..d085171e 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -1,4 +1,4 @@
+-image: ${MIRROR_GHCR}/siemens/kas/kas:4.3.2
++image: ${MIRROR_GHCR}/siemens/kas/kas:4.4
 =20
- SRC_URI =3D "file://SUPPORTED"
-+S =3D "${WORKDIR}/sources"
-+UNPACKDIR =3D "${S}"
-=20
- do_install() {
-+        # do_copy_locale expects SUPPORTED to be in WORKDIR, but recent
-+        # changes have made it so that the source/unpack location is no
-+        # longer WORKDIR and cannot be pointed to be such.  So, do this
-+        # copy manually here
-+        install -m 0644 ${UNPACKDIR}/SUPPORTED ${WORKDIR}/SUPPORTED
-+
- 	# Add stubs for files OE-core expects
- 	install -d ${S}/nscd/
- 	touch  ${S}/nscd/nscd.init
+ variables:
+   # These are needed as the k8s executor doesn't respect the container
 --=20
-2.39.3 (Apple Git-146)
+2.34.1
 
 
