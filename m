@@ -2,35 +2,35 @@ Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D87AC2BD09
-	for <webhook@archiver.kernel.org>; Thu, 27 Jun 2024 12:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A7CC2BD09
+	for <webhook@archiver.kernel.org>; Thu, 27 Jun 2024 13:03:23 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.7218.1719493068884316089
+ by mx.groups.io with SMTP id smtpd.web10.7309.1719493399951807689
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 27 Jun 2024 05:57:49 -0700
+ Thu, 27 Jun 2024 06:03:20 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37F44367;
-	Thu, 27 Jun 2024 05:58:13 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46C78367;
+	Thu, 27 Jun 2024 06:03:44 -0700 (PDT)
 Received: from e133390.cambridge.arm.com (e133390.arm.com [10.1.36.164])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 660AB3F766;
-	Thu, 27 Jun 2024 05:57:47 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 433F33F766;
+	Thu, 27 Jun 2024 06:03:18 -0700 (PDT)
 From: Peter Hoyes <peter.hoyes@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Ziad Elhanafy <ziad.elhanafy@arm.com>,
 	Divin Raj <divin.raj@arm.com>
-Subject: [PATCH] arm/oeqa: Enable pexpect profiling for testcase debugging
-Date: Thu, 27 Jun 2024 13:57:00 +0100
-Message-Id: <20240627125700.2406122-1-peter.hoyes@arm.com>
+Subject: [PATCH scarthgap] arm/oeqa: Enable pexpect profiling for testcase debugging
+Date: Thu, 27 Jun 2024 14:03:04 +0100
+Message-Id: <20240627130304.2407957-1-peter.hoyes@arm.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 27 Jun 2024 12:57:53 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5846
+ <meta-arm@lists.yoctoproject.org>; Thu, 27 Jun 2024 13:03:23 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5847
 
 From: Ziad Elhanafy <ziad.elhanafy@arm.com>
 
