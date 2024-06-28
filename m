@@ -1,92 +1,66 @@
-Return-Path: <peter.hoyes@arm.com>
+Return-Path: <harsimransingh.tungal@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A7CC2BD09
-	for <webhook@archiver.kernel.org>; Thu, 27 Jun 2024 13:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46770C2BD09
+	for <webhook@archiver.kernel.org>; Fri, 28 Jun 2024 13:31:56 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.7309.1719493399951807689
+ by mx.groups.io with SMTP id smtpd.web10.16935.1719581515868579904
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 27 Jun 2024 06:03:20 -0700
+ Fri, 28 Jun 2024 06:31:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: harsimransingh.tungal@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46C78367;
-	Thu, 27 Jun 2024 06:03:44 -0700 (PDT)
-Received: from e133390.cambridge.arm.com (e133390.arm.com [10.1.36.164])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 433F33F766;
-	Thu, 27 Jun 2024 06:03:18 -0700 (PDT)
-From: Peter Hoyes <peter.hoyes@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61EBF106F;
+	Fri, 28 Jun 2024 06:32:20 -0700 (PDT)
+Received: from e132995.arm.com (unknown [10.57.72.58])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2E383F73B;
+	Fri, 28 Jun 2024 06:31:54 -0700 (PDT)
+From: harsimransingh.tungal@arm.com
 To: meta-arm@lists.yoctoproject.org
-Cc: Ziad Elhanafy <ziad.elhanafy@arm.com>,
-	Divin Raj <divin.raj@arm.com>
-Subject: [PATCH scarthgap] arm/oeqa: Enable pexpect profiling for testcase debugging
-Date: Thu, 27 Jun 2024 14:03:04 +0100
-Message-Id: <20240627130304.2407957-1-peter.hoyes@arm.com>
-X-Mailer: git-send-email 2.34.1
+Cc: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
+Subject: [PATCH 2/3] arm-bsp/trusted-services: corstone1000: fix compilation issues
+Date: Fri, 28 Jun 2024 14:31:44 +0100
+Message-Id: <20240628133145.1444437-3-harsimransingh.tungal@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240628133145.1444437-1-harsimransingh.tungal@arm.com>
+References: <20240628133145.1444437-1-harsimransingh.tungal@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 27 Jun 2024 13:03:23 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5847
+ <meta-arm@lists.yoctoproject.org>; Fri, 28 Jun 2024 13:31:56 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5850
 
-From: Ziad Elhanafy <ziad.elhanafy@arm.com>
+From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 
-This patch enables logging with timestamps for individual pexpect
-assertions to ease the debugging of failed tests and the tuning of
-timeouts. It measures the execution time of all pexpect calls and logs
-the actual duration for each.
+Fix compilation issues with newer GCC version 14.1 for Trusted-Services
+patches by disabling some GCC flags for now.
+This is just to unblock the meta-arm master compilation issues.
 
-Only "callable" pexpect calls are timed (e.g. expect, sendline, but not
-before or after).
-
-Signed-off-by: Divin Raj <divin.raj@arm.com>
-Signed-off-by: Ziad Elhanafy <ziad.elhanafy@arm.com>
-Signed-off-by: Peter Hoyes <peter.hoyes@arm.com>
+Signed-off-by: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 ---
- meta-arm/lib/oeqa/controllers/fvp.py | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ .../recipes-security/trusted-services/ts-arm-platforms.inc     | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/meta-arm/lib/oeqa/controllers/fvp.py b/meta-arm/lib/oeqa/con=
-trollers/fvp.py
-index 80f72aab..dddc10ee 100644
---- a/meta-arm/lib/oeqa/controllers/fvp.py
-+++ b/meta-arm/lib/oeqa/controllers/fvp.py
-@@ -3,6 +3,7 @@ import enum
- import pathlib
- import pexpect
- import os
-+import time
+diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platfo=
+rms.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms=
+.inc
+index 837f6871..f67d5f62 100644
+--- a/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms.inc
++++ b/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms.inc
+@@ -22,5 +22,8 @@ SRC_URI:append:corstone1000  =3D " \
+     file://0018-Change-RSS_COMMS-cmake-variables-to-cahce-vars.patch \
+     "
 =20
- from oeqa.core.target.ssh import OESSHTarget
- from fvp import runner
-@@ -127,9 +128,19 @@ class OEFVPTarget(OESSHTarget):
-         def call_pexpect(terminal, *args, **kwargs):
-             attr =3D getattr(self.terminals[terminal], name)
-             if callable(attr):
--                return attr(*args, **kwargs)
-+                self.logger.debug(f"Calling {name} on {terminal} : with =
-arguments -> {args}  :  {kwargs}")
-+                start_time =3D time.monotonic()  # Record the start time
++# The patches above introduce errors with GCC 14.1, silence them for now
++CFLAGS:append:corstone1000 =3D " -Wno-int-conversion -Wno-implicit-funct=
+ion-declaration"
 +
-+                attr =3D getattr(self.terminals[terminal], name)
-+                result =3D attr(*args, **kwargs)
-+
-+                end_time =3D time.monotonic()  # Record the end time
-+                elapsed_time =3D end_time - start_time
-+                self.logger.debug(f"Execution time for result: [ {result=
-} ] - elapsed_time: {elapsed_time} seconds")
-             else:
--                return attr
-+                result =3D attr
-+
-+            return result
-=20
-         return call_pexpect
-=20
+ COMPATIBLE_MACHINE:fvp-base =3D "fvp-base"
+ TS_PLATFORM:fvp-base =3D "arm/fvp/fvp_base_revc-2xaemv8a"
 --=20
-2.34.1
+2.25.1
 
 
