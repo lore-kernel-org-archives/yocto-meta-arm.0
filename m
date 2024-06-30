@@ -2,63 +2,61 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC574C27C4F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7CEC30659
 	for <webhook@archiver.kernel.org>; Sun, 30 Jun 2024 22:23:29 +0000 (UTC)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
- by mx.groups.io with SMTP id smtpd.web10.6865.1719786203159973327
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+ by mx.groups.io with SMTP id smtpd.web11.6908.1719786206593376580
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 30 Jun 2024 15:23:23 -0700
+ Sun, 30 Jun 2024 15:23:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=X5gxX6TF;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.175, mailfrom: jdmason@kudzu.us)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-64b101294c0so19954377b3.1
-        for <meta-arm@lists.yoctoproject.org>; Sun, 30 Jun 2024 15:23:23 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=kihssWID;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.180, mailfrom: jdmason@kudzu.us)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dff17fd97b3so2436546276.2
+        for <meta-arm@lists.yoctoproject.org>; Sun, 30 Jun 2024 15:23:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1719786202; x=1720391002; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1719786205; x=1720391005; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HkH2/s2AlC34pUZVJODD67kNXs5kAfByBQTDT+HZegA=;
-        b=X5gxX6TFjUCPOv1e+8TaCpud9MMquAM+jmOrRgyew9eYcxStOyiWTz8pdJ8X2g3/OP
-         QfWs3u9A4+ImCI6Dr2cWbjRt6YRirKP/ych26V+Jt1CputDxMwDyHomYmP1FcroLRf9q
-         rCzaLW/V90/fdVwFOuK1aARBhmnyxZ2kFWicBiPxDKsHTtNRkNCJ4xLHdQYLIsjDusCk
-         GtyOP0IQbgCvYtRbRcj+IZzlBgbM0+VoR4Kr/WHs4mhGA9iQ8zjyc88nbB9nFZK5YsYx
-         eiexxdxHsDdz/UlBk40I0eaXW5FJ3pmbWCotX/THHuQeK88ZsRSIIR0WY0dIbgE7TYqD
-         OZyA==
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GuPxrsBEdZB9fIbQoiH7vZ9QUyn+Iaomkm0O91++awQ=;
+        b=kihssWID9eW43w5hd7INxebJrG3z8puhQUML1N58ONV/t1liFmOIUX8YyFjSNdcwTC
+         wEC7/gnfUMYNCxe87B6Bi/nSruYdTdM+lBF3QWXd1eDHaGH1289gY8kkv0bgoctEQSoq
+         88y7ucwFaZh/QDlokw1bmcs3jocqs+l02VtPf0o9Bp5k9Eo6rFKy9IZ2df6LkK4H5593
+         P1KUp+ulIqxUH/lcOAspGTgb2o9DsNQ8oYViho4ROUI6JUB4DgFnwi3B/u5Ssyk9AZ2p
+         xH1PRuvixRzO8W0RwhnYx846et9dUXDFoYn4ubIBROyX2UUtavMKL7j+bMRb4XqXCxb1
+         fWVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719786202; x=1720391002;
+        d=1e100.net; s=20230601; t=1719786205; x=1720391005;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HkH2/s2AlC34pUZVJODD67kNXs5kAfByBQTDT+HZegA=;
-        b=ZTg4FGSxnWH4P4q/u8ecZ2X51Hb9R2wF1dOzgkzVURewlFCndJkimsaAeU2LE+rd7W
-         tFEgeYFXMQPWxViHh61cgr4TusYR970ojdniygJt57s3TeHo8jKF0MqfSrTh1pi80vNS
-         g7ccmpG0cTpuhiEUrG7vG5qosp6kAfzksOujylCVC1Ht0qSUHAzYrh0ADDA1o2BNXTh3
-         myTQ1CD0fFpzVu3Hi78yCdzP0fuxiSHvjW45L11loxFayH18uibzrBieNejUywuSX5g/
-         Oi49Hzii0EEXWHiX0eXWjPb2nwuEdorE+WsENxeaVvsYeHzKfGNWSd8KVPOfOrQxLHB5
-         a5NQ==
-X-Gm-Message-State: AOJu0Yz1KFEojG9/cyvM1MXZ6PKwGcZZ+Vzrhu8wrruYtMcejm0q80+p
-	VAEUzPRWEZ8s9zCZGu2v89OizKkgWowBo8YfmldN4J/B8DAO6tmPAf3EVEh4Dag4SpRu8yYcNdo
+        bh=GuPxrsBEdZB9fIbQoiH7vZ9QUyn+Iaomkm0O91++awQ=;
+        b=moUxnIgPWXM2EcC7j5/W+NnotxDqOmZ7YbnQDovF6C4pzKXrqP3Fis7daBvtSyazZT
+         nIvt6rzbtYSO2UgDGMa8suGyaFOzQYS3dy4DdAOUqZkZdTEFFfk5zUy5PCJIEgk3HmIw
+         fuGzbmoHY3wMQd5y7+ZW7ek6CuLxQTCXZewHvrmYrLNg4vVEinDSpqK+byWz3maAH1jG
+         mgna30dj8xHprnhHpbJu3hh78RHvYzN0IbfMi+uyDhoTzsJDAUlePUGk5tBaXm+eqKnB
+         mAD/XOD6zE406ZMnpPtevE3seb2tNSB8wTIb+7mNXFtaHncuRmM94uVpnz6LdPsUPI5b
+         b1KQ==
+X-Gm-Message-State: AOJu0YyvlIsH6JTNWwAhr7ikxwkhAdnIcgsmW+JMfliEEw9uf/HMRgQl
+	fvO8BUlBPTHjdhyDTeFL5NbjVbV25O7gGm2OfeeVQK+2R3pPWVFJng99bisrEBAIBH6nRE+rxuU
 	=
-X-Google-Smtp-Source: AGHT+IFvNstclZFJ+GMtvufzHwKOp04Q7VYBr1q2UKR0p/hdPc/PCSyvSOONd4Fy2aUl44QavCiTpA==
-X-Received: by 2002:a05:690c:3810:b0:646:4cd7:76aa with SMTP id 00721157ae682-64c7312ff93mr46151037b3.36.1719786201990;
-        Sun, 30 Jun 2024 15:23:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHzLEaBoNQpbfc/11ComTnrU2LYqZiIeIGn0a8sCMmTjHccxGEiSxHrBfYQQjnoPmGhv3tvEw==
+X-Received: by 2002:a25:804a:0:b0:e02:b434:372e with SMTP id 3f1490d57ef6-e036eb28ea1mr4740915276.22.1719786205399;
+        Sun, 30 Jun 2024 15:23:25 -0700 (PDT)
 Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-64a9a8037b9sm11311187b3.63.2024.06.30.15.23.21
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e0353ea398fsm1118131276.28.2024.06.30.15.23.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Jun 2024 15:23:21 -0700 (PDT)
+        Sun, 30 Jun 2024 15:23:25 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Cc: Ziad Elhanafy <ziad.elhanafy@arm.com>,
-	Divin Raj <divin.raj@arm.com>
-Subject: Re: [PATCH] arm/oeqa: Enable pexpect profiling for testcase debugging
-Date: Sun, 30 Jun 2024 18:23:01 -0400
-Message-Id: <171978618237.360838.2796500943813501616.b4-ty@arm.com>
+	Ross Burton <ross.burton@arm.com>
+Subject: Re: [PATCH] CI: update to Kas 4.4 image
+Date: Sun, 30 Jun 2024 18:23:02 -0400
+Message-Id: <171978618234.360838.18147696072122622254.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240627125700.2406122-1-peter.hoyes@arm.com>
-References: <20240627125700.2406122-1-peter.hoyes@arm.com>
+In-Reply-To: <20240626154325.2165430-1-ross.burton@arm.com>
+References: <20240626154325.2165430-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -66,24 +64,19 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Sun, 30 Jun 2024 22:23:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5853
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5854
 
 
-On Thu, 27 Jun 2024 13:57:00 +0100, Peter Hoyes wrote:
-> This patch enables logging with timestamps for individual pexpect
-> assertions to ease the debugging of failed tests and the tuning of
-> timeouts. It measures the execution time of all pexpect calls and logs
-> the actual duration for each.
+On Wed, 26 Jun 2024 16:43:25 +0100, Ross Burton wrote:
+> The Kas 4.4 image includes the websocket module, needed to use the
+> public hashserv/sstate.
 > 
-> Only "callable" pexpect calls are timed (e.g. expect, sendline, but not
-> before or after).
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] arm/oeqa: Enable pexpect profiling for testcase debugging
-      commit: 5f647901524c945058a7495a9ff999d191718334
+[1/1] CI: update to Kas 4.4 image
+      commit: c4c562c179e670c4306c40a4214e21ec2f71027f
 
 Best regards,
 -- 
