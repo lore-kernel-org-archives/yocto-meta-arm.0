@@ -2,61 +2,61 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA176C3064D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B71C30658
 	for <webhook@archiver.kernel.org>; Tue,  2 Jul 2024 14:35:09 +0000 (UTC)
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
- by mx.groups.io with SMTP id smtpd.web10.26050.1719930905693141365
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+ by mx.groups.io with SMTP id smtpd.web10.26047.1719930901666937407
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 02 Jul 2024 07:35:05 -0700
+ Tue, 02 Jul 2024 07:35:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=EQ/2qMtn;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.174, mailfrom: jdmason@kudzu.us)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6439f6cf79dso32976497b3.0
-        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Jul 2024 07:35:05 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=D7VdAw/q;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.178, mailfrom: jdmason@kudzu.us)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-650866942aeso5761507b3.0
+        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Jul 2024 07:35:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1719930905; x=1720535705; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1719930900; x=1720535700; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=05Gboo6KqZyH12Zvtq5DfHxra9HwQlHXivWI6+wVU/o=;
-        b=EQ/2qMtnkY36bhVpweqB3K68AKG1RIV9McChOn1IAQgDYwceV6sWc2ReoYIyUeJ/9b
-         70TTB4Wl7A5NyQ8QPq0lc5A9TKyKr1TDS4nCEtMTG00Ci95FFMBJHSgLgHJt3Bf8x/dz
-         cRU3QTgiLH7wwbLDiu5dmfqnGeIURyZZesY/xqmkGBw+WE90KKitG7ZhRDW4ONNz1t+4
-         Mh27ELJ0RbDEoKFz3g/vnOm5Rpdx+IrYxGtjx1y+triyQQyy9ZfxFhO0vSYRGdmwQnCr
-         VDrrr7Akz7+Eq6r/MoYlVp+sqcSaKJ5qTU0mG86n/aQ5A6K1dHtAZxIc/pzkFbPOVFBh
-         uLsA==
+        bh=N33YCYBzG9xnN8+5wqNWJyyUNVjl92zulS5cabnIYzk=;
+        b=D7VdAw/qFYr8bNIXPVUMA4R0dgXY28AIMZI3HaGbli+XXqX4DOz+3G7Qh0Q2D6v3F2
+         maJzX6U2dMzQaMWRZh8gMY2mIQwayhHX6i4DT7sM/bxhVRF6fDEQoG3Vo9fNFeeQqcPx
+         HgcYihwWmbLYvli1t8HsPFIsZ5hiQqy7G5O8px4fKkM35N6EW/H2p6GkQAf58msieV4q
+         v5HVlLkwF+i5WKdKu+Z2b1b3TffiZfpm3hLHbfKyy6Whp1BoobmbJePiXY9q/TK0L1Z3
+         ObzsGjdv1cJ37ZPM3JeVBYybBPY3ko9B+6uAN0Fgt3c40ktJBXPDsHhw0jXHwHrUDa08
+         ceBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719930905; x=1720535705;
+        d=1e100.net; s=20230601; t=1719930900; x=1720535700;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=05Gboo6KqZyH12Zvtq5DfHxra9HwQlHXivWI6+wVU/o=;
-        b=Fjlkplzz0la+A9zn7mgo7YeTuLAH6X+VZ7yM/ge08v/RdmCCgTE5TUUnfJYY6zfCaC
-         0nT/yOHNYZgdlUbJmnX/y5j/qZQ1ZJRHiCZVPT48ogUkuJK7G1WsdMD+Sw6HI/sTSYuy
-         3j/3ITuP27kL5KxCJ7vIx56hbahBLVm+P2hUcHweWdXlE+E+P71i3DvoTmEtl4Y1u3hD
-         e3NG39Qu9GUu4o5Pkv9MFSDEja0fMbz51ysYeywxcc5XJ0HMjkw6zpS/h4sR5cQkZCUe
-         xt05MHSsS1U7ECP1iwGhd2s2t3gX3QhCoiUXFZoCRxWpnrKYrxwwKIFUgniyjhfvJimq
-         gAHQ==
-X-Gm-Message-State: AOJu0YwkHijj8iI/aP/PTD+6EGEme/KLQYqW/hiT5Q5hk/ozZo5fgTyI
-	72i3LY624R9A18r7+k4B2PpzHdidAMoxGb6UoCfVg4sNLlj5UNFqTkXUM60hRtdk8/QjYftrQfA
+        bh=N33YCYBzG9xnN8+5wqNWJyyUNVjl92zulS5cabnIYzk=;
+        b=KEITd0ypoyBaRee88pNNdws3O9r4QDVIo7bkYBnOBBqA9S1LOG2eTqVUfw3N44g1JY
+         CIr0WmepfbqAL1sVHoHB0/Cqew80H8krxXdsZ/FEd2yeviivYOqYTD1Iv8G19SGtiEez
+         gEb6yBrN9Bqe04iL68ZUVlT3E9jDNMLbs7R3fdEC7vSFs8TUwMGw8h3Foau4/LFp61MV
+         Fkz1I1yWhlQdvb1rQGZEanQdvgLJ2EEnPLmWC1En4Gefa0EvFR7KahfSNI8OEsFZx31E
+         VX4zQ1h8DAPUMNmhlLBn4Wc+YyPC+WBm1i9Swbs+C8NcmBkZBzclcMf99vfEGw56b1iN
+         gJAQ==
+X-Gm-Message-State: AOJu0Yy/swhVPRfMU64xEQ4xMrmAbuwLoVIavsHEn9PVO5f5LEBENRM5
+	v1+sbioYMTA69SpVUas2ipR8QA//ZI7TzBO6RPZbEC5CyeHzSQrP9wGKyVdc8YYysb7hqVNfcy0
 	=
-X-Google-Smtp-Source: AGHT+IGzCv/jV5+Px/900JOEMNxW6T7xg5svUcdnI3kzpMzAyyHPC3LJLGXkKNvyn2p1fjMcjHE/ZA==
-X-Received: by 2002:a81:ae28:0:b0:64a:e7ec:f45 with SMTP id 00721157ae682-64c73606ea3mr92123917b3.40.1719930904588;
-        Tue, 02 Jul 2024 07:35:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFvRRdfo4jp+sKG0KoEGK9vuCDlwbfYrh/K2Tzt7R2FDVfCIqmwZuQhKylDbS/bQhkf8KbQng==
+X-Received: by 2002:a81:d206:0:b0:64a:956b:c063 with SMTP id 00721157ae682-64c73226bebmr85647627b3.39.1719930900547;
+        Tue, 02 Jul 2024 07:35:00 -0700 (PDT)
 Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-650dc65eea0sm609657b3.65.2024.07.02.07.35.03
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6508ff26e90sm1286037b3.64.2024.07.02.07.34.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 07:35:03 -0700 (PDT)
+        Tue, 02 Jul 2024 07:34:59 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Subject: Re: [PATCH] arm/fvpboot: Revert "Disable timing annotation by default"
-Date: Tue,  2 Jul 2024 10:34:53 -0400
-Message-Id: <171993089315.3773510.6226414638400404981.b4-ty@arm.com>
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] arm-systemready: WORKDIR to UNPACKDIR changes
+Date: Tue,  2 Jul 2024 10:34:52 -0400
+Message-Id: <171993089316.3773510.17816685380347486281.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240627081718.2092820-1-peter.hoyes@arm.com>
-References: <20240627081718.2092820-1-peter.hoyes@arm.com>
+In-Reply-To: <20240701131152.5620-1-jon.mason@arm.com>
+References: <20240701131152.5620-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -64,23 +64,20 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 02 Jul 2024 14:35:09 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5857
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5856
 
 
-On Thu, 27 Jun 2024 09:17:18 +0100, Peter Hoyes wrote:
-> Fast Models 11.26 now print the following warning if the env var
-> FASTSIM_DISABLE_TA is set:
+On Mon, 01 Jul 2024 09:11:52 -0400, Jon Mason wrote:
+> Recent upstream changes to what is acceptable use of WORKDIR have broken
+> where the meta-arm-systemready recipes are expecting things to be.  Fix
+> them to point to the correct location.
 > 
->   Warning: /ARM/FastModels/deprecated: the use of FASTSIM_DISABLE_TA
->   environment variable is deprecated and will beremoved in a future
->   release.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] arm/fvpboot: Revert "Disable timing annotation by default"
-      commit: 1a2004428d4a1b3953238f1f1cee85625031098b
+[1/1] arm-systemready: WORKDIR to UNPACKDIR changes
+      commit: 1d65894556c93c4cddc1a34f27b151e890ee061a
 
 Best regards,
 -- 
