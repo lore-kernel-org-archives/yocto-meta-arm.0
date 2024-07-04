@@ -1,88 +1,89 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <delane.brandy@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2B3C31D97
-	for <webhook@archiver.kernel.org>; Wed,  3 Jul 2024 02:51:33 +0000 (UTC)
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
- by mx.groups.io with SMTP id smtpd.web10.41726.1719975089625152219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EA5C30653
+	for <webhook@archiver.kernel.org>; Thu,  4 Jul 2024 09:50:15 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.6860.1720086609424853203
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 02 Jul 2024 19:51:29 -0700
+ Thu, 04 Jul 2024 02:50:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=06sNRiQk;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.173, mailfrom: jdmason@kudzu.us)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6519528f44fso741097b3.1
-        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Jul 2024 19:51:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1719975088; x=1720579888; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lP5uKo1y0dViyEw0ERcS7Z8hICbqM6OuQTA96fMzRAg=;
-        b=06sNRiQkX9B5Exv8unfwFdSnhTDV+TFJdATZMJQ6O/0M73AYRxYMmGuv3mpOD8T/iB
-         zNFy7HNj7FMjWivzoTjObGltwS7/w4FsCjAv2KfigW7eTYHn6O4XfJhGyEmdlxM+G+nm
-         ka5DwhftTz/jTWSe/Jm1lCIWqohMwRDd2QlSHb+NZkBdKXBAJHFWG1GgnKBFmKCk9Ue8
-         0OxMtWOOGcK5CY7GcdxKAHHxX76jw/g0z23LgupXjP+s5K1b6OCZfV0GmZEi+8z5slwU
-         QbC8gg/ZiaYS+YhsCWu82wuoGStJ3Hw2vjxNPHjyDuAMbMpUD06sNCI6RI0VI9CBtwyb
-         9hDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719975088; x=1720579888;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lP5uKo1y0dViyEw0ERcS7Z8hICbqM6OuQTA96fMzRAg=;
-        b=K65eqeL7L5kF/q/7WkCv7c/BQ1f6+agAplvgnIrJezCOCXN6OZ3wcvDvoqE8OuWAhL
-         gpas2CK4v7cFGv7SX1fjUYYNBhUB6GlkL7/OczO8o4BcGc0K0iIlOIZn2zTKRCjI4JBY
-         Ao0Pv4BSzuhBkAmpv2xagajKlsr6lUqfOsoeKr9FAF3j23KPAZIaK8LwQQ1M9jXu6+t1
-         fn+oALVBFF9QDq4K/AWc/AxQtz3gvKoaHsjF8dYvGNmS4BoUl5WSnFw8tjWj8S7aix9O
-         1FCBKe0Qs9XRTzCJdV8PcaEQ4AqiIGBuFlX620TjHHFTmzUILFOtDhub0vXgmYcjV7SU
-         u4Ow==
-X-Gm-Message-State: AOJu0Yy6HsG8lhXGm39DlbsRkdrczuFmuG7PKzU+jyl5PE7vfxkfSFnI
-	VzIEcraJeszCzTv6qyuokcZlakXiahpHoaAyicpQ90LXrnYBPnw9IrX79GSRzAwa2rKYHBcOWMM
-	=
-X-Google-Smtp-Source: AGHT+IHBIRmVZ5dSU8vuGQ8y86aHY1RoJdQ2axJ+GfkSGwmA86i0/yGeydLK2gJcx5UrixKKY8lqTg==
-X-Received: by 2002:a05:690c:24d:b0:64b:69f0:f900 with SMTP id 00721157ae682-64c71cd9d81mr102507837b3.23.1719975088373;
-        Tue, 02 Jul 2024 19:51:28 -0700 (PDT)
-Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-64a9bb502e6sm20072827b3.77.2024.07.02.19.51.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jul 2024 19:51:27 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	harsimransingh.tungal@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/trusted-firmware-a: corstone1000: fix compilation issue for FVP multicore
-Date: Tue,  2 Jul 2024 22:51:20 -0400
-Message-Id: <171997508121.587178.6320134119099563117.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240702153529.19530-1-harsimransingh.tungal@arm.com>
-References: <20240702153529.19530-1-harsimransingh.tungal@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: delane.brandy@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E454B367;
+	Thu,  4 Jul 2024 02:50:33 -0700 (PDT)
+Received: from e133015.arm.com (unknown [10.57.45.137])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 459143F762;
+	Thu,  4 Jul 2024 02:50:08 -0700 (PDT)
+From: delane.brandy@arm.com
+To: meta-arm@lists.yoctoproject.org
+Cc: Delane Brandy <delane.brandy@arm.com>
+Subject: [PATCH] arm-bsp/corstone1000: Update Corstone-1000 user guide
+Date: Thu,  4 Jul 2024 10:49:52 +0100
+Message-Id: <20240704094952.982354-1-delane.brandy@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 03 Jul 2024 02:51:33 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5861
+ <meta-arm@lists.yoctoproject.org>; Thu, 04 Jul 2024 09:50:15 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5863
 
+From: Delane Brandy <delane.brandy@arm.com>
 
-On Tue, 02 Jul 2024 16:35:28 +0100, harsimransingh.tungal@arm.com wrote:
-> From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-> 
-> Include platform header file in order to remove compiler warnings.
-> Due to GCC upgrades to 14.1, some warnings are being treated as errors.
-> This change resolves TF-A compilation issue when FVP multicore
-> is enabled.
-> 
-> [...]
+Update the Corstone-1000 user guide with the new instructions on how to
+rebuild the platform to enable multicore support and run a test to
+verify this.
 
-Applied, thanks!
+Signed-off-by: Delane Brandy <delane.brandy@arm.com>
+---
+ .../documentation/corstone1000/user-guide.rst | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-[1/1] arm-bsp/trusted-firmware-a: corstone1000: fix compilation issue for FVP multicore
-      commit: b5903ce6ea89ebec8e9cdb799cef0e955c0ef6fe
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+diff --git a/meta-arm-bsp/documentation/corstone1000/user-guide.rst b/met=
+a-arm-bsp/documentation/corstone1000/user-guide.rst
+index 5dc95642..2bdd490f 100644
+--- a/meta-arm-bsp/documentation/corstone1000/user-guide.rst
++++ b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
+@@ -1458,6 +1458,33 @@ The external system can be switched on/off on dema=
+nd with the following commands
+=20
+   echo start > /sys/class/remoteproc/remoteproc0/state
+=20
++
++Testing FVP in SMP mode
++-----------------------
++
++Symmetric multiprocessing (SMP) mode is only supported on FVP. It can be=
+ enabled by using `corstone1000-fvp-multicore.yml`
++
++1. Rebuild the platform with SMP mode enabled:
++
++::
++
++  kas build meta-arm/kas/corstone1000-fvp.yml:meta-arm/ci/debug.yml:meta=
+-arm/kas/corstone1000-fvp-multicore.yml
++
++2. Once rebuilt, boot the platform with SMP mode enabled:
++
++::
++
++  kas shell meta-arm/kas/corstone1000-fvp.yml:meta-arm/ci/debug.yml:meta=
+-arm/kas/corstone1000-fvp-multicore.yml -c "../meta-arm/scripts/runfvp"
++
++
++3. Validating SMP mode using the nproc command which should return the n=
+umber of cores:
++
++::
++
++  nproc
++  #output: 4
++
++
+ Tests results
+ -------------
+=20
 
