@@ -1,85 +1,64 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4165C2BD09
-	for <webhook@archiver.kernel.org>; Tue,  9 Jul 2024 12:45:49 +0000 (UTC)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
- by mx.groups.io with SMTP id smtpd.web11.12004.1720529140574021415
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3693CC3DA42
+	for <webhook@archiver.kernel.org>; Tue,  9 Jul 2024 18:27:59 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.3123.1720549676090646459
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 09 Jul 2024 05:45:40 -0700
+ Tue, 09 Jul 2024 11:27:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=rhjuWBCz;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.175, mailfrom: jdmason@kudzu.us)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-643efaf0786so40704877b3.1
-        for <meta-arm@lists.yoctoproject.org>; Tue, 09 Jul 2024 05:45:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1720529139; x=1721133939; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T6TvVyPhr6s4OfFsYqFM7mPMKPW9RSk7iP7UPfW+pEY=;
-        b=rhjuWBCz/T55HgXFXmTe1UZNAz3QqN2YNEe9sm4WRIp8qEwgFEn2ciLBTNtWPoDh+r
-         6wGDFzsr5nXWdmWtDbQp686xdAeebgoyHS4OrDZvoIghPI7xMWrx1ICDvuyxqn7FlFHl
-         B6d+nMyfsuDPwzUKm8I1l1tv72VYJ01gRiRXi1RgRBi5cQJhbMFRkU84SLZr7jQQCLZ0
-         NYKrCZt9w2+vz9a9Yoebv0k3HwDUoKvOOBEaYsDhAOQk14m2pW7zaPiPtEA7QdrLJx8e
-         QMl+AK2aJssZIIEblR5ktnnDVxN5+HS6J04FOHBd39Jh0odbzakQw3OJTfkB+V0cFbmE
-         Z4CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720529139; x=1721133939;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T6TvVyPhr6s4OfFsYqFM7mPMKPW9RSk7iP7UPfW+pEY=;
-        b=gt4k7+i6LgFdCPP6TbEvHU0CHYTeJRWXN23Wj5vXX9d9lkD/YSwKzjKoD1GYu8m/b8
-         DZecmVQIQC9kfkDHzFMlup1LRCW/GFztnIkl1m1PramBwz7jBcy6HJZQvcL1hVogSg2G
-         wN0P9c85zeMbs5UPv0gBWUukicdwfOjkduJ25gD68B44ni6OwKCZfOOn6k+zmx55FVr+
-         VVRAd8wykZ1xwH8w6PnABbK8F1cFfDKQX/Enw4vOtGVlmhFk2Djb72P6BtARnwWfvZxT
-         wZzaVMoCKXbOSq8RDs67MP1ZpPWXrfEbWZIJcyOfl+TVCGbrVFbNg5+lfRI5mSefe32X
-         flqg==
-X-Gm-Message-State: AOJu0Yw/pGrWeUxP/mPmd4U4ZGViVhhD2garvTIL6LWYnSXL/fLex+XV
-	n4IdmpgNalYM+dA/ZRbpns0NPiBtpF2CNqc1bu9upRY9WqMpcG6/am7lXazHzBkIbzBsREEBBJg
-	=
-X-Google-Smtp-Source: AGHT+IHv0eV0bav/J3FBIkev0GYGB8Juhh0leTOLx2lCmRMcr+wpa+AiG/bBMMFcaRj77VDgYaHNnA==
-X-Received: by 2002:a25:d38e:0:b0:e02:c6fe:aea2 with SMTP id 3f1490d57ef6-e041b03fe9fmr2840215276.7.1720529139177;
-        Tue, 09 Jul 2024 05:45:39 -0700 (PDT)
-Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e041a99aea0sm288334276.54.2024.07.09.05.45.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 05:45:38 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	delane.brandy@arm.com
-Subject: Re: [PATCH] arm-bsp/corstone1000: Update Corstone-1000 user guide
-Date: Tue,  9 Jul 2024 08:45:20 -0400
-Message-Id: <172052912046.1983569.12270913394693302187.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240704094952.982354-1-delane.brandy@arm.com>
-References: <20240704094952.982354-1-delane.brandy@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7900212FC
+	for <meta-arm@lists.yoctoproject.org>; Tue,  9 Jul 2024 11:28:20 -0700 (PDT)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0E1073F762
+	for <meta-arm@lists.yoctoproject.org>; Tue,  9 Jul 2024 11:27:54 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] CI: remove unnecessary clang settings
+Date: Tue,  9 Jul 2024 14:27:53 -0400
+Message-Id: <20240709182753.33263-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 09 Jul 2024 12:45:49 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5873
+ <meta-arm@lists.yoctoproject.org>; Tue, 09 Jul 2024 18:27:59 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5874
 
+With the resolution of meta-clang issue 766 and
+OE-Core 15d09b02b2632ab1cabc3b1bd9f521e6d3d3b83f
+many of the settings are no longer necessary to be set as part of our
+CI.  Remove them, as it is causing other issues with CI.
 
-On Thu, 04 Jul 2024 10:49:52 +0100, delane.brandy@arm.com wrote:
-> Update the Corstone-1000 user guide with the new instructions on how to
-> rebuild the platform to enable multicore support and run a test to
-> verify this.
-> 
-> 
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ ci/clang.yml | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-Applied, thanks!
+diff --git a/ci/clang.yml b/ci/clang.yml
+index 9b2d194a3a11..402292a6b86d 100644
+--- a/ci/clang.yml
++++ b/ci/clang.yml
+@@ -10,12 +10,3 @@ repos:
+ local_conf_header:
+   toolchain: |
+     TOOLCHAIN =3D "clang"
+-    PREFERRED_PROVIDER_llvm =3D "clang"
+-    PREFERRED_PROVIDER_llvm-native =3D "clang-native"
+-    PREFERRED_PROVIDER_nativesdk-llvm =3D "nativesdk-clang"
+-    PROVIDES:pn-clang =3D "llvm"
+-    PROVIDES:pn-clang-native =3D "llvm-native"
+-    PROVIDES:pn-nativesdk-clang =3D "nativesdk-llvm"
+-    # This is needed to stop bitbake getting confused about what clang/l=
+lvm is
+-    # being used, see https://github.com/kraj/meta-clang/pull/766
+-    BBMASK +=3D "/meta/recipes-devtools/llvm/llvm.*\.bb"
+--=20
+2.39.3 (Apple Git-146)
 
-[1/1] arm-bsp/corstone1000: Update Corstone-1000 user guide
-      commit: 61f5a0b1b6ec6024c1e43d2811c234dc5dbf9200
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
