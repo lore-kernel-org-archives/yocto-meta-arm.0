@@ -2,58 +2,58 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56EEC2BD09
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1147C3DA4D
 	for <webhook@archiver.kernel.org>; Fri, 12 Jul 2024 14:57:32 +0000 (UTC)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
- by mx.groups.io with SMTP id smtpd.web10.9769.1720796246517396728
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+ by mx.groups.io with SMTP id smtpd.web11.9892.1720796246109712128
  for <meta-arm@lists.yoctoproject.org>;
  Fri, 12 Jul 2024 07:57:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=HvizIgLP;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.176, mailfrom: jdmason@kudzu.us)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-64b417e1511so20926467b3.3
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=upCxftt2;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.182, mailfrom: jdmason@kudzu.us)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e03618fc78bso1927194276.2
         for <meta-arm@lists.yoctoproject.org>; Fri, 12 Jul 2024 07:57:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1720796245; x=1721401045; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HiP+4gwvA+qTzDMsYAmUUF28fSXL3iN7zJYsLAOu7Nw=;
-        b=HvizIgLPDEL0czACqpiCpa+T4eVhWnWhS6BT92qqN9HChokTJf4+Ug9v71Rz58T9Bz
-         hs7VBCYaGj547bRUXmf4gd2o7b9X2tMJX8n0qzqqMfIJ5WwVjggwFWiWimPRwDwUd0fx
-         e3QjUCR4fitGeK4EAJaB4dvTWXwjWY14OKaTsvXThPVOh+eFxj5SMp9FbXsGsCDvpNR0
-         /zyVxRKNC8t74bRmrSdJOOof/kIEiSLITvdkHpn6inxwXyIxGmd9f26LI8vG5HqhNcKe
-         7flyTqoA18sCu278BB8FAajeMRiYD2j0f+eDIGlXdmjkIcpwMb6raZKgyQ+ky3/UBaOf
-         mXsQ==
+        bh=ldcEiO5JNjZlr6tjfyeCPKtvpECwLVEabQEEEqFN/3E=;
+        b=upCxftt2cRblmNaBNrK+WMrTKV3cS/DBZNFQvQtjE0KhsNS/Ekpa/WN2UeUHNdp4jV
+         1whcK6Uyzk/pqqGs3DokdrAVE8EYmS+ET7zyg0G8AUJIHUHB9amGUKPJ3lTmuHgI7TGl
+         6jJAsZ9A/1N589F67NNgo/Q+JBr6vyEHHU6oc16aJJjLi8S1OOCa2CwWP6/CJTIhhvbV
+         L78jr3wOMzAx2HhaV+yhQBAj/z7SRy5DIgc43pYfk86e4QLt1EBEiYvZUq8d+7AeXz6R
+         88m21URI2mtOEYRoUotL3WBzNkZWZWhrnIH9lQ0xkK2LHy605Gbf81O8k7XW9KQGBkmi
+         shMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1720796245; x=1721401045;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HiP+4gwvA+qTzDMsYAmUUF28fSXL3iN7zJYsLAOu7Nw=;
-        b=dyOztqCQOHW1wi/G8IqA4dMZslQnrHP80FAyiTingU9tgAIuz2Aq2ksORY4qVdVdb2
-         t2iu/yikfKLowsBP0N1CvcKpCY4DK/1JXeKjcvC5CVtWNip0rPMl83lo+MuVeqghqc8s
-         dqzu4XN0OS9U3S/bJDGlvkuYGUgi95CwPS8tCt7YNQDgFI4HKXFwdg3264U9TStAt1LI
-         EMmjgwkb5GSiMK0HG+6Rf/GzQIKvmvD+j1eTITT1kq3k/q1oUf3uomLQVLyMkZJPg1R3
-         qnB/8F6tp0PSikj246dYZ11k82uW/uKWXCP+0spSozr0WP93WYAbNhFk+VhhBMyYX8ED
-         YcWw==
-X-Gm-Message-State: AOJu0YwCNT5AeoYXOrQZdWRZaE9Y/QQZ+iyuIx692Y71WZEqrTM4ZpHX
-	dhU0lnvFDckDxfXd5AAgzIEuwvQxqEDyFgnDwdTSDL7Z6XilRArlFNXA6PHdMvbGsRuc/ic0+0c
+        bh=ldcEiO5JNjZlr6tjfyeCPKtvpECwLVEabQEEEqFN/3E=;
+        b=s6XchpmHg8zicm04fb+PssdcpFUeN/tm90LwzEM6+SjsZ7cvxgXZVhGlGSHKWcAO7+
+         XnGmsEGl1W5QerF6paAXJ8CrN5uz6YD0r8EMDtf+9m4N/bDBo45fIBL3tWIw5f2uZdOR
+         swD/uypqo4AkWfki5+qBGdX0GMBOiW1ICZgt/6JV5f1Ceaq9cLTbj/slZWXJkG+CuouB
+         kdD3ESxTGHqxaFjjZSDaWAlcli0vlgo9Db9WG9guN3BJdrGftFecpzVVsvZBCiGcPkJl
+         NaW9XUMwI6H9z6FY4o/ja14PwcQwYpM27kwWpcf0uXWtGRydsLr4ncOCnFjzNDuZPtzj
+         WZhA==
+X-Gm-Message-State: AOJu0Yy1b2DYB0RD1r0lhYhRPALspwVHg8xGWmPiGxtNW6w8GZ66uLYQ
+	9fC+8N98rEL/flkNJZ3keswYeyNg+21AvJb0oD8pIAA2vVp7TogixcpRQvJ+HIrdhJJoXy/Ww8c
 	=
-X-Google-Smtp-Source: AGHT+IGHPrd4OKnGVaSn7AC//7x7Ri48s8hDrRFFbs+pe4RNuFQa5EJm0GFyebcOTZOFcHkqI4JQpQ==
-X-Received: by 2002:a05:690c:997:b0:646:25c7:178e with SMTP id 00721157ae682-658ee790c10mr126839467b3.5.1720796245490;
-        Fri, 12 Jul 2024 07:57:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFemV6mM9EVNhAfo8TaWXlINoxk0m2G2GenL6Dly9si8REHC5BH/9UEAr0fRRtSpqDXFo/9pg==
+X-Received: by 2002:a25:bf91:0:b0:e03:9a95:bc78 with SMTP id 3f1490d57ef6-e041b0a90d5mr13782716276.36.1720796244755;
+        Fri, 12 Jul 2024 07:57:24 -0700 (PDT)
 Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-658e68e51bcsm14942407b3.104.2024.07.12.07.57.25
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e041a902284sm1303958276.36.2024.07.12.07.57.24
         for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jul 2024 07:57:25 -0700 (PDT)
+        Fri, 12 Jul 2024 07:57:24 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 3/3] arm/gn: update to the latest commit
-Date: Fri, 12 Jul 2024 10:57:23 -0400
-Message-Id: <20240712145723.3914014-3-jon.mason@arm.com>
+Subject: [PATCH 2/3] arm/boot-wrapper-aarch64: update with latest patch
+Date: Fri, 12 Jul 2024 10:57:22 -0400
+Message-Id: <20240712145723.3914014-2-jon.mason@arm.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20240712145723.3914014-1-jon.mason@arm.com>
 References: <20240712145723.3914014-1-jon.mason@arm.com>
@@ -63,39 +63,52 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 12 Jul 2024 14:57:32 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5890
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5889
 
-Update to the latest gn commit.  The previous commit was from 23 April 2024.
+Update to the latest commit.  The previous top commit was from 27 July 2021.
 The commits since that commit are:
-    Do not cleanup args.gn imports located in the output directory.
-    Fix expectations in NinjaRustBinaryTargetWriterTest.SwiftModule
-    Do not add native dependencies to the library search path
-    Support linking frameworks and swiftmodules in Rust targets
-    [desc] Silence print() statements when outputing json
-    infra: Move CI/try builds to Ubuntu-22.04
-    [MinGW] Fix mingw building issues
-    [gn] Fix "link" in the //examples/simple_build/build/toolchain/BUILD.gn
-    [template] Fix "rule alink_thin" in the //build/build_linux.ninja.template
-    Allow multiple --ide switches
+    aarch64: Enable access to MDSELR_EL1 from EL2 and below
+    aarch64: enable Permission Indirection Extension
+    aarch64: enable access to TCR2_ELx
+    model.lds.S: Quote file paths
+    Makefile: Change COUNTER_FREQ to 100 MHz
+    sme: Fix sign-extension bug in SMCR_EL3 write
+    fix array boundary check in find_logical_id
+    aarch64: enable access to HCRX_EL2
+    aarch64: Enable use of SME by EL2 and below
+    aarch64: Document what we're doing when setting ZCR_EL3.LEN
+    aarch64: Recognize PAuth QARMA3
+    Makefile: avoid dtc warnings on re-compiling DTB
+    Unify start_el3 & start_no_el3
+    Rework bootmethod initialization
+    Announce locations of memory objects
+    aarch32: move the bulk of Secure PL1 initialization to C
+    aarch64: move the bulk of EL3 initialization to C
+    Announce boot-wrapper mode / exception level
+    Rework common init C code
+    aarch64: initialize SCTLR_ELx for the boot-wrapper
+    aarch64: add mov_64 macro
+    aarch32: add coprocessor accessors
+    aarch64: add system register accessors
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm/recipes-devtools/gn/gn_git.bb | 2 +-
+ .../boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb            | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm/recipes-devtools/gn/gn_git.bb b/meta-arm/recipes-devtools/gn/gn_git.bb
-index 2bb29cc3bce7..620f75643a5f 100644
---- a/meta-arm/recipes-devtools/gn/gn_git.bb
-+++ b/meta-arm/recipes-devtools/gn/gn_git.bb
-@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=0fca02217a5d49a14dfe2d11837bb34d"
+diff --git a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb b/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb
+index d0605dd7a5f2..d0f7893d8cc8 100644
+--- a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb
++++ b/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb
+@@ -4,7 +4,7 @@ LICENSE = "BSD-3-Clause"
+ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=bb63326febfb5fb909226c8e7ebcef5c"
+ 
+ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/mark/boot-wrapper-aarch64.git;branch=master;protocol=https"
+-SRCREV = "d3b1a15d18542b2086e72bfdc3fc43f454772a3b"
++SRCREV = "5e3760073454c72f3458805a1b7a89ecf80353cb"
+ 
+ # boot-wrapper doesn't make releases
  UPSTREAM_CHECK_COMMITS = "1"
- 
- SRC_URI = "git://gn.googlesource.com/gn;protocol=https;branch=main"
--SRCREV = "f284b6b47039a2d7edfcbfc51f52664f82b5a789"
-+SRCREV = "b2afae122eeb6ce09c52d63f67dc53fc517dbdc8"
- PV = "0+git"
- 
- S = "${WORKDIR}/git"
 -- 
 2.30.2
 
