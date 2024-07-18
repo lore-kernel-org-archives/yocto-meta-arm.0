@@ -2,59 +2,59 @@ Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F04C3DA7F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE9CC41513
 	for <webhook@archiver.kernel.org>; Thu, 18 Jul 2024 20:35:59 +0000 (UTC)
 Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
- by mx.groups.io with SMTP id smtpd.web10.4183.1721334952411141470
+ by mx.groups.io with SMTP id smtpd.web10.4184.1721334955306142850
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 18 Jul 2024 13:35:52 -0700
+ Thu, 18 Jul 2024 13:35:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=z0u3eQKw;
+ dkim=pass header.i=@linaro.org header.s=google header.b=SVpfsg68;
  spf=pass (domain: linaro.org, ip: 209.85.128.180, mailfrom: javier.tia@linaro.org)
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-65f9b244018so12717287b3.3
-        for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jul 2024 13:35:52 -0700 (PDT)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-661d7e68e89so9729487b3.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jul 2024 13:35:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721334951; x=1721939751; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1721334954; x=1721939754; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=M6Zr6NSCymDnggv3lRQvMlTI2sUOIxCsHB1wjfnRh54=;
-        b=z0u3eQKwbruegY/1SLt/uB/Xevt4k8dqQ4PKuDVLzlJGFQ8H+exQRLqeKztcYrs6Im
-         V3uZ1W211Gqa0+2fVRJZc8CCPekUf3b07pO/WwVGIgZELrNL9NYcqXDePopQGLf3eYYR
-         jVdG/n66pruKzCC4HXZx2rP0S5PJMTM2GVEN4o6r6zFS8GV9MGj/05JCC5OYjLacDB3e
-         JZJpfxg5KE+PPyawhZp8mLJSeOG3UXNz+AHZ1x2kphg3GghdwvrXwd/yOzVT4J5uS6Yt
-         u2t5V1ZHqa8+OKGPPHcxRaoWeI2JjDhwFuFLpbzJRxyg5k+kKvY8tXH0R++pmQSgPYyG
-         iLEg==
+        bh=5ijs/PqslDJCjWaUWOXOubABw9algRuVzD/iiwfcaJI=;
+        b=SVpfsg68z2XjIQLW2LVCLttQ9mgUL3E80uk1DyxVUBXbt9iazmjP0+RBpHgPIMwLXi
+         Jyu1EritmxCMjzDxoIGX//gswmp7WYx6wCxZcQA1S5fbc1ETDSoCapQF5UUnAZ12LjLx
+         S6Gfp5JJOpCO8G8uQEhg6bH0F8NU6mN8CWTenQguKCxYtgUtLU5WEkYLvbE6ISo0vLln
+         wHMgn1VujHPVpQG2aCnJPUundzvNhThHKjBtSDZOzH+dvI2bK4JQv5u6KQa0fXJhS9FL
+         QYuZJf5Nap2bcSrlz7xpbAjZoFek4xzw8vsCItnLYNXTqK/XWI97wDapTH55Xzq2fQK/
+         LhrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721334951; x=1721939751;
+        d=1e100.net; s=20230601; t=1721334954; x=1721939754;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=M6Zr6NSCymDnggv3lRQvMlTI2sUOIxCsHB1wjfnRh54=;
-        b=FsKreSYXYzI0tMR9g9GeaVa+mATlQAltgdbC2c08I+bf3owXnTJfMVNklrs6SmcuCi
-         LQlDEVZFakL8/wNdd4RS3B7aRWiuW4PrBs9MLI+pSNiFbPItO7Y6uoca4sYYOtWfnvQk
-         zwgK93Uw0NBkMMuCLiLWFAJzBhJqr2LvcgAhXJlc1x8SI/CfZ99pPCCQv5gC+EelvUwE
-         sGZB908f6FguIqYiVkk5W8Wb0oRi6VY+NuaAaeNUmhShkGeSmeL21lPvd0PAylGUGNfH
-         VbckGwtLG46XVMWWMOnHtaX1aPGnv9y7jve2Zj3Baz+M2HORyyJDXr2DjvNe2/appla4
-         Qbww==
-X-Gm-Message-State: AOJu0YxJW+OVvuYo3+OtvdqL5mhYyCCkZ21L0DA3atC/JsZw5Sreye02
-	zKPHrQ7JT9Zprg/KCFHbVBOvJTDWeWpuzuQtKC0j2c89+euDiTxVdfcaanD/XNEx2GYDKcOPaVz
-	+O6s=
-X-Google-Smtp-Source: AGHT+IGZWSqirOOD/zaGFMmnV1AaqPXmTJTlE/EYpuCcNDrvCorDpVX59BbPCr8A8+hr7MbwHP/Mhw==
-X-Received: by 2002:a81:ae23:0:b0:619:da17:87be with SMTP id 00721157ae682-666a6dafaa8mr31629237b3.42.1721334951255;
-        Thu, 18 Jul 2024 13:35:51 -0700 (PDT)
+        bh=5ijs/PqslDJCjWaUWOXOubABw9algRuVzD/iiwfcaJI=;
+        b=pytL18OrhddhpI2qLPhhwCFtcI1xAeAPXk68DO/dNQtm2Hfw5+LiAsSU8oCjRuO7MP
+         B9N+YqXi7RSQZ/cpu58x5cugD6NEXuYPiN8CFJoS0VjgJq+8ddAkivZIQPYf4hBgTIWs
+         ZQ6T+H5XqsxTSNZFQ/n04dwnXFjeaKrWP8t+SJcTxUg4zpZQqgvzRedncAO+mw+zn9iw
+         HwNdG6GXqyzRyt1jGzcwULIfPYb09Qd2DXY04HlWtzrEkV8nXYtXz1oYb+bezAq6UgnS
+         Ns7GI638OlPmJAdJ6EDYtit4kAbNj7HYVNy6FSD5YNMn7W12YxrRN0QLpZJJfF03IDnX
+         z+Sw==
+X-Gm-Message-State: AOJu0Yx9O5W0dHa4e5JMWJ00+2V5y99vcmPlLWTMOkjDf+6zyF11q+1S
+	Xq2jp/j5iH1KQn/VAswZSscD9Gv5AmARBO1xWddzlI0rP8KwlRkttoMc00QfvXe/0XXG4fhSaLE
+	5wDQ=
+X-Google-Smtp-Source: AGHT+IHWE8RTlipkVR/rrPMHHZHRaetrxS9OmNe8brRDpa/F/eRvksblcWJkiKAOQoauj0henlKbxg==
+X-Received: by 2002:a05:690c:298:b0:644:4a1c:1868 with SMTP id 00721157ae682-6660f319993mr28502237b3.24.1721334954294;
+        Thu, 18 Jul 2024 13:35:54 -0700 (PDT)
 Received: from localhost.localdomain ([190.171.102.111])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6695245a1dasm171657b3.53.2024.07.18.13.35.50
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6695245a1dasm171657b3.53.2024.07.18.13.35.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 13:35:50 -0700 (PDT)
+        Thu, 18 Jul 2024 13:35:54 -0700 (PDT)
 From: Javier Tia <javier.tia@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>,
 	Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH v1 1/7] qemuarm64-secureboot: Add poky machine UEFI settings
-Date: Thu, 18 Jul 2024 14:35:20 -0600
-Message-ID: <20240718203526.52214-2-javier.tia@linaro.org>
+Subject: [PATCH v1 4/7] qemuarm64-secureboot: Setup UEFI and Secure Boot in u-boot
+Date: Thu, 18 Jul 2024 14:35:23 -0600
+Message-ID: <20240718203526.52214-5-javier.tia@linaro.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240718203526.52214-1-javier.tia@linaro.org>
 References: <20240718203526.52214-1-javier.tia@linaro.org>
@@ -64,81 +64,73 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 18 Jul 2024 20:35:59 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5900
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5903
 
-- Introduce uefi-secureboot poky machine feature.
-
-- Replace qemuarm64.wks with efi-disk-no-swap.wks.in disk definition to
-  add expected UEFI disk partitions configuration.
-
-- Enable poky machine feature and grub UEFI support.
-
-- Remove hard-coded root partition as it will be detected based on GUID
-  part.
-
-- Use systemd as Init manager to auto-mount efivarfs required by efivar.
-
-- Install additional userspace software required by Linux kernel and
-  systemd.
-
-- Set root password.
+Add u-boot minimal UEFI definitions. Setup UEFI variables with the keys
+previously generated.
 
 Signed-off-by: Javier Tia <javier.tia@linaro.org>
 ---
- .../core-image-base-uefi-secureboot.inc       | 21 +++++++++++++++++++
- .../images/core-image-base.bbappend           |  1 +
- .../conf/machine/qemuarm64-secureboot.conf    |  3 +++
- 3 files changed, 25 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc
- create mode 100644 meta-arm-bsp/recipes-bsp/images/core-image-base.bbappend
+ .../u-boot/u-boot-qemuarm64-secureboot.inc     | 18 ++++++++++++++++++
+ .../qemuarm64-secureboot.cfg                   | 10 ++++++++++
+ .../recipes-bsp/u-boot/u-boot_%.bbappend       |  1 +
+ 3 files changed, 29 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-qemuarm64-secureboot.inc
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/qemuarm64-secureboot/qemuarm64-secureboot.cfg
 
-diff --git a/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc b/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-qemuarm64-secureboot.inc b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-qemuarm64-secureboot.inc
 new file mode 100644
-index 00000000..9f20e3f4
+index 00000000..0a0accd1
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc
-@@ -0,0 +1,21 @@
-+# Detected by passing kernel parameter
-+QB_KERNEL_ROOT = ""
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-qemuarm64-secureboot.inc
+@@ -0,0 +1,18 @@
++FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}/${MACHINE}:"
 +
-+# kernel is in the image, should not be loaded separately
-+QB_DEFAULT_KERNEL = "none"
++SRC_URI += "file://${MACHINE}.cfg"
 +
-+KERNEL_IMAGETYPE = "Image"
++UBOOT_BOARDDIR = "${S}/board/emulation/qemu-arm"
++UBOOT_ENV_NAME = "qemu-arm.env"
 +
-+WKS_FILE = "efi-disk-no-swap.wks.in"
++DEPENDS += 'python3-pyopenssl-native'
 +
-+MACHINE_FEATURES += "efi"
++do_compile:prepend() {
++    export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
 +
-+EFI_PROVIDER = "grub-efi"
-+IMAGE_INSTALL += "grub-efi"
-+
-+IMAGE_INSTALL += "systemd util-linux bash coreutils efivar"
-+
-+inherit extrausers
-+EXTRA_IMAGE_FEATURES += "allow-root-login"
-+# Set the root password to toor
-+EXTRA_USERS_PARAMS += "usermod -p '\$6\$cnS1MQVd07.jLdkj\$NgXwgR.LWtbi4qD3Drn6x0AQtVtX/CdfKPy1eJzuUC0YdD8s54fLAlsLm8vaoacAoqq6BHYGTAbUnAUNJKTOb1' root;"
-diff --git a/meta-arm-bsp/recipes-bsp/images/core-image-base.bbappend b/meta-arm-bsp/recipes-bsp/images/core-image-base.bbappend
++    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n pk  -d "${UEFI_SB_KEYS_DIR}"/PK.esl  -t file
++    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n kek -d "${UEFI_SB_KEYS_DIR}"/KEK.esl -t file
++    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n db  -d "${UEFI_SB_KEYS_DIR}"/db.esl  -t file
++    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n dbx -d "${UEFI_SB_KEYS_DIR}"/dbx.esl -t file
++    "${S}"/tools/efivar.py print -i "${S}"/ubootefi.var
++}
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/qemuarm64-secureboot/qemuarm64-secureboot.cfg b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/qemuarm64-secureboot/qemuarm64-secureboot.cfg
 new file mode 100644
-index 00000000..1f6dbd24
+index 00000000..d2edb5fb
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/images/core-image-base.bbappend
-@@ -0,0 +1 @@
-+require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'core-image-base-uefi-secureboot.inc', '', d)}
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/qemuarm64-secureboot/qemuarm64-secureboot.cfg
+@@ -0,0 +1,10 @@
++CONFIG_CMD_BOOTMENU=y
++CONFIG_USE_BOOTCOMMAND=y
++CONFIG_BOOTCOMMAND="bootmenu"
++CONFIG_USE_PREBOOT=y
++CONFIG_EFI_VAR_BUF_SIZE=65536
++CONFIG_FIT_SIGNATURE=y
++CONFIG_EFI_SECURE_BOOT=y
++CONFIG_EFI_VARIABLES_PRESEED=y
++CONFIG_PREBOOT="setenv bootmenu_0 UEFI Boot Manager=bootefi bootmgr; setenv bootmenu_1 UEFI Maintenance Menu=eficonfig"
++CONFIG_PREBOOT_DEFINED=y
 \ No newline at end of file
-diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemuarm64-secureboot.conf
-index 78a39c03..27581941 100644
---- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
-+++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
-@@ -22,3 +22,6 @@ WKS_FILE_DEPENDS = "trusted-firmware-a"
- IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+index 11f332ad..8df993ae 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -5,6 +5,7 @@ MACHINE_U-BOOT_REQUIRE:corstone1000 = "u-boot-corstone1000.inc"
+ MACHINE_U-BOOT_REQUIRE:fvp-base = "u-boot-fvp-base.inc"
+ MACHINE_U-BOOT_REQUIRE:juno = "u-boot-juno.inc"
+ MACHINE_U-BOOT_REQUIRE:tc = "u-boot-tc.inc"
++MACHINE_U-BOOT_REQUIRE:qemuarm64-secureboot = "${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'u-boot-qemuarm64-secureboot.inc', '', d)}"
  
- MACHINE_FEATURES += "optee-ftpm"
-+MACHINE_FEATURES += "uefi-secureboot"
-+
-+INIT_MANAGER = "systemd"
-\ No newline at end of file
+ require ${MACHINE_U-BOOT_REQUIRE}
+ 
 -- 
 2.45.2
 
