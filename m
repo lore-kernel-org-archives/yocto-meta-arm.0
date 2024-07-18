@@ -2,57 +2,57 @@ Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B78DC3DA49
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244E6C3DA63
 	for <webhook@archiver.kernel.org>; Thu, 18 Jul 2024 13:42:21 +0000 (UTC)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
- by mx.groups.io with SMTP id smtpd.web10.15308.1721310138545588376
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+ by mx.groups.io with SMTP id smtpd.web10.15307.1721310136661654450
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 18 Jul 2024 06:42:18 -0700
+ Thu, 18 Jul 2024 06:42:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=eAarR/hF;
- spf=pass (domain: linaro.org, ip: 209.85.208.173, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2eede876fcbso9592621fa.2
-        for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jul 2024 06:42:18 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=j0+zZxg0;
+ spf=pass (domain: linaro.org, ip: 209.85.167.41, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-52e991fb456so332612e87.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jul 2024 06:42:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721310137; x=1721914937; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1721310135; x=1721914935; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/shhQlkqxlG8mLSsWEdxp0crruvg58Rnl10L3e4o4h8=;
-        b=eAarR/hFR2ItI7CO1dxI3B+2V1v7TU4vo/iMc8g7p+04mjxhnPkijHD3H8Ymx211RI
-         nocPAO98aqVDEMfGrgwYu0bYqkHJTaDMNpyY/qZtkidJwTJsuaIKmuC/ZkcW2uAHKgOx
-         TmWIgoAVWmHckAwDMDN7EkOl1qG01AKoJ3cC23qGYA9dY9+VBLaDo+yr+TmEQ+MVYtbz
-         9VaN9d4YtpW++0py+6wAGNOSGtPFb/ckRd4v5p5q4UXIVoUuRommOh1A31PGjbq45y0c
-         ckW4OxA0xnTKZGp3rvbGgwlt1UGHRPlpo5YyFiN/pXjifW+FDrKZQdM9Na4LgoznsEch
-         jkdA==
+        bh=fb+sqzyIkk1uITAyzgbXN+GCDoGxelVsujfJHwmbCGg=;
+        b=j0+zZxg0HleVDp5dMVUq7mpJGmdrHGL1IzNeDRarTAKLQe3NE0aDg7DuSLRrLiYGWv
+         VhZwuoI6Jed1teABxomnJfr8a+GdmiVVZ17tFgUmtii7Zng05a+xBiS+O6KM9dokyPZ7
+         ctIrGMiXYjuG3vbgtbqaMrjo+wfzCr3Geo4g+uvpWVKyKRToMEbfUi7eVSup8wCx3bWp
+         dwm2/Q9wDovPJ20NplpcgD5+wfeKjj6mC+99Q5YUkCUgrh2WN5qTJHafO8/cLCkVG/VY
+         WyXBjHJOqUitivLvTGnz3U+6I0OD6oZoB1DhUVZsONxRXLfgKTKDeb3PrLEAFGNDO9WU
+         jgSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721310137; x=1721914937;
+        d=1e100.net; s=20230601; t=1721310135; x=1721914935;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/shhQlkqxlG8mLSsWEdxp0crruvg58Rnl10L3e4o4h8=;
-        b=VWUt+96uy43wltlqFGtima+TA1G+4T/u2BqcGgw4jiELr7rc0pEaDqu2lSO4msmc2i
-         YTyfNxe2Xhv38+23Kv/GI2l3yaGZiYrRMwKHfn+R9V0PGNWACastoM0AA2apSFW/tqKu
-         dZtGc0D6GUGETJ7zyg54HjknACQ6R4kIeduwSm3e0kqVcAwcrDKiuZ6z1T+AbHZievun
-         TVTRAmoM3ZSF6GR7Q7NeWJPll722uQg3Gza1S5sNVVc3XgBmlKFS1M0CY+aR20gZkBpu
-         LNAwKXOEEYKExQ39kxHTWlkZ0vI9VHrA6KJ5AXXyn5grnjzdRMPLB1wsqJInTWoMIgN/
-         J8lw==
-X-Gm-Message-State: AOJu0YygcObrBIltY9n05K3C6Nyjj4882kK7+SHJHiWyT+2+GvZn955i
-	V2qoEZDj+IeZzxTbkDNQ7PQJTMBV9n5dbYNciRrrIvZXQOvVMQlSQ/wcRk0fkT1VsKZjTugR5eo
-	w
-X-Google-Smtp-Source: AGHT+IHRrdG/7xv+lY42S88CkrN5q8sPMrrBQgi1Tj/mqDk126P+4/yQ9SpeiQKE5eHd9tOVunn9UQ==
-X-Received: by 2002:a05:651c:10d1:b0:2ec:3dd4:75f4 with SMTP id 38308e7fff4ca-2ef05d28010mr17604231fa.38.1721310136735;
-        Thu, 18 Jul 2024 06:42:16 -0700 (PDT)
+        bh=fb+sqzyIkk1uITAyzgbXN+GCDoGxelVsujfJHwmbCGg=;
+        b=aDPdEn3meKLPoBi0Mvhw7NwZ0h++6dpx409n4dwb2uiNRwkAMXSyjap9df6zTsvjIp
+         LxUZWUsFR5uPEoUI1H1k9UVUV/k7UDvzHshXdyGPNCxtzRfbF3KxBK1xSWP9H+qQblPP
+         JgSvf3/dhJXpSxBN7vUvqQzTg9raCi9aBDtilG+YYlYUP+WXFbY+dW4wMOJ6YGKwXVqD
+         vmFH3+DjjACjTKp1YBmIatkwYZUgr6vamHnLL7jUF6TavVyEC87aulJov5YxQfsOpfW3
+         NGAV/l0mdxJ96RnFlFDapm5fx5iGlCwAkWfOadqWZ39ycRnZtkAQxwnubYm5/LojjCeR
+         2mJg==
+X-Gm-Message-State: AOJu0YzmZ/O30xhNY28qKEXdMFiIRKMDpWeVPmVPDd9CfVOY1bX3xydh
+	XGqab1NgPvIsjn7lqaJbLdQxn0L+DjNXYf3MHLMRegPV3HqTWU6LIrj0ASDauQprdo5A+4O/oF6
+	f
+X-Google-Smtp-Source: AGHT+IGc0KfTyDsERKAlHuSUj0WgLHfbqDtJQyqU9EViwbQl2f30i/7pR+UbLhTfC/ZaSPWSl2lJgg==
+X-Received: by 2002:a05:6512:3a83:b0:52e:941d:ade8 with SMTP id 2adb3069b0e04-52ef07028d9mr332707e87.9.1721310134821;
+        Thu, 18 Jul 2024 06:42:14 -0700 (PDT)
 Received: from localhost.localdomain (87-100-245-199.bb.dnainternet.fi. [87.100.245.199])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ef05c81865sm3219511fa.10.2024.07.18.06.42.15
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2ef05c81865sm3219511fa.10.2024.07.18.06.42.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 06:42:16 -0700 (PDT)
+        Thu, 18 Jul 2024 06:42:14 -0700 (PDT)
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
-Subject: [PATCH 3/4] optee-os-tadevkit: remove buildpaths INSANE_SKIP
-Date: Thu, 18 Jul 2024 16:41:51 +0300
-Message-ID: <20240718134152.38721-3-mikko.rapeli@linaro.org>
+Subject: [PATCH 2/4] optee-os: remove absolute paths
+Date: Thu, 18 Jul 2024 16:41:50 +0300
+Message-ID: <20240718134152.38721-2-mikko.rapeli@linaro.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240718134152.38721-1-mikko.rapeli@linaro.org>
 References: <20240718134152.38721-1-mikko.rapeli@linaro.org>
@@ -62,29 +62,124 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 18 Jul 2024 13:42:21 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5897
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5896
 
-Embedded build paths are now removed and test passes.
+Change optee-os build scripts to not use absolute
+build time paths in generated header files and scripts.
+
+One patch is backport from master/4.3 and the other has been
+submitted.
 
 Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 ---
- meta-arm/recipes-security/optee/optee-os-tadevkit_4.2.0.bb | 3 ---
- 1 file changed, 3 deletions(-)
+ ...not-use-full-path-to-generate-guard-.patch | 45 +++++++++++++++++++
+ ....mk-remove-absolute-build-time-paths.patch | 32 +++++++++++++
+ .../recipes-security/optee/optee-os_4.2.0.bb  |  4 +-
+ 3 files changed, 80 insertions(+), 1 deletion(-)
+ create mode 100644 meta-arm/recipes-security/optee/optee-os/0001-checkconf.mk-do-not-use-full-path-to-generate-guard-.patch
+ create mode 100644 meta-arm/recipes-security/optee/optee-os/0001-mk-compile.mk-remove-absolute-build-time-paths.patch
 
-diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_4.2.0.bb b/meta-arm/recipes-security/optee/optee-os-tadevkit_4.2.0.bb
-index 961d5251..2e43254a 100644
---- a/meta-arm/recipes-security/optee/optee-os-tadevkit_4.2.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_4.2.0.bb
-@@ -20,9 +20,6 @@ do_deploy() {
- 
- FILES:${PN} = "${includedir}/optee/"
- 
--# Build paths are currently embedded
--INSANE_SKIP:${PN}-dev += "buildpaths"
--
- # Include extra headers needed by SPMC tests to TA DEVKIT.
- # Supported after op-tee v3.20
- EXTRA_OEMAKE:append = "${@bb.utils.contains('MACHINE_FEATURES', 'optee-spmc-test', \
+diff --git a/meta-arm/recipes-security/optee/optee-os/0001-checkconf.mk-do-not-use-full-path-to-generate-guard-.patch b/meta-arm/recipes-security/optee/optee-os/0001-checkconf.mk-do-not-use-full-path-to-generate-guard-.patch
+new file mode 100644
+index 00000000..29719b45
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os/0001-checkconf.mk-do-not-use-full-path-to-generate-guard-.patch
+@@ -0,0 +1,45 @@
++From c8a2a6529dc3ff609281ef4fe5c5bc949c805b5c Mon Sep 17 00:00:00 2001
++From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
++Date: Thu, 6 Jun 2024 11:42:46 +0200
++Subject: [PATCH] checkconf.mk: do not use full path to generate guard symbol
++ in conf.h
++
++The combination of building with -g3 (which emits definitions of all
++defined preprocessor macros to the debug info) and using a full path
++to define the name of this preprocessor guard means that the output is
++not binary reproducible across different build hosts. For example, in
++my Yocto build, the string
++
++  __home_ravi_yocto_tmp_glibc_work_stm32mp135fdk_oe_linux_gnueabi_optee_os_stm32mp_3_19_0_stm32mp_r1_1_build_stm32mp135f_dk_include_generated_conf_h_
++
++appears in several build artifacts. Another developer or buildbot
++would not build in some /home/ravi/... directory.
++
++In order to increase binary reproducibility, only use the path sans
++the $(out-dir)/ prefix of the conf.h file.
++
++Reviewed-by: Jens Wiklander <jens.wiklander@linaro.org>
++Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
++---
++ mk/checkconf.mk | 3 ++-
++ 1 file changed, 2 insertions(+), 1 deletion(-)
++
++Upstream-Status: Backport [c8a2a6529dc3ff609281ef4fe5c5bc949c805b5c]
++
++diff --git a/mk/checkconf.mk b/mk/checkconf.mk
++index 449b1c2b8..bb08d6b15 100644
++--- a/mk/checkconf.mk
+++++ b/mk/checkconf.mk
++@@ -17,7 +17,8 @@ define check-conf-h
++ 	cnf='$(strip $(foreach var,				\
++ 		$(call cfg-vars-by-prefix,$1),			\
++ 		$(call cfg-make-define,$(var))))';		\
++-	guard="_`echo $@ | tr -- -/.+ _`_";			\
+++	guardpath="$(patsubst $(out-dir)/%,%,$@)"		\
+++	guard="_`echo "$${guardpath}" | tr -- -/.+ _`_";	\
++ 	mkdir -p $(dir $@);					\
++ 	echo "#ifndef $${guard}" >$@.tmp;			\
++ 	echo "#define $${guard}" >>$@.tmp;			\
++-- 
++2.34.1
++
+diff --git a/meta-arm/recipes-security/optee/optee-os/0001-mk-compile.mk-remove-absolute-build-time-paths.patch b/meta-arm/recipes-security/optee/optee-os/0001-mk-compile.mk-remove-absolute-build-time-paths.patch
+new file mode 100644
+index 00000000..af41599c
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os/0001-mk-compile.mk-remove-absolute-build-time-paths.patch
+@@ -0,0 +1,32 @@
++From f881f1b42be0b1e53c0f9a0a663adbc11fa2f320 Mon Sep 17 00:00:00 2001
++From: Mikko Rapeli <mikko.rapeli@linaro.org>
++Date: Thu, 18 Jul 2024 07:54:18 +0000
++Subject: [PATCH] mk/compile.mk: remove absolute build time paths
++
++Some generated files get a __FILE_ID__ which include absolute
++build time paths. Remove the paths and use plain file name.
++Fixes yocto QA check.
++
++Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
++---
++ mk/compile.mk | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++Upstream-Status: Submitted [https://github.com/OP-TEE/optee_os/pull/6950]
++
++diff --git a/mk/compile.mk b/mk/compile.mk
++index b3d807ba4..85b4dab64 100644
++--- a/mk/compile.mk
+++++ b/mk/compile.mk
++@@ -120,7 +120,7 @@ comp-cppflags-$2 = $$(filter-out $$(CPPFLAGS_REMOVE) $$(cppflags-remove) \
++ 		      $$(addprefix -I,$$(incdirs-$2)) \
++ 		      $$(cppflags$$(comp-sm-$2)) \
++ 		      $$(cppflags-lib$$(comp-lib-$2)) $$(cppflags-$2)) \
++-		      -D__FILE_ID__=$$(subst -,_,$$(subst /,_,$$(subst .,_,$1)))
+++		      -D__FILE_ID__=$$(subst -,_,$$(subst /,_,$$(subst .,_,$$(notdir $1))))
++ 
++ comp-flags-$2 += -MD -MF $$(comp-dep-$2) -MT $$@
++ comp-flags-$2 += $$(comp-cppflags-$2)
++-- 
++2.34.1
++
+diff --git a/meta-arm/recipes-security/optee/optee-os_4.2.0.bb b/meta-arm/recipes-security/optee/optee-os_4.2.0.bb
+index 8ae219f4..cee024af 100644
+--- a/meta-arm/recipes-security/optee/optee-os_4.2.0.bb
++++ b/meta-arm/recipes-security/optee/optee-os_4.2.0.bb
+@@ -7,4 +7,6 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+ SRCREV = "12d7c4ee4642d2d761e39fbcf21a06fb77141dea"
+ SRC_URI += " \
+     file://0003-optee-enable-clang-support.patch \
+-   "
++    file://0001-checkconf.mk-do-not-use-full-path-to-generate-guard-.patch \
++    file://0001-mk-compile.mk-remove-absolute-build-time-paths.patch \
++"
 -- 
 2.34.1
 
