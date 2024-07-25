@@ -1,84 +1,100 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A312C3DA63
-	for <webhook@archiver.kernel.org>; Wed, 24 Jul 2024 01:11:26 +0000 (UTC)
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
- by mx.groups.io with SMTP id smtpd.web11.847.1721783479471034942
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51362C3DA49
+	for <webhook@archiver.kernel.org>; Thu, 25 Jul 2024 13:19:47 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.35997.1721913577727683274
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 23 Jul 2024 18:11:19 -0700
+ Thu, 25 Jul 2024 06:19:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=Mta8yBfq;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.44, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6b79293a858so33843156d6.3
-        for <meta-arm@lists.yoctoproject.org>; Tue, 23 Jul 2024 18:11:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1721783478; x=1722388278; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X98DSLPWuRr/UpmeB7Jg8fxEvC3su3blj83yYVhLUMM=;
-        b=Mta8yBfq/l4N2N25VdZHq2JdO/NEZ5JTKsdL/rdIqiaxOuUFCrOj47Sfqx7sOTk0n2
-         ff7Jp0GakQhpL9OLvCyQtk/kq5RWZOyOsdv1BVNLx0V6RIhO5LDwAGCCA9/5uiZHCWaD
-         Cb698S7D/tPaJdcuVlWDTdPMTQqQ0QtIn2yXBZcMEOE5GjaFmUOsZjKJ9RptOkfFsp8h
-         TECeoRlrlXbQ7ALqxFdK38hpEHjPmsh+lm4aBoQbz/8LkwS8MZrpdnd1PdDUHNgGZJ+Y
-         NLhgXsQdrJEhm55gKVjFV1JXnEdPR11XVwrUz47bXuksHdDjN9SvvEWPfYr1u6nvNXEU
-         hgzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721783478; x=1722388278;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X98DSLPWuRr/UpmeB7Jg8fxEvC3su3blj83yYVhLUMM=;
-        b=Gjt0V3bmjsWsBgfENRHPWsao1hGQzKryyOFoSePdSt1Z23IyIkXaI83DECz864jFsF
-         B2d8MBtIKLUKZj8u5R4Fa+P4wIKD/vr9IzeVea8g0r9wNYWt+JwS8nHstIPPNpZwO04x
-         v7uVfRYikPRUcUK+1Q46DgcYE2krletybSmG1ORpkWmrtR4bUZ9eq1+5s5TfmZiMRReP
-         128/19+BrNKy0RWZP9ZL4QKkMUKnwXAg9CzDXJIC5JjsnkEPkcyPyVCzxZ9xjf1EXkUU
-         veWE7FjPwxsVu7DBzAkRMPbszVsM5We9cKx7pqiUy3kCfs9fU3kJyogvnOu23KUwPwFC
-         cnEA==
-X-Gm-Message-State: AOJu0Yw9yA1pv7Sbc56F+kyuy3WrBxwfbzbmPdcZLP5fLLKvfRvFWbh0
-	SvkeAKbu9RBWfrhbAN0azdoQOgCM448wyZkDXUaDzjuOwFEYExNQjxs3JOsfQ3UgHEYkjWzo9vM
-	=
-X-Google-Smtp-Source: AGHT+IFkslFQBrcIsOjfuhfl8Di5IiapAr2Qkdyhff67+Uysw6yONZTxgWsIH9cXlK1CoD5oEjN7mw==
-X-Received: by 2002:ad4:5f45:0:b0:6b5:ead7:23cd with SMTP id 6a1803df08f44-6b990799013mr6832906d6.40.1721783478088;
-        Tue, 23 Jul 2024 18:11:18 -0700 (PDT)
-Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b7b051c86csm50561066d6.116.2024.07.23.18.11.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jul 2024 18:11:17 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	amr.mohamed@arm.com
-Subject: Re: [PATCH scarthgap] kas: Update kas configuration for fvp-base.yml file
-Date: Tue, 23 Jul 2024 21:11:13 -0400
-Message-Id: <172178347302.3439346.12117164714748386448.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240719131434.2272392-1-amr.mohamed@arm.com>
-References: <20240719131434.2272392-1-amr.mohamed@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB4271007
+	for <meta-arm@lists.yoctoproject.org>; Thu, 25 Jul 2024 06:20:02 -0700 (PDT)
+Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C45B43F5A1
+	for <meta-arm@lists.yoctoproject.org>; Thu, 25 Jul 2024 06:19:36 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm-systemready: explicitly disable SPDX in the fake image classes
+Date: Thu, 25 Jul 2024 14:19:04 +0100
+Message-Id: <20240725131904.1934149-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 24 Jul 2024 01:11:26 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5914
+ <meta-arm@lists.yoctoproject.org>; Thu, 25 Jul 2024 13:19:47 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5915
 
+If SPDX 3.0 has been enabled then it :appends to IMAGE_CLASSES and then
+breaks at build time because there are several classes and recipes that
+look like but are not images.
 
-On Fri, 19 Jul 2024 14:14:34 +0100, amr.mohamed@arm.com wrote:
-> Change defaults repo refspec in fvp-base.yml file from master to
-> scarthgap.
-> 
-> 
+Explicitly :remove the relevant class, but this really needs a better
+solution in the long term.
 
-Applied, thanks!
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ meta-arm-systemready/classes/extra_imagedepends_only.bbclass   | 2 ++
+ .../recipes-test/arm-systemready-acs/arm-systemready-ir-acs.bb | 2 +-
+ .../arm-systemready-linux-distros.inc                          | 3 ++-
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
-[1/1] kas: Update kas configuration for fvp-base.yml file
-      commit: 1b85bbb4cab9658da3cd926c62038b8559c5c64e
+diff --git a/meta-arm-systemready/classes/extra_imagedepends_only.bbclass=
+ b/meta-arm-systemready/classes/extra_imagedepends_only.bbclass
+index bf06a9f4..224b724e 100644
+--- a/meta-arm-systemready/classes/extra_imagedepends_only.bbclass
++++ b/meta-arm-systemready/classes/extra_imagedepends_only.bbclass
+@@ -23,3 +23,5 @@ do_rootfs[noexec] =3D "1"
+ do_image[noexec] =3D "1"
+ do_image_complete[noexec] =3D "1"
+ do_build[depends] =3D ""
++
++IMAGE_CLASSES:remove =3D "create-spdx-image-3.0"
+diff --git a/meta-arm-systemready/recipes-test/arm-systemready-acs/arm-sy=
+stemready-ir-acs.bb b/meta-arm-systemready/recipes-test/arm-systemready-a=
+cs/arm-systemready-ir-acs.bb
+index 7a709af5..83257b30 100644
+--- a/meta-arm-systemready/recipes-test/arm-systemready-acs/arm-systemrea=
+dy-ir-acs.bb
++++ b/meta-arm-systemready/recipes-test/arm-systemready-acs/arm-systemrea=
+dy-ir-acs.bb
+@@ -39,7 +39,7 @@ file://${COMMON_LICENSE_DIR}/Unicode-DFS-2016;md5=3D907=
+371994d651afe53e98adc278246
+ file://${COMMON_LICENSE_DIR}/Unicode-TOU;md5=3D666362dc5dba74f477af0f44f=
+b85bd22 \
+ file://${COMMON_LICENSE_DIR}/Zlib;md5=3D87f239f408daca8a157858e192597633=
+ \
+ "
+-IMAGE_CLASSES:remove =3D "license_image"
++IMAGE_CLASSES:remove =3D "license_image create-spdx-image-3.0"
+=20
+ COMPATIBLE_MACHINE =3D "(fvp-.+|.+-fvp)"
+=20
+diff --git a/meta-arm-systemready/recipes-test/arm-systemready-linux-dist=
+ros/arm-systemready-linux-distros.inc b/meta-arm-systemready/recipes-test=
+/arm-systemready-linux-distros/arm-systemready-linux-distros.inc
+index 24dfc50a..fdca3cc0 100644
+--- a/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
+-systemready-linux-distros.inc
++++ b/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
+-systemready-linux-distros.inc
+@@ -2,7 +2,8 @@ SUMMARY =3D "Arm SystemReady Linux distros installation"
+ DESCRIPTION =3D "Arm SystemReady Linux distro CD/DVD images and installa=
+tion \
+                target disk image"
+=20
+-IMAGE_CLASSES:remove =3D "license_image testimage"
++IMAGE_CLASSES:remove =3D "license_image testimage create-spdx-image-3.0"
++
+ BUILDHISTORY_FEATURES:remove =3D "image"
+=20
+ INHIBIT_DEFAULT_DEPS =3D "1"
+--=20
+2.34.1
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
