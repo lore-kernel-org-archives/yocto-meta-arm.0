@@ -2,26 +2,26 @@ Return-Path: <amr.mohamed@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53072C49EA1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82466C52CDA
 	for <webhook@archiver.kernel.org>; Fri, 26 Jul 2024 10:01:28 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.58251.1721988086163500059
+ by mx.groups.io with SMTP id smtpd.web10.57653.1721988086986116502
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 26 Jul 2024 03:01:26 -0700
+ Fri, 26 Jul 2024 03:01:27 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: amr.mohamed@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 686F91042;
-	Fri, 26 Jul 2024 03:01:51 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BDBD1063;
+	Fri, 26 Jul 2024 03:01:52 -0700 (PDT)
 Received: from e125330.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5C48A3F73F;
-	Fri, 26 Jul 2024 03:01:25 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2F9273F73F;
+	Fri, 26 Jul 2024 03:01:26 -0700 (PDT)
 From: amr.mohamed@arm.com
 To: meta-arm@lists.yoctoproject.org
 Cc: Amr Mohamed <amr.mohamed@arm.com>
-Subject: [PATCH scarthgap 2/4] arm-systemready/linux-distros: Add kickstart file for Fedora unattended
-Date: Fri, 26 Jul 2024 11:01:07 +0100
-Message-Id: <20240726100109.1878470-2-amr.mohamed@arm.com>
+Subject: [PATCH scarthgap 3/4] arm-systemready/oeqa: Add new test for Fedora unattended installation
+Date: Fri, 26 Jul 2024 11:01:08 +0100
+Message-Id: <20240726100109.1878470-3-amr.mohamed@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240726100109.1878470-1-amr.mohamed@arm.com>
 References: <20240726100109.1878470-1-amr.mohamed@arm.com>
@@ -31,172 +31,75 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 26 Jul 2024 10:01:28 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5921
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5922
 
 From: Amr Mohamed <amr.mohamed@arm.com>
 
-Add the Fedora kickstart configuration file and define a function to
-modify the unpacked ISO image to add the kickstart file inside and
-modify the grub.cfg file.
+The oeqa test responds to the boot loader prompt error message and
+waits till the distro installation is finished.
 
 Signed-off-by: Amr Mohamed <amr.mohamed@arm.com>
 ---
- .../arm-systemready-linux-distros-fedora.bb   | 16 ++++++++
- .../arm-systemready-linux-distros.inc         | 14 ++++++-
- .../unattended-boot-conf/Fedora/ks.cfg        | 39 +++++++++++++++++++
- 3 files changed, 67 insertions(+), 2 deletions(-)
- create mode 100644 meta-arm-systemready/recipes-test/arm-systemready-lin=
-ux-distros/unattended-boot-conf/Fedora/ks.cfg
+ .../arm_systemready_fedora_unattended.py      | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 meta-arm-systemready/lib/oeqa/runtime/cases/arm_syste=
+mready_fedora_unattended.py
 
-diff --git a/meta-arm-systemready/recipes-test/arm-systemready-linux-dist=
-ros/arm-systemready-linux-distros-fedora.bb b/meta-arm-systemready/recipe=
-s-test/arm-systemready-linux-distros/arm-systemready-linux-distros-fedora=
-.bb
-index 25990b30..de4ea36d 100644
---- a/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
--systemready-linux-distros-fedora.bb
-+++ b/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
--systemready-linux-distros-fedora.bb
-@@ -98,6 +98,22 @@ file://${COMMON_LICENSE_DIR}/OPUBL-1.0;md5=3D99367d475=
-0dbf0ae6cc74209ddd52f6d \
-=20
- ARM_SYSTEMREADY_LINUX_DISTRO_INSTALL_SIZE =3D "6144"
-=20
-+TEST_SUITES =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "ar=
-m_systemready_fedora_unattended", "", d)}"
-+
-+ISO_LABEL =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "Fedo=
-ra-S-dvd-aarch64-39", "", d)}"
-+BOOT_CATALOG =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "b=
-oot.catalog", "", d)}"
-+BOOT_IMAGE =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "EFI=
-/BOOT/BOOTAA64.EFI", "", d)}"
-+EFI_IMAGE =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "imag=
-es/efiboot.img", "", d)}"
-+
- PV =3D "39.1.5"
- SRC_URI =3D "https://download.fedoraproject.org/pub/fedora/linux/release=
-s/39/Server/aarch64/iso/Fedora-Server-dvd-aarch64-39-1.5.iso;unpack=3D0;d=
-ownloadfilename=3D${ISO_IMAGE_NAME}.iso"
- SRC_URI[sha256sum] =3D "d19dc2a39758155fa53e6fd555d0d173ccc8175b55dea480=
-02d499f39cb30ce0"
-+
-+modifyiso() {
-+    UNATTENDED_CONF_DIR=3D"${THISDIR}/unattended-boot-conf/Fedora"
-+   =20
-+    cp "${UNATTENDED_CONF_DIR}/ks.cfg" ${EXTRACTED_ISO_TEMP_DIR}
-+    sed -i 's/set default=3D"1"/set default=3D"0"/g' "${EXTRACTED_ISO_TE=
-MP_DIR}/EFI/BOOT/grub.cfg"
-+    sed -i 's/set timeout=3D60/set timeout=3D0/g' "${EXTRACTED_ISO_TEMP_=
-DIR}/EFI/BOOT/grub.cfg"
-+    sed -i '0,/vmlinuz/s/vmlinuz/& inst.ks=3Dhd:LABEL=3DFedora-S-dvd-aar=
-ch64-39:\/ks.cfg/' "${EXTRACTED_ISO_TEMP_DIR}/EFI/BOOT/grub.cfg"
-+}
-diff --git a/meta-arm-systemready/recipes-test/arm-systemready-linux-dist=
-ros/arm-systemready-linux-distros.inc b/meta-arm-systemready/recipes-test=
-/arm-systemready-linux-distros/arm-systemready-linux-distros.inc
-index fdca3cc0..5e8a18e2 100644
---- a/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
--systemready-linux-distros.inc
-+++ b/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
--systemready-linux-distros.inc
-@@ -2,8 +2,12 @@ SUMMARY =3D "Arm SystemReady Linux distros installation"
- DESCRIPTION =3D "Arm SystemReady Linux distro CD/DVD images and installa=
-tion \
-                target disk image"
-=20
--IMAGE_CLASSES:remove =3D "license_image testimage create-spdx-image-3.0"
-+DISTRO_UNATTENDED_INST_TESTS ?=3D "0"
-=20
-+require ${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "arm-systemr=
-eady-linux-distros-unattended.inc", "", d)}
-+
-+IMAGE_CLASSES:remove =3D "license_image create-spdx-image-3.0"
-+IMAGE_CLASSES:remove =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TE=
-STS", "", "testimage", d)}"
- BUILDHISTORY_FEATURES:remove =3D "image"
-=20
- INHIBIT_DEFAULT_DEPS =3D "1"
-@@ -16,7 +20,7 @@ do_configure[noexec] =3D "1"
- do_compile[noexec] =3D "1"
-=20
- ISO_IMAGE_NAME =3D "${PN}-${PV}"
--IMAGE_LINK_NAME =3D "${PN}-${PV}-${MACHINE}"
-+IMAGE_LINK_NAME =3D "${PN}-${MACHINE}"
-=20
- ARM_SYSTEMREADY_LINUX_DISTRO_ISO_IMAGE =3D \
-     "${DEPLOY_DIR_IMAGE}/${ISO_IMAGE_NAME}.iso"
-@@ -47,7 +51,13 @@ python do_image_complete() {
-     from oe.utils import execute_pre_post_process
-     post_process_cmds =3D d.getVar("IMAGE_POSTPROCESS_COMMAND")
-     execute_pre_post_process(d, post_process_cmds)
-+
-+    if d.getVar('DISTRO_UNATTENDED_INST_TESTS') =3D=3D "1":
-+        # Ensure an empty rootfs manifest exists (required by testimage)
-+        fname =3D os.path.join(d.getVar('IMGDEPLOYDIR'), d.getVar('IMAGE=
-_LINK_NAME') + ".manifest")
-+        open(fname, 'w').close()
- }
-+
- do_image_complete[nostamp] =3D "1"
- addtask image_complete after do_deploy before do_build
-=20
-diff --git a/meta-arm-systemready/recipes-test/arm-systemready-linux-dist=
-ros/unattended-boot-conf/Fedora/ks.cfg b/meta-arm-systemready/recipes-tes=
-t/arm-systemready-linux-distros/unattended-boot-conf/Fedora/ks.cfg
+diff --git a/meta-arm-systemready/lib/oeqa/runtime/cases/arm_systemready_=
+fedora_unattended.py b/meta-arm-systemready/lib/oeqa/runtime/cases/arm_sy=
+stemready_fedora_unattended.py
 new file mode 100644
-index 00000000..f8ea3bc6
+index 00000000..f607fb12
 --- /dev/null
-+++ b/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/una=
-ttended-boot-conf/Fedora/ks.cfg
++++ b/meta-arm-systemready/lib/oeqa/runtime/cases/arm_systemready_fedora_=
+unattended.py
 @@ -0,0 +1,39 @@
-+# Generated by Anaconda 39.32.6                                         =
-                                                                         =
-                                           =20
-+# Generated by pykickstart v3.48                                        =
-                                                                         =
-                                           =20
-+#version=3DDEVEL                                                        =
-                                                                         =
-                                             =20
-+# Use text mode install
-+text
++from oeqa.runtime.case import OERuntimeTestCase
 +
-+# Keyboard layouts
-+keyboard --vckeymap=3Dus --xlayouts=3D'us'
-+# System language
-+lang en_GB.UTF-8
 +
-+# Use CDROM installation media
-+cdrom
++class SystemReadyFedoraUnattendedTest(OERuntimeTestCase):
++    def setUp(self):
++        super().setUp()
++        self.console =3D self.target.DEFAULT_CONSOLE
 +
-+%packages --excludedocs --ignoremissing
-+@core --nodefaults
-+=20
-+%end
++    def test_fedora_unattended(self):
++        # Turn on the FVP.
++        self.target.transition('on')
 +
-+# Run the Setup Agent on first boot
-+firstboot --enable
-+# Do not configure the X Window System
-+skipx
++        # Timeout value =3D elapsed time * 2; where elapsed time was col=
+lected
++        # from the elapsed time in the log.do_testimage for each functio=
+n after
++        # the build is finished on the development machine.
++        self.target.expect(self.console,
++                           '  Booting `Install Fedora 39\'',
++                           timeout=3D(2 * 60))
++        bb.plain('Installation status: Loading the installer, kernel and=
+ initrd...')
 +
-+# System bootloader configuration
-+bootloader --location=3Dmbr --boot-drive=3Dvda
-+autopart
-+# Partition clearing information
-+clearpart --all --initlabel --drives=3Dvda
++        self.target.expect(self.console,
++                           'Setting up the installation environment',
++                           timeout=3D(2 * 60 * 60))
++        bb.plain('Installation status: Setting up the installation envir=
+onment...')
 +
-+# System timezone
-+timezone Europe/London --utc
++        self.target.expect(self.console,
++                           'Installing the software',
++                           timeout=3D(30 * 60))
++        bb.plain('Installation status: Installing the software packages.=
+..')
 +
-+# Root password
-+rootpw --lock
-+user --groups=3Dwheel --name=3Duser --password=3Dunsafe --gecos=3D"usr1"=
-=20
++        # Waiting to respond to the boot loader prompt error message.
++        self.target.expect(self.console,
++                           'Please respond \'yes\' or \'no\': ',
++                           timeout=3D(16 * 60 * 60))
++        self.target.sendline(self.console, 'yes')
 +
-+# Reboot after installation with an attempt to eject the installation me=
-dia
-+reboot --eject
++        # Waiting till the installation is finished.
++        self.target.expect(self.console, r'.*login: ', timeout=3D(5 * 60=
+ * 60))
++        bb.plain('Installation status: Fedora installation finished succ=
+essfully.')
 --=20
 2.25.1
 
