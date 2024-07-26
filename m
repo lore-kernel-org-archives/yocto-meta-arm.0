@@ -1,100 +1,115 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <amr.mohamed@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51362C3DA49
-	for <webhook@archiver.kernel.org>; Thu, 25 Jul 2024 13:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190CEC3DA7F
+	for <webhook@archiver.kernel.org>; Fri, 26 Jul 2024 09:56:18 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.35997.1721913577727683274
+ by mx.groups.io with SMTP id smtpd.web10.57589.1721987773728510972
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 25 Jul 2024 06:19:37 -0700
+ Fri, 26 Jul 2024 02:56:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: amr.mohamed@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB4271007
-	for <meta-arm@lists.yoctoproject.org>; Thu, 25 Jul 2024 06:20:02 -0700 (PDT)
-Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C45B43F5A1
-	for <meta-arm@lists.yoctoproject.org>; Thu, 25 Jul 2024 06:19:36 -0700 (PDT)
-From: Ross Burton <ross.burton@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6E731007;
+	Fri, 26 Jul 2024 02:56:38 -0700 (PDT)
+Received: from e125330.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BB0E83F73F;
+	Fri, 26 Jul 2024 02:56:12 -0700 (PDT)
+From: amr.mohamed@arm.com
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-systemready: explicitly disable SPDX in the fake image classes
-Date: Thu, 25 Jul 2024 14:19:04 +0100
-Message-Id: <20240725131904.1934149-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
+Cc: Amr Mohamed <amr.mohamed@arm.com>
+Subject: [PATCH 1/4] arm-systemready/linux-distros: new inc file for unattended installation
+Date: Fri, 26 Jul 2024 10:56:00 +0100
+Message-Id: <20240726095604.1805688-1-amr.mohamed@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 25 Jul 2024 13:19:47 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5915
+ <meta-arm@lists.yoctoproject.org>; Fri, 26 Jul 2024 09:56:18 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5916
 
-If SPDX 3.0 has been enabled then it :appends to IMAGE_CLASSES and then
-breaks at build time because there are several classes and recipes that
-look like but are not images.
+From: Amr Mohamed <amr.mohamed@arm.com>
 
-Explicitly :remove the relevant class, but this really needs a better
-solution in the long term.
+Add a new inc file to unpack and repack the distro ISO image after
+adding the kickstart configuration file inside.
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+Signed-off-by: Amr Mohamed <amr.mohamed@arm.com>
 ---
- meta-arm-systemready/classes/extra_imagedepends_only.bbclass   | 2 ++
- .../recipes-test/arm-systemready-acs/arm-systemready-ir-acs.bb | 2 +-
- .../arm-systemready-linux-distros.inc                          | 3 ++-
- 3 files changed, 5 insertions(+), 2 deletions(-)
+ ...m-systemready-linux-distros-unattended.inc | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 meta-arm-systemready/recipes-test/arm-systemready-lin=
+ux-distros/arm-systemready-linux-distros-unattended.inc
 
-diff --git a/meta-arm-systemready/classes/extra_imagedepends_only.bbclass=
- b/meta-arm-systemready/classes/extra_imagedepends_only.bbclass
-index bf06a9f4..224b724e 100644
---- a/meta-arm-systemready/classes/extra_imagedepends_only.bbclass
-+++ b/meta-arm-systemready/classes/extra_imagedepends_only.bbclass
-@@ -23,3 +23,5 @@ do_rootfs[noexec] =3D "1"
- do_image[noexec] =3D "1"
- do_image_complete[noexec] =3D "1"
- do_build[depends] =3D ""
-+
-+IMAGE_CLASSES:remove =3D "create-spdx-image-3.0"
-diff --git a/meta-arm-systemready/recipes-test/arm-systemready-acs/arm-sy=
-stemready-ir-acs.bb b/meta-arm-systemready/recipes-test/arm-systemready-a=
-cs/arm-systemready-ir-acs.bb
-index 7a709af5..83257b30 100644
---- a/meta-arm-systemready/recipes-test/arm-systemready-acs/arm-systemrea=
-dy-ir-acs.bb
-+++ b/meta-arm-systemready/recipes-test/arm-systemready-acs/arm-systemrea=
-dy-ir-acs.bb
-@@ -39,7 +39,7 @@ file://${COMMON_LICENSE_DIR}/Unicode-DFS-2016;md5=3D907=
-371994d651afe53e98adc278246
- file://${COMMON_LICENSE_DIR}/Unicode-TOU;md5=3D666362dc5dba74f477af0f44f=
-b85bd22 \
- file://${COMMON_LICENSE_DIR}/Zlib;md5=3D87f239f408daca8a157858e192597633=
- \
- "
--IMAGE_CLASSES:remove =3D "license_image"
-+IMAGE_CLASSES:remove =3D "license_image create-spdx-image-3.0"
-=20
- COMPATIBLE_MACHINE =3D "(fvp-.+|.+-fvp)"
-=20
 diff --git a/meta-arm-systemready/recipes-test/arm-systemready-linux-dist=
-ros/arm-systemready-linux-distros.inc b/meta-arm-systemready/recipes-test=
-/arm-systemready-linux-distros/arm-systemready-linux-distros.inc
-index 24dfc50a..fdca3cc0 100644
---- a/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
--systemready-linux-distros.inc
+ros/arm-systemready-linux-distros-unattended.inc b/meta-arm-systemready/r=
+ecipes-test/arm-systemready-linux-distros/arm-systemready-linux-distros-u=
+nattended.inc
+new file mode 100644
+index 00000000..f8c9c6c5
+--- /dev/null
 +++ b/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
--systemready-linux-distros.inc
-@@ -2,7 +2,8 @@ SUMMARY =3D "Arm SystemReady Linux distros installation"
- DESCRIPTION =3D "Arm SystemReady Linux distro CD/DVD images and installa=
-tion \
-                target disk image"
-=20
--IMAGE_CLASSES:remove =3D "license_image testimage"
-+IMAGE_CLASSES:remove =3D "license_image testimage create-spdx-image-3.0"
+-systemready-linux-distros-unattended.inc
+@@ -0,0 +1,45 @@
++SUMMARY =3D "Arm SystemReady Linux distros unattended requirements"
++DESCRIPTION =3D "Arm SystemReady Linux distro unattended configurations =
+\
++               and ISO image modification"
 +
- BUILDHISTORY_FEATURES:remove =3D "image"
-=20
- INHIBIT_DEFAULT_DEPS =3D "1"
++EXTRACTED_ISO_TEMP_DIR =3D "${WORKDIR}/extracted_iso_temp_dir"
++NEW_ISO_TEMP_DIR =3D "${WORKDIR}/new_iso_temp_dir"
++
++# oeqa test case must be added to TEST_SUITES to acknowledge that the un=
+attended
++# installation was successful.
++inherit testimage
++
++python () {
++    unattended_required_vars =3D ['ISO_LABEL', 'BOOT_CATALOG', 'BOOT_IMA=
+GE', 'EFI_IMAGE']
++
++    for var in unattended_required_vars:
++        if not d.getVar(var):
++            raise bb.parse.SkipRecipe(f'{var} variable is not set')
++}
++
++unpackiso() {
++    # Unpack the ISO image
++    bsdtar -xf ${WORKDIR}/${ISO_IMAGE_NAME}.iso -C ${EXTRACTED_ISO_TEMP_=
+DIR}
++    chmod -R u+rw ${EXTRACTED_ISO_TEMP_DIR}
++}
++
++modifyiso() {
++
++}
++
++repackiso() {
++    # Repack the ISO image
++    mkisofs -o ${NEW_ISO_TEMP_DIR}/${ISO_IMAGE_NAME}.iso -U -r -v -T -J =
+-joliet-long -V ${ISO_LABEL} \
++            -volset ${ISO_LABEL} -A ${ISO_LABEL} -b ${BOOT_IMAGE} -c ${B=
+OOT_CATALOG} -no-emul-boot \
++            -boot-load-size 4 -boot-info-table -J -R -V ${ISO_LABEL} -el=
+torito-alt-boot \
++            -eltorito-boot ${EFI_IMAGE} -no-emul-boot ${EXTRACTED_ISO_TE=
+MP_DIR}
++
++    mv -f ${NEW_ISO_TEMP_DIR}/${ISO_IMAGE_NAME}.iso ${WORKDIR}
++}
++
++# Write the test data in IMAGE_POSTPROCESS_COMMAND
++IMAGE_POSTPROCESS_COMMAND +=3D "write_image_test_data; "
++
++do_unpack[depends] +=3D "cdrtools-native:do_populate_sysroot libarchive-=
+native:do_populate_sysroot"
++do_unpack[postfuncs] +=3D "unpackiso modifyiso repackiso"
++do_unpack[cleandirs] +=3D "${EXTRACTED_ISO_TEMP_DIR} ${NEW_ISO_TEMP_DIR}=
+"
+\ No newline at end of file
 --=20
-2.34.1
+2.25.1
 
 
