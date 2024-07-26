@@ -2,113 +2,201 @@ Return-Path: <amr.mohamed@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190CEC3DA7F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A395C49EA1
 	for <webhook@archiver.kernel.org>; Fri, 26 Jul 2024 09:56:18 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.57589.1721987773728510972
+ by mx.groups.io with SMTP id smtpd.web11.58181.1721987774690218033
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 26 Jul 2024 02:56:13 -0700
+ Fri, 26 Jul 2024 02:56:14 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: amr.mohamed@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6E731007;
-	Fri, 26 Jul 2024 02:56:38 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A905C1476;
+	Fri, 26 Jul 2024 02:56:39 -0700 (PDT)
 Received: from e125330.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BB0E83F73F;
-	Fri, 26 Jul 2024 02:56:12 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9417D3F73F;
+	Fri, 26 Jul 2024 02:56:13 -0700 (PDT)
 From: amr.mohamed@arm.com
 To: meta-arm@lists.yoctoproject.org
 Cc: Amr Mohamed <amr.mohamed@arm.com>
-Subject: [PATCH 1/4] arm-systemready/linux-distros: new inc file for unattended installation
-Date: Fri, 26 Jul 2024 10:56:00 +0100
-Message-Id: <20240726095604.1805688-1-amr.mohamed@arm.com>
+Subject: [PATCH 2/4] arm-systemready/linux-distros: Add kickstart file for Fedora unattended
+Date: Fri, 26 Jul 2024 10:56:01 +0100
+Message-Id: <20240726095604.1805688-2-amr.mohamed@arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240726095604.1805688-1-amr.mohamed@arm.com>
+References: <20240726095604.1805688-1-amr.mohamed@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 26 Jul 2024 09:56:18 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5916
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5917
 
 From: Amr Mohamed <amr.mohamed@arm.com>
 
-Add a new inc file to unpack and repack the distro ISO image after
-adding the kickstart configuration file inside.
+Add the Fedora kickstart configuration file and define a function to
+modify the unpacked ISO image to add the kickstart file inside and
+modify the grub.cfg file.
 
 Signed-off-by: Amr Mohamed <amr.mohamed@arm.com>
 ---
- ...m-systemready-linux-distros-unattended.inc | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ .../arm-systemready-linux-distros-fedora.bb   | 16 ++++++++
+ .../arm-systemready-linux-distros.inc         | 14 ++++++-
+ .../unattended-boot-conf/Fedora/ks.cfg        | 39 +++++++++++++++++++
+ 3 files changed, 67 insertions(+), 2 deletions(-)
  create mode 100644 meta-arm-systemready/recipes-test/arm-systemready-lin=
-ux-distros/arm-systemready-linux-distros-unattended.inc
+ux-distros/unattended-boot-conf/Fedora/ks.cfg
 
 diff --git a/meta-arm-systemready/recipes-test/arm-systemready-linux-dist=
-ros/arm-systemready-linux-distros-unattended.inc b/meta-arm-systemready/r=
-ecipes-test/arm-systemready-linux-distros/arm-systemready-linux-distros-u=
-nattended.inc
-new file mode 100644
-index 00000000..f8c9c6c5
---- /dev/null
+ros/arm-systemready-linux-distros-fedora.bb b/meta-arm-systemready/recipe=
+s-test/arm-systemready-linux-distros/arm-systemready-linux-distros-fedora=
+.bb
+index 25990b30..de4ea36d 100644
+--- a/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
+-systemready-linux-distros-fedora.bb
 +++ b/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
--systemready-linux-distros-unattended.inc
-@@ -0,0 +1,45 @@
-+SUMMARY =3D "Arm SystemReady Linux distros unattended requirements"
-+DESCRIPTION =3D "Arm SystemReady Linux distro unattended configurations =
-\
-+               and ISO image modification"
+-systemready-linux-distros-fedora.bb
+@@ -98,6 +98,22 @@ file://${COMMON_LICENSE_DIR}/OPUBL-1.0;md5=3D99367d475=
+0dbf0ae6cc74209ddd52f6d \
+=20
+ ARM_SYSTEMREADY_LINUX_DISTRO_INSTALL_SIZE =3D "6144"
+=20
++TEST_SUITES =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "ar=
+m_systemready_fedora_unattended", "", d)}"
 +
-+EXTRACTED_ISO_TEMP_DIR =3D "${WORKDIR}/extracted_iso_temp_dir"
-+NEW_ISO_TEMP_DIR =3D "${WORKDIR}/new_iso_temp_dir"
++ISO_LABEL =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "Fedo=
+ra-S-dvd-aarch64-39", "", d)}"
++BOOT_CATALOG =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "b=
+oot.catalog", "", d)}"
++BOOT_IMAGE =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "EFI=
+/BOOT/BOOTAA64.EFI", "", d)}"
++EFI_IMAGE =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "imag=
+es/efiboot.img", "", d)}"
 +
-+# oeqa test case must be added to TEST_SUITES to acknowledge that the un=
-attended
-+# installation was successful.
-+inherit testimage
-+
-+python () {
-+    unattended_required_vars =3D ['ISO_LABEL', 'BOOT_CATALOG', 'BOOT_IMA=
-GE', 'EFI_IMAGE']
-+
-+    for var in unattended_required_vars:
-+        if not d.getVar(var):
-+            raise bb.parse.SkipRecipe(f'{var} variable is not set')
-+}
-+
-+unpackiso() {
-+    # Unpack the ISO image
-+    bsdtar -xf ${WORKDIR}/${ISO_IMAGE_NAME}.iso -C ${EXTRACTED_ISO_TEMP_=
-DIR}
-+    chmod -R u+rw ${EXTRACTED_ISO_TEMP_DIR}
-+}
+ PV =3D "39.1.5"
+ SRC_URI =3D "https://download.fedoraproject.org/pub/fedora/linux/release=
+s/39/Server/aarch64/iso/Fedora-Server-dvd-aarch64-39-1.5.iso;unpack=3D0;d=
+ownloadfilename=3D${ISO_IMAGE_NAME}.iso"
+ SRC_URI[sha256sum] =3D "d19dc2a39758155fa53e6fd555d0d173ccc8175b55dea480=
+02d499f39cb30ce0"
 +
 +modifyiso() {
-+
++    UNATTENDED_CONF_DIR=3D"${THISDIR}/unattended-boot-conf/Fedora"
++   =20
++    cp "${UNATTENDED_CONF_DIR}/ks.cfg" ${EXTRACTED_ISO_TEMP_DIR}
++    sed -i 's/set default=3D"1"/set default=3D"0"/g' "${EXTRACTED_ISO_TE=
+MP_DIR}/EFI/BOOT/grub.cfg"
++    sed -i 's/set timeout=3D60/set timeout=3D0/g' "${EXTRACTED_ISO_TEMP_=
+DIR}/EFI/BOOT/grub.cfg"
++    sed -i '0,/vmlinuz/s/vmlinuz/& inst.ks=3Dhd:LABEL=3DFedora-S-dvd-aar=
+ch64-39:\/ks.cfg/' "${EXTRACTED_ISO_TEMP_DIR}/EFI/BOOT/grub.cfg"
 +}
+diff --git a/meta-arm-systemready/recipes-test/arm-systemready-linux-dist=
+ros/arm-systemready-linux-distros.inc b/meta-arm-systemready/recipes-test=
+/arm-systemready-linux-distros/arm-systemready-linux-distros.inc
+index fdca3cc0..5e8a18e2 100644
+--- a/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
+-systemready-linux-distros.inc
++++ b/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
+-systemready-linux-distros.inc
+@@ -2,8 +2,12 @@ SUMMARY =3D "Arm SystemReady Linux distros installation"
+ DESCRIPTION =3D "Arm SystemReady Linux distro CD/DVD images and installa=
+tion \
+                target disk image"
+=20
+-IMAGE_CLASSES:remove =3D "license_image testimage create-spdx-image-3.0"
++DISTRO_UNATTENDED_INST_TESTS ?=3D "0"
+=20
++require ${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "arm-systemr=
+eady-linux-distros-unattended.inc", "", d)}
 +
-+repackiso() {
-+    # Repack the ISO image
-+    mkisofs -o ${NEW_ISO_TEMP_DIR}/${ISO_IMAGE_NAME}.iso -U -r -v -T -J =
--joliet-long -V ${ISO_LABEL} \
-+            -volset ${ISO_LABEL} -A ${ISO_LABEL} -b ${BOOT_IMAGE} -c ${B=
-OOT_CATALOG} -no-emul-boot \
-+            -boot-load-size 4 -boot-info-table -J -R -V ${ISO_LABEL} -el=
-torito-alt-boot \
-+            -eltorito-boot ${EFI_IMAGE} -no-emul-boot ${EXTRACTED_ISO_TE=
-MP_DIR}
++IMAGE_CLASSES:remove =3D "license_image create-spdx-image-3.0"
++IMAGE_CLASSES:remove =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TE=
+STS", "", "testimage", d)}"
+ BUILDHISTORY_FEATURES:remove =3D "image"
+=20
+ INHIBIT_DEFAULT_DEPS =3D "1"
+@@ -16,7 +20,7 @@ do_configure[noexec] =3D "1"
+ do_compile[noexec] =3D "1"
+=20
+ ISO_IMAGE_NAME =3D "${PN}-${PV}"
+-IMAGE_LINK_NAME =3D "${PN}-${PV}-${MACHINE}"
++IMAGE_LINK_NAME =3D "${PN}-${MACHINE}"
+=20
+ ARM_SYSTEMREADY_LINUX_DISTRO_ISO_IMAGE =3D \
+     "${DEPLOY_DIR_IMAGE}/${ISO_IMAGE_NAME}.iso"
+@@ -47,7 +51,13 @@ python do_image_complete() {
+     from oe.utils import execute_pre_post_process
+     post_process_cmds =3D d.getVar("IMAGE_POSTPROCESS_COMMAND")
+     execute_pre_post_process(d, post_process_cmds)
 +
-+    mv -f ${NEW_ISO_TEMP_DIR}/${ISO_IMAGE_NAME}.iso ${WORKDIR}
-+}
++    if d.getVar('DISTRO_UNATTENDED_INST_TESTS') =3D=3D "1":
++        # Ensure an empty rootfs manifest exists (required by testimage)
++        fname =3D os.path.join(d.getVar('IMGDEPLOYDIR'), d.getVar('IMAGE=
+_LINK_NAME') + ".manifest")
++        open(fname, 'w').close()
+ }
 +
-+# Write the test data in IMAGE_POSTPROCESS_COMMAND
-+IMAGE_POSTPROCESS_COMMAND +=3D "write_image_test_data; "
+ do_image_complete[nostamp] =3D "1"
+ addtask image_complete after do_deploy before do_build
+=20
+diff --git a/meta-arm-systemready/recipes-test/arm-systemready-linux-dist=
+ros/unattended-boot-conf/Fedora/ks.cfg b/meta-arm-systemready/recipes-tes=
+t/arm-systemready-linux-distros/unattended-boot-conf/Fedora/ks.cfg
+new file mode 100644
+index 00000000..f8ea3bc6
+--- /dev/null
++++ b/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/una=
+ttended-boot-conf/Fedora/ks.cfg
+@@ -0,0 +1,39 @@
++# Generated by Anaconda 39.32.6                                         =
+                                                                         =
+                                           =20
++# Generated by pykickstart v3.48                                        =
+                                                                         =
+                                           =20
++#version=3DDEVEL                                                        =
+                                                                         =
+                                             =20
++# Use text mode install
++text
 +
-+do_unpack[depends] +=3D "cdrtools-native:do_populate_sysroot libarchive-=
-native:do_populate_sysroot"
-+do_unpack[postfuncs] +=3D "unpackiso modifyiso repackiso"
-+do_unpack[cleandirs] +=3D "${EXTRACTED_ISO_TEMP_DIR} ${NEW_ISO_TEMP_DIR}=
-"
-\ No newline at end of file
++# Keyboard layouts
++keyboard --vckeymap=3Dus --xlayouts=3D'us'
++# System language
++lang en_GB.UTF-8
++
++# Use CDROM installation media
++cdrom
++
++%packages --excludedocs --ignoremissing
++@core --nodefaults
++=20
++%end
++
++# Run the Setup Agent on first boot
++firstboot --enable
++# Do not configure the X Window System
++skipx
++
++# System bootloader configuration
++bootloader --location=3Dmbr --boot-drive=3Dvda
++autopart
++# Partition clearing information
++clearpart --all --initlabel --drives=3Dvda
++
++# System timezone
++timezone Europe/London --utc
++
++# Root password
++rootpw --lock
++user --groups=3Dwheel --name=3Duser --password=3Dunsafe --gecos=3D"usr1"=
+=20
++
++# Reboot after installation with an attempt to eject the installation me=
+dia
++reboot --eject
 --=20
 2.25.1
 
