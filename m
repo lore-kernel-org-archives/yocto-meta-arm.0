@@ -1,91 +1,91 @@
-Return-Path: <mikko.rapeli@linaro.org>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4DAC49EA1
-	for <webhook@archiver.kernel.org>; Tue, 30 Jul 2024 10:25:29 +0000 (UTC)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
- by mx.groups.io with SMTP id smtpd.web11.14644.1722335125187628913
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F280C3DA49
+	for <webhook@archiver.kernel.org>; Wed, 31 Jul 2024 03:12:25 +0000 (UTC)
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+ by mx.groups.io with SMTP id smtpd.web11.34771.1722395535283851687
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 30 Jul 2024 03:25:25 -0700
+ Tue, 30 Jul 2024 20:12:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=MBPKl/Xv;
- spf=pass (domain: linaro.org, ip: 209.85.167.48, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-52f04b3cb33so9874307e87.0
-        for <meta-arm@lists.yoctoproject.org>; Tue, 30 Jul 2024 03:25:24 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=lprfYvUJ;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.180, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7a20b8fa6dcso13596085a.3
+        for <meta-arm@lists.yoctoproject.org>; Tue, 30 Jul 2024 20:12:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722335123; x=1722939923; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/shhQlkqxlG8mLSsWEdxp0crruvg58Rnl10L3e4o4h8=;
-        b=MBPKl/XvC2IiaJTju8FMetSHWeiKHglwad4Bq9MLB2B74x8TJLKJRtgzAWSpikWhMU
-         EVQKvFtGgX7xOSQU6IOoyQcu6goEhBlepIWGpQ34AICj6IM1RcDrlXZzBW8UTl0tQ3VR
-         Nf32a4ecpvdaPgdq/1qY71owRCaPspeosuoHR/vQDpxOkOLq0VqesM1Ly9KwePAxZP5+
-         DkRNwfTqPtxjB2G8ynmI7skBORUCd97+b9mFFHKJ/CjhRrt7GRsM1FpCA7qmkvYs253+
-         8oyWZYlNMqWIxI5c+yvgqSMR4Qd1U93/7kPLZi+m37Gog+S9vTTwFmf3gNQEyFcF6aGm
-         +8bw==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1722395534; x=1723000334; darn=lists.yoctoproject.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G4ubRpJV+KlCTqqhT1COeqm2VOW91aAGrfBhykX3CiI=;
+        b=lprfYvUJPdTeC1Gwirg4f9DV+pdJXKJ9tzDNURBABvPVpKZt2Y+SZgB+Ka5wKOTcd3
+         n/4YmfgZRqmKCV3kLE2wTKW82DiHyA5R0RlU/pK2G4PKsO+C+4KZQPRG9kF0k5kyrgj/
+         2+DTvc28FCIoXm0Bj8lp20rctsJmVM2f3GVS68D0vQRjVq0Rs0XBzLTVg5PhVE83DWZC
+         vIgsDIxOG6gunfatl6tcO6pThQy4mEid+MiTHWMmty4gLbKpNggY30NVvdwjfGKv12WJ
+         epZcUwl/X1hBIIaaQ9o5KB0nmKW6kiG1iT5I62N8b7w25tnuvR5AhdpZLO+ow0sM7y2r
+         hpQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722335123; x=1722939923;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/shhQlkqxlG8mLSsWEdxp0crruvg58Rnl10L3e4o4h8=;
-        b=oMIVDedcaEzLwM3bXqUGJj9x8U/arr4OKMbVii0l4EOIyn8PSlwhYBS9FCIbP0dA5/
-         oa3vsNBRL5INc1YrMZZOhASakWhcymK2hlfILXzVQVX3YPJXxu4hNVx9ooz/8NPbqCy1
-         +ssWL2vZi0bFo/dw2km2EFS0lSz9EbJIuGs9PN4Sal7b56w7q0qjRni/QQCCgosuNJU+
-         C73w60ZwywjPEL2sPnv38iTEvmabWs3c0SHtY3mdMUcZIOBvWDDXjOKRpl3LtGrlKo6h
-         SYMkxyv+aKBMoXtA/dFRZqSnfbbVf6J5JgbWZ6T4189FWq/yp1vuP+MpK5ljWOnZkIQs
-         /2tA==
-X-Gm-Message-State: AOJu0YwzG2melny1fIpUbbUqAbPG5YD0EugHlo/uxnjojy3fWdndrw24
-	Tlbz2/is80mLY47iIEYS4r8B4mFcJ38bJ51TGFnpVxWK3HxsQu3ZChOyoaAFggQTkvYFfLNl/Sf
-	g
-X-Google-Smtp-Source: AGHT+IEAny64e0b3pZnjlQMbzIHSsVa3XfpY3C4HbM2fq2GxiPdap/yENUwG0LLhgiu5n9cmosKKhw==
-X-Received: by 2002:a05:6512:1296:b0:52e:933f:f1fa with SMTP id 2adb3069b0e04-5309b2e0b62mr9216514e87.61.1722335123150;
-        Tue, 30 Jul 2024 03:25:23 -0700 (PDT)
-Received: from localhost.localdomain (87-100-245-199.bb.dnainternet.fi. [87.100.245.199])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52fd5bc4a46sm1861969e87.17.2024.07.30.03.25.22
+        d=1e100.net; s=20230601; t=1722395534; x=1723000334;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G4ubRpJV+KlCTqqhT1COeqm2VOW91aAGrfBhykX3CiI=;
+        b=NkSn/ZyQ/C/CCnxtBcOkdvRKSTunDe2ZAf3rRsVC3SoeYJgpTJlBL1H242dmreuvgZ
+         GVFiUs461w5TiShwdh1P/tLjWUAKzPJWMI0EDtv/lU4uWQd4c02bd32JEVwfq7qGYCrH
+         C+OZglq+PHHzAxwPRXW7tfwRn92/6ah287kg0jmmm4XSWH8822UsOx9/6RrAyNaBmb+K
+         UMYoACBiZMS3Z2QJ6ProYl+klvylbXziEEezLe3JH8r+Mu4I7katfBb4QNfykSfmp8aV
+         fPuieJkJOXOxmzUxRsHZtWKjgQlf8xxhryp2i0DMEtDbY+WveMxCT8a1t7Jxx1VscHSH
+         qPKQ==
+X-Gm-Message-State: AOJu0Yz96oM2lYNucYnEk9FZc2lCDvTaDrucAFRYppNNviDuTg2PbY1Y
+	dpwD+9SQWQPrYGvMZilPzsFUPkBMpKhV4Uxa455ZsDsYfxMxky4uRfelvoovwQ==
+X-Google-Smtp-Source: AGHT+IFlKYD+SS/6HtrihNYcLt5oz4Y8IG/GLYGuHalWWBsWuQswnfB1isEmMqsuBTXde7D3/ebJdA==
+X-Received: by 2002:a05:620a:1a9e:b0:7a2:c2a:c9f8 with SMTP id af79cd13be357-7a20c2acbebmr48444485a.1.1722395534090;
+        Tue, 30 Jul 2024 20:12:14 -0700 (PDT)
+Received: from kudzu.us ([136.54.20.50])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a1f9149e2esm220567485a.17.2024.07.30.20.12.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jul 2024 03:25:22 -0700 (PDT)
-From: Mikko Rapeli <mikko.rapeli@linaro.org>
-To: meta-arm@lists.yoctoproject.org
-Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
-Subject: [PATCH v2 3/4] optee-os-tadevkit: remove buildpaths INSANE_SKIP
-Date: Tue, 30 Jul 2024 13:24:58 +0300
-Message-ID: <20240730102459.148826-3-mikko.rapeli@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240730102459.148826-1-mikko.rapeli@linaro.org>
-References: <20240730102459.148826-1-mikko.rapeli@linaro.org>
+        Tue, 30 Jul 2024 20:12:13 -0700 (PDT)
+Date: Tue, 30 Jul 2024 23:12:12 -0400
+From: Jon Mason <jdmason@kudzu.us>
+To: Mikko Rapeli <mikko.rapeli@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [PATCH 1/4] optee-os: asm debug prefix fixes
+Message-ID: <ZqmrjL-EKud5PJSn@kudzu.us>
+References: <20240718134152.38721-1-mikko.rapeli@linaro.org>
+ <ZqizD72goWGzQjGw@nuoska>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZqizD72goWGzQjGw@nuoska>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 30 Jul 2024 10:25:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5930
+ <meta-arm@lists.yoctoproject.org>; Wed, 31 Jul 2024 03:12:25 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5932
 
-Embedded build paths are now removed and test passes.
+On Tue, Jul 30, 2024 at 12:31:59PM +0300, Mikko Rapeli wrote:
+> Hi,
+> 
+> Is there something in these patches that is not ok for merging?
 
-Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
----
- meta-arm/recipes-security/optee/optee-os-tadevkit_4.2.0.bb | 3 ---
- 1 file changed, 3 deletions(-)
+Sorry for the delay.
 
-diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_4.2.0.bb b/meta-arm/recipes-security/optee/optee-os-tadevkit_4.2.0.bb
-index 961d5251..2e43254a 100644
---- a/meta-arm/recipes-security/optee/optee-os-tadevkit_4.2.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_4.2.0.bb
-@@ -20,9 +20,6 @@ do_deploy() {
- 
- FILES:${PN} = "${includedir}/optee/"
- 
--# Build paths are currently embedded
--INSANE_SKIP:${PN}-dev += "buildpaths"
--
- # Include extra headers needed by SPMC tests to TA DEVKIT.
- # Supported after op-tee v3.20
- EXTRA_OEMAKE:append = "${@bb.utils.contains('MACHINE_FEATURES', 'optee-spmc-test', \
--- 
-2.34.1
+Something in CI was breaking and I was trying to isolate it to the
+individual patches, but the CI I'm running that is publicly available
+has been having issues (which I think are now resolved) and the
+internal one has been bogged down with a large number of reviews.
 
+v2 that you just sent is now in master-next and hopefully will be
+happy when I get up tomorrow morning.
+
+Thanks,
+Jon
+
+> 
+> I'm following up the build paths patch with upstream.
+> 
+> Cheers,
+> 
+> -Mikko
+> 
 
