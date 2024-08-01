@@ -1,146 +1,147 @@
-Return-Path: <mikko.rapeli@linaro.org>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CDFC3DA64
-	for <webhook@archiver.kernel.org>; Thu,  1 Aug 2024 09:06:35 +0000 (UTC)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
- by mx.groups.io with SMTP id smtpd.web10.63905.1722503192556433713
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB2AC3DA64
+	for <webhook@archiver.kernel.org>; Thu,  1 Aug 2024 14:37:07 +0000 (UTC)
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+ by mx.groups.io with SMTP id smtpd.web10.70006.1722523018770693262
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 01 Aug 2024 02:06:32 -0700
+ Thu, 01 Aug 2024 07:36:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=cSHWCggk;
- spf=pass (domain: linaro.org, ip: 209.85.167.51, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52fc14d6689so7099555e87.1
-        for <meta-arm@lists.yoctoproject.org>; Thu, 01 Aug 2024 02:06:32 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=3E0hrYiY;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.170, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-44fdcd7a622so34999881cf.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 01 Aug 2024 07:36:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722503191; x=1723107991; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9+EqgW5YgfJwSS4usWK8XcSrw6WKvxEZe1Rx8v9zl0Q=;
-        b=cSHWCggkKphXOY+IzY5rpdeRNGbYzF9GbxMFGNSdu4eM0nTWVA8ngBte2+0nBce0dE
-         topZQ6Ctef/cuBubgyMkrt9694CWpnoxACxBOL2ftkWrSOqoVWSsXltkIPyMq/fBB1nv
-         YsCTVAezvT4QgnraRI6fy/1L+6OiHKdptOFI1h70ytGdEN0k8VR4ePz6DS8OMV+OgCyJ
-         36a1Rh4NchKkNvTVctd2ECsOpSir35R9dgrz+3ITz8lHj+Oj9E+rRV7xJAMp52StRh7n
-         a+Olw8nFuBak3t5PMmPLvPT+OiCmwHsKHQyt++/i22UyR2HFl33haLCBimOiNMqCCf/Y
-         8qjg==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1722523018; x=1723127818; darn=lists.yoctoproject.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Csz/tkh7/mq0Aqb4yjRDgyaRTXVMxH459vdas67T0/A=;
+        b=3E0hrYiYAmOxqUDymTLfpX8VQ0GBQ7Zv0ZJ+wyFBITXoE/vtxmAwTcOOGwqZ2B3Qzn
+         I+eZcV9U4m6bRIhIE+xbJ7PFqer43fIs3bKOVYJTsCGZy4YZRiT8ESCdUMDvJ2f4VLi8
+         ur1BsKrHqMLq6blBAsjoMp2ygjVzG/HEfZn752ws+fcTlDXCuOJK5Gm/EGpupsDzRXGs
+         75twphGzilgfwrefqwZ1qtX4aX5S7N6phQO/tvpUSJQaa/ZFGtSTvb3Y04lc0xbuxI71
+         MPy1Ea3EEZamkcrzNtBEG0sVuDdZWryKMstPoJpWgtqUh0OxkDDKcEq6/Cs/BIJrBSXJ
+         sNDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722503191; x=1723107991;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9+EqgW5YgfJwSS4usWK8XcSrw6WKvxEZe1Rx8v9zl0Q=;
-        b=uutAPIchK58cOS/REhDgtz5dJ+GdDst2tCxtkewcx0pjxgOEacR8I0sUNTqA6fPfSj
-         kEF/jHs3rv6gguYpx0M2UDOwV0SK1gr1Z0G6gcViG3u4TrSaH3egB80dvpn7Di2hRmnr
-         ItW4BJmLF90SFjcxRuGMdVv+UEM71jEbzepnRy6YiNd4GQHZZ7cE0O3BA4qj1yAI3LhG
-         T3k4MuLq71/00BT+sQNi0RqvLpIUpF4GMH1YQNA0i+GgVVO5rvCltE+iDraINymq5YCV
-         bRAa2fl10hjzOg5miX6qdJF/Vfd6pxS8UohBV1zPLdoP9O4f8eGDOckrN4S+9kur2bnE
-         JOSw==
-X-Gm-Message-State: AOJu0YzLbABrzSxUrbKGRQ+resc1566IuEnYKEtlJaH+xirSlEN1tag+
-	q7IlMnO36Rl7M8B5HjFtJJkIzSNfkSvVvIqwCltReOmo70mlte4h2VlChq2M64B1puVNxToBOZJ
-	B
-X-Google-Smtp-Source: AGHT+IHlgwM3QIx7hncFkYlwBUG5hf7YkPxf5J0a5KuWeSWfN6Dls/NTMpeu3Stwml6auQ0LueaNKA==
-X-Received: by 2002:a05:6512:baa:b0:52c:dba6:b4c8 with SMTP id 2adb3069b0e04-530b61aebe2mr1539899e87.13.1722503190566;
-        Thu, 01 Aug 2024 02:06:30 -0700 (PDT)
-Received: from localhost.localdomain (drt4d6yyyyyyyyyyyyhlt-3.rev.dnainternet.fi. [2001:14ba:7430:3d00::193])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52fd5c19fa9sm2504957e87.223.2024.08.01.02.06.29
+        d=1e100.net; s=20230601; t=1722523018; x=1723127818;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Csz/tkh7/mq0Aqb4yjRDgyaRTXVMxH459vdas67T0/A=;
+        b=brJaREF+rVhl5RUQPKa8T2GVdNHc30km+0+YHwOETBnAjevfFLF3hXLzx3Pc59PqpQ
+         yzzPmR6Uu9WS6KcMkObPmyaNtlxB9q9Iw8XMyPMWFImI/eYLXXkbwXdNI3vcWmnF4XKi
+         1mcDiyEbqYnb7JEqrJ6e1/aDDJsm+0INFYKXzS61045XRsfFD3J4/Ez6DFXfsyRvJZTV
+         I3izhGTzvChEIfKIPtiZhTp3zvzqM5LFAV18jX63MCK1y8QH6pWQNVmJadMqu2l3lWiJ
+         Yn5OBJLkVFa9LPBIubkyLVZyH74zEAKnpDm+6qG1FVZW6fgBClIrghUQDzWvY6ISITct
+         PoVw==
+X-Gm-Message-State: AOJu0YydoPAhP3zvL97nTWLsBrCNKFflnz/lGj215sqIRFWD73gqFD6X
+	ymdNccPkwCCHDEAln8Ux1YBray445hqjYZfeh5Lbt7gT97LEuAU2FTPK05j2Yg==
+X-Google-Smtp-Source: AGHT+IFl2cRkKOrJqOZ48e7NBCjXey7Wi3qBIR+VWLq/lvajbbDi1Xr9BJ2asUDtSZ17sCnaxjWc5A==
+X-Received: by 2002:a05:6214:5c03:b0:6b7:ad38:2df3 with SMTP id 6a1803df08f44-6bb98476820mr3950726d6.39.1722523017510;
+        Thu, 01 Aug 2024 07:36:57 -0700 (PDT)
+Received: from kudzu.us ([136.54.20.50])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb3fa94e63sm85425426d6.76.2024.08.01.07.36.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Aug 2024 02:06:29 -0700 (PDT)
-From: Mikko Rapeli <mikko.rapeli@linaro.org>
-To: meta-arm@lists.yoctoproject.org
-Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
-Subject: [PATCH][master-next] optee-os: fix buildpaths QA failure on corstone1000
-Date: Thu,  1 Aug 2024 12:05:58 +0300
-Message-ID: <20240801090558.43415-1-mikko.rapeli@linaro.org>
-X-Mailer: git-send-email 2.45.2
+        Thu, 01 Aug 2024 07:36:57 -0700 (PDT)
+Date: Thu, 1 Aug 2024 10:36:55 -0400
+From: Jon Mason <jdmason@kudzu.us>
+To: Javier Tia <javier.tia@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, Mikko Rapeli <mikko.rapeli@linaro.org>,
+	Ross Burton <Ross.Burton@arm.com>
+Subject: Re: [PATCH v1 2/7] qemuarm64-secureboot: Introduce UEFI_SB_KEYS_DIR
+Message-ID: <Zqudh8VguOw6bgZ-@kudzu.us>
+References: <20240718203526.52214-1-javier.tia@linaro.org>
+ <20240718203526.52214-3-javier.tia@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240718203526.52214-3-javier.tia@linaro.org>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 01 Aug 2024 09:06:35 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5941
+ <meta-arm@lists.yoctoproject.org>; Thu, 01 Aug 2024 14:37:07 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5942
 
-Patch submitted upstream:
+On Thu, Jul 18, 2024 at 02:35:21PM -0600, Javier Tia wrote:
+> UEFI_SB_KEYS_DIR saves UEFI keys path.
+> 
+> To avoid security issues, UEFI keys are not provided and they can be
+> generated by gen_uefi_keys.sh script.
+> 
+> Signed-off-by: Javier Tia <javier.tia@linaro.org>
 
-https://github.com/OP-TEE/optee_os/pull/6974
+Running CI on this series and seeing failures on all qemuarm64-secureboot machines with:
 
-Fixes:
+--- Error summary ---
+ERROR: Nothing PROVIDES 'core-image-base'
+core-image-base was skipped: Required missing keys: /builds/jonmason00/meta-arm/work/build/../../meta-arm/uefi-sb-keys/PK.esl, /builds/jonmason00/meta-arm/work/build/../../meta-arm/uefi-sb-keys/KEK.esl, /builds/jonmason00/meta-arm/work/build/../../meta-arm/uefi-sb-keys/dbx.esl, /builds/jonmason00/meta-arm/work/build/../../meta-arm/uefi-sb-keys/db.esl, /builds/jonmason00/meta-arm/work/build/../../meta-arm/uefi-sb-keys/db.key, /builds/jonmason00/meta-arm/work/build/../../meta-arm/uefi-sb-keys/db.crt.
+Run /builds/jonmason00/meta-arm/work/build/../../meta-arm/uefi-sb-keys/gen_uefi_keys.sh to generate missing keys.
 
-https://gitlab.com/jonmason00/meta-arm/-/jobs/7472950159
+See https://gitlab.com/jonmason00/meta-arm/-/jobs/7473619852
 
-ERROR: mc:firmware:optee-os-4.2.0-r0 do_package_qa: QA Issue: File /lib/firmware/tee.elf in package optee-os contains reference to TMPDIR [buildpaths]
 
-Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
----
- ...rnel-link.mk-remove-all-debug-flags-.patch | 46 +++++++++++++++++++
- .../recipes-security/optee/optee-os_4.2.0.bb  |  1 +
- 2 files changed, 47 insertions(+)
- create mode 100644 meta-arm/recipes-security/optee/optee-os/0001-core-arch-arm-kernel-link.mk-remove-all-debug-flags-.patch
-
-diff --git a/meta-arm/recipes-security/optee/optee-os/0001-core-arch-arm-kernel-link.mk-remove-all-debug-flags-.patch b/meta-arm/recipes-security/optee/optee-os/0001-core-arch-arm-kernel-link.mk-remove-all-debug-flags-.patch
-new file mode 100644
-index 00000000..45045490
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os/0001-core-arch-arm-kernel-link.mk-remove-all-debug-flags-.patch
-@@ -0,0 +1,46 @@
-+From 79f9b7f933b16dcb04710a9314a92a3d10561f53 Mon Sep 17 00:00:00 2001
-+From: Mikko Rapeli <mikko.rapeli@linaro.org>
-+Date: Thu, 1 Aug 2024 09:30:17 +0100
-+Subject: [PATCH] core/arch/arm/kernel/link.mk: remove all debug flags from
-+ version.o
-+
-+Default debug flag -g3 was already getting removed from
-+version-o-cflags but on corstone1000 platform-cflags-debug-info
-+is set to -gdwarf-2 and thus debug info was included in the
-+generated version.o. This then included full absolute build
-+time path which breaks "buildpaths" yocto QA check since the path
-+is also in final tee.elf binary. Remove all debug flags from
-+version-o-cflags as a fix/workaround.
-+
-+Fixes yocto build reproducibility issues on corstone1000:
-+
-+https://gitlab.com/jonmason00/meta-arm/-/jobs/7472950196
-+
-+Cc: Jon Mason <jon.mason@arm.com>
-+Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
-+---
-+ core/arch/arm/kernel/link.mk | 6 ++++--
-+ 1 file changed, 4 insertions(+), 2 deletions(-)
-+
-+Upstream-Status: Submitted [https://github.com/OP-TEE/optee_os/pull/6974]
-+
-+diff --git a/core/arch/arm/kernel/link.mk b/core/arch/arm/kernel/link.mk
-+index 49e9f4fa1..85fcf0e86 100644
-+--- a/core/arch/arm/kernel/link.mk
-++++ b/core/arch/arm/kernel/link.mk
-+@@ -150,8 +150,10 @@ define update-buildcount
-+ 	fi
-+ endef
-+ 
-+-# filter-out to workaround objdump warning
-+-version-o-cflags = $(filter-out -g3,$(core-platform-cflags) \
-++# filter-out to workaround objdump warning and to
-++# remove build time paths
-++version-o-cflags = $(filter-out \
-++	$(platform-cflags-debug-info),$(core-platform-cflags) \
-+ 			$(platform-cflags) $(cflagscore))
-+ # SOURCE_DATE_EPOCH defined for reproducible builds
-+ ifneq ($(SOURCE_DATE_EPOCH),)
-+-- 
-+2.34.1
-+
-diff --git a/meta-arm/recipes-security/optee/optee-os_4.2.0.bb b/meta-arm/recipes-security/optee/optee-os_4.2.0.bb
-index cee024af..c309efa7 100644
---- a/meta-arm/recipes-security/optee/optee-os_4.2.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-os_4.2.0.bb
-@@ -9,4 +9,5 @@ SRC_URI += " \
-     file://0003-optee-enable-clang-support.patch \
-     file://0001-checkconf.mk-do-not-use-full-path-to-generate-guard-.patch \
-     file://0001-mk-compile.mk-remove-absolute-build-time-paths.patch \
-+    file://0001-core-arch-arm-kernel-link.mk-remove-all-debug-flags-.patch \
- "
--- 
-2.34.1
-
+> ---
+>  meta-arm/conf/layer.conf               |  2 ++
+>  meta-arm/uefi-sb-keys/gen_uefi_keys.sh | 35 ++++++++++++++++++++++++++
+>  2 files changed, 37 insertions(+)
+>  create mode 100755 meta-arm/uefi-sb-keys/gen_uefi_keys.sh
+> 
+> diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+> index 9e9c9dbd..2854dd69 100644
+> --- a/meta-arm/conf/layer.conf
+> +++ b/meta-arm/conf/layer.conf
+> @@ -21,3 +21,5 @@ HOSTTOOLS_NONFATAL += "telnet"
+>  addpylib ${LAYERDIR}/lib oeqa
+>  
+>  WARN_QA:append:layer-meta-arm = " patch-status"
+> +
+> +UEFI_SB_KEYS_DIR ??= "${LAYERDIR}/uefi-sb-keys"
+> \ No newline at end of file
+> diff --git a/meta-arm/uefi-sb-keys/gen_uefi_keys.sh b/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
+> new file mode 100755
+> index 00000000..fc7f25c9
+> --- /dev/null
+> +++ b/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
+> @@ -0,0 +1,35 @@
+> +#/bin/sh
+> +
+> +set -eux
+> +
+> +#Create PK
+> +openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout PK.key -out PK.crt -nodes -days 3650
+> +cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc PK.crt PK.esl
+> +sign-efi-sig-list -c PK.crt -k PK.key PK PK.esl PK.auth
+> +
+> +#Create KEK
+> +openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout KEK.key -out KEK.crt -nodes -days 3650
+> +cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc KEK.crt KEK.esl
+> +sign-efi-sig-list -c PK.crt -k PK.key KEK KEK.esl KEK.auth
+> +
+> +#Create DB
+> +openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout db.key -out db.crt -nodes -days 3650
+> +cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc db.crt db.esl
+> +sign-efi-sig-list -c KEK.crt -k KEK.key db db.esl db.auth
+> +
+> +#Create DBX
+> +openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout dbx.key -out dbx.crt -nodes -days 3650
+> +cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc dbx.crt dbx.esl
+> +sign-efi-sig-list -c KEK.crt -k KEK.key dbx dbx.esl dbx.auth
+> +
+> +#Sign image
+> +#sbsign --key db.key --cert db.crt Image
+> +
+> +#Digest image
+> +#hash-to-efi-sig-list Image db_Image.hash
+> +#sign-efi-sig-list -c KEK.crt -k KEK.key db db_Image.hash db_Image.auth
+> +
+> +#Empty cert for testing
+> +touch noPK.esl
+> +sign-efi-sig-list -c PK.crt -k PK.key PK noPK.esl noPK.auth
+> +
+> -- 
+> 2.45.2
+> 
+> 
 
