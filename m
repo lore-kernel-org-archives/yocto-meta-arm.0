@@ -1,98 +1,314 @@
-Return-Path: <mikko.rapeli@linaro.org>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82931C3DA4A
-	for <webhook@archiver.kernel.org>; Fri,  2 Aug 2024 12:27:43 +0000 (UTC)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
- by mx.groups.io with SMTP id smtpd.web10.91661.1722601653870655505
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6843C52D6F
+	for <webhook@archiver.kernel.org>; Fri,  2 Aug 2024 18:25:42 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.2484.1722623133390322031
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 02 Aug 2024 05:27:34 -0700
+ Fri, 02 Aug 2024 11:25:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=G6j69CcD;
- spf=pass (domain: linaro.org, ip: 209.85.167.46, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52efba36802so13217594e87.2
-        for <meta-arm@lists.yoctoproject.org>; Fri, 02 Aug 2024 05:27:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1722601652; x=1723206452; darn=lists.yoctoproject.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dChIH5MjGicHILbDGhkchdIxUbXzrOZffcc2pi9dn4Y=;
-        b=G6j69CcDAbYVEVlGpsNtdDAmp8LQ2ISRPaUYvN7m/kXPhFdBUnfffymjlLBQpev80O
-         H1lx+SqjFPCHfhnDOdsNCqgrW1WIqDY8I9QWfsdk+yQoJ1ATGV4fWhGJmUQmtzwN1mJ6
-         OP6K3Ockt8AkBzJYKGh8eHG1LR5mraFCYAkvjidiYzAMByaB79OFV+K8mmRokQSf40sz
-         ipiFbUvBPsZg2Q81n5mbZrZpDMcCbAbhRcIiPgcIDz4OfSopB/Av2ZLa7+F9d7A/fAzi
-         IdoQWPUkojWK6xgXey2X0n1/bvl9l7e7XIZOzkt67bfz+ztRWNtn8nFG7NyZoI62v60E
-         U4Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722601652; x=1723206452;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dChIH5MjGicHILbDGhkchdIxUbXzrOZffcc2pi9dn4Y=;
-        b=WumoYmHVyOqiyXdc3PhwbINRdt9G++r7nVBzOEShrF7sCIC70nTBSz8ddqRG4N2KcP
-         oBF0KN/IgIRcQhYhqABI/R+sTA/edhyhMxOeqqUd6ENb7tw7I5D8OYtvBgtJNGkX6k/H
-         xn4X60bzaBvxMw6ekDh+rrXznwSqHl4OvJqH4GcrY78kz5yPPUidtfxvrI5TVGBgqrz9
-         9EDAH184p7Mpbyry0qvIFLRe317g+o/c75sQv2QPYiVfhehiYDdyQ06MnPDf3nObkk8N
-         j061g+A1TmmxHu8a/MtxA+NK3S9gwkyp35Qd9bGaV9KEaalYXJrnLItJBPj4aNZAw7S7
-         K9AA==
-X-Gm-Message-State: AOJu0Yy5lKqtChUnRyyo+EiaOG4B3qB38GUr+w1rrGv7ZoJxUYypaR92
-	GUX7gjAt+6+6/+augh2hpgFpCeOujMY+SuCmu0w8w1g0n3fugEzqVXuOk+StAqo=
-X-Google-Smtp-Source: AGHT+IEVGfH9ECEx6LnbnPQIPt9SzeKPHFxP9AZvPhR565ePGow58a48iQuBNbMjwKluNZPpZzDPEA==
-X-Received: by 2002:a05:6512:2805:b0:52c:898b:a180 with SMTP id 2adb3069b0e04-530bb3667ddmr2394586e87.12.1722601651836;
-        Fri, 02 Aug 2024 05:27:31 -0700 (PDT)
-Received: from nuoska (87-100-245-199.bb.dnainternet.fi. [87.100.245.199])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-530bba2a0dasm213085e87.121.2024.08.02.05.27.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Aug 2024 05:27:30 -0700 (PDT)
-Date: Fri, 2 Aug 2024 15:27:29 +0300
-From: Mikko Rapeli <mikko.rapeli@linaro.org>
-To: Jon Mason <jdmason@kudzu.us>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [PATCH][master-next] optee-os: fix buildpaths QA failure on
- corstone1000
-Message-ID: <ZqzQsZ-6tZCCM0nG@nuoska>
-References: <20240801090558.43415-1-mikko.rapeli@linaro.org>
- <Zqul7Gx37jYcgI0o@kudzu.us>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81E45DA7
+	for <meta-arm@lists.yoctoproject.org>; Fri,  2 Aug 2024 11:25:58 -0700 (PDT)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1AB2E3F766
+	for <meta-arm@lists.yoctoproject.org>; Fri,  2 Aug 2024 11:25:31 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/4] arm-bsp/fvp-base: u-boot patch clean-up
+Date: Fri,  2 Aug 2024 14:25:22 -0400
+Message-Id: <20240802182525.80611-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zqul7Gx37jYcgI0o@kudzu.us>
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 02 Aug 2024 12:27:43 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5946
+ <meta-arm@lists.yoctoproject.org>; Fri, 02 Aug 2024 18:25:42 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5947
 
-Hi,
+Move the fvp-base unique u-boot patches to the proper nested directory
+and rename them to match convention (devtool style).
 
-On Thu, Aug 01, 2024 at 11:12:44AM -0400, Jon Mason wrote:
-> On Thu, Aug 01, 2024 at 12:05:58PM +0300, Mikko Rapeli wrote:
-> > Patch submitted upstream:
-> > 
-> > https://github.com/OP-TEE/optee_os/pull/6974
-> > 
-> > Fixes:
-> > 
-> > https://gitlab.com/jonmason00/meta-arm/-/jobs/7472950159
-> > 
-> > ERROR: mc:firmware:optee-os-4.2.0-r0 do_package_qa: QA Issue: File /lib/firmware/tee.elf in package optee-os contains reference to TMPDIR [buildpaths]
-> > 
-> > Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
-> 
-> This patch fixes the issue and CI on master-next is now green (but I
-> had to run this internally since my externally visible CI is behind).
-> However, after looking at the progress being made in https://github.com/OP-TEE/optee_os/pull/6974
-> It might be best to wait on the solution in there and backport that.
-> Given the responsiveness of J�r�me Forissier and yourself, I expect it
-> should happen in the next few hours.
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ .../recipes-bsp/u-boot/u-boot-fvp-base.inc    |  3 +-
+ ...-wfe-definitions-to-common-Arm-heade.patch | 84 ++++++++++++++++
+ ...c_timer-Use-event-stream-for-udelay.patch} | 98 ++-----------------
+ 3 files changed, 94 insertions(+), 91 deletions(-)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0004-=
+arm-Move-sev-and-wfe-definitions-to-common-Arm-heade.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/{tick.patch =3D> fvp-base/=
+0005-armv8-generic_timer-Use-event-stream-for-udelay.patch} (53%)
 
-Took a bit longer but v2 is now out with patches approved and merged
-upstream.
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc b/meta-a=
+rm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
+index 9f8c178a29ef..1bde9c64944a 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
+@@ -4,5 +4,6 @@ SRC_URI:append =3D " \
+     file://0001-vexpress64-Set-the-DM_RNG-property.patch \
+     file://0002-vexpress64-Select-PSCI-RESET-by-default.patch \
+     file://0003-vexpress64-Imply-CONFIG_ARM64_CRC32-by-default.patch \
+-    file://tick.patch \
++    file://0004-arm-Move-sev-and-wfe-definitions-to-common-Arm-heade.pat=
+ch \
++    file://0005-armv8-generic_timer-Use-event-stream-for-udelay.patch \
+     "
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0004-arm-Mov=
+e-sev-and-wfe-definitions-to-common-Arm-heade.patch b/meta-arm-bsp/recipe=
+s-bsp/u-boot/u-boot/fvp-base/0004-arm-Move-sev-and-wfe-definitions-to-com=
+mon-Arm-heade.patch
+new file mode 100644
+index 000000000000..088b4dccb5b3
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0004-arm-Move-sev-a=
+nd-wfe-definitions-to-common-Arm-heade.patch
+@@ -0,0 +1,84 @@
++From b18a3c183d20812933d192d4b0d622b11ef2bf29 Mon Sep 17 00:00:00 2001
++From: Peter Hoyes <Peter.Hoyes@arm.com>
++Date: Wed, 1 May 2024 09:16:32 +0100
++Subject: [PATCH] arm: Move sev() and wfe() definitions to common Arm hea=
+der
++ file
++
++The sev() and wfe() asm macros are currently defined only for
++mach-exynos. As these are common Arm instructions, move them to the
++common asm/system.h header file, for both Armv7 and Armv8, so they
++can be used by other machines.
++
++wfe may theoretically trigger a context switch if an interrupt occurs
++so add a memory barrier to this call.
++
++Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
++Reviewed-by: Andre Przywara<andre.przywara@arm.com>
++
++Upstream-Status: Backport
++Signed-off-by: Ross Burton <ross.burton@arm.com>
++---
++ arch/arm/include/asm/system.h              |  9 +++++++++
++ arch/arm/mach-exynos/include/mach/system.h | 19 -------------------
++ 2 files changed, 9 insertions(+), 19 deletions(-)
++
++diff --git a/arch/arm/include/asm/system.h b/arch/arm/include/asm/system=
+.h
++index 43f7503571d7..51123c296843 100644
++--- a/arch/arm/include/asm/system.h
+++++ b/arch/arm/include/asm/system.h
++@@ -154,6 +154,13 @@ enum dcache_option {
++ 	"wfi" : : : "memory");		\
++ 	})
++=20
+++#define wfe()				\
+++	({asm volatile(			\
+++	"wfe" : : : "memory");		\
+++	})
+++
+++#define sev() asm volatile("sev")
+++
++ static inline unsigned int current_el(void)
++ {
++ 	unsigned long el;
++@@ -369,6 +376,8 @@ void switch_to_hypervisor_ret(void);
++=20
++ #ifdef __ARM_ARCH_7A__
++ #define wfi() __asm__ __volatile__ ("wfi" : : : "memory")
+++#define wfe() __asm__ __volatile__ ("wfe" : : : "memory")
+++#define sev() __asm__ __volatile__ ("sev")
++ #else
++ #define wfi()
++ #endif
++diff --git a/arch/arm/mach-exynos/include/mach/system.h b/arch/arm/mach-=
+exynos/include/mach/system.h
++index 5d0bebac5733..0aed4c3e2bf6 100644
++--- a/arch/arm/mach-exynos/include/mach/system.h
+++++ b/arch/arm/mach-exynos/include/mach/system.h
++@@ -36,25 +36,6 @@ struct exynos5_sysreg {
++=20
++ #define USB20_PHY_CFG_HOST_LINK_EN	(1 << 0)
++=20
++-/*
++- * This instruction causes an event to be signaled to all cores
++- * within a multiprocessor system. If SEV is implemented,
++- * WFE must also be implemented.
++- */
++-#define sev() __asm__ __volatile__ ("sev\n\t" : : );
++-/*
++- * If the Event Register is not set, WFE suspends execution until
++- * one of the following events occurs:
++- * - an IRQ interrupt, unless masked by the CPSR I-bit
++- * - an FIQ interrupt, unless masked by the CPSR F-bit
++- * - an Imprecise Data abort, unless masked by the CPSR A-bit
++- * - a Debug Entry request, if Debug is enabled
++- * - an Event signaled by another processor using the SEV instruction.
++- * If the Event Register is set, WFE clears it and returns immediately.
++- * If WFE is implemented, SEV must also be implemented.
++- */
++-#define wfe() __asm__ __volatile__ ("wfe\n\t" : : );
++-
++ /* Move 0xd3 value to CPSR register to enable SVC mode */
++ #define svc32_mode_en() __asm__ __volatile__				\
++ 			("@ I&F disable, Mode: 0x13 - SVC\n\t"		\
++--=20
++2.30.2
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/tick.patch b/meta-arm=
+-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0005-armv8-generic_timer-Use-even=
+t-stream-for-udelay.patch
+similarity index 53%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/tick.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0005-armv8-gene=
+ric_timer-Use-event-stream-for-udelay.patch
+index 370bc2745914..ac29b463cd01 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/tick.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0005-armv8-generic_=
+timer-Use-event-stream-for-udelay.patch
+@@ -1,92 +1,7 @@
+-From b18a3c183d20812933d192d4b0d622b11ef2bf29 Mon Sep 17 00:00:00 2001
+-From: Peter Hoyes <Peter.Hoyes@arm.com>
+-Date: Wed, 1 May 2024 09:16:32 +0100
+-Subject: [PATCH 1/2] arm: Move sev() and wfe() definitions to common Arm
+- header file
+-
+-The sev() and wfe() asm macros are currently defined only for
+-mach-exynos. As these are common Arm instructions, move them to the
+-common asm/system.h header file, for both Armv7 and Armv8, so they
+-can be used by other machines.
+-
+-wfe may theoretically trigger a context switch if an interrupt occurs
+-so add a memory barrier to this call.
+-
+-Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+-Reviewed-by: Andre Przywara<andre.przywara@arm.com>
+-
+-Upstream-Status: Backport
+-Signed-off-by: Ross Burton <ross.burton@arm.com>
+----
+- arch/arm/include/asm/system.h              |  9 +++++++++
+- arch/arm/mach-exynos/include/mach/system.h | 19 -------------------
+- 2 files changed, 9 insertions(+), 19 deletions(-)
+-
+-diff --git a/arch/arm/include/asm/system.h b/arch/arm/include/asm/system=
+.h
+-index 43f7503571..51123c2968 100644
+---- a/arch/arm/include/asm/system.h
+-+++ b/arch/arm/include/asm/system.h
+-@@ -154,6 +154,13 @@ enum dcache_option {
+- 	"wfi" : : : "memory");		\
+- 	})
+-=20
+-+#define wfe()				\
+-+	({asm volatile(			\
+-+	"wfe" : : : "memory");		\
+-+	})
+-+
+-+#define sev() asm volatile("sev")
+-+
+- static inline unsigned int current_el(void)
+- {
+- 	unsigned long el;
+-@@ -369,6 +376,8 @@ void switch_to_hypervisor_ret(void);
+-=20
+- #ifdef __ARM_ARCH_7A__
+- #define wfi() __asm__ __volatile__ ("wfi" : : : "memory")
+-+#define wfe() __asm__ __volatile__ ("wfe" : : : "memory")
+-+#define sev() __asm__ __volatile__ ("sev")
+- #else
+- #define wfi()
+- #endif
+-diff --git a/arch/arm/mach-exynos/include/mach/system.h b/arch/arm/mach-=
+exynos/include/mach/system.h
+-index 5d0bebac57..0aed4c3e2b 100644
+---- a/arch/arm/mach-exynos/include/mach/system.h
+-+++ b/arch/arm/mach-exynos/include/mach/system.h
+-@@ -36,25 +36,6 @@ struct exynos5_sysreg {
+-=20
+- #define USB20_PHY_CFG_HOST_LINK_EN	(1 << 0)
+-=20
+--/*
+-- * This instruction causes an event to be signaled to all cores
+-- * within a multiprocessor system. If SEV is implemented,
+-- * WFE must also be implemented.
+-- */
+--#define sev() __asm__ __volatile__ ("sev\n\t" : : );
+--/*
+-- * If the Event Register is not set, WFE suspends execution until
+-- * one of the following events occurs:
+-- * - an IRQ interrupt, unless masked by the CPSR I-bit
+-- * - an FIQ interrupt, unless masked by the CPSR F-bit
+-- * - an Imprecise Data abort, unless masked by the CPSR A-bit
+-- * - a Debug Entry request, if Debug is enabled
+-- * - an Event signaled by another processor using the SEV instruction.
+-- * If the Event Register is set, WFE clears it and returns immediately.
+-- * If WFE is implemented, SEV must also be implemented.
+-- */
+--#define wfe() __asm__ __volatile__ ("wfe\n\t" : : );
+--
+- /* Move 0xd3 value to CPSR register to enable SVC mode */
+- #define svc32_mode_en() __asm__ __volatile__				\
+- 			("@ I&F disable, Mode: 0x13 - SVC\n\t"		\
+---=20
+-2.34.1
+-
+-
+ From ebc84d7b60c1ed3398e9f600fe3dc8406500bd35 Mon Sep 17 00:00:00 2001
+ From: Peter Hoyes <Peter.Hoyes@arm.com>
+ Date: Wed, 1 May 2024 09:16:33 +0100
+-Subject: [PATCH 2/2] armv8: generic_timer: Use event stream for udelay
++Subject: [PATCH] armv8: generic_timer: Use event stream for udelay
+=20
+ Polling cntpct_el0 in a tight loop for delays is inefficient.
+ This is particularly apparent on Arm FVPs, which do not simulate
+@@ -105,6 +20,9 @@ board family.
+=20
+ Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+ Reviewed-by: Andre Przywara <andre.przywara@arm.com>
++
++Upstream-Status: Backport
++Signed-off-by: Ross Burton <ross.burton@arm.com>
+ ---
+  arch/arm/cpu/armv8/Kconfig         |  8 ++++++++
+  arch/arm/cpu/armv8/generic_timer.c | 27 +++++++++++++++++++++++++++
+@@ -112,7 +30,7 @@ Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+  3 files changed, 39 insertions(+), 2 deletions(-)
+=20
+ diff --git a/arch/arm/cpu/armv8/Kconfig b/arch/arm/cpu/armv8/Kconfig
+-index 9f0fb369f7..199335cd60 100644
++index 9f0fb369f773..199335cd6040 100644
+ --- a/arch/arm/cpu/armv8/Kconfig
+ +++ b/arch/arm/cpu/armv8/Kconfig
+ @@ -191,6 +191,14 @@ config ARMV8_EA_EL3_FIRST
+@@ -131,7 +49,7 @@ index 9f0fb369f7..199335cd60 100644
+  	bool "ARM64 Accelerated Cryptographic Algorithms"
+ =20
+ diff --git a/arch/arm/cpu/armv8/generic_timer.c b/arch/arm/cpu/armv8/gen=
+eric_timer.c
+-index e4aa5a4745..1de7ec596f 100644
++index e4aa5a474553..1de7ec596fc7 100644
+ --- a/arch/arm/cpu/armv8/generic_timer.c
+ +++ b/arch/arm/cpu/armv8/generic_timer.c
+ @@ -114,3 +114,30 @@ ulong timer_get_boot_us(void)
+@@ -166,7 +84,7 @@ index e4aa5a4745..1de7ec596f 100644
+ +}
+ +#endif
+ diff --git a/arch/arm/include/asm/system.h b/arch/arm/include/asm/system=
+.h
+-index 51123c2968..7e30cac32a 100644
++index 51123c296843..7e30cac32a09 100644
+ --- a/arch/arm/include/asm/system.h
+ +++ b/arch/arm/include/asm/system.h
+ @@ -69,8 +69,10 @@
+@@ -183,5 +101,5 @@ index 51123c2968..7e30cac32a 100644
+  /*
+   * HCR_EL2 bits definitions
+ --=20
+-2.34.1
++2.30.2
+=20
+--=20
+2.39.3 (Apple Git-146)
 
-Thanks!
-
--Mikko
 
