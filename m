@@ -1,82 +1,102 @@
-Return-Path: <mariam.elshakfy@arm.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 399E6C52D6F
-	for <webhook@archiver.kernel.org>; Wed,  7 Aug 2024 20:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FCBC52D6F
+	for <webhook@archiver.kernel.org>; Thu,  8 Aug 2024 14:53:08 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.44222.1723063434283703390
+ by mx.groups.io with SMTP id smtpd.web11.61986.1723128786183125897
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 07 Aug 2024 13:43:54 -0700
+ Thu, 08 Aug 2024 07:53:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: mariam.elshakfy@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62B85FEC;
-	Wed,  7 Aug 2024 13:44:19 -0700 (PDT)
-Received: from Ubuntu.arm.com (unknown [10.57.95.92])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1930A3F766;
-	Wed,  7 Aug 2024 13:43:52 -0700 (PDT)
-From: mariam.elshakfy@arm.com
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBDC31042
+	for <meta-arm@lists.yoctoproject.org>; Thu,  8 Aug 2024 07:53:30 -0700 (PDT)
+Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id ACC583F766
+	for <meta-arm@lists.yoctoproject.org>; Thu,  8 Aug 2024 07:53:04 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Mariam Elshakfy <mariam.elshakfy@arm.com>
-Subject: [PATCH] arm/trusted-services: Move ts-newlib compilation fix to meta-arm
-Date: Wed,  7 Aug 2024 21:43:43 +0100
-Message-Id: <20240807204343.4267-1-mariam.elshakfy@arm.com>
+Subject: [PATCH] arm-bsp/linux-yocto: update for linux 6.10
+Date: Thu,  8 Aug 2024 15:52:59 +0100
+Message-Id: <20240808145259.2155425-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 07 Aug 2024 20:44:02 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5957
+ <meta-arm@lists.yoctoproject.org>; Thu, 08 Aug 2024 14:53:08 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5958
 
-From: Mariam Elshakfy <mariam.elshakfy@arm.com>
+CONFIG_FB_ARMCLCD is long obsolete, has been replaced with a DRM driver
+enabled by CONFIG_DRM_PL111, and was removed in 6.8.
 
-This change moves ts-newlib compilation fix from
-meta-arm-bsp to meta-arm, as this compilation failure
-is not specific to meta-arm-bsp platforms.
+CONFIG_THERMAL_WRITABLE_TRIPS was removed in 6.9.
 
-Signed-off-by: Mariam Elshakfy <mariam.elshakfy@arm.com>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../recipes-security/trusted-services/ts-newlib_%.bbappend     | 1 -
- meta-arm/recipes-security/trusted-services/ts-newlib_4.1.0.bb  | 3 +++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ .../linux/arm-platforms-kmeta/bsp/arm-platforms/fvp/fvp-drm.cfg | 1 -
+ .../arm-platforms-kmeta/bsp/arm-platforms/juno/juno-drm.cfg     | 2 +-
+ .../arm-platforms-kmeta/bsp/arm-platforms/juno/juno-fb.cfg      | 1 -
+ .../arm-platforms-kmeta/bsp/arm-platforms/juno/juno-thermal.cfg | 1 -
+ 4 files changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-newlib_%.b=
-bappend b/meta-arm-bsp/recipes-security/trusted-services/ts-newlib_%.bbap=
-pend
-index e861426a..708f5986 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/ts-newlib_%.bbappend
-+++ b/meta-arm-bsp/recipes-security/trusted-services/ts-newlib_%.bbappend
-@@ -4,6 +4,5 @@ COMPATIBLE_MACHINE:corstone1000 =3D "corstone1000"
- SRC_URI:append:corstone1000 =3D " \
-   file://0001-newlib-memcpy-remove-optimized-version.patch;patchdir=3D..=
-/newlib \
- "
--export NEWLIB_CFLAGS_TARGET =3D "-Wno-implicit-function-declaration -Wno=
--int-conversion"
-=20
- COMPATIBLE_MACHINE:fvp-base =3D "fvp-base"
-diff --git a/meta-arm/recipes-security/trusted-services/ts-newlib_4.1.0.b=
-b b/meta-arm/recipes-security/trusted-services/ts-newlib_4.1.0.bb
-index 669e87ae..866276b3 100644
---- a/meta-arm/recipes-security/trusted-services/ts-newlib_4.1.0.bb
-+++ b/meta-arm/recipes-security/trusted-services/ts-newlib_4.1.0.bb
-@@ -20,6 +20,9 @@ EXTRA_OECMAKE +=3D '-DNEWLIB_SOURCE_DIR=3D${WORKDIR}/gi=
-t/newlib \
-=20
- OECMAKE_SOURCEPATH =3D "${S}/deployments/newlib/${TS_ENV}/"
-=20
-+# Silence compilation errors from GCC 14.1 due to stricter code validati=
-on
-+export NEWLIB_CFLAGS_TARGET =3D "-Wno-implicit-function-declaration -Wno=
--int-conversion"
-+
- # TS ships a patch that needs to be applied to newlib
- apply_ts_patch() {
-     ( cd ${WORKDIR}/git/newlib;    git stash; git branch -f bf_am; git a=
-m ${S}/external/newlib/*.patch; git reset bf_am )
+diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/ar=
+m-platforms/fvp/fvp-drm.cfg b/meta-arm-bsp/recipes-kernel/linux/arm-platf=
+orms-kmeta/bsp/arm-platforms/fvp/fvp-drm.cfg
+index 77133a9d..0a6e3f67 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
+orms/fvp/fvp-drm.cfg
++++ b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
+orms/fvp/fvp-drm.cfg
+@@ -2,4 +2,3 @@
+ CONFIG_DRM=3Dy
+ CONFIG_DRM_PL111=3Dy
+ CONFIG_FB=3Dy
+-CONFIG_FB_ARMCLCD=3Dy
+diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/ar=
+m-platforms/juno/juno-drm.cfg b/meta-arm-bsp/recipes-kernel/linux/arm-pla=
+tforms-kmeta/bsp/arm-platforms/juno/juno-drm.cfg
+index 12162979..7b225083 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
+orms/juno/juno-drm.cfg
++++ b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
+orms/juno/juno-drm.cfg
+@@ -1,5 +1,5 @@
+ CONFIG_DRM=3Dy
+ CONFIG_DRM_HDLCD=3Dy
++CONFIG_DRM_PL111=3Dy
+ CONFIG_DRM_I2C_NXP_TDA998X=3Dy
+ CONFIG_FB=3Dy
+-CONFIG_FB_ARMCLCD=3Dy
+diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/ar=
+m-platforms/juno/juno-fb.cfg b/meta-arm-bsp/recipes-kernel/linux/arm-plat=
+forms-kmeta/bsp/arm-platforms/juno/juno-fb.cfg
+index 59499fa6..ba143a0a 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
+orms/juno/juno-fb.cfg
++++ b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
+orms/juno/juno-fb.cfg
+@@ -1,4 +1,3 @@
+ CONFIG_FB=3Dy
+-CONFIG_FB_ARMCLCD=3Dy
+ CONFIG_FRAMEBUFFER_CONSOLE=3Dy
+ # CONFIG_VGA_CONSOLE is not set
+diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/ar=
+m-platforms/juno/juno-thermal.cfg b/meta-arm-bsp/recipes-kernel/linux/arm=
+-platforms-kmeta/bsp/arm-platforms/juno/juno-thermal.cfg
+index f4d220e0..a5b0e69b 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
+orms/juno/juno-thermal.cfg
++++ b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
+orms/juno/juno-thermal.cfg
+@@ -5,4 +5,3 @@ CONFIG_THERMAL_GOV_POWER_ALLOCATOR=3Dy
+ CONFIG_THERMAL_DEFAULT_GOV_POWER_ALLOCATOR=3Dy
+ CONFIG_THERMAL_GOV_USER_SPACE=3Dy
+ CONFIG_CPU_THERMAL=3Dy
+-CONFIG_THERMAL_WRITABLE_TRIPS=3Dy
 --=20
 2.34.1
 
