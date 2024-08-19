@@ -2,60 +2,60 @@ Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAD2C5320E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F2AC54722
 	for <webhook@archiver.kernel.org>; Mon, 19 Aug 2024 19:04:54 +0000 (UTC)
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
- by mx.groups.io with SMTP id smtpd.web11.1053.1724094290244566162
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+ by mx.groups.io with SMTP id smtpd.web11.1051.1724094289326965511
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 19 Aug 2024 12:04:50 -0700
+ Mon, 19 Aug 2024 12:04:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=uhBdPLig;
- spf=pass (domain: linaro.org, ip: 209.85.219.47, mailfrom: javier.tia@linaro.org)
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6bf66fe9d8bso24238826d6.0
-        for <meta-arm@lists.yoctoproject.org>; Mon, 19 Aug 2024 12:04:50 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=CCDEUPYj;
+ spf=pass (domain: linaro.org, ip: 209.85.222.173, mailfrom: javier.tia@linaro.org)
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7a1d0dc869bso339587085a.2
+        for <meta-arm@lists.yoctoproject.org>; Mon, 19 Aug 2024 12:04:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724094289; x=1724699089; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1724094288; x=1724699088; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2Sw6qgwfeoRcTz5HRF/e7ri5lXvqhu/5iyjFHNupvjw=;
-        b=uhBdPLigHB/uNvn2SZg8Pl7neHyFE97SgHKlyrrIX6dMnM6Bky/qUBmfZiKUAkk6I5
-         lA/a1RWQRmeM6vd6hyEmxTsAfUFhYzKW8o5wKKwIRh88ACfzTiRemMiKUa5xOrmk0k/U
-         ksC6haOccRfYO2O0dQwUFT2fQkAisOF51deanuvs6tHloIxEj26UyrPSC3+1TQU/IuNK
-         7agGaeQMtugh6I968B5oWDEgN0J/rfyVdHhpjNJX57aZOo5rq4hq58yHO4E2MWgOoy7N
-         4PaaJ2rB+OeR6cADOHi6dd5F9RtzqaerBDykC237D7M0KRJFQGxG2qHbEbX631CbZZYA
-         +Dmg==
+        bh=Q/r2Ucrd9qMllbfh6Tkmn1si3mm5VM1XainARIeqVZI=;
+        b=CCDEUPYjk080c07IQkMdHaSoU4fCr1VrOarEfM6AGXXzmT0meGPQSA05ZTbHUE9Ywz
+         zWz/xdRQz7efOOqzWaXF7JU2FMujmc+jDDeOVu2i3O39ra+zEuZYqaC4VlEqBawyoCqU
+         QrrCt5usRqT0pksqa9hfeRH6/4HEgU4KeneXkcJaRqrVEadrl5jPUtZOzXjbtRMGilfM
+         IRzRTvEmLtDqBxkqYdqm0odhc9Ldvrnj7v5dJLd9sGDroX2IsfkVFXP92SDIZJzJTVkN
+         0LOWYsMcNdU5vqIHj/PWvpxxArTjb9RCw0atZ4YxFJ9Kb+zRxuimS7OsIswuS7bDcMVL
+         ALXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724094289; x=1724699089;
+        d=1e100.net; s=20230601; t=1724094288; x=1724699088;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2Sw6qgwfeoRcTz5HRF/e7ri5lXvqhu/5iyjFHNupvjw=;
-        b=qsn07xPrFd1dRNFFaScvjg6P1wFRPHjT/pPwICDOSJrxh6Gf8a/KuTUB5iaGDVq072
-         jX2AkJnA4y0JjgumW/LigRFo7/0kRaDU6eWeFsAgp4Av5JHFlMtE9/IZpch5ao1NbSg9
-         ZvceuCGfwJ6O+a/ja6MUcIVbg2v/HdR7cyN4Htl82PfJw8RHYcPCYewuRBIzE5Yc0ya/
-         IRHc0p0YmAA19Bp0fwD0RQRq2snEX3ALFLHf8M/mbFnjD/v0cr2xz3Kq5V9rNFxp/3lM
-         IM3mQLi7mAWech9iyiFZUQAAxd4jJUjRpOAUkY+JNDnseHsftYI8XrRo9amVzK3St9hd
-         /ZMg==
-X-Gm-Message-State: AOJu0YyWRMgCMFi4zlxLsz7nNqnrCybR3lkqd6/MwppSuoQtIH+BsFtF
-	uWgLK8BMQFCviqHC8TlD80mfqlUviM80ygQrmPKNdy2T12xgCj5HByajNPmjtpP3DifCmKigdkP
-	o
-X-Google-Smtp-Source: AGHT+IEeteqhkpxN5ynqyLm0/NkL9SqrT+N6qszSsT2+H9pLi5sI/C3/lm80K9BxeUc6YTH4feCueA==
-X-Received: by 2002:a05:6214:2b87:b0:6bf:7a30:f438 with SMTP id 6a1803df08f44-6bf7ce517cfmr159380276d6.22.1724094289145;
-        Mon, 19 Aug 2024 12:04:49 -0700 (PDT)
+        bh=Q/r2Ucrd9qMllbfh6Tkmn1si3mm5VM1XainARIeqVZI=;
+        b=SHH4x7DIRmZenBDuczYqKh2awIWiZz8r7DQZCC+3EJ7c7MPi7fRNv5Nvwja/TrH84f
+         bHS+4E/1YEQIr4WkP2eUsOD5REX0BZeyiIsQeP6qSvCIrI+1dWw7UlfosRVZUfZEq0+X
+         Fwr69vwSk3uhTNwWYhnfa/najBSxLld0pbWty/kXBasPFg+p5eyOoQHN8D2tNWUpQeu6
+         16oMe7E/9GFoWz8nuC+BWbSBcB77MFWHwbFZBwEham3a9OvYS3O69rsWUsw0Q7AqjzMn
+         9dBp9W/Ul/QzpNx1qDQsWLn+wDoeAHEyuTA7jQs0GKpUsz7zBMSeP6ven8+4gcd/UwyC
+         9oOg==
+X-Gm-Message-State: AOJu0YyYjBmDI56CaUb64G22wkXAxX0ofsR4n4mb7I/8fxeftABmcGmH
+	hL6UUYWTuzE3e0w8pm8RI6BxzV+sToQVGM46O2dcgrgwvFrMDN7ciZP+aVsj/jPhtUcuHl94wAA
+	O
+X-Google-Smtp-Source: AGHT+IFb0+mOOgX8jT9OaDMxeEgQTQ5vjasKJIZ4MPZIFX7UGGC5NboTPpK5kqt4ljR4PO/Z5oiiGQ==
+X-Received: by 2002:a05:6214:3d07:b0:6b5:e895:82f0 with SMTP id 6a1803df08f44-6bf7ce5f9c0mr159824486d6.43.1724094287900;
+        Mon, 19 Aug 2024 12:04:47 -0700 (PDT)
 Received: from jetm-rog-x670e-gene.lan ([177.93.4.25])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bf6fe06feasm45371756d6.40.2024.08.19.12.04.48
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bf6fe06feasm45371756d6.40.2024.08.19.12.04.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2024 12:04:48 -0700 (PDT)
+        Mon, 19 Aug 2024 12:04:47 -0700 (PDT)
 From: Javier Tia <javier.tia@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>,
 	Jon Mason <jon.mason@arm.com>,
 	Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH v2 13/14] meta-arm: Add UEFI Secure Boot test
-Date: Mon, 19 Aug 2024 13:04:28 -0600
-Message-ID: <20240819190429.2897888-14-javier.tia@linaro.org>
+Subject: [PATCH v2 12/14] systemd-boot: Use it as bootloader & sign UEFI image
+Date: Mon, 19 Aug 2024 13:04:27 -0600
+Message-ID: <20240819190429.2897888-13-javier.tia@linaro.org>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240819190429.2897888-1-javier.tia@linaro.org>
 References: <20240819190429.2897888-1-javier.tia@linaro.org>
@@ -65,87 +65,83 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 19 Aug 2024 19:04:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5979
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5978
 
-Add a test to verify UEFI Secure Boot is enabled
-
-Run the test:
-
-kas build 'ci/qemuarm64-secureboot.yml:ci/testimage.yml'
+As qemuarm64-secureboot is already using systemd as Init manager, use
+too systemd-boot as bootloader. It has a simpler and more intuitive
+configuration format compared to grub. It uses a single configuration
+file that is easy to understand and modify.
 
 Signed-off-by: Javier Tia <javier.tia@linaro.org>
 ---
- ci/qemuarm64-secureboot.yml                   |  2 ++
- .../core-image-base-uefi-secureboot.inc       |  6 +++-
- .../oeqa/runtime/cases/uefi_secure_boot.py    | 32 +++++++++++++++++++
- 3 files changed, 39 insertions(+), 1 deletion(-)
- create mode 100644 meta-arm/lib/oeqa/runtime/cases/uefi_secure_boot.py
+ .../images/core-image-base-uefi-secureboot.inc       |  2 +-
+ meta-arm-bsp/wic/efi-disk-no-swap.wks.in             |  2 +-
+ meta-arm/conf/machine/qemuarm64-secureboot.conf      |  2 ++
+ .../systemd/systemd-boot-uefi-secureboot.inc         | 12 ++++++++++++
+ .../recipes-core/systemd/systemd-boot_%.bbappend     |  1 +
+ 5 files changed, 17 insertions(+), 2 deletions(-)
+ create mode 100644 meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
+ create mode 100644 meta-arm/recipes-core/systemd/systemd-boot_%.bbappend
 
-diff --git a/ci/qemuarm64-secureboot.yml b/ci/qemuarm64-secureboot.yml
-index 958a1ff1..02341934 100644
---- a/ci/qemuarm64-secureboot.yml
-+++ b/ci/qemuarm64-secureboot.yml
-@@ -11,6 +11,8 @@ local_conf_header:
-   optee: |
-     IMAGE_INSTALL:append = " optee-test optee-client optee-os-ta"
-     TEST_SUITES:append = " optee ftpm"
-+  uefi_secure_boot: |
-+    TEST_SUITES:append = " uefi_secure_boot"
- 
- machine: qemuarm64-secureboot
- 
 diff --git a/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc b/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc
-index e5cf7760..ce64b8b5 100644
+index 07e315a3..e5cf7760 100644
 --- a/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc
 +++ b/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc
-@@ -10,4 +10,8 @@ QB_DEFAULT_KERNEL = "none"
+@@ -10,4 +10,4 @@ QB_DEFAULT_KERNEL = "none"
  
  KERNEL_IMAGETYPE = "Image"
  
--IMAGE_INSTALL += "systemd systemd-boot"
-+IMAGE_INSTALL += "systemd systemd-boot util-linux coreutils efivar"
+-IMAGE_INSTALL += "systemd"
++IMAGE_INSTALL += "systemd systemd-boot"
+diff --git a/meta-arm-bsp/wic/efi-disk-no-swap.wks.in b/meta-arm-bsp/wic/efi-disk-no-swap.wks.in
+index 6ae7ad9d..6d77d3aa 100644
+--- a/meta-arm-bsp/wic/efi-disk-no-swap.wks.in
++++ b/meta-arm-bsp/wic/efi-disk-no-swap.wks.in
+@@ -7,4 +7,4 @@ part /boot --source bootimg-efi --sourceparams="loader=${EFI_PROVIDER}" --label
+ 
+ part / --source rootfs --fstype=ext4 --label root --align 1024 --use-uuid --exclude-path boot/
+ 
+-bootloader --ptable gpt --timeout=1 --append="${GRUB_LINUX_APPEND}"
++bootloader --ptable gpt --timeout=5 --append="${LINUX_KERNEL_ARGS}"
+diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+index 79ab6080..38acc97d 100644
+--- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
++++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+@@ -26,6 +26,8 @@ MACHINE_FEATURES += "optee-ftpm"
+ MACHINE_FEATURES += "efi"
+ MACHINE_FEATURES += "uefi-secureboot"
+ 
++EFI_PROVIDER = "systemd-boot"
 +
-+inherit extrausers
-+
-+EXTRA_IMAGE_FEATURES += "allow-root-login empty-root-password"
-diff --git a/meta-arm/lib/oeqa/runtime/cases/uefi_secure_boot.py b/meta-arm/lib/oeqa/runtime/cases/uefi_secure_boot.py
+ INIT_MANAGER = "systemd"
+ DISTRO_FEATURES += "systemd"
+ DISTRO_FEATURES_NATIVE += "systemd"
+diff --git a/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc b/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
 new file mode 100644
-index 00000000..4a62b54c
+index 00000000..c0753614
 --- /dev/null
-+++ b/meta-arm/lib/oeqa/runtime/cases/uefi_secure_boot.py
-@@ -0,0 +1,32 @@
-+#
-+# SPDX-License-Identifier: MIT
-+#
++++ b/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
+@@ -0,0 +1,12 @@
++DEPENDS += 'gen-uefi-sb-keys'
++DEPENDS += "sbsigntool-native"
 +
-+import os
++inherit sbsign
 +
-+from oeqa.runtime.case import OERuntimeTestCase
-+from oeqa.runtime.decorator.package import OEHasPackage
-+from oeqa.core.decorator.oetimeout import OETimeout
++SBSIGN_KEY = "${UEFI_SB_KEYS_DIR}/db.key"
++SBSIGN_CERT = "${UEFI_SB_KEYS_DIR}/db.crt"
++SBSIGN_TARGET_BINARY = "${B}/src/boot/efi/systemd-boot${EFI_ARCH}.efi"
 +
-+
-+class UEFI_SB_TestSuite(OERuntimeTestCase):
-+    """
-+    Validate Secure Boot is Enabled
-+    """
-+
-+    @OETimeout(1300)
-+    def test_uefi_secure_boot(self):
-+        # Validate Secure Boot is enabled by checking
-+        # 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot.
-+        # The GUID '8be4df61-93ca-11d2-aa0d-00e098032b8c' is a well-known
-+        # identifier for the Secure Boot UEFI variable. By checking the value of
-+        # this variable, specifically
-+        # '8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot', we can determine
-+        # whether Secure Boot is enabled or not. This variable is set by the
-+        # UEFI firmware to indicate the current Secure Boot state. If the
-+        # variable is set to a value of '0x1' (or '1'), it indicates that Secure
-+        # Boot is enabled. If the variable is set to a value of '0x0' (or '0'),
-+        # it indicates that Secure Boot is disabled.
-+        cmd = "efivar -d -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot"
-+        status, output = self.target.run(cmd, timeout=120)
-+        self.assertEqual(output, "1", msg="\n".join([cmd, output]))
++do_compile:append() {
++    do_sbsign
++}
+diff --git a/meta-arm/recipes-core/systemd/systemd-boot_%.bbappend b/meta-arm/recipes-core/systemd/systemd-boot_%.bbappend
+new file mode 100644
+index 00000000..caba9830
+--- /dev/null
++++ b/meta-arm/recipes-core/systemd/systemd-boot_%.bbappend
+@@ -0,0 +1 @@
++require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'systemd-boot-uefi-secureboot.inc', '', d)}
+\ No newline at end of file
 -- 
 2.46.0
 
