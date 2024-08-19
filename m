@@ -2,60 +2,60 @@ Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F1AC5472C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41679C52D7C
 	for <webhook@archiver.kernel.org>; Mon, 19 Aug 2024 19:04:44 +0000 (UTC)
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
- by mx.groups.io with SMTP id smtpd.web11.1045.1724094281609132225
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+ by mx.groups.io with SMTP id smtpd.web10.1077.1724094279526481953
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 19 Aug 2024 12:04:41 -0700
+ Mon, 19 Aug 2024 12:04:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=B2B1l/L9;
- spf=pass (domain: linaro.org, ip: 209.85.210.49, mailfrom: javier.tia@linaro.org)
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7093b53f315so1699079a34.2
-        for <meta-arm@lists.yoctoproject.org>; Mon, 19 Aug 2024 12:04:41 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=qos3LyxT;
+ spf=pass (domain: linaro.org, ip: 209.85.219.49, mailfrom: javier.tia@linaro.org)
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6bf775d1bdfso24270276d6.1
+        for <meta-arm@lists.yoctoproject.org>; Mon, 19 Aug 2024 12:04:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724094281; x=1724699081; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1724094278; x=1724699078; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d4QveURaOEPjRXZzrUewBCfHkU+UFxipcUv9I+R+wcQ=;
-        b=B2B1l/L9ZieQKhmtI9InrwVXIcJ6C9/kxxu94hIluItPbO0uyXCmA6TPogu/6mU7nf
-         ZMeimhzVaMTAJKyzKFjBBss54COlM+bT3Tjoz2PmiZS7g2HXtpNz9mq0BoMOW1g5K4g7
-         GVVfgR7aoZYA22cmj5OJuDgJ3arPjtmpziMNdrcVv6dXlQQEBEQQVzLk61WVFNpOzPz0
-         beR5qJ1OLIzrNvYVMVpV8EAR1eliqPwfwa+WeZ8ZJBwnUNlNJ4JrBd7+7OO2CuVrGGK0
-         EOMpImgcynO+bZSZaFbvbXXZ3fmJLq3eK3VLxDIglcX6U6FF0KaSYpfmsqO/zA8bAPnA
-         m01w==
+        bh=SLHu6PRlZnCzW/rU1UEj78mshvoxk7WjoojsTwAZ3/I=;
+        b=qos3LyxTTJ4WPILZPSPWysvFIz48fHhtHdq2miHYcn+O2BN78/ARXIvE0yUMJWgLpR
+         YV+tyhU5lsJKpP3AiM2XRNqbLGzSiuB4jArQbwPCsj8hNTZEfQx7ZQkTkAZO6kNG5x7K
+         2jIphfr6rZ1Eq7oA91lLxZnWhtau26Vy+wxqrTGKMYK8OE2rXrra/87THTovcLaOeDsE
+         DBtY/HzrIhuEOraprO0Ge9OfxY4SqFA91aNfouxVSmTBlN57KaUHCSf5KuAOA4j55vhx
+         evQ+8Le44ga0+SJhiq5fBalveUEpX2F9e1ruz54x5M0dzeDwsyQNltSwexDqwRMXjqFL
+         b0KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724094281; x=1724699081;
+        d=1e100.net; s=20230601; t=1724094278; x=1724699078;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d4QveURaOEPjRXZzrUewBCfHkU+UFxipcUv9I+R+wcQ=;
-        b=CcSn41OuMsJKisI8cDElQ6ZsO7EfoWoSblCw+TLk6v+Jwftq18I9zrYFFiqnAiOcj8
-         qoQDURjzynokGfadO0+zjt6yY5zWIRuRZ254bCkLEAkDfXD7VVhjljw5TN6xPInxnO2y
-         YRN8Eg7FO+H/fnohG4t+Z45XCofQ1Eia6lvN88Yyrs68F5JVwzpdQ8K9TCWIoTHa1gZY
-         z22j6NTCwM9RWPLwBVGb1u3RGlIlZSlvvEQ1AaLk1PxodAwt3wK/Pbt/2+PoiCFTM+ol
-         7PgU+/Ta8qClXl/LA0WCM6uhewAcPDOjUalzwdmqMfmpg2Yi3K86O1IplPo0PHQLS98g
-         RuYA==
-X-Gm-Message-State: AOJu0YzDZk0a4755tNKt9a2uqxwi+2Jr+elMwYdSXRuwiYA4vSLRZjSZ
-	ymh5Yb2ua/pwHrBGyQX+fCEju7k/MNk4z1LxoCn/eNjN6B6PqxegoDMYD8QNjbqHUPv0uzdGaqI
-	I
-X-Google-Smtp-Source: AGHT+IETqu+4IhTh3XYa8bl0TYN7HzgRJGBNjibvzIcKEqCuCriezTRK7fMwCIuJp9hiqFChINXzUw==
-X-Received: by 2002:a05:6830:6388:b0:704:4abf:c0d6 with SMTP id 46e09a7af769-70cac86e087mr14557849a34.20.1724094280668;
-        Mon, 19 Aug 2024 12:04:40 -0700 (PDT)
+        bh=SLHu6PRlZnCzW/rU1UEj78mshvoxk7WjoojsTwAZ3/I=;
+        b=BWmKCE6TBVtl0ww1WCA52cmx77z+nXZ8aZpIq8H3cYvSOHzYmBSNuBGi4ivs330QPu
+         pxOIAm+cgemI2QQxbxMm4BuYTtHTDP7Gk+qa58r4xH+H0ik17yRMOcOHW+aNrZI3d2RJ
+         /eDct7ZcBOsBG+MSg5ctKSyEB7lO0XTgT5v1MbyMP3dfAzSVYAKotEzfZoW9ePTOi1nB
+         7cLwJZagvM0L/MALA/cPkKNWkS6WcuW1QOpyxAbrgMaC6fmn6g/DAKeGVgaQSpCGrA80
+         pF6V8+12r5sGbZW2Qdlbvc6SPjgdeG1t0NAV8F8e9shGbqD29IhtYqXXaZy55QGP7o/5
+         22zw==
+X-Gm-Message-State: AOJu0Yx2U4ZvbI0Tplk+GuwGJ7rPZOUaJ5uaU/FOQ8IYB06IPueqwejr
+	8fX+u9Fq+Ub2hx04NIdSw39kV2uy8suIblbBKtTKterpZl9mAmUL3cvRmKJqWy1gqrRiBIVkeyF
+	A
+X-Google-Smtp-Source: AGHT+IGHqAABdsh1wMdVFKIlj+Rsc+lIi0I6KmUcwxH203pLHhpLcYthEw5K8ABeOLzvHlRcnmTE5A==
+X-Received: by 2002:a05:6214:5f01:b0:6b5:936d:e5e9 with SMTP id 6a1803df08f44-6bf7cdf0a71mr175759536d6.26.1724094278263;
+        Mon, 19 Aug 2024 12:04:38 -0700 (PDT)
 Received: from jetm-rog-x670e-gene.lan ([177.93.4.25])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bf6fe06feasm45371756d6.40.2024.08.19.12.04.39
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bf6fe06feasm45371756d6.40.2024.08.19.12.04.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2024 12:04:40 -0700 (PDT)
+        Mon, 19 Aug 2024 12:04:37 -0700 (PDT)
 From: Javier Tia <javier.tia@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>,
 	Jon Mason <jon.mason@arm.com>,
 	Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH v2 06/14] core-image-base: Inherit uefi-sb-keys
-Date: Mon, 19 Aug 2024 13:04:21 -0600
-Message-ID: <20240819190429.2897888-7-javier.tia@linaro.org>
+Subject: [PATCH v2 04/14] uefi-sb-keys.bbclass: Add class to validate UEFI keys
+Date: Mon, 19 Aug 2024 13:04:19 -0600
+Message-ID: <20240819190429.2897888-5-javier.tia@linaro.org>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240819190429.2897888-1-javier.tia@linaro.org>
 References: <20240819190429.2897888-1-javier.tia@linaro.org>
@@ -65,21 +65,46 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 19 Aug 2024 19:04:44 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5972
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5970
+
+Without UEFI keys, signing will fail and the OS will not boot.
 
 Signed-off-by: Javier Tia <javier.tia@linaro.org>
 ---
- .../recipes-bsp/images/core-image-base-uefi-secureboot.inc      | 2 ++
- 1 file changed, 2 insertions(+)
+ meta-arm/classes/uefi-sb-keys.bbclass | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 meta-arm/classes/uefi-sb-keys.bbclass
 
-diff --git a/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc b/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc
-index 351e9030..2232d3b3 100644
---- a/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc
-+++ b/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc
-@@ -1 +1,3 @@
-+inherit uefi-sb-keys
+diff --git a/meta-arm/classes/uefi-sb-keys.bbclass b/meta-arm/classes/uefi-sb-keys.bbclass
+new file mode 100644
+index 00000000..e800b4c6
+--- /dev/null
++++ b/meta-arm/classes/uefi-sb-keys.bbclass
+@@ -0,0 +1,24 @@
++# Validate UEFI keys
++python __anonymous () {
++    if d.getVar("UEFI_SB_KEYS_DIR", False) is None:
++        raise bb.parse.SkipRecipe("UEFI_SB_KEYS_DIR is not set.")
 +
- WKS_FILE = "efi-disk-no-swap.wks.in"
++    # keys used for UEFI secure boot
++    uefi_sb_keys = d.getVar("UEFI_SB_KEYS_DIR")
++
++    keys_to_check = [
++        uefi_sb_keys + "/PK.esl",
++        uefi_sb_keys + "/KEK.esl",
++        uefi_sb_keys + "/dbx.esl",
++        uefi_sb_keys + "/db.esl",
++        uefi_sb_keys + "/db.key",
++        uefi_sb_keys + "/db.crt",
++    ]
++
++    missing_keys = [f for f in keys_to_check if not os.path.exists(f)]
++
++    if missing_keys:
++        raise bb.parse.SkipRecipe("Required missing keys: %s" % (", ".join(missing_keys), )
++            + ".\nRun %s/gen_uefi_keys.sh to generate missing keys." % uefi_sb_keys)
++
++}
 -- 
 2.46.0
 
