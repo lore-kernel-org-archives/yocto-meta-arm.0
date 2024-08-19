@@ -2,60 +2,60 @@ Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41679C52D7C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C327C5472D
 	for <webhook@archiver.kernel.org>; Mon, 19 Aug 2024 19:04:44 +0000 (UTC)
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
- by mx.groups.io with SMTP id smtpd.web10.1077.1724094279526481953
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+ by mx.groups.io with SMTP id smtpd.web10.1076.1724094278213070125
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 19 Aug 2024 12:04:39 -0700
+ Mon, 19 Aug 2024 12:04:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=qos3LyxT;
- spf=pass (domain: linaro.org, ip: 209.85.219.49, mailfrom: javier.tia@linaro.org)
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6bf775d1bdfso24270276d6.1
-        for <meta-arm@lists.yoctoproject.org>; Mon, 19 Aug 2024 12:04:39 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=yeUOeFFB;
+ spf=pass (domain: linaro.org, ip: 209.85.219.46, mailfrom: javier.tia@linaro.org)
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6bf790944f1so22920216d6.2
+        for <meta-arm@lists.yoctoproject.org>; Mon, 19 Aug 2024 12:04:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724094278; x=1724699078; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1724094277; x=1724699077; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SLHu6PRlZnCzW/rU1UEj78mshvoxk7WjoojsTwAZ3/I=;
-        b=qos3LyxTTJ4WPILZPSPWysvFIz48fHhtHdq2miHYcn+O2BN78/ARXIvE0yUMJWgLpR
-         YV+tyhU5lsJKpP3AiM2XRNqbLGzSiuB4jArQbwPCsj8hNTZEfQx7ZQkTkAZO6kNG5x7K
-         2jIphfr6rZ1Eq7oA91lLxZnWhtau26Vy+wxqrTGKMYK8OE2rXrra/87THTovcLaOeDsE
-         DBtY/HzrIhuEOraprO0Ge9OfxY4SqFA91aNfouxVSmTBlN57KaUHCSf5KuAOA4j55vhx
-         evQ+8Le44ga0+SJhiq5fBalveUEpX2F9e1ruz54x5M0dzeDwsyQNltSwexDqwRMXjqFL
-         b0KA==
+        bh=i3FMcrxoQMEjfxeuNGxbNN6+IFf/qUnBbfx9yY/tZpY=;
+        b=yeUOeFFBliWw+KM1+Gb2k9OFhQRmIyV4bGUgzxfarxews6FX0e5CDNgYbXHt/H9ciT
+         xfZtKR6oRqYNJ08bh77Zkzg3+OMOTOGQ8VMAS7nN9Vr36ZaNzrSJzI+7823ob/hWT3p6
+         nO2bP/1W4K/34NDhEng6UmfUyub6l0xqJhYuCmp748ujGJB3+sRzzmBYgZDlQXxhKaja
+         xne3GaIdxs4A1H2CV8EJvbRgNg84SnAwIpjlRcbWibvJeBDFTkWAvUMm+0w0jJ7tpuMb
+         kmaVzbQXMwJ1BZNBbMv/8OfXJArluM7UwZ0c8FB5gMWfG0pRTFGXJ1vKnVbkG5CjQCyK
+         7Yug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724094278; x=1724699078;
+        d=1e100.net; s=20230601; t=1724094277; x=1724699077;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SLHu6PRlZnCzW/rU1UEj78mshvoxk7WjoojsTwAZ3/I=;
-        b=BWmKCE6TBVtl0ww1WCA52cmx77z+nXZ8aZpIq8H3cYvSOHzYmBSNuBGi4ivs330QPu
-         pxOIAm+cgemI2QQxbxMm4BuYTtHTDP7Gk+qa58r4xH+H0ik17yRMOcOHW+aNrZI3d2RJ
-         /eDct7ZcBOsBG+MSg5ctKSyEB7lO0XTgT5v1MbyMP3dfAzSVYAKotEzfZoW9ePTOi1nB
-         7cLwJZagvM0L/MALA/cPkKNWkS6WcuW1QOpyxAbrgMaC6fmn6g/DAKeGVgaQSpCGrA80
-         pF6V8+12r5sGbZW2Qdlbvc6SPjgdeG1t0NAV8F8e9shGbqD29IhtYqXXaZy55QGP7o/5
-         22zw==
-X-Gm-Message-State: AOJu0Yx2U4ZvbI0Tplk+GuwGJ7rPZOUaJ5uaU/FOQ8IYB06IPueqwejr
-	8fX+u9Fq+Ub2hx04NIdSw39kV2uy8suIblbBKtTKterpZl9mAmUL3cvRmKJqWy1gqrRiBIVkeyF
-	A
-X-Google-Smtp-Source: AGHT+IGHqAABdsh1wMdVFKIlj+Rsc+lIi0I6KmUcwxH203pLHhpLcYthEw5K8ABeOLzvHlRcnmTE5A==
-X-Received: by 2002:a05:6214:5f01:b0:6b5:936d:e5e9 with SMTP id 6a1803df08f44-6bf7cdf0a71mr175759536d6.26.1724094278263;
-        Mon, 19 Aug 2024 12:04:38 -0700 (PDT)
-Received: from jetm-rog-x670e-gene.lan ([177.93.4.25])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bf6fe06feasm45371756d6.40.2024.08.19.12.04.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=i3FMcrxoQMEjfxeuNGxbNN6+IFf/qUnBbfx9yY/tZpY=;
+        b=Kv3GD4Fc9gVGjXo9KLdmGtJ2par8beqt4BlU1g2RQXsbYTAahUXNdSD2E0tvnp2eLI
+         JwctSwQrXrtu5g7QoIMFUMpRTHfeUDkg35M5K0Y9BdsYBJruFagMw9UKNuu9oHpt0s08
+         J1Xfut4xr2op6u5933Z/0+7JuAFzKld5cksxf7VTDVQ5CukpwryU3PkyuDHNGLNc5F3u
+         +2zoftbMRe0CBR1j6aa0EAVQPAHULSzePY2KFwCpIy8lvMiWyYFN2sm2MSojRV+eFxi6
+         4cde32puCAyLiCC8c98oP+xOnKwjbnGMXAox4ODe5ET8KBmF9Tr70cmr/gdBpsrJdO6d
+         J74g==
+X-Gm-Message-State: AOJu0Yxrc9UnHZ+H1kIBxyEZJW4t4jn+IxpCwp+Y9pT+KjM2wlrTrsrv
+	NlBdvFnBwFv+z2cbL1LzIc8eX3CeInesT9P9RPcVHX/u54/6FYBIgRp+JMD+3qomIF5/b3aJ7yS
+	F
+X-Google-Smtp-Source: AGHT+IGZF9fVdgO1nmOOkVCVUZmhyZo0h3gIuD2vV2JDhc03EC1Lz2fhle20Oegl5KeBEjlMZFlUQA==
+X-Received: by 2002:ad4:4448:0:b0:6bf:7d52:6359 with SMTP id 6a1803df08f44-6bf7d5267a9mr121244766d6.47.1724094277062;
         Mon, 19 Aug 2024 12:04:37 -0700 (PDT)
+Received: from jetm-rog-x670e-gene.lan ([177.93.4.25])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bf6fe06feasm45371756d6.40.2024.08.19.12.04.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2024 12:04:36 -0700 (PDT)
 From: Javier Tia <javier.tia@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>,
 	Jon Mason <jon.mason@arm.com>,
 	Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH v2 04/14] uefi-sb-keys.bbclass: Add class to validate UEFI keys
-Date: Mon, 19 Aug 2024 13:04:19 -0600
-Message-ID: <20240819190429.2897888-5-javier.tia@linaro.org>
+Subject: [PATCH v2 03/14] layer.conf: Introduce UEFI_SB_KEYS_DIR
+Date: Mon, 19 Aug 2024 13:04:18 -0600
+Message-ID: <20240819190429.2897888-4-javier.tia@linaro.org>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240819190429.2897888-1-javier.tia@linaro.org>
 References: <20240819190429.2897888-1-javier.tia@linaro.org>
@@ -65,46 +65,72 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 19 Aug 2024 19:04:44 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5970
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5969
 
-Without UEFI keys, signing will fail and the OS will not boot.
+UEFI_SB_KEYS_DIR saves UEFI keys path.
+
+To avoid security issues, UEFI keys are not provided and they can be
+generated by gen_uefi_keys.sh script.
 
 Signed-off-by: Javier Tia <javier.tia@linaro.org>
 ---
- meta-arm/classes/uefi-sb-keys.bbclass | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 meta-arm/classes/uefi-sb-keys.bbclass
+ meta-arm/conf/layer.conf               |  2 ++
+ meta-arm/uefi-sb-keys/gen_uefi_keys.sh | 35 ++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
+ create mode 100755 meta-arm/uefi-sb-keys/gen_uefi_keys.sh
 
-diff --git a/meta-arm/classes/uefi-sb-keys.bbclass b/meta-arm/classes/uefi-sb-keys.bbclass
-new file mode 100644
-index 00000000..e800b4c6
+diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+index 9e9c9dbd..2854dd69 100644
+--- a/meta-arm/conf/layer.conf
++++ b/meta-arm/conf/layer.conf
+@@ -21,3 +21,5 @@ HOSTTOOLS_NONFATAL += "telnet"
+ addpylib ${LAYERDIR}/lib oeqa
+ 
+ WARN_QA:append:layer-meta-arm = " patch-status"
++
++UEFI_SB_KEYS_DIR ??= "${LAYERDIR}/uefi-sb-keys"
+\ No newline at end of file
+diff --git a/meta-arm/uefi-sb-keys/gen_uefi_keys.sh b/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
+new file mode 100755
+index 00000000..fc7f25c9
 --- /dev/null
-+++ b/meta-arm/classes/uefi-sb-keys.bbclass
-@@ -0,0 +1,24 @@
-+# Validate UEFI keys
-+python __anonymous () {
-+    if d.getVar("UEFI_SB_KEYS_DIR", False) is None:
-+        raise bb.parse.SkipRecipe("UEFI_SB_KEYS_DIR is not set.")
++++ b/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
+@@ -0,0 +1,35 @@
++#/bin/sh
 +
-+    # keys used for UEFI secure boot
-+    uefi_sb_keys = d.getVar("UEFI_SB_KEYS_DIR")
++set -eux
 +
-+    keys_to_check = [
-+        uefi_sb_keys + "/PK.esl",
-+        uefi_sb_keys + "/KEK.esl",
-+        uefi_sb_keys + "/dbx.esl",
-+        uefi_sb_keys + "/db.esl",
-+        uefi_sb_keys + "/db.key",
-+        uefi_sb_keys + "/db.crt",
-+    ]
++#Create PK
++openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout PK.key -out PK.crt -nodes -days 3650
++cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc PK.crt PK.esl
++sign-efi-sig-list -c PK.crt -k PK.key PK PK.esl PK.auth
 +
-+    missing_keys = [f for f in keys_to_check if not os.path.exists(f)]
++#Create KEK
++openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout KEK.key -out KEK.crt -nodes -days 3650
++cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc KEK.crt KEK.esl
++sign-efi-sig-list -c PK.crt -k PK.key KEK KEK.esl KEK.auth
 +
-+    if missing_keys:
-+        raise bb.parse.SkipRecipe("Required missing keys: %s" % (", ".join(missing_keys), )
-+            + ".\nRun %s/gen_uefi_keys.sh to generate missing keys." % uefi_sb_keys)
++#Create DB
++openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout db.key -out db.crt -nodes -days 3650
++cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc db.crt db.esl
++sign-efi-sig-list -c KEK.crt -k KEK.key db db.esl db.auth
 +
-+}
++#Create DBX
++openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout dbx.key -out dbx.crt -nodes -days 3650
++cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc dbx.crt dbx.esl
++sign-efi-sig-list -c KEK.crt -k KEK.key dbx dbx.esl dbx.auth
++
++#Sign image
++#sbsign --key db.key --cert db.crt Image
++
++#Digest image
++#hash-to-efi-sig-list Image db_Image.hash
++#sign-efi-sig-list -c KEK.crt -k KEK.key db db_Image.hash db_Image.auth
++
++#Empty cert for testing
++touch noPK.esl
++sign-efi-sig-list -c PK.crt -k PK.key PK noPK.esl noPK.auth
++
 -- 
 2.46.0
 
