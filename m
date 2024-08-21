@@ -2,102 +2,105 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2CEC52D7C
-	for <webhook@archiver.kernel.org>; Wed, 21 Aug 2024 14:13:34 +0000 (UTC)
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
- by mx.groups.io with SMTP id smtpd.web10.20707.1724249608183153787
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115C7C52D6F
+	for <webhook@archiver.kernel.org>; Wed, 21 Aug 2024 14:35:25 +0000 (UTC)
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+ by mx.groups.io with SMTP id smtpd.web11.21470.1724250924538933058
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 21 Aug 2024 07:13:28 -0700
+ Wed, 21 Aug 2024 07:35:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=cgY0mpLS;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.167.182, mailfrom: jdmason@kudzu.us)
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3db13410adfso4373926b6e.2
-        for <meta-arm@lists.yoctoproject.org>; Wed, 21 Aug 2024 07:13:28 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=MVAtSI07;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.180, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7a20b8fa6dcso439078985a.3
+        for <meta-arm@lists.yoctoproject.org>; Wed, 21 Aug 2024 07:35:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1724249607; x=1724854407; darn=lists.yoctoproject.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dEDy6LhAnmiSbRTRSOK0eoFfJXbSwArbTt1yIv2GqzM=;
-        b=cgY0mpLSCaRAY17R8gamIyR24Nyhx4b11vmJzc1mW1X7LNw1sS0+ijfJ3p45+I4aX4
-         lkuYcWo+K8QUnsJyVpBLydncM7iwG8BOwnK6bm3/Yu1+dYqxJCVRQoF4xK3SlCtOxzkU
-         3qbMqhFeN51Jd7dsrLvfebD1EpIThs7yClNyqprbic6nrOSfXe4QYaMCUuxjWVEQm+uo
-         W1oHbGVRDqqEcGGXsWt49UQbSFQ52B3cl74VG1fjr2BnbVb9CFkgk51WTPBxwx3oGR56
-         GVSWsNj6YJGP+2PkkN9R6UWO4yMptzhnuIJAX9j5nwjT5D9Q/gWCzD18ZnACFAhKmJqV
-         A3XQ==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1724250923; x=1724855723; darn=lists.yoctoproject.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xoVZrInTdzGjDO9EeYxnE3GzlnfABlIVQ0L3ZmWkBgo=;
+        b=MVAtSI07BNkJx8U/QwMVD8HRKAwqhjxgFMBLBmVL550EVwpY0LrgB4XfejbJ1IqBrz
+         BBxNbsrzK2FPvF7FfgjyEB2Pb9BzzTwYRBwkgfHXA2pT9qxkVb1Sw0Czg7/IBll7AwSr
+         uKy3o67Z/zzBtu9pypQsza+1LCv2FSx/dFQMVGJeM6uOoZA7XN0vDsqkhBVBir8jCMmg
+         dcxpq4FRLlNLlvQ4TjdR9eIwBj70uZO6v8Sm/lIumsQVWcPyQ/IYyavgYHcnCf8FV20n
+         h5ASLSb2y1bzee3Ijz/7kBUL+BUfCusU92hJS3ZJWXfeNYH0hPbu1YS0XXZjoVaEp2qX
+         ulVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724249607; x=1724854407;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dEDy6LhAnmiSbRTRSOK0eoFfJXbSwArbTt1yIv2GqzM=;
-        b=xVnnzn5+NEa21vZggrbdxFJRPn3cufbytjJxvPbq4oWF0mWVr/rFp7Z4zGHb7Zy1Tj
-         DBb1lOyYZIBdJ1TgkTer09IVn0Enqe72aFpPtAlEkrlQ2JetT0uYSED2epMyI4WH/siI
-         OKGNhhzRH82IOjseE4tVfRP3ELiuUYNxsJ1wmdB8s2gV2/BWW/uBAS0GTp28jjgi9dwv
-         G45nO5ydIlw8KxEopkCc1Zv/B0cqnzcSmJUE2LeP/79mgk5syPA5iZANE5ut0oEQGr5+
-         qczQm7oHMoDyWbearkY8UshcR/VuHBOwiK5NuHXCSg4iGk6h0YvsgIQd6w4ACL937vPj
-         6uNw==
-X-Gm-Message-State: AOJu0YxZqoX5/rdPCK9S1IwkS3pjR2PahxLklyn55pIIPvi1Pcya4xVJ
-	vhdDZklpLVttvjt3C93epYg3yikPLDarrzdzo6lgckNAN7nyuUATHSpos6+Drw==
-X-Google-Smtp-Source: AGHT+IFJiea7FknDcBBCFIMzeNO8Fbbupwbw1A7wNjOf0hpIU1tX7oE/XwwlhYDOoUTnH1E7vjXkhA==
-X-Received: by 2002:a05:6808:23d1:b0:3d8:499f:1de2 with SMTP id 5614622812f47-3de195c3752mr3119343b6e.35.1724249607231;
-        Wed, 21 Aug 2024 07:13:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1724250923; x=1724855723;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xoVZrInTdzGjDO9EeYxnE3GzlnfABlIVQ0L3ZmWkBgo=;
+        b=CiZP/BjCF1suxDrvfbjrRXN+SktVaanCJmMdp9Du9szCa/oISijjSaNCkP3LpiKMfq
+         4VDSIhcX+M+0+Dm73MM9Y14lf21GQNc/cYZ7sYB9VziJ3CXud+UXUjPzBb6S4lHaF9vu
+         GiKMivDQb+VBQBwfW9I61OPwZ5k0v+h25u2cR6FuYtidQuuf7AbuRgkgCXJ2otIhptAS
+         6GudFe/3QOJYu8Bhb5Ef2IXIDtXS6IuifRMvvbXJdkdDDihkBMjtO4DI/rXjDuHU1u0e
+         HCYGpXlDxJaKVj8S6UceCKCmrwbu1PhY+Eu50q9oZJov4qjYBQI9Dv6ybKbkMB7BfvMH
+         S+DA==
+X-Gm-Message-State: AOJu0YyhBIQC/WxZEVUbqtGI7bbPVz4Duw/iQTBdhZU8NFel0YvcH4pO
+	GxjESiQF0vNmqDYd2ptRb3bsliwrPQ64tK6eI3Zoc/MXnAF5OHKjp0b/oHzKZg==
+X-Google-Smtp-Source: AGHT+IEK6YEkh183Pcv45zAxKBSn4oXVyHKFyAsj5wm7L1E4dz16v7jsnHeeYVWAp/Z2WHJZWrnhXA==
+X-Received: by 2002:a05:620a:2403:b0:7a3:5004:43dc with SMTP id af79cd13be357-7a67490c94dmr260838885a.40.1724250923308;
+        Wed, 21 Aug 2024 07:35:23 -0700 (PDT)
 Received: from kudzu.us ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45369fee649sm59430071cf.29.2024.08.21.07.13.26
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a4ff0e06ccsm626404785a.93.2024.08.21.07.35.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2024 07:13:26 -0700 (PDT)
-Date: Wed, 21 Aug 2024 10:13:25 -0400
+        Wed, 21 Aug 2024 07:35:22 -0700 (PDT)
+Date: Wed, 21 Aug 2024 10:35:21 -0400
 From: Jon Mason <jdmason@kudzu.us>
-To: Marek Bykowski <marek.bykowski@gmail.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: meta-arm-bsp supporting fvp-base armv9 CPUs
-Message-ID: <ZsX2BePGbizrsH5u@kudzu.us>
-References: <Kzp1.1723880551717838263.t5nq@lists.yoctoproject.org>
+To: Javier Tia <javier.tia@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, Mikko Rapeli <mikko.rapeli@linaro.org>,
+	Ross Burton <Ross.Burton@arm.com>, Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH v2 14/14] qemuarm64-secureboot.yml: Set branch to
+ scarthgap
+Message-ID: <ZsX7KYA4_1ITkk4V@kudzu.us>
+References: <20240819190429.2897888-1-javier.tia@linaro.org>
+ <20240819190429.2897888-15-javier.tia@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Kzp1.1723880551717838263.t5nq@lists.yoctoproject.org>
+In-Reply-To: <20240819190429.2897888-15-javier.tia@linaro.org>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 21 Aug 2024 14:13:34 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5985
+ <meta-arm@lists.yoctoproject.org>; Wed, 21 Aug 2024 14:35:25 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5986
 
-On Sat, Aug 17, 2024 at 12:42:31AM -0700, Marek Bykowski wrote:
-> Hi folks,
+On Mon, Aug 19, 2024 at 01:04:29PM -0600, Javier Tia wrote:
+> UEFI Secure Boot is broken in master. Set to the latest stable OE
+> branch.
 > 
-> Are you going to add support for armv9 CPUs for fvp-base?�Or alternatively can I start adding it by myself but I guess I would need some pointers.
+> Signed-off-by: Javier Tia <javier.tia@linaro.org>
+> ---
+>  ci/qemuarm64-secureboot.yml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/ci/qemuarm64-secureboot.yml b/ci/qemuarm64-secureboot.yml
+> index 02341934..cadbe874 100644
+> --- a/ci/qemuarm64-secureboot.yml
+> +++ b/ci/qemuarm64-secureboot.yml
+> @@ -1,5 +1,9 @@
+>  # yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
+>  
+> +defaults:
+> + repos:
+> +    branch: scarthgap
 
-No plans on migrating fvp-base to ARMv9.  If you need an ARMv9 enabled
-virtual platform, we have sbsa-ref tuned for neoverse n2.
-
-> When I simply changed for `meta-arm-bsp/conf/machine/fvp-base.conf`
-> 
-> -require conf/machine/include/arm/arch-armv8-4a.inc
-> +require conf/machine/include/arm/arch-armv9a.inc
-> 
-> and
-> 
-> -FVP_CONFIG[cluster0.has_arm_v8-4] = "1"
-> -FVP_CONFIG[cluster1.has_arm_v8-4] = "1"
-> +FVP_CONFIG[cluster0.has_arm_v9-0] = "1"
-> +FVP_CONFIG[cluster1.has_arm_v9-0] = "1"
-> 
-> I get the error
-> 
-> NOTICE: �Booting Trusted Firmware
-> NOTICE: �BL1: v2.10.4(release):lts-v2.10.4-dirty
-> NOTICE: �BL1: Built : 16:23:33, Apr 26 2024
-> NOTICE: �BL1: Booting BL2
-> ERROR: � EL1 supports AArch64-only. Please set build flag CTX_INCLUDE_AARCH32_REGS = 0
-
-I'm guessing there is some TF-A flag that needs to be enabled/disabled
-for FVP Base to not allow for 32bit enabled binaries.
-
-Let me know if sbsa-ref isn't sufficient and I can try to investigate
-this issue.
+Please don't do this.  If it's broken in edk2 then hold back the
+version for qemuarm64-secureboot in a bbappend.  And if this was the
+right thing to do (which it isn't), it needs a comment saying why it's
+being done here.  Lastly, this fails CI majorly (in every instance of
+qemuarm64-secureboot).  One example,
+https://gitlab.com/jonmason00/meta-arm/-/jobs/7627395767
 
 Thanks,
 Jon
+
+> +
+>  header:
+>    version: 14
+>    includes:
+> -- 
+> 2.46.0
+> 
+> 
 
