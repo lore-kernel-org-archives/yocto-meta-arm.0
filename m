@@ -1,113 +1,103 @@
-Return-Path: <mikko.rapeli@linaro.org>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C64C52D6F
-	for <webhook@archiver.kernel.org>; Wed, 21 Aug 2024 07:02:42 +0000 (UTC)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
- by mx.groups.io with SMTP id smtpd.web10.14394.1724223751898752513
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2CEC52D7C
+	for <webhook@archiver.kernel.org>; Wed, 21 Aug 2024 14:13:34 +0000 (UTC)
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+ by mx.groups.io with SMTP id smtpd.web10.20707.1724249608183153787
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 21 Aug 2024 00:02:32 -0700
+ Wed, 21 Aug 2024 07:13:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=oIWJkv7Z;
- spf=pass (domain: linaro.org, ip: 209.85.167.47, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52efa16aad9so7760756e87.0
-        for <meta-arm@lists.yoctoproject.org>; Wed, 21 Aug 2024 00:02:31 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=cgY0mpLS;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.167.182, mailfrom: jdmason@kudzu.us)
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3db13410adfso4373926b6e.2
+        for <meta-arm@lists.yoctoproject.org>; Wed, 21 Aug 2024 07:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724223749; x=1724828549; darn=lists.yoctoproject.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nLBVu78x5M43rbtnsF4YhT8E+8BFeTcPfh9Ss4Tv23s=;
-        b=oIWJkv7ZeV0vxnfaU9fWUfW36ZFiHsM88sTWwhHmU5nR4UocvCW4OUql0IYY6DbGBF
-         eR7TRkia7ylLeg9QXfqevFUxOclNBj0zAxqupX3FqHx4oaKnL6cYZPFZz6pgmaib6jNZ
-         nV2p/KDY+TEYbOPd6Vb7a8gR/3Sqz9Ael06NolX1qB5K6AyTNxehenQWVIUB0SHYBfSl
-         yKHLRMbZGC6ceCwavNXmFIZxKlNg/8+T1Wx3Xp5rI9N7DyvYRfbmRgGiX3Jeul0J/hqS
-         VfxpskFu1BaZyzmoQ6muhRw4eXHWnHjRmx/bRANNp/7D68NkK38LSGWNuLyE1roEL+r5
-         Ai7Q==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1724249607; x=1724854407; darn=lists.yoctoproject.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dEDy6LhAnmiSbRTRSOK0eoFfJXbSwArbTt1yIv2GqzM=;
+        b=cgY0mpLSCaRAY17R8gamIyR24Nyhx4b11vmJzc1mW1X7LNw1sS0+ijfJ3p45+I4aX4
+         lkuYcWo+K8QUnsJyVpBLydncM7iwG8BOwnK6bm3/Yu1+dYqxJCVRQoF4xK3SlCtOxzkU
+         3qbMqhFeN51Jd7dsrLvfebD1EpIThs7yClNyqprbic6nrOSfXe4QYaMCUuxjWVEQm+uo
+         W1oHbGVRDqqEcGGXsWt49UQbSFQ52B3cl74VG1fjr2BnbVb9CFkgk51WTPBxwx3oGR56
+         GVSWsNj6YJGP+2PkkN9R6UWO4yMptzhnuIJAX9j5nwjT5D9Q/gWCzD18ZnACFAhKmJqV
+         A3XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724223749; x=1724828549;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nLBVu78x5M43rbtnsF4YhT8E+8BFeTcPfh9Ss4Tv23s=;
-        b=woZOd+OJfExrfDEdwQI+kspkR2CSxfSsQKwbm1uSzIQSDz12Wp9Acg+HedTrdMhi10
-         A8HGuEXsIBhFsAc/Ut5F7F8AXg197bYnY01AIiP6DzW+S2S00iQmk/CPEauUdDO41y2D
-         8WvQInDKCsdxApUz3kadSMiyqOEB4hALzjxyMi4Fy6fcW2uiPBewinPkZnhbzkT2RqND
-         pLYWlKK4RR+ccRGZiOISgovycAmyEKMlg8ovV6o2dBLcNUzyBkq49e7O166DcnB6d/27
-         HEMzucGTjmj2eGveftRhqQOvloLnO3pOq/Z20YS7sPLIpDCFQDXELM/cJjAOOdKzvhmM
-         4yug==
-X-Gm-Message-State: AOJu0Yx9bvg7NCXfgmgBvQqDfwBichjJ7VPr4QQdTOYafA7kTmffYgV9
-	qGMSBdfsQcCNWQISHs5LxTgQJUnwR0EJVHc1e67IifJxlyawRzm5ZY0Q5XP483Y=
-X-Google-Smtp-Source: AGHT+IHqeXTRd+Ec1F6p/6CAFdk4vwhGfsPOovGJgTsMwki9azZZ2mULCtU4GEgbTXRUbOPoD9UDSQ==
-X-Received: by 2002:a05:6512:b99:b0:530:ae99:c7fa with SMTP id 2adb3069b0e04-53348548becmr759819e87.10.1724223748768;
-        Wed, 21 Aug 2024 00:02:28 -0700 (PDT)
-Received: from nuoska (87-100-245-199.bb.dnainternet.fi. [87.100.245.199])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5330d42561csm1949646e87.299.2024.08.21.00.02.27
+        d=1e100.net; s=20230601; t=1724249607; x=1724854407;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dEDy6LhAnmiSbRTRSOK0eoFfJXbSwArbTt1yIv2GqzM=;
+        b=xVnnzn5+NEa21vZggrbdxFJRPn3cufbytjJxvPbq4oWF0mWVr/rFp7Z4zGHb7Zy1Tj
+         DBb1lOyYZIBdJ1TgkTer09IVn0Enqe72aFpPtAlEkrlQ2JetT0uYSED2epMyI4WH/siI
+         OKGNhhzRH82IOjseE4tVfRP3ELiuUYNxsJ1wmdB8s2gV2/BWW/uBAS0GTp28jjgi9dwv
+         G45nO5ydIlw8KxEopkCc1Zv/B0cqnzcSmJUE2LeP/79mgk5syPA5iZANE5ut0oEQGr5+
+         qczQm7oHMoDyWbearkY8UshcR/VuHBOwiK5NuHXCSg4iGk6h0YvsgIQd6w4ACL937vPj
+         6uNw==
+X-Gm-Message-State: AOJu0YxZqoX5/rdPCK9S1IwkS3pjR2PahxLklyn55pIIPvi1Pcya4xVJ
+	vhdDZklpLVttvjt3C93epYg3yikPLDarrzdzo6lgckNAN7nyuUATHSpos6+Drw==
+X-Google-Smtp-Source: AGHT+IFJiea7FknDcBBCFIMzeNO8Fbbupwbw1A7wNjOf0hpIU1tX7oE/XwwlhYDOoUTnH1E7vjXkhA==
+X-Received: by 2002:a05:6808:23d1:b0:3d8:499f:1de2 with SMTP id 5614622812f47-3de195c3752mr3119343b6e.35.1724249607231;
+        Wed, 21 Aug 2024 07:13:27 -0700 (PDT)
+Received: from kudzu.us ([136.54.20.50])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45369fee649sm59430071cf.29.2024.08.21.07.13.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2024 00:02:28 -0700 (PDT)
-Date: Wed, 21 Aug 2024 10:02:26 +0300
-From: Mikko Rapeli <mikko.rapeli@linaro.org>
-To: Javier Tia <javier.tia@linaro.org>
-Cc: meta-arm@lists.yoctoproject.org, Ross Burton <Ross.Burton@arm.com>,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH v2 14/14] qemuarm64-secureboot.yml: Set branch to
- scarthgap
-Message-ID: <ZsWRAt4LHGd68rQT@nuoska>
-References: <20240819190429.2897888-1-javier.tia@linaro.org>
- <20240819190429.2897888-15-javier.tia@linaro.org>
+        Wed, 21 Aug 2024 07:13:26 -0700 (PDT)
+Date: Wed, 21 Aug 2024 10:13:25 -0400
+From: Jon Mason <jdmason@kudzu.us>
+To: Marek Bykowski <marek.bykowski@gmail.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: meta-arm-bsp supporting fvp-base armv9 CPUs
+Message-ID: <ZsX2BePGbizrsH5u@kudzu.us>
+References: <Kzp1.1723880551717838263.t5nq@lists.yoctoproject.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240819190429.2897888-15-javier.tia@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Kzp1.1723880551717838263.t5nq@lists.yoctoproject.org>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 21 Aug 2024 07:02:42 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5984
+ <meta-arm@lists.yoctoproject.org>; Wed, 21 Aug 2024 14:13:34 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5985
 
-Hi,
+On Sat, Aug 17, 2024 at 12:42:31AM -0700, Marek Bykowski wrote:
+> Hi folks,
+> 
+> Are you going to add support for armv9 CPUs for fvp-base?�Or alternatively can I start adding it by myself but I guess I would need some pointers.
 
-On Mon, Aug 19, 2024 at 01:04:29PM -0600, Javier Tia wrote:
-> UEFI Secure Boot is broken in master. Set to the latest stable OE
-> branch.
+No plans on migrating fvp-base to ARMv9.  If you need an ARMv9 enabled
+virtual platform, we have sbsa-ref tuned for neoverse n2.
 
-What exactly is broken on master? On my build with this series
-everything worked with master commits:
+> When I simply changed for `meta-arm-bsp/conf/machine/fvp-base.conf`
+> 
+> -require conf/machine/include/arm/arch-armv8-4a.inc
+> +require conf/machine/include/arm/arch-armv9a.inc
+> 
+> and
+> 
+> -FVP_CONFIG[cluster0.has_arm_v8-4] = "1"
+> -FVP_CONFIG[cluster1.has_arm_v8-4] = "1"
+> +FVP_CONFIG[cluster0.has_arm_v9-0] = "1"
+> +FVP_CONFIG[cluster1.has_arm_v9-0] = "1"
+> 
+> I get the error
+> 
+> NOTICE: �Booting Trusted Firmware
+> NOTICE: �BL1: v2.10.4(release):lts-v2.10.4-dirty
+> NOTICE: �BL1: Built : 16:23:33, Apr 26 2024
+> NOTICE: �BL1: Booting BL2
+> ERROR: � EL1 supports AArch64-only. Please set build flag CTX_INCLUDE_AARCH32_REGS = 0
 
-poky 39de8c65492a8b84494abc3f890744f89af70a36
-meta-arm c965cf722f684acfbefa5a6509d36c0478a7a48f
-meta-openembedded ec936d6893b95a6c191c324ff2448444ac56d6dc
-meta-secure-core ae48c2372a346eee842e94e0a230944977bc5293
+I'm guessing there is some TF-A flag that needs to be enabled/disabled
+for FVP Base to not allow for 32bit enabled binaries.
 
-$ kas build ci/qemuarm64-secureboot.yml:ci/sstate-mirror.yml:ci/testimage.yml
-...
-2024-08-21 07:45:38 - INFO     - RESULTS:
-2024-08-21 07:45:38 - INFO     - RESULTS - ftpm.FtpmTestSuite.test_ftpm: PASSED (65.68s)
-2024-08-21 07:45:38 - INFO     - RESULTS - optee.OpteeTestSuite.test_opteetest_xtest: PASSED (458.00s)
-2024-08-21 07:45:38 - INFO     - RESULTS - uefi_secure_boot.UEFI_SB_TestSuite.test_uefi_secure_boot: PASSED (0.78s)
-2024-08-21 07:45:38 - INFO     - RESULTS - date.DateTest.test_date: PASSED (11.95s)
-2024-08-21 07:45:38 - INFO     - RESULTS - df.DfTest.test_df: PASSED (0.78s)
-2024-08-21 07:45:38 - INFO     - RESULTS - oe_syslog.SyslogTest.test_syslog_running: PASSED (0.81s)
-2024-08-21 07:45:38 - INFO     - RESULTS - oe_syslog.SyslogTestConfig.test_syslog_logger: PASSED (2.37s)
-2024-08-21 07:45:38 - INFO     - RESULTS - oe_syslog.SyslogTestConfig.test_syslog_restart: PASSED (1.50s)
-2024-08-21 07:45:38 - INFO     - RESULTS - parselogs.ParseLogsTest.test_get_context: PASSED (0.00s)
-2024-08-21 07:45:38 - INFO     - RESULTS - parselogs.ParseLogsTest.test_parselogs: PASSED (4.23s)
-2024-08-21 07:45:38 - INFO     - RESULTS - ping.PingTest.test_ping: PASSED (0.05s)
-2024-08-21 07:45:38 - INFO     - RESULTS - scp.ScpTest.test_scp_file: PASSED (1.88s)
-2024-08-21 07:45:38 - INFO     - RESULTS - ssh.SSHTest.test_ssh: PASSED (0.73s)
-2024-08-21 07:45:38 - INFO     - RESULTS - systemd.SystemdBasicTests.test_systemd_basic: PASSED (0.72s)
-2024-08-21 07:45:38 - INFO     - RESULTS - systemd.SystemdBasicTests.test_systemd_failed: PASSED (1.64s)
-2024-08-21 07:45:38 - INFO     - RESULTS - systemd.SystemdBasicTests.test_systemd_list: PASSED (5.84s)
-2024-08-21 07:45:38 - INFO     - RESULTS - systemd.SystemdJournalTests.test_systemd_boot_time: PASSED (0.81s)
-2024-08-21 07:45:38 - INFO     - RESULTS - systemd.SystemdJournalTests.test_systemd_journal: PASSED (0.97s)
-2024-08-21 07:45:38 - INFO     - RESULTS - apt.AptRepoTest.test_apt_install_from_repo: SKIPPED (0.00s)
-...
-2024-08-21 07:45:38 - INFO     - SUMMARY:
-2024-08-21 07:45:38 - INFO     - core-image-base () - Ran 75 tests in 561.638s
-2024-08-21 07:45:38 - INFO     - core-image-base - OK - All required tests passed (successes=18, skipped=57, failures=0, errors=0)
-2024-08-21 07:45:38 - INFO     - NOTE: recipe core-image-base-1.0-r0: task do_testimage: Succeeded
+Let me know if sbsa-ref isn't sufficient and I can try to investigate
+this issue.
 
-Cheers,
-
--Mikko
+Thanks,
+Jon
 
