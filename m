@@ -2,62 +2,62 @@ Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F23C52D7C
-	for <webhook@archiver.kernel.org>; Thu, 22 Aug 2024 01:43:08 +0000 (UTC)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
- by mx.groups.io with SMTP id smtpd.web10.4142.1724290984939690282
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A17C5321D
+	for <webhook@archiver.kernel.org>; Thu, 22 Aug 2024 01:43:28 +0000 (UTC)
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+ by mx.groups.io with SMTP id smtpd.web11.4028.1724291000823653990
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 21 Aug 2024 18:43:05 -0700
+ Wed, 21 Aug 2024 18:43:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=QB6+j9qJ;
- spf=pass (domain: linaro.org, ip: 209.85.219.174, mailfrom: javier.tia@linaro.org)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e1674508eb9so388423276.1
-        for <meta-arm@lists.yoctoproject.org>; Wed, 21 Aug 2024 18:43:04 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=nv6/Q/BR;
+ spf=pass (domain: linaro.org, ip: 209.85.128.172, mailfrom: javier.tia@linaro.org)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6c0e22218d0so4359407b3.0
+        for <meta-arm@lists.yoctoproject.org>; Wed, 21 Aug 2024 18:43:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724290984; x=1724895784; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1724291000; x=1724895800; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=7klmjXYch8GNaZN1wEzo461fb1uc8XjLt42gnCiFheA=;
-        b=QB6+j9qJ+/5hVgL5dcEtbz6bpKLKltGVmvylslXEW7WDq8MvwAZdIuLxaU8cZj1OVP
-         oY742XEnq0xQLjRu/ZK4HSFCgc+vZ8uwdVO9YraqurPUed8GSBMfHpHz9wLSLs9JnRaQ
-         JEi/TnXxujpEsihM/OGfCjC+5+m6mBlFbmi34mLTK9r30r80OQEhsMGp1gYK2dcfMjN9
-         kTlEuNAGlHeciIAyLP4mtIqZjO1MixwIBjGs1JLmzWhTGNs+vF7b3jecJv46Bq8shUcc
-         tE+k3iKd/Lz9t5gAHOl6Gl7kqZkvnPMHJY0wcBsNqcrfbOzKq5EVEKBpfya0UKHnHvnu
-         +LsA==
+        bh=QztYLxVa/r1jORAYjb7tlFC+PcBf5mmvPyMauG0BvGM=;
+        b=nv6/Q/BRpygtvwaCCvP1MN6nH9oH+H3rH80tlVIE3KNMrokn5ex4Bp3y3XhbiuDUUU
+         zHy35BdouwxC8ugwDoMBCelCsUPp93Czb5GgXTBG6terQfFWOb3cY2vZv5o3XHYlh2kH
+         gK9J76w9UdvxSUrX4o9ofsK/UsTmNamtFREnEwhHICbT8CfOfEKz7X9b0Kqqg+uzydsG
+         KHbvdgileD+sTbUMkR2N7GBUfEuVeuC9udd3zect1RPN6gFzz4ilBgM4B4Y5GNtADqCl
+         l1URhne6OzLiVLhK3/nGFANCDtzxrc4SwOBpx+H4QlZTZtArKQX5mcKHtQhkXvrkuILo
+         Foqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724290984; x=1724895784;
+        d=1e100.net; s=20230601; t=1724291000; x=1724895800;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7klmjXYch8GNaZN1wEzo461fb1uc8XjLt42gnCiFheA=;
-        b=dnjPseM7bsEy+LjGAb5QJfceY1Oqyb8bk9zv8NQ+OtAQeQmbEhqTL9WKASBfUSm6oW
-         AA6AwtSnRct7SyXl/X7/cVrTrF+qXfjWXYH3wbped/VXMT9gjBJx/vr8dkPiDHWCO/Fj
-         AJdiHvOiQUG5rKjqjSGOjjBIC4rqbOVPXICETTseLwEW5Nh1xF0cgoiDc2gpvyZ8jmHK
-         8U0XMhgj871iPRMTlUbzMbAPowQFoqi3liHebg6uxMxt4ETh90hqws0LpNC8Y90L10hI
-         N/M2yYAXjoHSl012Bpw0i1HvUfLpKooqj5gVMINklOfnmm14neY7H4sBYGt5jFWb3ILG
-         xY7g==
-X-Gm-Message-State: AOJu0YzYGzA0aFl5lHAFkTIYiFOaqbVwDSMXeXlLxD3Au/bczE80f8xj
-	/sHs/Tks+93uct3GyA2zo+rIShRxUoM6sTM7QAXJUWxSh1w+n9nxAxNGRjqDEa0=
-X-Google-Smtp-Source: AGHT+IGzT0FVaOwZhG4/BSTU2d66uplYnvxC1s9lZ4xY+qwtp3miVSgAgCuPLW0p+e65vrXbYAwmnQ==
-X-Received: by 2002:a05:6902:1a44:b0:e0e:8941:c37f with SMTP id 3f1490d57ef6-e166553a1f9mr4820336276.46.1724290984038;
-        Wed, 21 Aug 2024 18:43:04 -0700 (PDT)
+        bh=QztYLxVa/r1jORAYjb7tlFC+PcBf5mmvPyMauG0BvGM=;
+        b=ME81SuJKQySDhbBkSgW73BmmKdOsIfn0rNOd64gspVesAaNsmPWqRlecM1giSbu2rz
+         jiTkkxljBcipult12KeHPtEedOok13D03PuPl/apymqGkUtzVDmrcr2rO0WzijN1f/eE
+         3utH88UURxppDNJdQOCDUo/BG2o4bA4eNaOwkq+CGERta2VCOM1p3wqvH1QfTR3lZSdj
+         k31x/dqWSr9Ae5Jlk5OfelG+RXS9h988s5aqm/p/WVdAHn1ea8+DWLvMxRB0QeRBt+X4
+         VLRN3O5xWHe1RgzeBSSQpJe+S4fqvxFAreIEWxQgh6IvoExlf+0KMqkVZMSU65H00Mhu
+         W25g==
+X-Gm-Message-State: AOJu0YxD5RgLJGaQ/nyaz6Aq/n+64zoelw3o7nARFznIhUkq7crNS+QA
+	qCtRH4PszBQ2cE1xD8CRqg6QbAKdToHR61OBuXTM4NRzHYGdKm3pRUXYy+NgbkM=
+X-Google-Smtp-Source: AGHT+IHkf2ODCKcRrEGPglgEdd0oWotK7/yt/Zd8eCGwrE9lmca7vAQ+7ASNNeF47qGKhENIj3wUXw==
+X-Received: by 2002:a05:690c:3241:b0:64a:e7ec:f3d with SMTP id 00721157ae682-6c3d2db741dmr3169827b3.18.1724290999911;
+        Wed, 21 Aug 2024 18:43:19 -0700 (PDT)
 Received: from [192.168.8.164] ([170.246.157.153])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6c39a752e50sm738957b3.39.2024.08.21.18.43.03
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6c39d3aa4b8sm720707b3.90.2024.08.21.18.43.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Aug 2024 18:43:03 -0700 (PDT)
-Message-ID: <52c3cee7-9ee4-43cc-becd-b60ac0c20e6b@linaro.org>
-Date: Wed, 21 Aug 2024 19:43:02 -0600
+        Wed, 21 Aug 2024 18:43:19 -0700 (PDT)
+Message-ID: <d0126f7b-3d9a-4e0b-916c-85c8883e56bf@linaro.org>
+Date: Wed, 21 Aug 2024 19:43:18 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 14/14] qemuarm64-secureboot.yml: Set branch to
  scarthgap
-To: Mikko Rapeli <mikko.rapeli@linaro.org>
-Cc: meta-arm@lists.yoctoproject.org, Ross Burton <Ross.Burton@arm.com>,
- Jon Mason <jon.mason@arm.com>
+To: Jon Mason <jdmason@kudzu.us>
+Cc: meta-arm@lists.yoctoproject.org, Mikko Rapeli <mikko.rapeli@linaro.org>,
+ Ross Burton <Ross.Burton@arm.com>, Jon Mason <jon.mason@arm.com>
 References: <20240819190429.2897888-1-javier.tia@linaro.org>
- <20240819190429.2897888-15-javier.tia@linaro.org> <ZsWRAt4LHGd68rQT@nuoska>
+ <20240819190429.2897888-15-javier.tia@linaro.org> <ZsX7KYA4_1ITkk4V@kudzu.us>
 Content-Language: en-US, es-MX
 From: Javier Tia <javier.tia@linaro.org>
 Autocrypt: addr=javier.tia@linaro.org; keydata=
@@ -94,38 +94,37 @@ Autocrypt: addr=javier.tia@linaro.org; keydata=
  0DRpy6BSPVApS8v1S2kYlWyHm0+LhO4HWKgh/iIfYdYVeFs9I733KL9PvUAI6SqtMwYWH9UB
  5CZs1TgzocqaktEEBQJ76SKl4lU4yQJW9Pa33RRHpUXKNSg7Y2GChiD8zbi0vR/LC65omza9
  WdJQjTu3/NJR54YogRY=
-In-Reply-To: <ZsWRAt4LHGd68rQT@nuoska>
+In-Reply-To: <ZsX7KYA4_1ITkk4V@kudzu.us>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 22 Aug 2024 01:43:08 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5988
+ <meta-arm@lists.yoctoproject.org>; Thu, 22 Aug 2024 01:43:28 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5989
 
-On 8/21/24 1:02 AM, Mikko Rapeli wrote:
-> Hi,
-> 
+On 8/21/24 8:35 AM, Jon Mason wrote:
 > On Mon, Aug 19, 2024 at 01:04:29PM -0600, Javier Tia wrote:
->> UEFI Secure Boot is broken in master. Set to the latest stable OE 
->> branch.
+>> diff --git a/ci/qemuarm64-secureboot.yml b/ci/qemuarm64-secureboot.yml
+>> index 02341934..cadbe874 100644
+>> --- a/ci/qemuarm64-secureboot.yml
+>> +++ b/ci/qemuarm64-secureboot.yml
+>> @@ -1,5 +1,9 @@
+>>   # yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
+>>   
+>> +defaults:
+>> + repos:
+>> +    branch: scarthgap
 > 
-> What exactly is broken on master? On my build with this series 
-> everything worked with master commits:
+> Please don't do this.  If it's broken in edk2 then hold back the
+> version for qemuarm64-secureboot in a bbappend.  And if this was the
+> right thing to do (which it isn't), it needs a comment saying why it's
+> being done here.  Lastly, this fails CI majorly (in every instance of
+> qemuarm64-secureboot).  One example,
+> https://gitlab.com/jonmason00/meta-arm/-/jobs/7627395767
+> 
 
-Every time I tried to boot the kernel, I was getting an authentication error. However, after clearing out all repos and cloning them, that is no longer the case. Perhaps there was an upstream problem that was resolved.
-
-$ kas build ci/qemuarm64-secureboot.yml:ci/sstate-mirror.yml:ci/testimage.yml
-...
-2024-08-21 19:24:11 - INFO     - Repository poky checked out to 94993b0ef4d670cbfee517b703e356de461078a9
-2024-08-21 19:24:11 - INFO     - Repository meta-openembedded checked out to fc0264f0fd424e18c364d18cbce69eae386c8995
-2024-08-21 19:24:11 - INFO     - Repository meta-secure-core checked out to ae48c2372a346eee842e94e0a230944977bc5293
-...
-SUMMARY:
-core-image-base () - Ran 73 tests in 21.193s
-core-image-base - OK - All required tests passed (successes=16, skipped=57, failures=0, errors=0)
-NOTE: Tasks Summary: Attempted 4266 tasks of which 3983 didn't need to be rerun and all succeeded.
-
+Sure, I have removed the last commit hard-coding the branch. It's using master by default and passing the tests. Sending patch series v3.
 
 Thanks,
 
