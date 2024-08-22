@@ -2,60 +2,60 @@ Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CB7C5321D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 580D9C54722
 	for <webhook@archiver.kernel.org>; Thu, 22 Aug 2024 01:43:58 +0000 (UTC)
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
- by mx.groups.io with SMTP id smtpd.web11.4040.1724291033154939382
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+ by mx.groups.io with SMTP id smtpd.web11.4043.1724291035653159090
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 21 Aug 2024 18:43:53 -0700
+ Wed, 21 Aug 2024 18:43:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=SuX7vzUc;
- spf=pass (domain: linaro.org, ip: 209.85.128.172, mailfrom: javier.tia@linaro.org)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6b8d96aa4c3so3204737b3.1
-        for <meta-arm@lists.yoctoproject.org>; Wed, 21 Aug 2024 18:43:53 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=yl2Xi5nD;
+ spf=pass (domain: linaro.org, ip: 209.85.128.181, mailfrom: javier.tia@linaro.org)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-690e9001e01so3385857b3.3
+        for <meta-arm@lists.yoctoproject.org>; Wed, 21 Aug 2024 18:43:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724291032; x=1724895832; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1724291034; x=1724895834; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=c5+tBxeFbiWkfJkiZMiVStk0WUgY+OMHmCiMHBeRQPM=;
-        b=SuX7vzUcx7padaCNgq+b2qFSHbS0lhsNDxHTcOo43n8xDSlue7mpt21i4G7ppc/p+x
-         2/Z0/GivD+MMg75xhBTrpZSoC7PPKZ3YiOKa3h8aMOUv5l1mpPsixEO54p4APzIILSUi
-         fb0Gn1AIIt8cRM+nWzQejW+TC9/kMwTtZ/nxBKeZjBr8W2chpKLQm9dt6oopE40+C2Sy
-         O2fE/TZzaPJ/rBnFdLIdUSeuWe3L9XIdT2GCtxBg187eV2FCbK6Z/jdBHmCC0S+VWX+0
-         ewE4kTjnUiadoR3AEfmyuZqeTbuq2ZmNrIFYE1KvQO4rE1kbBMHYaGc8Qo1y0rTkQ0Qu
-         Ixog==
+        bh=h78nR8U3XGeppnR8tMm/5NKKjqRIM74r32yU07YeEzU=;
+        b=yl2Xi5nDRDiLsA6a2JO06qBD+Pe37U6ZiDZYfwrBMeyUGghtFZECKlsAEq4L+xU80Y
+         6w8YqqS+EMlpeRE+N2R+A/lPUk2cBj/kRlUD1K6zQBPeUy9PgusI1mxBN+U+QIN7JP2A
+         wAbadNP0Lnw+1cdwoc39rUZCSgd0VUNQJn8MU1km4wiA+vraOdEiNDyySG/if303cLyb
+         7n94FwpmaLE5QwSyI16CMAJbB6KS6ifcIcxA16NBUSLFF2X9AsWwKBOugkDI9sat4lop
+         WBCWvFEGTwNXaWXPWBgtGhXJ3lRxeNDWj0L8ZaoDtIzXhnb1DTMhYNZNSXg+bfELsNiK
+         f/og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724291032; x=1724895832;
+        d=1e100.net; s=20230601; t=1724291034; x=1724895834;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c5+tBxeFbiWkfJkiZMiVStk0WUgY+OMHmCiMHBeRQPM=;
-        b=rP57ZmINazbEvsTQzZwG6ZhhzKpXQBMOXvHjayPhEubEJAZ6LvrZ2xGT3za1Z3i0Gm
-         fbzH6B2XsMSo/sHhvqUtzZI0VCFpMxaUUCz9UgWREdaq0aifwn1/HMIOoMHoXfhRPKG+
-         JJAu+g2EXaCbWKB3PufRDqJxTqIpWCMk/yhb4e1LoWJbIfbWKgdi8r9bdBBOLZztTW5S
-         gRyy1sjyO6n6zcrhaBWumItkryDlwsIv97/cJOpBKoOTe53hqPDu0BnBbQzxtcgp743y
-         GWbJfdzBx/i8Vy2CZQ6brdnumQqI7K6QzNaAKZYuJFKXcVM4GisIT09LH4wdjaVybjjb
-         kF+Q==
-X-Gm-Message-State: AOJu0Yw3SGH91AiGGpbQ75Kg3CML6voRwpbe39FE6WFbMp7OnlzIH81m
-	09H9ZMgfdh9Hv8z60nx03j33bwt7eh3pC8ww0Do1LuLi9sfxzhpiyLfOL6EBIGqb39fUia+yCXL
-	9
-X-Google-Smtp-Source: AGHT+IE9ug0jzwpgVZEpwL1cKdT0A8eNpLtgEOkEZssLvu5gDm1s2yp1BJeMItNB2/9Aiq46UzbafQ==
-X-Received: by 2002:a05:690c:e1f:b0:6ad:91df:8fad with SMTP id 00721157ae682-6c09e65fa77mr56226337b3.26.1724291032110;
-        Wed, 21 Aug 2024 18:43:52 -0700 (PDT)
+        bh=h78nR8U3XGeppnR8tMm/5NKKjqRIM74r32yU07YeEzU=;
+        b=Z6Xfq+aJ6pER6+mqFKmw/TDPMwPchv/syML/C6ATKAL+3d07dFUuFtSYAGcufHOJ+j
+         Fg2eK6fJ2TLSFLQ83DDuT2Bk8PYBBwADhid/Btr7WhewvPn73U9jckSDqSt6HsjVsT7q
+         AafxekYoUJAL7XW8BxrxSFnk5LDZNqwaylMOl2Obz6GREbxqGT4hOMNFt5k6zrye7X6Z
+         fQJUu04PP9nr2US52+oQ4qdNsVa70SLugKkSv0q9tHd9kxwq3ugmnoPLDMy2Q5YyQuvg
+         rR26PPDrmoq+wjapNGVQfAEe6R5AYQFmlIM9Zkv4y0RCLti6Jm062wM3i8AdL6pILqq0
+         Wgfg==
+X-Gm-Message-State: AOJu0Yz5EqTeT5IWbHKKp7C5s6BXUbxBMI6RfOw5w4QNMZJlfYSK/As8
+	KH0+4tofFUFJEZV/JnHySN1lPLoV5X5jR7jQc3tyw2S790NcvYfysJ8oIBQN/195Q+f5HCTi4x1
+	x
+X-Google-Smtp-Source: AGHT+IHgsXgZFUto1mCj2Zby5wcloL2ledbHipIMDUpRPg9mMk46JaUBaOmuo3NHyV7R1ZVWNWlL+g==
+X-Received: by 2002:a05:690c:418f:b0:65f:9451:13dd with SMTP id 00721157ae682-6c3d62a3d7cmr3295437b3.42.1724291034555;
+        Wed, 21 Aug 2024 18:43:54 -0700 (PDT)
 Received: from jetm-rog-x670e-gene.lan ([170.246.157.153])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6c39e6eae07sm707757b3.145.2024.08.21.18.43.51
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6c39e6eae07sm707757b3.145.2024.08.21.18.43.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2024 18:43:51 -0700 (PDT)
+        Wed, 21 Aug 2024 18:43:54 -0700 (PDT)
 From: Javier Tia <javier.tia@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>,
 	Jon Mason <jon.mason@arm.com>,
 	Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH v3 09/13] qemuarm64-secureboot: Add meta-secure-core layer as dependency
-Date: Wed, 21 Aug 2024 19:43:31 -0600
-Message-ID: <20240822014335.3394568-10-javier.tia@linaro.org>
+Subject: [PATCH v3 11/13] systemd: Add UEFI support
+Date: Wed, 21 Aug 2024 19:43:33 -0600
+Message-ID: <20240822014335.3394568-12-javier.tia@linaro.org>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240822014335.3394568-1-javier.tia@linaro.org>
 References: <20240822014335.3394568-1-javier.tia@linaro.org>
@@ -65,40 +65,56 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 22 Aug 2024 01:43:58 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5999
-
-meta-secure-core is required because of sbsigntool.
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6001
 
 Signed-off-by: Javier Tia <javier.tia@linaro.org>
 ---
- ci/qemuarm64-secureboot.yml | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ .../recipes-bsp/images/core-image-base-uefi-secureboot.inc   | 2 ++
+ meta-arm/conf/machine/qemuarm64-secureboot.conf              | 5 +++++
+ meta-arm/recipes-core/systemd/systemd-efi.inc                | 1 +
+ meta-arm/recipes-core/systemd/systemd_%.bbappend             | 1 +
+ 4 files changed, 9 insertions(+)
+ create mode 100644 meta-arm/recipes-core/systemd/systemd-efi.inc
+ create mode 100644 meta-arm/recipes-core/systemd/systemd_%.bbappend
 
-diff --git a/ci/qemuarm64-secureboot.yml b/ci/qemuarm64-secureboot.yml
-index b26941e0..958a1ff1 100644
---- a/ci/qemuarm64-secureboot.yml
-+++ b/ci/qemuarm64-secureboot.yml
-@@ -4,13 +4,15 @@ header:
-   version: 14
-   includes:
-     - ci/base.yml
--
--machine: qemuarm64-secureboot
--
--target:
--  - core-image-base
-+    - ci/meta-openembedded.yml
-+    - ci/meta-secure-core.yml
+diff --git a/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc b/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc
+index 06046f6e..07e315a3 100644
+--- a/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc
++++ b/meta-arm-bsp/recipes-bsp/images/core-image-base-uefi-secureboot.inc
+@@ -9,3 +9,5 @@ QB_KERNEL_ROOT = ""
+ QB_DEFAULT_KERNEL = "none"
  
- local_conf_header:
-   optee: |
-     IMAGE_INSTALL:append = " optee-test optee-client optee-os-ta"
-     TEST_SUITES:append = " optee ftpm"
+ KERNEL_IMAGETYPE = "Image"
 +
-+machine: qemuarm64-secureboot
++IMAGE_INSTALL += "systemd"
+diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+index 6789b1c6..d6a7e22b 100644
+--- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
++++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+@@ -25,4 +25,9 @@ WKS_FILE_DEPENDS = "trusted-firmware-a"
+ IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
+ 
+ MACHINE_FEATURES += "optee-ftpm"
++MACHINE_FEATURES += "efi"
+ MACHINE_FEATURES += "uefi-secureboot"
 +
-+target:
-+  - core-image-base
++INIT_MANAGER = "systemd"
++DISTRO_FEATURES += "systemd"
++DISTRO_FEATURES_NATIVE += "systemd"
+diff --git a/meta-arm/recipes-core/systemd/systemd-efi.inc b/meta-arm/recipes-core/systemd/systemd-efi.inc
+new file mode 100644
+index 00000000..5572e51a
+--- /dev/null
++++ b/meta-arm/recipes-core/systemd/systemd-efi.inc
+@@ -0,0 +1 @@
++PACKAGECONFIG:append = " efi"
+diff --git a/meta-arm/recipes-core/systemd/systemd_%.bbappend b/meta-arm/recipes-core/systemd/systemd_%.bbappend
+new file mode 100644
+index 00000000..660358c2
+--- /dev/null
++++ b/meta-arm/recipes-core/systemd/systemd_%.bbappend
+@@ -0,0 +1 @@
++require ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'systemd-efi.inc', '', d)}
 -- 
 2.46.0
 
