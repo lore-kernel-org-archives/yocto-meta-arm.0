@@ -2,60 +2,60 @@ Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F07C87FC5
-	for <webhook@archiver.kernel.org>; Thu, 29 Aug 2024 16:32:26 +0000 (UTC)
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
- by mx.groups.io with SMTP id smtpd.web10.24034.1724949138177010079
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 580ADC83F3C
+	for <webhook@archiver.kernel.org>; Thu, 29 Aug 2024 16:32:36 +0000 (UTC)
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+ by mx.groups.io with SMTP id smtpd.web10.24058.1724949146315694104
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 29 Aug 2024 09:32:18 -0700
+ Thu, 29 Aug 2024 09:32:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=kM7PGYTz;
- spf=pass (domain: linaro.org, ip: 209.85.128.171, mailfrom: javier.tia@linaro.org)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6ca1d6f549eso10422567b3.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 09:32:18 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=tVeZz+Sm;
+ spf=pass (domain: linaro.org, ip: 209.85.128.179, mailfrom: javier.tia@linaro.org)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-690ad83d4d7so7733147b3.3
+        for <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 09:32:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724949137; x=1725553937; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1724949145; x=1725553945; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SLHu6PRlZnCzW/rU1UEj78mshvoxk7WjoojsTwAZ3/I=;
-        b=kM7PGYTzQvs4TBzLjjIj5KmZAHXCajYbKPsJ7MvxbmqMLELhsOogSFcv5Nix2G6ku7
-         CqFW57cgAZMs9m7BG6AmYOAkMleVAgzRXlgMrcqm25C3YBeqvZkmXYmHnjiaa3DWMf6s
-         NmQ8+JoUqokz0fqiNk26zZQyanFv2G9c76AbEjwolXtmviwsjP6gVDv+10WZ9cPGa3V1
-         Rpe6a4MSC5Bx6aaNbXHEZqMa3U8ZQw9hzGNS+aantIYDQEYjqU2dvb36JHphKhiQwqzs
-         Y3JOXYDGHJL2GyVimw9fM7Ie4SgLe9Gqv9wvdfmmm4R8E40QbKNs9T+gyRMizWdCAQvB
-         h0dw==
+        bh=/4uqiqGNFeYK26IJZeFXiRd548q0q3xwHKI1ITF66iY=;
+        b=tVeZz+SmaspNmjoTfN9xrANmxXJkOJFgUXZdKbEOczpCD/qnPCHdZE1IRx6mvi2ucD
+         /iFYLd2i8Fo/QYRpk8zmXvMJz8I+n/i1RJB+eZe/txJYarYaPIbqT4R1LkufLJ6qvtUd
+         ihhtrsZu2Po3u1De3MoP2uIKSXVzVjhu0CASiXvvoB9wBAgphxYl/8NRjKWl1+UH2aGW
+         kGqf161iNuyo63ZeWjgx73YxahS7AZ4AP28ebK4r9VdwCYGI6hk+eB0xyz0vlPsZ0U3w
+         XlAr/XL83LdBqA9aR1sqhpc2jPvqV+TYC5TQGKdpd9Sioma3zRzQQmwTmMtcxjzraZUJ
+         C2rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724949137; x=1725553937;
+        d=1e100.net; s=20230601; t=1724949145; x=1725553945;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SLHu6PRlZnCzW/rU1UEj78mshvoxk7WjoojsTwAZ3/I=;
-        b=A0tCpNuFG/OPoudAn5Qv0c/I+S2+G0zBDypDgH+ZJ1rkC3FIDpFtWmRA/f1nXjnMfH
-         8yYU3EDlqnUXzrJov0QqZJRBO1hDTsN3fGltAIR2tmBlRSRo7WtlvKV5qwzp5mSBoIXn
-         iGXGg582YvqJJ9QwSRaPEZ9E3oT606SR6i90Kglmw7EDe0O7SzG2Ywhtv48EMYqaeFlr
-         mFuxtqaq34VRt3+hqT3tZ77jU17I7P8Cok8kOvciZS3F5lk8AGyL6oYYx/6jQ5NSQkru
-         EAG8Uo2ex0GxJOrKnCZew8ijYCV2evHvNZ6RUb5BRoAmLyoM6lt31B7hxaS/+y2wBBZ4
-         FvEg==
-X-Gm-Message-State: AOJu0YwuVe0PEb4wS7uWXU5e3OixI6NMs/M9Lajbzt/X4hhEuNWqH60Q
-	12Veej1QBRVLGJ37i28q2YSba0iFdCbvDdGfjsMwTdPE8KQhbs06e5UcHwgldNTBxEwv4AC4mrm
-	0
-X-Google-Smtp-Source: AGHT+IGHHlpKe+YxWjy+x9iHpDucYnPKV6JQk9JBTQMFQAz3J6m7o71szSa4nBKvxIuSgqIjXFQvNw==
-X-Received: by 2002:a05:690c:2c02:b0:6af:8662:ff43 with SMTP id 00721157ae682-6d278435917mr29381227b3.37.1724949137183;
-        Thu, 29 Aug 2024 09:32:17 -0700 (PDT)
+        bh=/4uqiqGNFeYK26IJZeFXiRd548q0q3xwHKI1ITF66iY=;
+        b=NissYz9Bl1XSfeE9cdsi1UjNF6+ubZGLS13WcVMqEEti3TZuW4IztuJ5fqKZu2DHhR
+         PXLcqDljEk9R70wVDBrtvSm/NFJGXakxhWSUxDviAuAw6rCezw7+MmDqhXRw9bgk5zPQ
+         R/SmWv6gsf5GrftJYt4U041cTmzMijC5/bVu0eVF4W679OBDFQdob+kz7ii0EG22sOXW
+         hRZySTgGmgBbw2/dtRychxQ08aMZxLE7qPBs/slZEhWGFHXJIGungX6ZolcPUYu9PUdx
+         GXk7nL2kKMs0bt7MlW9X+83XymE1IUAXNKIh+G0wkawX4ji936oFAje9O7I9vv6flC4G
+         kFmQ==
+X-Gm-Message-State: AOJu0Yz3WS0HY3EH2h8jddxqvXwQPZKSnIUlGx5heJfrL5n280j4M5nM
+	ekq3vg3gHVPI5uKRn60kb9DksRe8NIZl3WyBCTZEYd7ZunJNPh1CwLttadgcotOlgRQgFTl/0c1
+	O
+X-Google-Smtp-Source: AGHT+IEA+KJmt9wv/q2PpOYcl/yiEgHX90uBh2vz/lu1ttMb+hQqwQVU1C2Mbkic7aw6qrc943TqVg==
+X-Received: by 2002:a05:690c:10d:b0:6ad:bf4f:1bc3 with SMTP id 00721157ae682-6d277c6ec56mr29729147b3.32.1724949145333;
+        Thu, 29 Aug 2024 09:32:25 -0700 (PDT)
 Received: from jetm-rog-x670e-gene.lan ([170.246.157.153])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6d2d438e18asm2993517b3.60.2024.08.29.09.32.16
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6d2d438e18asm2993517b3.60.2024.08.29.09.32.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2024 09:32:16 -0700 (PDT)
+        Thu, 29 Aug 2024 09:32:24 -0700 (PDT)
 From: Javier Tia <javier.tia@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>,
 	Jon Mason <jon.mason@arm.com>,
 	Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH v4 04/13] uefi-sb-keys.bbclass: Add class to validate UEFI keys
-Date: Thu, 29 Aug 2024 10:32:00 -0600
-Message-ID: <20240829163209.47945-5-javier.tia@linaro.org>
+Subject: [PATCH v4 11/13] systemd: Add UEFI support
+Date: Thu, 29 Aug 2024 10:32:07 -0600
+Message-ID: <20240829163209.47945-12-javier.tia@linaro.org>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240829163209.47945-1-javier.tia@linaro.org>
 References: <20240829163209.47945-1-javier.tia@linaro.org>
@@ -64,47 +64,57 @@ Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 16:32:26 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6014
-
-Without UEFI keys, signing will fail and the OS will not boot.
+ <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 16:32:36 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6021
 
 Signed-off-by: Javier Tia <javier.tia@linaro.org>
 ---
- meta-arm/classes/uefi-sb-keys.bbclass | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 meta-arm/classes/uefi-sb-keys.bbclass
+ meta-arm/conf/machine/qemuarm64-secureboot.conf              | 5 +++++
+ .../images/core-image-minimal-uefi-secureboot.inc            | 2 ++
+ meta-arm/recipes-core/systemd/systemd-efi.inc                | 1 +
+ meta-arm/recipes-core/systemd/systemd_%.bbappend             | 1 +
+ 4 files changed, 9 insertions(+)
+ create mode 100644 meta-arm/recipes-core/systemd/systemd-efi.inc
+ create mode 100644 meta-arm/recipes-core/systemd/systemd_%.bbappend
 
-diff --git a/meta-arm/classes/uefi-sb-keys.bbclass b/meta-arm/classes/uefi-sb-keys.bbclass
+diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+index 2483c4ac..542d09a3 100644
+--- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
++++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+@@ -22,4 +22,9 @@ WKS_FILE_DEPENDS = "trusted-firmware-a"
+ IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
+ 
+ MACHINE_FEATURES += "optee-ftpm"
++MACHINE_FEATURES += "efi"
+ MACHINE_FEATURES += "uefi-secureboot"
++
++INIT_MANAGER = "systemd"
++DISTRO_FEATURES += "systemd"
++DISTRO_FEATURES_NATIVE += "systemd"
+diff --git a/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc b/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
+index 06046f6e..07e315a3 100644
+--- a/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
++++ b/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
+@@ -9,3 +9,5 @@ QB_KERNEL_ROOT = ""
+ QB_DEFAULT_KERNEL = "none"
+ 
+ KERNEL_IMAGETYPE = "Image"
++
++IMAGE_INSTALL += "systemd"
+diff --git a/meta-arm/recipes-core/systemd/systemd-efi.inc b/meta-arm/recipes-core/systemd/systemd-efi.inc
 new file mode 100644
-index 00000000..e800b4c6
+index 00000000..5572e51a
 --- /dev/null
-+++ b/meta-arm/classes/uefi-sb-keys.bbclass
-@@ -0,0 +1,24 @@
-+# Validate UEFI keys
-+python __anonymous () {
-+    if d.getVar("UEFI_SB_KEYS_DIR", False) is None:
-+        raise bb.parse.SkipRecipe("UEFI_SB_KEYS_DIR is not set.")
-+
-+    # keys used for UEFI secure boot
-+    uefi_sb_keys = d.getVar("UEFI_SB_KEYS_DIR")
-+
-+    keys_to_check = [
-+        uefi_sb_keys + "/PK.esl",
-+        uefi_sb_keys + "/KEK.esl",
-+        uefi_sb_keys + "/dbx.esl",
-+        uefi_sb_keys + "/db.esl",
-+        uefi_sb_keys + "/db.key",
-+        uefi_sb_keys + "/db.crt",
-+    ]
-+
-+    missing_keys = [f for f in keys_to_check if not os.path.exists(f)]
-+
-+    if missing_keys:
-+        raise bb.parse.SkipRecipe("Required missing keys: %s" % (", ".join(missing_keys), )
-+            + ".\nRun %s/gen_uefi_keys.sh to generate missing keys." % uefi_sb_keys)
-+
-+}
++++ b/meta-arm/recipes-core/systemd/systemd-efi.inc
+@@ -0,0 +1 @@
++PACKAGECONFIG:append = " efi"
+diff --git a/meta-arm/recipes-core/systemd/systemd_%.bbappend b/meta-arm/recipes-core/systemd/systemd_%.bbappend
+new file mode 100644
+index 00000000..660358c2
+--- /dev/null
++++ b/meta-arm/recipes-core/systemd/systemd_%.bbappend
+@@ -0,0 +1 @@
++require ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'systemd-efi.inc', '', d)}
 -- 
 2.46.0
 
