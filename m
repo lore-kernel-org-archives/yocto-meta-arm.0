@@ -2,60 +2,60 @@ Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A5EC83F3D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED27C83F3A
 	for <webhook@archiver.kernel.org>; Thu, 29 Aug 2024 16:32:26 +0000 (UTC)
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
- by mx.groups.io with SMTP id smtpd.web10.24029.1724949137049268232
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+ by mx.groups.io with SMTP id smtpd.web10.24039.1724949141613833429
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 29 Aug 2024 09:32:17 -0700
+ Thu, 29 Aug 2024 09:32:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=q8rF/7AW;
- spf=pass (domain: linaro.org, ip: 209.85.128.169, mailfrom: javier.tia@linaro.org)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6d3c10af2efso155707b3.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 09:32:16 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=OrueNG8p;
+ spf=pass (domain: linaro.org, ip: 209.85.219.180, mailfrom: javier.tia@linaro.org)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e1205de17aaso909465276.2
+        for <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 09:32:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724949136; x=1725553936; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1724949140; x=1725553940; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=i3FMcrxoQMEjfxeuNGxbNN6+IFf/qUnBbfx9yY/tZpY=;
-        b=q8rF/7AWfeBRlIJewvAcLgObvicK1ArCJG8Bmjj7wSLE6WdUMccjFjlQwbAxGvhiUX
-         zvfu90nYHFciFXni4cvkSVdW7lcrhOqE9/dyHOiXMZ8e5T6UeXPu8Y9Q6vEvr4a6U4TU
-         B0LdMjgTaCnTV2QVKKjHMh7wexUJB7RavmMjglQB3v7KLibbw86TSQ1WcNYl8TqPou8U
-         z8ybvbP39a5ZO7Xx083yTDMMlG7MzN7jSD/zomN60HmNnBC8pU6a+5bfGCnGx81PQI/e
-         H0U+a0COZ/thYFCQsHqoeaRGUasCEIl6egadbqQzidKxTFBWg+/C2Er9K2KQGNKmCgGq
-         xyNQ==
+        bh=Y6cnGubIUPfqUNMZsTLbuxSnui3vnRbhrJbBfO5KvAM=;
+        b=OrueNG8pMXhtS/GTtr/Ss2NjuzqJykaiQP+yUrz93DXP1zWUV2GB1RkXS51JRo1Xb3
+         GRkyAUykUdqlxi2N2azZug15w137Tkkm5DsDUCTV88kW9tJvjSg/06D2ILqvUTLHDgxx
+         IyuoldTf9J5dbqqaT2IRSqpbLE71N28SsYfm485S18wy/qpXKQQ/bPD5GLNBV2xRmkG2
+         JQQtkzNrr/hJL2QBSiJwVgN7Vj1sWkMR4OqI/tYIJo4Dp3e9ct9TS9n8koN6HPAigZ6P
+         Rc+0kY1VKNQpakfLSQDWU4lkSkDChn5mjqK4UL9PuIP3pkVO57xfyrxGmJr2bqbBUdDB
+         IbeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724949136; x=1725553936;
+        d=1e100.net; s=20230601; t=1724949140; x=1725553940;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=i3FMcrxoQMEjfxeuNGxbNN6+IFf/qUnBbfx9yY/tZpY=;
-        b=Ns5VAM/Rkk/af4IENd9Ylh4h1+LkaFSJHNEQjxb+zbDrmqxySBC6/Ixl40/4111wIt
-         MzAMPXyrIEi7sQOOKbH63lsnWx0G6ASFpWexqseVdXn3QfQ6RCyN2m8WEj1uA6knJ/ki
-         w9V4rJkymSoqUqWF7oEAOdWI/XWtEz4w+skAgRdmmcahBdv0PTYefqn4RyP4uogA1/nC
-         SBsu6TDVnkx6Xn/7vSKbwlEVcYYgvOUQ104d8a2IzWdk1ANARpsrBPiu2y1ByI0PCTRV
-         zEDwFhF/5qgI7TJmK9WaR0ZGu/XUnoq0Vk2Pi0a+Z14viXIPMF9btLhD9eb/aKF3sMzv
-         oh7A==
-X-Gm-Message-State: AOJu0YyMYjCVJaffQ7VMxfCSOWFd5Esot2iPLfO4X5jHIJ7TNy0wwaYd
-	jgAoRwQh9O/RLTeyeF5yMt6xZ4AkqAcyf6245rJPSW5willMCkRt1WTQVu9SzMPX5zle48w5+Ao
-	w
-X-Google-Smtp-Source: AGHT+IEPDSQMbqqd/q2h7kA+0zvUPY1mNatTfYek8790o1nKi6dcA4QE6R1raH4WcSAO8iPz2Z/HrQ==
-X-Received: by 2002:a05:690c:2713:b0:64a:7040:2d8a with SMTP id 00721157ae682-6d2766ef460mr29058917b3.23.1724949136078;
-        Thu, 29 Aug 2024 09:32:16 -0700 (PDT)
+        bh=Y6cnGubIUPfqUNMZsTLbuxSnui3vnRbhrJbBfO5KvAM=;
+        b=JR9P5tWeyn/n+N/TO6/cw0tP3XVtAC0hcq4gvvh3K3TFnliwZzHepBIVKPypse9643
+         9whx1YoxPF4ZdaDralnGi8bF1aZXsD7s/B76bANYBKVYhoFPm02+HuKTBEMT8Xc62PhF
+         LHoF5bFPWC2DU1kGd5IMR2P30lhZnBlWp1TAk95CDEj8nHDJwbMaGcI0+mdXB9Vkx8Wi
+         D+t3dIr8YxMylxikJOE1Jb+GGbaBv/U6S4sVK8XYizmM8N69RmlmEvvC7NVM8/jNg9Nh
+         WaDS9j/ZdEOebYQg3JCe0tzzxv40Qes8Yj7qQ1WjRB7oeGSgaONWc6+mg/uv3N3eGMz2
+         3DeQ==
+X-Gm-Message-State: AOJu0Yxj1xH+K97K2cCAgEjh+qL9a4Qh/wtkEHlEU87j/vCtjBtrZNEG
+	659hbI9HNt1jiVNFOq5L1J1IkO7Jtgq8gu24TWltMl6HJ/VBn1qZ0IyvCfblCE8dCL7QAuYp/6O
+	p
+X-Google-Smtp-Source: AGHT+IEqaHSIIZ0+d7mc+UyBKTd7rAXjkYzD5pHerhc5+0jO610Xyh2pRmqh/WUw4JbxFL227/DUbw==
+X-Received: by 2002:a05:690c:6509:b0:6b2:1b65:4c0d with SMTP id 00721157ae682-6d276404956mr38355997b3.10.1724949140660;
+        Thu, 29 Aug 2024 09:32:20 -0700 (PDT)
 Received: from jetm-rog-x670e-gene.lan ([170.246.157.153])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6d2d438e18asm2993517b3.60.2024.08.29.09.32.15
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6d2d438e18asm2993517b3.60.2024.08.29.09.32.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2024 09:32:15 -0700 (PDT)
+        Thu, 29 Aug 2024 09:32:20 -0700 (PDT)
 From: Javier Tia <javier.tia@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>,
 	Jon Mason <jon.mason@arm.com>,
 	Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH v4 03/13] layer.conf: Introduce UEFI_SB_KEYS_DIR
-Date: Thu, 29 Aug 2024 10:31:59 -0600
-Message-ID: <20240829163209.47945-4-javier.tia@linaro.org>
+Subject: [PATCH v4 07/13] meta-arm: Introduce gen-uefi-sb-keys.bb recipe
+Date: Thu, 29 Aug 2024 10:32:03 -0600
+Message-ID: <20240829163209.47945-8-javier.tia@linaro.org>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240829163209.47945-1-javier.tia@linaro.org>
 References: <20240829163209.47945-1-javier.tia@linaro.org>
@@ -65,72 +65,130 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 16:32:26 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6013
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6017
 
-UEFI_SB_KEYS_DIR saves UEFI keys path.
-
-To avoid security issues, UEFI keys are not provided and they can be
-generated by gen_uefi_keys.sh script.
+Generate a new set of keys on build time. It avoids to use same keys
+which could generate a security issue.
 
 Signed-off-by: Javier Tia <javier.tia@linaro.org>
 ---
- meta-arm/conf/layer.conf               |  2 ++
- meta-arm/uefi-sb-keys/gen_uefi_keys.sh | 35 ++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
- create mode 100755 meta-arm/uefi-sb-keys/gen_uefi_keys.sh
+ meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb | 26 +++++++++
+ meta-arm/uefi-sb-keys/.gitignore              |  4 ++
+ meta-arm/uefi-sb-keys/gen_uefi_keys.sh        | 56 +++++++++----------
+ 3 files changed, 57 insertions(+), 29 deletions(-)
+ create mode 100644 meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb
+ create mode 100644 meta-arm/uefi-sb-keys/.gitignore
 
-diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-index 9e9c9dbd..2854dd69 100644
---- a/meta-arm/conf/layer.conf
-+++ b/meta-arm/conf/layer.conf
-@@ -21,3 +21,5 @@ HOSTTOOLS_NONFATAL += "telnet"
- addpylib ${LAYERDIR}/lib oeqa
- 
- WARN_QA:append:layer-meta-arm = " patch-status"
+diff --git a/meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb b/meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb
+new file mode 100644
+index 00000000..a4ae6d87
+--- /dev/null
++++ b/meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb
+@@ -0,0 +1,26 @@
++# SPDX-License-Identifier: MIT
 +
-+UEFI_SB_KEYS_DIR ??= "${LAYERDIR}/uefi-sb-keys"
++SUMMARY = "Generate UEFI keys for secure boot"
++LICENSE = "MIT"
++LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
++
++DEPENDS += "bash-native"
++DEPENDS += "coreutils-native"
++DEPENDS += "efitools-native"
++DEPENDS += "openssl-native"
++
++SRC_URI = "file://${UEFI_SB_KEYS_DIR}/gen_uefi_keys.sh"
++
++UNPACKDIR = "${S}"
++
++do_fetch[noexec] = "1"
++do_patch[noexec] = "1"
++do_compile[noexec] = "1"
++do_configure[noexec] = "1"
++
++do_install() {
++    ${UEFI_SB_KEYS_DIR}/gen_uefi_keys.sh ${UEFI_SB_KEYS_DIR}
++}
++
++FILES:${PN} = "${UEFI_SB_KEYS_DIR}/*.key"
++FILES:${PN} += "${UEFI_SB_KEYS_DIR}/*.crt"
+diff --git a/meta-arm/uefi-sb-keys/.gitignore b/meta-arm/uefi-sb-keys/.gitignore
+new file mode 100644
+index 00000000..f8669919
+--- /dev/null
++++ b/meta-arm/uefi-sb-keys/.gitignore
+@@ -0,0 +1,4 @@
++*.auth
++*.crt
++*.esl
++*.key
 \ No newline at end of file
 diff --git a/meta-arm/uefi-sb-keys/gen_uefi_keys.sh b/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
-new file mode 100755
-index 00000000..fc7f25c9
---- /dev/null
+index fc7f25c9..21e65c72 100755
+--- a/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
 +++ b/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
-@@ -0,0 +1,35 @@
-+#/bin/sh
-+
-+set -eux
-+
-+#Create PK
-+openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout PK.key -out PK.crt -nodes -days 3650
-+cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc PK.crt PK.esl
-+sign-efi-sig-list -c PK.crt -k PK.key PK PK.esl PK.auth
-+
-+#Create KEK
-+openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout KEK.key -out KEK.crt -nodes -days 3650
-+cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc KEK.crt KEK.esl
-+sign-efi-sig-list -c PK.crt -k PK.key KEK KEK.esl KEK.auth
-+
-+#Create DB
-+openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout db.key -out db.crt -nodes -days 3650
-+cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc db.crt db.esl
-+sign-efi-sig-list -c KEK.crt -k KEK.key db db.esl db.auth
-+
-+#Create DBX
-+openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout dbx.key -out dbx.crt -nodes -days 3650
-+cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc dbx.crt dbx.esl
-+sign-efi-sig-list -c KEK.crt -k KEK.key dbx dbx.esl dbx.auth
-+
-+#Sign image
-+#sbsign --key db.key --cert db.crt Image
-+
-+#Digest image
-+#hash-to-efi-sig-list Image db_Image.hash
-+#sign-efi-sig-list -c KEK.crt -k KEK.key db db_Image.hash db_Image.auth
-+
-+#Empty cert for testing
-+touch noPK.esl
-+sign-efi-sig-list -c PK.crt -k PK.key PK noPK.esl noPK.auth
-+
+@@ -1,35 +1,33 @@
+-#/bin/sh
++#!/bin/bash
++#
++# SPDX-License-Identifier: MIT
++#
+ 
+ set -eux
+ 
+-#Create PK
+-openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout PK.key -out PK.crt -nodes -days 3650
+-cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc PK.crt PK.esl
+-sign-efi-sig-list -c PK.crt -k PK.key PK PK.esl PK.auth
++KEYS_PATH=${1:-./}
++SUBJECT="/CN=Linaro_LEDGE/"
++GUID="11111111-2222-3333-4444-123456789abc"
+ 
+-#Create KEK
+-openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout KEK.key -out KEK.crt -nodes -days 3650
+-cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc KEK.crt KEK.esl
+-sign-efi-sig-list -c PK.crt -k PK.key KEK KEK.esl KEK.auth
++openssl req -x509 -sha256 -newkey rsa:2048 -subj "${SUBJECT}" \
++    -keyout "${KEYS_PATH}"/PK.key -out "${KEYS_PATH}"/PK.crt \
++    -nodes -days 3650
++cert-to-efi-sig-list -g ${GUID} \
++    "${KEYS_PATH}"/PK.crt "${KEYS_PATH}"/PK.esl
++sign-efi-sig-list -c "${KEYS_PATH}"/PK.crt -k "${KEYS_PATH}"/PK.key \
++    "${KEYS_PATH}"/PK "${KEYS_PATH}"/PK.esl "${KEYS_PATH}"/PK.auth
+ 
+-#Create DB
+-openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout db.key -out db.crt -nodes -days 3650
+-cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc db.crt db.esl
+-sign-efi-sig-list -c KEK.crt -k KEK.key db db.esl db.auth
+-
+-#Create DBX
+-openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout dbx.key -out dbx.crt -nodes -days 3650
+-cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc dbx.crt dbx.esl
+-sign-efi-sig-list -c KEK.crt -k KEK.key dbx dbx.esl dbx.auth
+-
+-#Sign image
+-#sbsign --key db.key --cert db.crt Image
+-
+-#Digest image
+-#hash-to-efi-sig-list Image db_Image.hash
+-#sign-efi-sig-list -c KEK.crt -k KEK.key db db_Image.hash db_Image.auth
+-
+-#Empty cert for testing
+-touch noPK.esl
+-sign-efi-sig-list -c PK.crt -k PK.key PK noPK.esl noPK.auth
++for key in KEK db dbx; do
++    openssl req -x509 -sha256 -newkey rsa:2048 -subj "${SUBJECT}" \
++        -keyout "${KEYS_PATH}"/${key}.key -out "${KEYS_PATH}"/${key}.crt \
++        -nodes -days 3650
++    cert-to-efi-sig-list -g ${GUID} \
++        "${KEYS_PATH}"/${key}.crt "${KEYS_PATH}"/${key}.esl
++    sign-efi-sig-list -c "${KEYS_PATH}"/PK.crt -k "${KEYS_PATH}"/PK.key \
++        "${KEYS_PATH}"/${key} "${KEYS_PATH}"/${key}.esl "${KEYS_PATH}"/${key}.auth
++done
+ 
++# Empty cert for testing
++touch "${KEYS_PATH}"/noPK.esl
++sign-efi-sig-list -c "${KEYS_PATH}"/PK.crt -k "${KEYS_PATH}"/PK.key \
++    "${KEYS_PATH}"/PK "${KEYS_PATH}"/noPK.esl "${KEYS_PATH}"/noPK.auth
 -- 
 2.46.0
 
