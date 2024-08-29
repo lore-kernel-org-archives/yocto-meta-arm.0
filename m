@@ -2,60 +2,60 @@ Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AECC87FC8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 658F6C87FC9
 	for <webhook@archiver.kernel.org>; Thu, 29 Aug 2024 16:32:26 +0000 (UTC)
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
- by mx.groups.io with SMTP id smtpd.web11.24077.1724949145169787445
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+ by mx.groups.io with SMTP id smtpd.web11.24058.1724949139433559891
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 29 Aug 2024 09:32:25 -0700
+ Thu, 29 Aug 2024 09:32:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=ezgfvhxQ;
- spf=pass (domain: linaro.org, ip: 209.85.128.182, mailfrom: javier.tia@linaro.org)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6b47ff8a59aso8107877b3.2
-        for <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 09:32:25 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=XElUKw2T;
+ spf=pass (domain: linaro.org, ip: 209.85.128.177, mailfrom: javier.tia@linaro.org)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6c91f9fb0d7so8885437b3.3
+        for <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 09:32:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724949144; x=1725553944; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1724949138; x=1725553938; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rkm13HMFP9FZqmdlE0W6Vw5KdIWOyYYCxFLq8AqBJLI=;
-        b=ezgfvhxQ4WORxBlXLdOimaHzujDgyGQ5xSdUjkZnvB54hvrsnzrcqMDgPDotYvQTAn
-         PBAmDWd/NCYK9MMPfnrkueuh2OqsO0WWJUT3zVIpISBo4eGOGEkO5ieRRmJCa6q8uZIS
-         gkSrq/ikWY41IGq7w9a/9CIsv52v0r1plnvOmMe2JnG0aoJ26dEaFtvyZPaCiX+1gyKQ
-         8qvE6YqbPf4yPZu9HZi1RiEMFOvC6OZOcbmZ37yphK7ix1BKOsN9zWC4omwRGsi/K64A
-         2uTTPXbup+xE7EiRPcPnkSvpB5zSUODjaT7DcKYpPMDMT/9oQDEHq6C8lxNgFUp7Zj/T
-         /YIQ==
+        bh=jKeLT5wECjxCPh0q9TVfT28Dr9BXXolYW1ml7VAYpJM=;
+        b=XElUKw2Tj05CA9A3RQaJF/QXl7hU1zD1bu3b+2GFVVs0TNj9HlMexRHfj6y4wGYg05
+         CxFflvCvNnMxscDzFsK2u8pFvQ6c6roPXQCSdeNAShgMeMUOlLCN4PSlyzgdmF0mMtg3
+         rD0LraD+O/9090ZUc/g9/SgjkaeghbagNQ/PkZwEHTkyqrITOJ3E4QQboFDBjXEnN6Wo
+         sBa9DbGftz3jn5lihnLx99XF7LF4F8JQj33zwrA31lStdFOGFIRfnqauTydjcF9PEIzh
+         wLwJGqry8bnkiT0mjgssuDU2gk/Ov3gzI9+Y7KPn+tevEWDP/AkSKdyrR/Onjuycn57b
+         HI9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724949144; x=1725553944;
+        d=1e100.net; s=20230601; t=1724949138; x=1725553938;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rkm13HMFP9FZqmdlE0W6Vw5KdIWOyYYCxFLq8AqBJLI=;
-        b=qwtgzIrvFTh8pkzuga6g/ExuLdW7Ubnyi3CRO7cHQPhp5CtbI9KSpur3dmStEQ9TmU
-         mVNXf9OjzRFVf7jUKYR6MKZMt1OyUhwBFDfFSonEgV8H5/Oj5VLF5YDaJYstCQmzdDQW
-         HiEeTE/5OGI/Pxzj3UyBwO+Y0cnJA5IR40wtVUFKulExXQSwnawwdh4gga7nEGdeDsnd
-         1GHBCFeX11gP613AbRNeT30mrwUMxKSlsGGOnofgSks1tV9iVhFUzjX/F2em0DrtqijP
-         4IsAY7f7pqaNevFnBd1g6aFWUCnKS0c7yuovDJiceIPHg5eViaI9TGQSz7RQ5+CViLQl
-         5M1A==
-X-Gm-Message-State: AOJu0YxXJ00+3vvPKADA/kVFJu45Hht9X+ZJaJLczZwl2vMG+GmW90kl
-	GD7M9BZnldFI1zh3+8SJBpwkdLlAEklVR2NF3PJgXZyWyRi0ulwBfKgh0n2pRqsRR17KHRTurjF
-	K
-X-Google-Smtp-Source: AGHT+IHWl8i6H0FO4L03vjlsd8PoJqq2Q7g8KPtfHc70nRtlfbRH8usNtD9bww6owzExpSpe0xPORg==
-X-Received: by 2002:a05:690c:e1d:b0:62f:9e2d:3e5d with SMTP id 00721157ae682-6d277f51ed8mr41938227b3.43.1724949144108;
-        Thu, 29 Aug 2024 09:32:24 -0700 (PDT)
+        bh=jKeLT5wECjxCPh0q9TVfT28Dr9BXXolYW1ml7VAYpJM=;
+        b=KIhotXInr1stYYCd+WLFN+WRZSLwhKFvpCcuOEr0TnVn5MxMNPr9eFhgBskAOCQh7E
+         slNx9lHAo8XcdSQLIUAHUn/wgfb7x5qWzDzCff1kPo0L5dSh/cTFxpmifUrzQtA0R9HR
+         1Ydem9VJq7bXZ2bDXlcdlh42vDOdbdZeUm9BDUpM/v0L/6BYN7x3WvY6uoOBOhc64roO
+         RfPeObELk3LFCXGUOs8oZ08Pyko6kSO3/c7MsMHfydcqoltykmRNuOgkBu2LG2jHaKc+
+         m4mBGNqIPWo/LVKkb3eSWYlxUHklBaaeSEZDc17jbcYeCBQWJnBYdOPLmouFAyv57cOB
+         201A==
+X-Gm-Message-State: AOJu0Ywp5zIaE2yGwjXMHMsaOATUgtZsy7Dh+3AoV9eT5Th/54Q704cy
+	+pcnO690f83lB1Og5Aiu1wpD3zWwwrWAOJZzgYBrc8BPdn3llM55gAXX4ujV8IITDQwYGTx3o+P
+	c
+X-Google-Smtp-Source: AGHT+IHZUHztSHKQb3MGYaKoZxvvJ4ErIVfLcNx/T2UTa3E4yU6gReXQmk8H5gnrk6+YKixMgWO9Jg==
+X-Received: by 2002:a05:690c:d83:b0:61a:e4ef:51d with SMTP id 00721157ae682-6d275e337dbmr38820307b3.9.1724949138413;
+        Thu, 29 Aug 2024 09:32:18 -0700 (PDT)
 Received: from jetm-rog-x670e-gene.lan ([170.246.157.153])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6d2d438e18asm2993517b3.60.2024.08.29.09.32.22
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6d2d438e18asm2993517b3.60.2024.08.29.09.32.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2024 09:32:23 -0700 (PDT)
+        Thu, 29 Aug 2024 09:32:17 -0700 (PDT)
 From: Javier Tia <javier.tia@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>,
 	Jon Mason <jon.mason@arm.com>,
 	Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH v4 10/13] linux-yocto: Setup UEFI and sign kernel image
-Date: Thu, 29 Aug 2024 10:32:06 -0600
-Message-ID: <20240829163209.47945-11-javier.tia@linaro.org>
+Subject: [PATCH v4 05/13] sbsign.bbclass: Add class to sign binaries
+Date: Thu, 29 Aug 2024 10:32:01 -0600
+Message-ID: <20240829163209.47945-6-javier.tia@linaro.org>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240829163209.47945-1-javier.tia@linaro.org>
 References: <20240829163209.47945-1-javier.tia@linaro.org>
@@ -65,70 +65,64 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 16:32:26 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6020
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6015
 
-efivarfs kernel module is required to access EFI vars.
+A lot of recipes are using these same steps to sign binaries
+for UEFI secure boot.
 
+Authored-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 Signed-off-by: Javier Tia <javier.tia@linaro.org>
 ---
- .../core-image-minimal-uefi-secureboot.inc    |  8 ++++++++
- .../linux/linux-yocto%.bbappend               |  2 ++
- .../linux/linux-yocto-uefi-secureboot.inc     | 19 +++++++++++++++++++
- 3 files changed, 29 insertions(+)
- create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
+ meta-arm/classes/sbsign.bbclass | 39 +++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 meta-arm/classes/sbsign.bbclass
 
-diff --git a/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc b/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
-index 2232d3b3..06046f6e 100644
---- a/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
-+++ b/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
-@@ -1,3 +1,11 @@
- inherit uefi-sb-keys
- 
- WKS_FILE = "efi-disk-no-swap.wks.in"
-+
-+# Detected by passing kernel parameter
-+QB_KERNEL_ROOT = ""
-+
-+# kernel is in the image, should not be loaded separately
-+QB_DEFAULT_KERNEL = "none"
-+
-+KERNEL_IMAGETYPE = "Image"
-diff --git a/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend
-index a287d0e1..29c21355 100644
---- a/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend
-+++ b/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend
-@@ -25,3 +25,5 @@ SRC_URI:append:qemuarm = " \
- 
- FFA_TRANSPORT_INCLUDE = "${@bb.utils.contains('MACHINE_FEATURES', 'arm-ffa', 'arm-ffa-transport.inc', '' , d)}"
- require ${FFA_TRANSPORT_INCLUDE}
-+
-+require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'linux-yocto-uefi-secureboot.inc', '', d)}
-\ No newline at end of file
-diff --git a/meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc b/meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
+diff --git a/meta-arm/classes/sbsign.bbclass b/meta-arm/classes/sbsign.bbclass
 new file mode 100644
-index 00000000..cb62fdee
+index 00000000..a99c0218
 --- /dev/null
-+++ b/meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
-@@ -0,0 +1,19 @@
-+KERNEL_FEATURES += "cfg/efi-ext.scc"
++++ b/meta-arm/classes/sbsign.bbclass
+@@ -0,0 +1,39 @@
++# Sign binaries for UEFI secure boot
++# Usage in recipes:
++#
++# Set key and cert files in recipe or machine/distro config:
++# SBSIGN_KEY = "db.key"
++# SBSIGN_CERT = "db.crt"
++#
++# Set binary to sign per recipe:
++# SBSIGN_TARGET_BINARY = "${B}/binary_to_sign"
++#
++# Then call do_sbsign() in correct stage of the build
++# do_compile:append() {
++#     do_sbsign
++# }
 +
-+DEPENDS += 'gen-uefi-sb-keys'
++DEPENDS += "sbsigntool-native"
 +
-+inherit sbsign
++SBSIGN_KEY ?= "db.key"
++SBSIGN_CERT ?= "db.crt"
++SBSIGN_TARGET_BINARY ?= "binary_to_sign"
 +
-+SBSIGN_KEY = "${UEFI_SB_KEYS_DIR}/db.key"
-+SBSIGN_CERT = "${UEFI_SB_KEYS_DIR}/db.crt"
++# makes sure changed keys trigger rebuild/re-signing
++SRC_URI += "\
++    file://${SBSIGN_KEY} \
++    file://${SBSIGN_CERT} \
++"
 +
-+# shell variable set inside do_compile task
-+SBSIGN_TARGET_BINARY = "$KERNEL_IMAGE"
-+
-+do_compile:append() {
-+    KERNEL_IMAGE=$(find ${B} -name ${KERNEL_IMAGETYPE} -print -quit)
-+    do_sbsign
++# not adding as task since recipes may need to sign binaries at different
++# stages. Instead they can call this function when needed by calling this function
++do_sbsign() {
++    bbnote "Signing ${PN} binary ${SBSIGN_TARGET_BINARY} with ${SBSIGN_KEY} and ${SBSIGN_CERT}"
++    ${STAGING_BINDIR_NATIVE}/sbsign \
++        --key "${UNPACKDIR}/${SBSIGN_KEY}" \
++        --cert "${UNPACKDIR}/${SBSIGN_CERT}" \
++        --output  "${SBSIGN_TARGET_BINARY}.signed" \
++        "${SBSIGN_TARGET_BINARY}"
++    cp "${SBSIGN_TARGET_BINARY}" "${SBSIGN_TARGET_BINARY}.unsigned"
++    cp "${SBSIGN_TARGET_BINARY}.signed" "${SBSIGN_TARGET_BINARY}"
 +}
-+
-+RRECOMMENDS:${PN} += "kernel-module-efivarfs"
-+RRECOMMENDS:${PN} += "kernel-module-efivars"
+\ No newline at end of file
 -- 
 2.46.0
 
