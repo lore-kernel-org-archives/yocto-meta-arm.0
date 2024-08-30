@@ -2,149 +2,115 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D882CA0FF6
-	for <webhook@archiver.kernel.org>; Fri, 30 Aug 2024 14:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D68CA0FF8
+	for <webhook@archiver.kernel.org>; Fri, 30 Aug 2024 14:03:29 +0000 (UTC)
 Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
- by mx.groups.io with SMTP id smtpd.web10.16118.1725026459370649548
+ by mx.groups.io with SMTP id smtpd.web11.16017.1725026599210938091
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 30 Aug 2024 07:00:59 -0700
+ Fri, 30 Aug 2024 07:03:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=wBP0nri8;
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=x5BUQnky;
  spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.182, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7a7fef9a5fdso180211985a.1
-        for <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 07:00:59 -0700 (PDT)
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7a7f8b0b7d0so77713885a.2
+        for <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 07:03:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725026458; x=1725631258; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725026598; x=1725631398; darn=lists.yoctoproject.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Bt4dG+ZfbtHO4AaOzBvIhnFGzVedX7dojG1s0uCWVw=;
-        b=wBP0nri8y+UF1NePqtlyC7AbWASpk1+8YoaVBzf9dQvFETPwRGwUmMMqeTlxilpnc4
-         lVI9Tz1CmwyEDQQ4jobOepvUSsylBBKhPmInuHN8wYfmvBnRqftoSEE2zPYGHwjJMXZ3
-         3WJojQsYAm6KIxRONeO9iMjQNJrjnrRhepxOU5pk54FGshG1+t0+nsH/Rh/iWzAY+Gj6
-         dcPWlkTCjOfBCOZzg/zNia4leU1a4e1jfLFezbcwVIzk0QQA9kpkQaCLvuEUTgmS5MeG
-         2PkIpl6e9gYPAPPdvTxzdZ5OOLlFVhBlTAXjnC3WISolfA17XOrJMc4ongAaFQxeW9iY
-         8XCw==
+        bh=gvWz7cHRvUkX2LgYAqpe6m9Qp1+1tVxyAr3U0739lCU=;
+        b=x5BUQnkyjRAf03HPTae1BoPyXjzFvK405zucRhreiiI/uX1yUTEwiMqjJ8L/QvMi7D
+         U7BDS9WrI/m5M5DbXgPvQCwdrwNrKfIA00IeaAZdfAtZtRyudTFXFPNdrYWBQdik2X11
+         kF8kSTyorHzQTjKt6HpRMe/ndIpt0h5x1wT9CAmVElom9RHDzff1g0qVqzs/MS7ZMQYb
+         kgj96K98e+HHS5BvvKC/5z/bjM5EAV9vsULrxp+k3QISa4AEpwUu8ju193ZECJaf8CBX
+         ii/qFvpBMqFLrGX4pyTTZxBX+QYPqKJTDGRvCJ3e+EzH1mNKfmHs26eetx2hWmk7bD7O
+         OxRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725026458; x=1725631258;
+        d=1e100.net; s=20230601; t=1725026598; x=1725631398;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5Bt4dG+ZfbtHO4AaOzBvIhnFGzVedX7dojG1s0uCWVw=;
-        b=RWLnmaHoKEG1DYK3Fw3slQqBy+ko3ZYnEHT6ULfF505rIER1CBGYpl4Gz6f62rRTna
-         i8uBYUM2wR89qiCTbR0ewltgUN4yJ4sKN/f9FTU3N48JRk9DJKLF4DEnnxk/B9uLQGPW
-         Rr+yfQdwHilJOr9gJgcrSZhwdsBxB8ak2kARMZleX/LBdZXpWlGJFCAzFEnDAlT7FDFx
-         g6+G8wZLjn144I/WFR2VbGhs1UTxX/ymHssen1FfFYp5GrJZIbkM2au6J7hHzKIIBSpo
-         jChdk1hF+XP7FWo/MW6GX+jGiq8RjGhpiD+Ec8vchsYrQnVwjwJucCbfwZjj+4pavXaS
-         mcDg==
-X-Gm-Message-State: AOJu0YyLPwAB+SPd+qcay3V7p+BWyQIY2xa71Q8eGu3t7SWutiGYhmMj
-	yhjagt+0JyXYXYvKSN4MS6a2ZNUxmq4lYwS2n0JsUGZwbNFivLvx3NSX2lEjKg==
-X-Google-Smtp-Source: AGHT+IGfeuhbMg0N5bK51w7R8nggLe68o3IiM50yaOsoiQpxf+If7m5htPOqty9L38YiaaSVQwozZg==
-X-Received: by 2002:a05:620a:4305:b0:7a4:d54f:7fe8 with SMTP id af79cd13be357-7a804c2a58bmr926257185a.19.1725026458095;
-        Fri, 30 Aug 2024 07:00:58 -0700 (PDT)
+        bh=gvWz7cHRvUkX2LgYAqpe6m9Qp1+1tVxyAr3U0739lCU=;
+        b=U8OlfoqcxPI/G07v3a8L0e5RahLAjCivlJ3qL9TKryhs0x9dVX//M1J7AJdFHW5UlC
+         ++9QQM2fq75ufsxidXl49P20bKcJcumYDNfDlPsNbwGk1p2Se5Kr2bqcEnjS/HfM9sWz
+         OQ8WlhzzKvN38Qql+/xIWiihP4NWrlNz04gcdCQor5dXNHsLqdZOafu2VN0h95r4FBFY
+         XKKwV2gSk1jWk9uoySyf8bBlhMvAYA34blx+fUVRhVCUvVoga9RGZNq/JsMULTWXVgKL
+         gV/zBgpGpym134W/nl7qfQaWZDcyi5dQ4R6Celkg0VjUpWfAY3ciN8yHe4tHUdTqfcvV
+         Sa0Q==
+X-Gm-Message-State: AOJu0YxoQnrawzihZnRYcvXEa9k4t5a3mWqNJlJZC3yGeYUq/Wp8M8/B
+	iPUs0yEO7KA/Ti8aCeSIscDRgmhMDf7oVLpvgVWTMZrelW2KpvOko/JyMHwHw7EfiKxaO4BHwtI
+	=
+X-Google-Smtp-Source: AGHT+IGUc/jXDkezhCLvUHCFTOeSWXJYv1I6cd4ffBrICUtVAI083C3ePv/8rRmVlFnyvYaOeMdl8A==
+X-Received: by 2002:a05:620a:28c6:b0:79d:74c3:b5fe with SMTP id af79cd13be357-7a804267b74mr692126485a.66.1725026597974;
+        Fri, 30 Aug 2024 07:03:17 -0700 (PDT)
 Received: from kudzu.us ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a806c00205sm145141885a.22.2024.08.30.07.00.57
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a806d5ff9csm144687885a.116.2024.08.30.07.03.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2024 07:00:57 -0700 (PDT)
-Date: Fri, 30 Aug 2024 10:00:56 -0400
+        Fri, 30 Aug 2024 07:03:17 -0700 (PDT)
+Date: Fri, 30 Aug 2024 10:03:15 -0400
 From: Jon Mason <jdmason@kudzu.us>
 To: Javier Tia <javier.tia@linaro.org>
 Cc: meta-arm@lists.yoctoproject.org, Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>, Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH v4 03/13] layer.conf: Introduce UEFI_SB_KEYS_DIR
-Message-ID: <ZtHQmBjng4mzrJyp@kudzu.us>
+Subject: Re: [PATCH v4 04/13] uefi-sb-keys.bbclass: Add class to validate
+ UEFI keys
+Message-ID: <ZtHRIzwr9roSCkuS@kudzu.us>
 References: <20240829163209.47945-1-javier.tia@linaro.org>
- <20240829163209.47945-4-javier.tia@linaro.org>
+ <20240829163209.47945-5-javier.tia@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240829163209.47945-4-javier.tia@linaro.org>
+In-Reply-To: <20240829163209.47945-5-javier.tia@linaro.org>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 14:01:09 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6029
+ <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 14:03:29 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6030
 
-On Thu, Aug 29, 2024 at 10:31:59AM -0600, Javier Tia wrote:
-> UEFI_SB_KEYS_DIR saves UEFI keys path.
-> 
-> To avoid security issues, UEFI keys are not provided and they can be
-> generated by gen_uefi_keys.sh script.
+On Thu, Aug 29, 2024 at 10:32:00AM -0600, Javier Tia wrote:
+> Without UEFI keys, signing will fail and the OS will not boot.
+
+I think this can be squashed with the previous commit.
+
+Thanks,
+Jon
+
 > 
 > Signed-off-by: Javier Tia <javier.tia@linaro.org>
 > ---
->  meta-arm/conf/layer.conf               |  2 ++
->  meta-arm/uefi-sb-keys/gen_uefi_keys.sh | 35 ++++++++++++++++++++++++++
->  2 files changed, 37 insertions(+)
->  create mode 100755 meta-arm/uefi-sb-keys/gen_uefi_keys.sh
+>  meta-arm/classes/uefi-sb-keys.bbclass | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 meta-arm/classes/uefi-sb-keys.bbclass
 > 
-> diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-> index 9e9c9dbd..2854dd69 100644
-> --- a/meta-arm/conf/layer.conf
-> +++ b/meta-arm/conf/layer.conf
-> @@ -21,3 +21,5 @@ HOSTTOOLS_NONFATAL += "telnet"
->  addpylib ${LAYERDIR}/lib oeqa
->  
->  WARN_QA:append:layer-meta-arm = " patch-status"
-> +
-> +UEFI_SB_KEYS_DIR ??= "${LAYERDIR}/uefi-sb-keys"
-
-I'm expecting the keys to be unique for each machine build.  If so,
-shouldn't the keys live in the deploy directory (assuming we want to
-reference them or reuse them) or the destination/work dir?  This would
-also remove the need to have the gitignore file, which I don't think
-is correct to have.
-
-> \ No newline at end of file
-> diff --git a/meta-arm/uefi-sb-keys/gen_uefi_keys.sh b/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
-> new file mode 100755
-> index 00000000..fc7f25c9
+> diff --git a/meta-arm/classes/uefi-sb-keys.bbclass b/meta-arm/classes/uefi-sb-keys.bbclass
+> new file mode 100644
+> index 00000000..e800b4c6
 > --- /dev/null
-> +++ b/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
-> @@ -0,0 +1,35 @@
-> +#/bin/sh
+> +++ b/meta-arm/classes/uefi-sb-keys.bbclass
+> @@ -0,0 +1,24 @@
+> +# Validate UEFI keys
+> +python __anonymous () {
+> +    if d.getVar("UEFI_SB_KEYS_DIR", False) is None:
+> +        raise bb.parse.SkipRecipe("UEFI_SB_KEYS_DIR is not set.")
 > +
-> +set -eux
+> +    # keys used for UEFI secure boot
+> +    uefi_sb_keys = d.getVar("UEFI_SB_KEYS_DIR")
 > +
-> +#Create PK
-> +openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout PK.key -out PK.crt -nodes -days 3650
-
-Here and below, do we want to say these are Linaro keys?  I'm not
-seeing anywhere else that checks (but I don't know this well enough to
-know if it does somewhere else).  If not, should we do something else
-like "OpenEmbedded"?
-
-> +cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc PK.crt PK.esl
-> +sign-efi-sig-list -c PK.crt -k PK.key PK PK.esl PK.auth
+> +    keys_to_check = [
+> +        uefi_sb_keys + "/PK.esl",
+> +        uefi_sb_keys + "/KEK.esl",
+> +        uefi_sb_keys + "/dbx.esl",
+> +        uefi_sb_keys + "/db.esl",
+> +        uefi_sb_keys + "/db.key",
+> +        uefi_sb_keys + "/db.crt",
+> +    ]
 > +
-> +#Create KEK
-> +openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout KEK.key -out KEK.crt -nodes -days 3650
-> +cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc KEK.crt KEK.esl
-> +sign-efi-sig-list -c PK.crt -k PK.key KEK KEK.esl KEK.auth
+> +    missing_keys = [f for f in keys_to_check if not os.path.exists(f)]
 > +
-> +#Create DB
-> +openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout db.key -out db.crt -nodes -days 3650
-> +cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc db.crt db.esl
-> +sign-efi-sig-list -c KEK.crt -k KEK.key db db.esl db.auth
+> +    if missing_keys:
+> +        raise bb.parse.SkipRecipe("Required missing keys: %s" % (", ".join(missing_keys), )
+> +            + ".\nRun %s/gen_uefi_keys.sh to generate missing keys." % uefi_sb_keys)
 > +
-> +#Create DBX
-> +openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout dbx.key -out dbx.crt -nodes -days 3650
-> +cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc dbx.crt dbx.esl
-> +sign-efi-sig-list -c KEK.crt -k KEK.key dbx dbx.esl dbx.auth
-> +
-> +#Sign image
-> +#sbsign --key db.key --cert db.crt Image
-
-Here and below are commented out.  Is this intentional?  If so, then
-why are they being kept in here (e.g., larger commenets needed)?
-
-> +#Digest image
-> +#hash-to-efi-sig-list Image db_Image.hash
-> +#sign-efi-sig-list -c KEK.crt -k KEK.key db db_Image.hash db_Image.auth
-> +
-> +#Empty cert for testing
-> +touch noPK.esl
-> +sign-efi-sig-list -c PK.crt -k PK.key PK noPK.esl noPK.auth
-> +
+> +}
 > -- 
 > 2.46.0
 > 
