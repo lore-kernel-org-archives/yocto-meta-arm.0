@@ -1,152 +1,197 @@
-Return-Path: <javier.tia@linaro.org>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67043C87FC3
-	for <webhook@archiver.kernel.org>; Thu, 29 Aug 2024 16:32:36 +0000 (UTC)
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
- by mx.groups.io with SMTP id smtpd.web11.24080.1724949148515633324
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7F1CA0ED3
+	for <webhook@archiver.kernel.org>; Fri, 30 Aug 2024 03:06:45 +0000 (UTC)
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+ by mx.groups.io with SMTP id smtpd.web11.4687.1724987194941478373
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 29 Aug 2024 09:32:28 -0700
+ Thu, 29 Aug 2024 20:06:35 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=SYZub/i9;
- spf=pass (domain: linaro.org, ip: 209.85.128.181, mailfrom: javier.tia@linaro.org)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6b8f13f28fbso7917307b3.1
-        for <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 09:32:28 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=cq5PbaZM;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.181, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7a80aeabb82so68037885a.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 20:06:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724949147; x=1725553947; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r048M551uetY0q1BuW2zCSzxBwWhWQ4Zf1IPFDak7rM=;
-        b=SYZub/i9NTgGxjZtBfIRfo1ZMFIkOQQescy2lzO4Z6P9aaAMjTQB9Y8FC749LgXQlX
-         T0ya0yrJjRV2Vjndsyig6d8oXjh31206jTOMyXNhNTUOIvaf9ttDGD5basbkIaxY/9Tf
-         M9IcGsuoCMV29zQvRF2b6jBH3REsoIk0ZXlnVqLyjFV1+GQS/Ah4/oB2ITS4YzkwXv3B
-         wwVtDIo0HU7DCAKPFoyTLxAjBBL9MgkOwnMMJBZn+oN8dCGqai+oBEwEiXelxn4igspu
-         RvuJCUGafV1vGuFY17eSMUmc8Maj+tQL2vMGcVf0VFRVhFWDrmlOnDoCpqR+DjJeqnM9
-         6Hng==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1724987194; x=1725591994; darn=lists.yoctoproject.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OFQmF6GwN+J0VN6pVC2xQXbb7QgR2+PX21Sw8Qk9qfE=;
+        b=cq5PbaZMQzbaGsJtPTHscxnegfh1on/otZIO9tKJU+aV8i19x2kUH4Rza/nYO3CSX7
+         BsuAZLZHEBIJ5qNpDaKlTYTcErKcruuQ7xBqKxwJBYg2BoKfgrZP6wOkorgudna4Gxfl
+         Wu983+IcNMq2kBo6am6Smh/4PclMm+c1EGP4F2EetQAhT2zrJXJVHVrF/LzvBKcygboa
+         aW10quVL0E5J0wJMciKclzN0HrQlyRYZitE6gGwyoMTdd7M3TYWa5ZQeyX50nzfLz044
+         r2gLZl4QB2+r6Wz1uOT5SMgT9PeFBJt5r7JDq1oY8B2AahI0YXKavI6k036K0ooYfx4V
+         vrog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724949147; x=1725553947;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r048M551uetY0q1BuW2zCSzxBwWhWQ4Zf1IPFDak7rM=;
-        b=gIdM8JDwwfpN1mTzt4bbm7a4HP/ICucf32G8ybLfCRyuX5m9E86RRq0p1+50u2KRF4
-         +TOvVsElY5FCwZlxBpSCpNif75FvF75tQa3Cf2xTZBaMl6sG9aiLRUzDpI4UTG9ARRBN
-         WLhJ1z8EYxaSuz5HyQ8rzIfvPVaMsLZeIm8lEEFbjCKOoTXSCd2xsismgjDAT2W5qZXQ
-         wzqBI+/CxD1/neT36ryXdYkB/05u8p6BaKWB9Vr8gvUhARfvRXSygOuIsVFdNMm/mKvU
-         9fAgRrhZ3bApSfFCjmWReBf4mX5PwldYkisqQkZWKLvmrBwdJee/ek08+yM0MrRE0O7/
-         mpxw==
-X-Gm-Message-State: AOJu0YyO4xDrPFbcyoE7kILE6m6OtOlqirLzD4CEcGDEdThbEfn7vOgZ
-	8cbncI9i85aStD+EzuqAuwM64ax/7DTJwW58qKaTKQQDG4rHC2QqNXTlSov3xKCGmL41GXo+wzq
-	y
-X-Google-Smtp-Source: AGHT+IEEB47FRjcPQV0dIwav0fminqb81rO2jKe+CMMOfWp+IttoPHwVQ6qP61YyXq/dk+mypX0eNA==
-X-Received: by 2002:a05:690c:2f0f:b0:6ad:b01a:9469 with SMTP id 00721157ae682-6d277d666d6mr31361727b3.39.1724949147505;
-        Thu, 29 Aug 2024 09:32:27 -0700 (PDT)
-Received: from jetm-rog-x670e-gene.lan ([170.246.157.153])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6d2d438e18asm2993517b3.60.2024.08.29.09.32.26
+        d=1e100.net; s=20230601; t=1724987194; x=1725591994;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OFQmF6GwN+J0VN6pVC2xQXbb7QgR2+PX21Sw8Qk9qfE=;
+        b=aGupBZwoGtGalej5BIYMCio4cxIoLSIu4DpJuDF3+JmhxcZN7NInjCXgNWx6QdPies
+         mW2v3oaqLvMhf3SjOZ/SPgptX3vtFcmv2TxOnycO+5eErua7xtU+30WojDwkjb5OTGkF
+         vYCHCI6d2+Zy9XxLFyDVZLVRCmydGn0T1Bx3hAsRu2sbzJhAnSYVLqmrTB/Ox+Ojbu3g
+         N1VyaTUd4zNILlABbUkX9UfOA2nftpfrOpr7Av/HtXt4767MMc1zMPS/ASoSJhCGnmBx
+         uW+O9uMY6epctyktcCPSKYtjZZxbvbLwyRbTB8p5Z/ZiYnP/W0y8+gi3NzOZSIvs0Iur
+         abDQ==
+X-Gm-Message-State: AOJu0Yxe/his6OgcpUEbRVaIxltUtJfD2gFCCu7roNj3i3rrNbCQSTwq
+	RZpLnXHPAtpg9n5hvz6gXaE2wBkjEESOyYIWFXsvki1l+BJrfc3bc+4mSGH9aw==
+X-Google-Smtp-Source: AGHT+IEv/kL3rnPcK0ZLY4+T/NrI7ds+caBgRhipe1ACNj4v42tHT6hbBtCDz2GX3xnF1y3aHsXsAg==
+X-Received: by 2002:a05:620a:2453:b0:7a2:a1d:c0f7 with SMTP id af79cd13be357-7a8041a1bf0mr496701885a.16.1724987193685;
+        Thu, 29 Aug 2024 20:06:33 -0700 (PDT)
+Received: from kudzu.us ([136.54.20.50])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a806d3c6b4sm106964285a.85.2024.08.29.20.06.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2024 09:32:27 -0700 (PDT)
-From: Javier Tia <javier.tia@linaro.org>
-To: meta-arm@lists.yoctoproject.org
-Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
-	Ross Burton <Ross.Burton@arm.com>,
-	Jon Mason <jon.mason@arm.com>,
-	Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH v4 13/13] meta-arm: Add UEFI Secure Boot test
-Date: Thu, 29 Aug 2024 10:32:09 -0600
-Message-ID: <20240829163209.47945-14-javier.tia@linaro.org>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240829163209.47945-1-javier.tia@linaro.org>
+        Thu, 29 Aug 2024 20:06:33 -0700 (PDT)
+Date: Thu, 29 Aug 2024 23:06:26 -0400
+From: Jon Mason <jdmason@kudzu.us>
+To: Javier Tia <javier.tia@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, Mikko Rapeli <mikko.rapeli@linaro.org>,
+	Ross Burton <Ross.Burton@arm.com>, Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH v4 00/13] qemuarm64-secureboot: Add UEFI Secure Boot
+Message-ID: <ZtE3MqOM2D40ei5r@kudzu.us>
 References: <20240829163209.47945-1-javier.tia@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240829163209.47945-1-javier.tia@linaro.org>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 29 Aug 2024 16:32:36 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6023
+ <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 03:06:45 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6024
 
-Add a test to verify UEFI Secure Boot is enabled
+Looks like this series is not building for me.  I'm seeing the
+following error:
 
-Run the test:
+ERROR: /builder/meta-arm/build/../poky/meta/recipes-kernel/linux/linux-yocto_6.10.bb: Unable to get checksum for linux-yocto SRC_URI entry db.key: file could not be found                     | ETA:  0:00:12
+The following paths were searched:
+/builder/meta-arm/build/../meta-arm/uefi-sb-keys/db.key
+ERROR: Parsing halted due to errors, see error messages above                                                                                                                                  | ETA:  0:00:14
+ERROR: /builder/meta-arm/build/../poky/meta/recipes-core/systemd/systemd-boot_256.5.bb: Unable to get checksum for systemd-boot SRC_URI entry db.key: file could not be found
+The following paths were searched:
+/builder/meta-arm/build/../meta-arm/uefi-sb-keys/db.key
+ERROR: /builder/meta-arm/build/../poky/meta/recipes-kernel/linux/linux-yocto_6.6.bb: Unable to get checksum for linux-yocto SRC_URI entry db.key: file could not be found
+The following paths were searched:
+/builder/meta-arm/build/../meta-arm/uefi-sb-keys/db.key
 
-kas build 'ci/qemuarm64-secureboot.yml:ci/testimage.yml'
+I've not looked into it, but it's being seen on mulitple setups and is
+trivial to replicate with:
+kas build ci/qemuarm64-secureboot.yml:ci/testimage.yml
 
-Signed-off-by: Javier Tia <javier.tia@linaro.org>
----
- ci/qemuarm64-secureboot.yml                   |  2 ++
- .../oeqa/runtime/cases/uefi_secure_boot.py    | 32 +++++++++++++++++++
- .../core-image-minimal-uefi-secureboot.inc    |  6 +++-
- 3 files changed, 39 insertions(+), 1 deletion(-)
- create mode 100644 meta-arm/lib/oeqa/runtime/cases/uefi_secure_boot.py
+Thanks,
+Jon
 
-diff --git a/ci/qemuarm64-secureboot.yml b/ci/qemuarm64-secureboot.yml
-index 03281a08..3eb8c20c 100644
---- a/ci/qemuarm64-secureboot.yml
-+++ b/ci/qemuarm64-secureboot.yml
-@@ -11,6 +11,8 @@ local_conf_header:
-   optee: |
-     IMAGE_INSTALL:append = " optee-test optee-client optee-os-ta"
-     TEST_SUITES:append = " optee ftpm"
-+  uefi_secure_boot: |
-+    TEST_SUITES:append = " uefi_secure_boot"
- 
- machine: qemuarm64-secureboot
- 
-diff --git a/meta-arm/lib/oeqa/runtime/cases/uefi_secure_boot.py b/meta-arm/lib/oeqa/runtime/cases/uefi_secure_boot.py
-new file mode 100644
-index 00000000..4a62b54c
---- /dev/null
-+++ b/meta-arm/lib/oeqa/runtime/cases/uefi_secure_boot.py
-@@ -0,0 +1,32 @@
-+#
-+# SPDX-License-Identifier: MIT
-+#
-+
-+import os
-+
-+from oeqa.runtime.case import OERuntimeTestCase
-+from oeqa.runtime.decorator.package import OEHasPackage
-+from oeqa.core.decorator.oetimeout import OETimeout
-+
-+
-+class UEFI_SB_TestSuite(OERuntimeTestCase):
-+    """
-+    Validate Secure Boot is Enabled
-+    """
-+
-+    @OETimeout(1300)
-+    def test_uefi_secure_boot(self):
-+        # Validate Secure Boot is enabled by checking
-+        # 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot.
-+        # The GUID '8be4df61-93ca-11d2-aa0d-00e098032b8c' is a well-known
-+        # identifier for the Secure Boot UEFI variable. By checking the value of
-+        # this variable, specifically
-+        # '8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot', we can determine
-+        # whether Secure Boot is enabled or not. This variable is set by the
-+        # UEFI firmware to indicate the current Secure Boot state. If the
-+        # variable is set to a value of '0x1' (or '1'), it indicates that Secure
-+        # Boot is enabled. If the variable is set to a value of '0x0' (or '0'),
-+        # it indicates that Secure Boot is disabled.
-+        cmd = "efivar -d -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot"
-+        status, output = self.target.run(cmd, timeout=120)
-+        self.assertEqual(output, "1", msg="\n".join([cmd, output]))
-diff --git a/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc b/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
-index e5cf7760..ce64b8b5 100644
---- a/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
-+++ b/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
-@@ -10,4 +10,8 @@ QB_DEFAULT_KERNEL = "none"
- 
- KERNEL_IMAGETYPE = "Image"
- 
--IMAGE_INSTALL += "systemd systemd-boot"
-+IMAGE_INSTALL += "systemd systemd-boot util-linux coreutils efivar"
-+
-+inherit extrausers
-+
-+EXTRA_IMAGE_FEATURES += "allow-root-login empty-root-password"
--- 
-2.46.0
 
+On Thu, Aug 29, 2024 at 10:31:56AM -0600, Javier Tia wrote:
+> Hi,
+> 
+> Addressing comments from patch series v3.
+> 
+> A backport from meta-ts with the minimal changes to add UEFI Secure Boot
+> into qemuarm64-secureboot machine.
+> 
+> Requirements:
+> 
+>   - Create a UEFI disk partition to copy EFI apps.
+> 
+>   - Add UEFI settings to U-Boot, systemd-boot, and Linux kernel.
+> 
+>   - UEFI keys are to be stored in U-Boot and used to sign systemd-boot
+>     and Linux kernel images.
+> 
+>   - Add systemd as Init manager to auto-mount efivarfs.
+> 
+> Introduces uefi-secureboot machine feature.
+> 
+> UEFI keys must be genereated in order to be added to U-Boot. Sign both
+> systemd-boot EFI app and Linux kernel image.
+> 
+> Build and verification steps:
+> 
+> $ kas build 'ci/qemuarm64-secureboot.yml:ci/testimage.yml'
+> 
+> ---
+> 
+> Changes since v3:
+> - For image creation use core-image-minimal, instead of core-image-base.
+> 
+> Changes since v2:
+> - Remove commit "qemuarm64-secureboot.yml: Set branch to scarthgap".
+> 
+> Changes since v1:
+> - Rework all subject commits to follow OE, Yocto, and meta-arm guidelines.
+> - Add gen-uefi-sb-keys.bb recipe to generate UEFI keys.
+> - Add an OE test to validate UEFI Secure Boot.
+> - Simplify gen_uefi_keys.sh to avoid code repetition.
+> - Replace grub with systemd-boot.
+> - Simplify signing binary images with sbsign class.
+> - Set OE branch to Scarthgap.
+> 
+> Changes since the v0:
+> - Remove u-boot recipe.
+> - Split the change in several commits.
+> - Remove sample UEFI keys.
+> - Validate UEFI keys exist before building.
+> - Insolate most of changes under uefi-secureboot machine feature.
+> 
+> Javier Tia (13):
+>   qemuarm64-secureboot: Introduce uefi-secureboot machine feature
+>   core-image-minimal: Use UEFI layout disk partitions
+>   layer.conf: Introduce UEFI_SB_KEYS_DIR
+>   uefi-sb-keys.bbclass: Add class to validate UEFI keys
+>   sbsign.bbclass: Add class to sign binaries
+>   core-image-minimal: Inherit uefi-sb-keys
+>   meta-arm: Introduce gen-uefi-sb-keys.bb recipe
+>   u-boot: Setup UEFI and Secure Boot
+>   qemuarm64-secureboot: Add meta-secure-core layer as dependency
+>   linux-yocto: Setup UEFI and sign kernel image
+>   systemd: Add UEFI support
+>   systemd-boot: Use it as bootloader & sign UEFI image
+>   meta-arm: Add UEFI Secure Boot test
+> 
+>  ci/qemuarm64-secureboot.yml                   | 14 ++++---
+>  .../u-boot/u-boot-qemuarm64-secureboot.inc    | 18 +++++++++
+>  .../u-boot/u-boot/uefi-secureboot.cfg         | 10 +++++
+>  .../recipes-bsp/u-boot/u-boot_%.bbappend      |  2 +-
+>  meta-arm-bsp/wic/efi-disk-no-swap.wks.in      |  2 +-
+>  meta-arm/classes/sbsign.bbclass               | 39 +++++++++++++++++++
+>  meta-arm/classes/uefi-sb-keys.bbclass         | 24 ++++++++++++
+>  meta-arm/conf/layer.conf                      |  2 +
+>  .../conf/machine/qemuarm64-secureboot.conf    |  8 ++++
+>  .../oeqa/runtime/cases/uefi_secure_boot.py    | 32 +++++++++++++++
+>  meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb | 26 +++++++++++++
+>  .../core-image-minimal-uefi-secureboot.inc    | 17 ++++++++
+>  .../images/core-image-minimal.bbappend        |  1 +
+>  .../systemd/systemd-boot-uefi-secureboot.inc  | 12 ++++++
+>  .../systemd/systemd-boot_%.bbappend           |  1 +
+>  meta-arm/recipes-core/systemd/systemd-efi.inc |  1 +
+>  .../recipes-core/systemd/systemd_%.bbappend   |  1 +
+>  .../linux/linux-yocto%.bbappend               |  2 +
+>  .../linux/linux-yocto-uefi-secureboot.inc     | 19 +++++++++
+>  meta-arm/uefi-sb-keys/.gitignore              |  4 ++
+>  meta-arm/uefi-sb-keys/gen_uefi_keys.sh        | 33 ++++++++++++++++
+>  21 files changed, 261 insertions(+), 7 deletions(-)
+>  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-qemuarm64-secureboot.inc
+>  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg
+>  create mode 100644 meta-arm/classes/sbsign.bbclass
+>  create mode 100644 meta-arm/classes/uefi-sb-keys.bbclass
+>  create mode 100644 meta-arm/lib/oeqa/runtime/cases/uefi_secure_boot.py
+>  create mode 100644 meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb
+>  create mode 100644 meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
+>  create mode 100644 meta-arm/recipes-core/images/core-image-minimal.bbappend
+>  create mode 100644 meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
+>  create mode 100644 meta-arm/recipes-core/systemd/systemd-boot_%.bbappend
+>  create mode 100644 meta-arm/recipes-core/systemd/systemd-efi.inc
+>  create mode 100644 meta-arm/recipes-core/systemd/systemd_%.bbappend
+>  create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
+>  create mode 100644 meta-arm/uefi-sb-keys/.gitignore
+>  create mode 100755 meta-arm/uefi-sb-keys/gen_uefi_keys.sh
+> 
+> -- 
+> 2.46.0
+> 
+> 
 
