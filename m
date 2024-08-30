@@ -2,136 +2,125 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B40B0CA1002
-	for <webhook@archiver.kernel.org>; Fri, 30 Aug 2024 15:16:39 +0000 (UTC)
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
- by mx.groups.io with SMTP id smtpd.web11.18750.1725030997280654046
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BD3CA1003
+	for <webhook@archiver.kernel.org>; Fri, 30 Aug 2024 15:24:39 +0000 (UTC)
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+ by mx.groups.io with SMTP id smtpd.web10.19207.1725031478203792185
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 30 Aug 2024 08:16:37 -0700
+ Fri, 30 Aug 2024 08:24:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=FTM05drU;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.181, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7a8125458e4so49517285a.3
-        for <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 08:16:37 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=J2c8dnk4;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.176, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7a8049d4a40so122636585a.1
+        for <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 08:24:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725030996; x=1725635796; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725031477; x=1725636277; darn=lists.yoctoproject.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=COygTS1Bc/wEIvaJEy77DJnSoVPdHqvb4NAkht6JrqM=;
-        b=FTM05drUh4DCNjOAovE3ITXO357P70IvdWUSVh4bAKOwl8ypZoGGrlUKmquv2dKNGY
-         fd7ceI45zGjwxgwYbqhH2Y0AM08h17qEIyM64hPhTRrhhSAFIlgNXmgKVaHmPEYTqa3w
-         JPHaUVFgB7zfPGddA7ESu9aCeI41iXulcAWkmyyQAPGVyEMjYCv1PPbiLcp4O8MqZUOf
-         nqp2QonRudEoU6DGs+bfLvTZbvRZNPj4/6+zbiQHgSAj5Gvb1Nloay7dXhUhLQ8ZEQSI
-         6enffc6GSfJEIKpLLRP/0YIemCV+Wyf1RcEUpeq8zmBSi+hNbd15yL+z6bljCtZNzhtG
-         Fw6Q==
+        bh=oi+rTNEXmYeDIDEPo4Tpma/Vo7YNnePXZQWmcSa2bIs=;
+        b=J2c8dnk4XYvnMvulXXZFRCsf3hBUnld5DWIun+G1xPl5c2KpuWxQGhF5jW6HbMwwVh
+         Aau3+dxPZnY3Gvmo2ZWQAFZoYruSn++HWZnBoxB7lPPDXx4ByID6mYXOf28QeC2T8C7r
+         0eQyp5iKNRZYrpVEDSucy8Ashyu033tgK4IVTfTFd7E+/3TuQwTrFgt0EmC7GqLrNFWX
+         pY2i1grr3wHZj5KBalZjTakqtYeCsKKUCXg8F9AGAMSbVNTD9joVwCqH3k9rR4TLdPTl
+         8vM5VHC/pI1YrRedJeoQUhNNeOMDgT91ZpazGU/d7OzMngFgzLS3AV06c2CJARBgm/+c
+         1sEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725030996; x=1725635796;
+        d=1e100.net; s=20230601; t=1725031477; x=1725636277;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=COygTS1Bc/wEIvaJEy77DJnSoVPdHqvb4NAkht6JrqM=;
-        b=jQf/xzABIe2zdf/TELjYGuHlo64gMiDLqQ9Fr7lZ6QuzPNgmmZtnXu+TdL6MfPByyu
-         B23Cd+6H+RFRuExyraOdjkS0fPC+TnbZHJhkuRUFeHT0Pk8Vo13upEl8buyCSUPo3zBr
-         4FldG9vYUAGJKDQ8SVwtKLAHesXuECuHTKN/rfQVpzYmzl3rIxLytiTQReOBSDvWFEpA
-         ozhY2KFT8d44kAXe0Se6OkIbv7p5Iyau0m+bi5fjd2PmuK6ndX+ix0jPzOXMz8ugEJ0S
-         i9Nczr1eYXxVrNrV6LKt2eiyDiFDz+XbcYIhWZe0Hw4oZ8XajbEXfS3xE0p9UZUDmVe5
-         pGYw==
-X-Gm-Message-State: AOJu0YzQfmDDyi6OVkegyc9h3102Egmdj2kz6nq5F5FIdLhfNoNcznZS
-	nDuR+/Chv2yBcvzxwN66uV+4keL33BKa11SMJKacd5CrRNuv8to/CEIguIkk4g==
-X-Google-Smtp-Source: AGHT+IERL2Z19IymitaV8425yjYh0mB1VO6ypOjVI2xtUiEQyiK0SP/nBwZcH6AKhjqCCx2MSJXEoA==
-X-Received: by 2002:a05:620a:c44:b0:7a6:5dbf:72d7 with SMTP id af79cd13be357-7a8042797e4mr873724885a.57.1725030996164;
-        Fri, 30 Aug 2024 08:16:36 -0700 (PDT)
+        bh=oi+rTNEXmYeDIDEPo4Tpma/Vo7YNnePXZQWmcSa2bIs=;
+        b=if3KOp56uCAm68GRqhpnuX0KzRCHr54mztLg1gNyTxYTgRCOJH3CvGc/CkcObE6oz+
+         /hCvRPnrmhjMs014yzHjvW03KHnGvAdaGymE3piqYxzQ4VmJZNMv2Brb3c6D556uugKb
+         Snoi1SfqqPXSQtIOlJfRWN0XL73Ks1JiWQ5rNHXHGhxoHOa4HCxiLH2Looa7G3GgE6nt
+         FkxWsIWV4MoymwWpiT5xIVJ35eqrOjB9amWBb08TPhMZTteCagY1dO+5br35WaDvQHLv
+         cUSN76+3UWMnYI88vIb/I2/hRg1R6W5gMFHfpJ6YXkOFbH867alqMMj06+Yx97J4diS7
+         JGeQ==
+X-Gm-Message-State: AOJu0YwFO1XKDnSK55kjXR7JJv0TvDURnpneoVSBUkcyZyYTp+9s2iLs
+	vSS85gF2V7B1H7RnGjgRRQ2lcRiDFGq4dTRYuyi4NP6gk/AA30dO/BJerAWy4A==
+X-Google-Smtp-Source: AGHT+IGebZ9mggfKYcP4OQOki5PRrivU1vC1WylcLGQw6nXOP9bNOEIINU6dnr9sUtVj3jkgfm+ZDw==
+X-Received: by 2002:a05:620a:4409:b0:7a2:ea4:d592 with SMTP id af79cd13be357-7a8042631fdmr811982585a.45.1725031477185;
+        Fri, 30 Aug 2024 08:24:37 -0700 (PDT)
 Received: from kudzu.us ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a806c2aefcsm149435585a.50.2024.08.30.08.16.35
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a806d8e806sm150503385a.135.2024.08.30.08.24.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2024 08:16:35 -0700 (PDT)
-Date: Fri, 30 Aug 2024 11:16:34 -0400
+        Fri, 30 Aug 2024 08:24:36 -0700 (PDT)
+Date: Fri, 30 Aug 2024 11:24:35 -0400
 From: Jon Mason <jdmason@kudzu.us>
 To: Javier Tia <javier.tia@linaro.org>
 Cc: meta-arm@lists.yoctoproject.org, Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>, Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH v4 10/13] linux-yocto: Setup UEFI and sign kernel image
-Message-ID: <ZtHiUh717gEP6T05@kudzu.us>
+Subject: Re: [PATCH v4 11/13] systemd: Add UEFI support
+Message-ID: <ZtHkM_KRdW9Bv18u@kudzu.us>
 References: <20240829163209.47945-1-javier.tia@linaro.org>
- <20240829163209.47945-11-javier.tia@linaro.org>
+ <20240829163209.47945-12-javier.tia@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240829163209.47945-11-javier.tia@linaro.org>
+In-Reply-To: <20240829163209.47945-12-javier.tia@linaro.org>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 15:16:39 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6036
+ <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 15:24:39 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6037
 
-On Thu, Aug 29, 2024 at 10:32:06AM -0600, Javier Tia wrote:
-> efivarfs kernel module is required to access EFI vars.
-> 
+On Thu, Aug 29, 2024 at 10:32:07AM -0600, Javier Tia wrote:
 > Signed-off-by: Javier Tia <javier.tia@linaro.org>
+
+I'm going to want a HUGE comment on why systemd is required here.  Are
+there some unique things in systemd that aren't present for sysvinit?
+Also, I think the systemd patches should be squashed together.
+
+Thanks,
+Jon
+
 > ---
->  .../core-image-minimal-uefi-secureboot.inc    |  8 ++++++++
->  .../linux/linux-yocto%.bbappend               |  2 ++
->  .../linux/linux-yocto-uefi-secureboot.inc     | 19 +++++++++++++++++++
->  3 files changed, 29 insertions(+)
->  create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
+>  meta-arm/conf/machine/qemuarm64-secureboot.conf              | 5 +++++
+>  .../images/core-image-minimal-uefi-secureboot.inc            | 2 ++
+>  meta-arm/recipes-core/systemd/systemd-efi.inc                | 1 +
+>  meta-arm/recipes-core/systemd/systemd_%.bbappend             | 1 +
+>  4 files changed, 9 insertions(+)
+>  create mode 100644 meta-arm/recipes-core/systemd/systemd-efi.inc
+>  create mode 100644 meta-arm/recipes-core/systemd/systemd_%.bbappend
 > 
+> diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+> index 2483c4ac..542d09a3 100644
+> --- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
+> +++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+> @@ -22,4 +22,9 @@ WKS_FILE_DEPENDS = "trusted-firmware-a"
+>  IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
+>  
+>  MACHINE_FEATURES += "optee-ftpm"
+> +MACHINE_FEATURES += "efi"
+>  MACHINE_FEATURES += "uefi-secureboot"
+> +
+> +INIT_MANAGER = "systemd"
+> +DISTRO_FEATURES += "systemd"
+> +DISTRO_FEATURES_NATIVE += "systemd"
 > diff --git a/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc b/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
-> index 2232d3b3..06046f6e 100644
+> index 06046f6e..07e315a3 100644
 > --- a/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
 > +++ b/meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
-> @@ -1,3 +1,11 @@
->  inherit uefi-sb-keys
+> @@ -9,3 +9,5 @@ QB_KERNEL_ROOT = ""
+>  QB_DEFAULT_KERNEL = "none"
 >  
->  WKS_FILE = "efi-disk-no-swap.wks.in"
+>  KERNEL_IMAGETYPE = "Image"
 > +
-> +# Detected by passing kernel parameter
-> +QB_KERNEL_ROOT = ""
-> +
-> +# kernel is in the image, should not be loaded separately
-> +QB_DEFAULT_KERNEL = "none"
-> +
-
-QB's are qemu testing variables.  I don't think they should be here.
-Either move them to the machine conf, or the yml file, or make a
-machine just for this based on qemuarm64-secureboot.
-
-> +KERNEL_IMAGETYPE = "Image"
-> diff --git a/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend
-> index a287d0e1..29c21355 100644
-> --- a/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend
-> +++ b/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend
-> @@ -25,3 +25,5 @@ SRC_URI:append:qemuarm = " \
->  
->  FFA_TRANSPORT_INCLUDE = "${@bb.utils.contains('MACHINE_FEATURES', 'arm-ffa', 'arm-ffa-transport.inc', '' , d)}"
->  require ${FFA_TRANSPORT_INCLUDE}
-> +
-> +require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'linux-yocto-uefi-secureboot.inc', '', d)}
-> \ No newline at end of file
-> diff --git a/meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc b/meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
+> +IMAGE_INSTALL += "systemd"
+> diff --git a/meta-arm/recipes-core/systemd/systemd-efi.inc b/meta-arm/recipes-core/systemd/systemd-efi.inc
 > new file mode 100644
-> index 00000000..cb62fdee
+> index 00000000..5572e51a
 > --- /dev/null
-> +++ b/meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
-> @@ -0,0 +1,19 @@
-> +KERNEL_FEATURES += "cfg/efi-ext.scc"
-> +
-> +DEPENDS += 'gen-uefi-sb-keys'
-> +
-> +inherit sbsign
-> +
-> +SBSIGN_KEY = "${UEFI_SB_KEYS_DIR}/db.key"
-> +SBSIGN_CERT = "${UEFI_SB_KEYS_DIR}/db.crt"
-> +
-> +# shell variable set inside do_compile task
-> +SBSIGN_TARGET_BINARY = "$KERNEL_IMAGE"
-> +
-> +do_compile:append() {
-> +    KERNEL_IMAGE=$(find ${B} -name ${KERNEL_IMAGETYPE} -print -quit)
-> +    do_sbsign
-> +}
-> +
-> +RRECOMMENDS:${PN} += "kernel-module-efivarfs"
-> +RRECOMMENDS:${PN} += "kernel-module-efivars"
+> +++ b/meta-arm/recipes-core/systemd/systemd-efi.inc
+> @@ -0,0 +1 @@
+> +PACKAGECONFIG:append = " efi"
+> diff --git a/meta-arm/recipes-core/systemd/systemd_%.bbappend b/meta-arm/recipes-core/systemd/systemd_%.bbappend
+> new file mode 100644
+> index 00000000..660358c2
+> --- /dev/null
+> +++ b/meta-arm/recipes-core/systemd/systemd_%.bbappend
+> @@ -0,0 +1 @@
+> +require ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'systemd-efi.inc', '', d)}
 > -- 
 > 2.46.0
 > 
