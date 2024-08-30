@@ -2,193 +2,150 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E30CA0FFB
-	for <webhook@archiver.kernel.org>; Fri, 30 Aug 2024 14:17:59 +0000 (UTC)
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
- by mx.groups.io with SMTP id smtpd.web10.16681.1725027470410006507
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BE6CA0FFD
+	for <webhook@archiver.kernel.org>; Fri, 30 Aug 2024 14:23:49 +0000 (UTC)
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+ by mx.groups.io with SMTP id smtpd.web10.17000.1725027823649382681
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 30 Aug 2024 07:17:50 -0700
+ Fri, 30 Aug 2024 07:23:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=0iuJSuMI;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.161.44, mailfrom: jdmason@kudzu.us)
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5daa93677e1so1056609eaf.3
-        for <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 07:17:50 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=wXaqsPqp;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.54, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6c353f2f954so1215496d6.3
+        for <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 07:23:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725027469; x=1725632269; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725027823; x=1725632623; darn=lists.yoctoproject.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IqH7L45cjRjgWe5OC3X7CNWm6JXsKIza49zEGkXFHrg=;
-        b=0iuJSuMI+KuvRSq0E3kcAF/fCGg9xI1efb91KAoR9yNp0M7Zim18mfKoP3/xvemXeR
-         Fwf6ghPFzmyvHcWAdMYZ9/A5flWX7pBsEn618rOmNGFEJOrY+5Gr45TlmgezAQEq9+cl
-         Bu6MMj6cDqQsAQg+lmLqgwrHa1fOZq2R7/yIOMZKj9R1NGbzLeTworIvb54nBVS2chX0
-         5EoBSefgL7k/3xCcU/TdTU9lVTVCa14MOOQRuWXH+FQlW/f6U4UK59dh2nqWfM1UCVdY
-         MHTGzSEmtbRMu6UWq/bhK8IZH6VWzfZ0chog89UZWcZHaKHtjTIc7b2Hu1StmxLT0AeL
-         oBrw==
+        bh=c6geBXYZPDpg6fJv2GB6LXQuOrVjJpPHSSWpsjloqDc=;
+        b=wXaqsPqpWKFE3nXnMaQe6hf5Sb1QF+h/rK91ePE/gphEMLTuDqhE2VFibZzGbHFuhO
+         bot60mtVN8QZqmNZMX/eK74bovyhh+BPvAceXWYDoug5A7rekQP06sxfJABw7CST2t9N
+         wXe14not7mLXafEDvs7tUJx0vJSb/HNY6GeQ+p4/5oP1PqD16HvS/AjdDGb/ajukCEpa
+         +xNfXxAwkI70+tnKKoOfKDeRQB3OYKLrorAsC3kc6yHh68aQEpCaTwEjs9KtttPZmBdD
+         bDXLsb/EDAv5PuudgO3L+rtU8c/pEoG8uPEY7+VwO3pf5X0WoIvK9La/5EFIETeCtxEf
+         uMDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725027469; x=1725632269;
+        d=1e100.net; s=20230601; t=1725027823; x=1725632623;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IqH7L45cjRjgWe5OC3X7CNWm6JXsKIza49zEGkXFHrg=;
-        b=RRUv3pZq09EnRPCwBtNLrKW7WhKmRsIll+D91mp5ShtDCKwMlTMSK+8e4eprTXI5UN
-         mfIp62/KH+/xRA2ei9MTE3v+ukQU85BAE0YYaYSLYMcRLvH+7TU/k1FGhmtMcaixEc15
-         G8w/405mlLo6RlEpzQ3tZsAdEy2/L3pQ/S1iqyH2I+SCzLpxDdiIpm2HMscm5Bt6mhmy
-         Iqu7onhYfgziuFzBJzo4R2/pU5o2Jx5jfb1k3346yQsu7dwCtz29maU3ygrCiuno7TGq
-         A9P3ZbK5kAAoSaIm5RE0DUWCcpo1GeTj5wGYMAnScSTGsVCYJNYxlS36WpZPOsHQvzoM
-         Gklg==
-X-Gm-Message-State: AOJu0YyHZHVP55gCw1LN6efjuqWkEv6RJowzJazNgd+Oqy23UwifzYyy
-	mRTMMwftGrlY39tA/Fc0ycQmIVuVRhO9uPuwC0bnNcEUu1ZiCF01/hBkck6ORw==
-X-Google-Smtp-Source: AGHT+IHZjbDV6wFg/LnwS5dN4B0IwakHyhcM73LVSheh8I+2aYsIJ+kSvMeAMTPiq3fCzWqS1hbXfg==
-X-Received: by 2002:a05:6358:52c3:b0:1b1:acd5:dd98 with SMTP id e5c5f4694b2df-1b603c0b617mr836408355d.7.1725027469378;
-        Fri, 30 Aug 2024 07:17:49 -0700 (PDT)
+        bh=c6geBXYZPDpg6fJv2GB6LXQuOrVjJpPHSSWpsjloqDc=;
+        b=MWvCq71Kzvux9HkfGnH8O7nXdedwy8z1S1c52oAAwzwN/efVfM8Zt89zrdljdSRyzH
+         iz3mtOWeZ66CZtbaHGBzJXTvV27iEM+WmH8Zd6Pev4x1RSuJHpLu6YCw4ai8sgM+krAF
+         yO2jDjevNqVKpVIbdNO2eMbVWrfSCw5pFys0rV0O2o5nw9OBzlxFKgSmusQDCylieKhV
+         NvDApNHOkhmqwizNiVwAeZ1/4p4eC5576RyvGcV2i0LR22sC4mcU0CPRa5Q3ILoxnhjl
+         Y9Y71JIGQjKjmJRpJ0EArfQ8wiRW5HWoxFJER3cd6jrZ1CG48NvUWCpc2E+VZrojZ88Q
+         olIA==
+X-Gm-Message-State: AOJu0YzNof1d30vpmJWlR9zTjxoClGwo1xxYWiZxHRp+AxFOU5aLrcbb
+	zIOxFJj2XSn7/d+gY5cGoHVVdqJt6AVMU7pI+4XEu/LqmmrvPeHFfknDbFTm3A==
+X-Google-Smtp-Source: AGHT+IFEzx8xW6BlPtoB1BWViiXYavCs9I84s42lBdYdmBJTb+Rk7XmYm1Xa20peXQ/tqvalm9xQaQ==
+X-Received: by 2002:a05:6214:5905:b0:6c1:6f54:2930 with SMTP id 6a1803df08f44-6c33e615b0amr68476606d6.12.1725027822486;
+        Fri, 30 Aug 2024 07:23:42 -0700 (PDT)
 Received: from kudzu.us ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c340daf160sm14854666d6.137.2024.08.30.07.17.48
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c340bfa85asm14916636d6.23.2024.08.30.07.23.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2024 07:17:48 -0700 (PDT)
-Date: Fri, 30 Aug 2024 10:17:47 -0400
+        Fri, 30 Aug 2024 07:23:42 -0700 (PDT)
+Date: Fri, 30 Aug 2024 10:23:40 -0400
 From: Jon Mason <jdmason@kudzu.us>
 To: Javier Tia <javier.tia@linaro.org>
 Cc: meta-arm@lists.yoctoproject.org, Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>, Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH v4 07/13] meta-arm: Introduce gen-uefi-sb-keys.bb recipe
-Message-ID: <ZtHUi14mYKJ1M76X@kudzu.us>
+Subject: Re: [PATCH v4 08/13] u-boot: Setup UEFI and Secure Boot
+Message-ID: <ZtHV7Cq54lnot0hD@kudzu.us>
 References: <20240829163209.47945-1-javier.tia@linaro.org>
- <20240829163209.47945-8-javier.tia@linaro.org>
+ <20240829163209.47945-9-javier.tia@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240829163209.47945-8-javier.tia@linaro.org>
+In-Reply-To: <20240829163209.47945-9-javier.tia@linaro.org>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 14:17:59 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6033
+ <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 14:23:49 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6034
 
-On Thu, Aug 29, 2024 at 10:32:03AM -0600, Javier Tia wrote:
-> Generate a new set of keys on build time. It avoids to use same keys
-> which could generate a security issue.
-
-Squash with patch #3 and #4
-
+On Thu, Aug 29, 2024 at 10:32:04AM -0600, Javier Tia wrote:
+> Add U-Boot minimal UEFI definitions.
+> 
+> Embedded UEFI variables with the keys previously generated. It's to
+> enable UEFI Secure Boot and verify the authenticity of the firmware and
+> operating system.
+> 
+> When U-Boot is built with UEFI support, it includes a set of efivars
+> that are used to store the Secure Boot variables. These efivars are
+> embedded in the U-Boot binary and are stored in the flash memory of the
+> system.
+> 
 > Signed-off-by: Javier Tia <javier.tia@linaro.org>
 > ---
->  meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb | 26 +++++++++
->  meta-arm/uefi-sb-keys/.gitignore              |  4 ++
->  meta-arm/uefi-sb-keys/gen_uefi_keys.sh        | 56 +++++++++----------
->  3 files changed, 57 insertions(+), 29 deletions(-)
->  create mode 100644 meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb
->  create mode 100644 meta-arm/uefi-sb-keys/.gitignore
+>  .../u-boot/u-boot-qemuarm64-secureboot.inc     | 18 ++++++++++++++++++
+>  .../u-boot/u-boot/uefi-secureboot.cfg          | 10 ++++++++++
+>  .../recipes-bsp/u-boot/u-boot_%.bbappend       |  2 +-
+>  3 files changed, 29 insertions(+), 1 deletion(-)
+>  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-qemuarm64-secureboot.inc
+>  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg
 > 
-> diff --git a/meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb b/meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb
+> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-qemuarm64-secureboot.inc b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-qemuarm64-secureboot.inc
 > new file mode 100644
-> index 00000000..a4ae6d87
+> index 00000000..ffad08e4
 > --- /dev/null
-> +++ b/meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb
-> @@ -0,0 +1,26 @@
-> +# SPDX-License-Identifier: MIT
+> +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-qemuarm64-secureboot.inc
+> @@ -0,0 +1,18 @@
+> +FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 > +
-> +SUMMARY = "Generate UEFI keys for secure boot"
-> +LICENSE = "MIT"
-> +LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+> +SRC_URI += "file://uefi-secureboot.cfg"
 > +
-> +DEPENDS += "bash-native"
-> +DEPENDS += "coreutils-native"
-> +DEPENDS += "efitools-native"
-> +DEPENDS += "openssl-native"
+> +UBOOT_BOARDDIR = "${S}/board/emulation/qemu-arm"
+> +UBOOT_ENV_NAME = "qemu-arm.env"
+
+I'm not seeing these variable referenced anywhere (but I could be
+missing it).  Per my comment below, if removed this could be generic.
+
 > +
-> +SRC_URI = "file://${UEFI_SB_KEYS_DIR}/gen_uefi_keys.sh"
+> +DEPENDS += 'python3-pyopenssl-native'
 > +
-> +UNPACKDIR = "${S}"
+> +do_compile:prepend() {
+> +    export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
 > +
-> +do_fetch[noexec] = "1"
-> +do_patch[noexec] = "1"
-> +do_compile[noexec] = "1"
-> +do_configure[noexec] = "1"
-> +
-> +do_install() {
-> +    ${UEFI_SB_KEYS_DIR}/gen_uefi_keys.sh ${UEFI_SB_KEYS_DIR}
+> +    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n pk  -d "${UEFI_SB_KEYS_DIR}"/PK.esl  -t file
+> +    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n kek -d "${UEFI_SB_KEYS_DIR}"/KEK.esl -t file
+> +    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n db  -d "${UEFI_SB_KEYS_DIR}"/db.esl  -t file
+> +    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n dbx -d "${UEFI_SB_KEYS_DIR}"/dbx.esl -t file
+> +    "${S}"/tools/efivar.py print -i "${S}"/ubootefi.var
 > +}
-> +
-> +FILES:${PN} = "${UEFI_SB_KEYS_DIR}/*.key"
-> +FILES:${PN} += "${UEFI_SB_KEYS_DIR}/*.crt"
-> diff --git a/meta-arm/uefi-sb-keys/.gitignore b/meta-arm/uefi-sb-keys/.gitignore
+> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg
 > new file mode 100644
-> index 00000000..f8669919
+> index 00000000..d2edb5fb
 > --- /dev/null
-> +++ b/meta-arm/uefi-sb-keys/.gitignore
-> @@ -0,0 +1,4 @@
-> +*.auth
-> +*.crt
-> +*.esl
-> +*.key
+> +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg
+> @@ -0,0 +1,10 @@
+> +CONFIG_CMD_BOOTMENU=y
+> +CONFIG_USE_BOOTCOMMAND=y
+> +CONFIG_BOOTCOMMAND="bootmenu"
+> +CONFIG_USE_PREBOOT=y
+> +CONFIG_EFI_VAR_BUF_SIZE=65536
+> +CONFIG_FIT_SIGNATURE=y
+> +CONFIG_EFI_SECURE_BOOT=y
+> +CONFIG_EFI_VARIABLES_PRESEED=y
+> +CONFIG_PREBOOT="setenv bootmenu_0 UEFI Boot Manager=bootefi bootmgr; setenv bootmenu_1 UEFI Maintenance Menu=eficonfig"
+> +CONFIG_PREBOOT_DEFINED=y
 > \ No newline at end of file
-> diff --git a/meta-arm/uefi-sb-keys/gen_uefi_keys.sh b/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
-> index fc7f25c9..21e65c72 100755
-> --- a/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
-> +++ b/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
-> @@ -1,35 +1,33 @@
-> -#/bin/sh
-> +#!/bin/bash
-> +#
-> +# SPDX-License-Identifier: MIT
-> +#
+> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+> index 11f332ad..ee815b6a 100644
+> --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+> +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+> @@ -5,6 +5,6 @@ MACHINE_U-BOOT_REQUIRE:corstone1000 = "u-boot-corstone1000.inc"
+>  MACHINE_U-BOOT_REQUIRE:fvp-base = "u-boot-fvp-base.inc"
+>  MACHINE_U-BOOT_REQUIRE:juno = "u-boot-juno.inc"
+>  MACHINE_U-BOOT_REQUIRE:tc = "u-boot-tc.inc"
+> +MACHINE_U-BOOT_REQUIRE += "${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'u-boot-qemuarm64-secureboot.inc', '', d)}"
+
+This seems like it should be generic, but references
+"qemuarm64-secureboot"
+
 >  
->  set -eux
->  
-> -#Create PK
-> -openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout PK.key -out PK.crt -nodes -days 3650
-> -cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc PK.crt PK.esl
-> -sign-efi-sig-list -c PK.crt -k PK.key PK PK.esl PK.auth
-> +KEYS_PATH=${1:-./}
-> +SUBJECT="/CN=Linaro_LEDGE/"
-> +GUID="11111111-2222-3333-4444-123456789abc"
->  
-> -#Create KEK
-> -openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout KEK.key -out KEK.crt -nodes -days 3650
-> -cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc KEK.crt KEK.esl
-> -sign-efi-sig-list -c PK.crt -k PK.key KEK KEK.esl KEK.auth
-> +openssl req -x509 -sha256 -newkey rsa:2048 -subj "${SUBJECT}" \
-> +    -keyout "${KEYS_PATH}"/PK.key -out "${KEYS_PATH}"/PK.crt \
-> +    -nodes -days 3650
-> +cert-to-efi-sig-list -g ${GUID} \
-> +    "${KEYS_PATH}"/PK.crt "${KEYS_PATH}"/PK.esl
-> +sign-efi-sig-list -c "${KEYS_PATH}"/PK.crt -k "${KEYS_PATH}"/PK.key \
-> +    "${KEYS_PATH}"/PK "${KEYS_PATH}"/PK.esl "${KEYS_PATH}"/PK.auth
->  
-> -#Create DB
-> -openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout db.key -out db.crt -nodes -days 3650
-> -cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc db.crt db.esl
-> -sign-efi-sig-list -c KEK.crt -k KEK.key db db.esl db.auth
+>  require ${MACHINE_U-BOOT_REQUIRE}
 > -
-> -#Create DBX
-> -openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout dbx.key -out dbx.crt -nodes -days 3650
-> -cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc dbx.crt dbx.esl
-> -sign-efi-sig-list -c KEK.crt -k KEK.key dbx dbx.esl dbx.auth
-> -
-> -#Sign image
-> -#sbsign --key db.key --cert db.crt Image
-> -
-> -#Digest image
-> -#hash-to-efi-sig-list Image db_Image.hash
-> -#sign-efi-sig-list -c KEK.crt -k KEK.key db db_Image.hash db_Image.auth
-> -
-> -#Empty cert for testing
-> -touch noPK.esl
-> -sign-efi-sig-list -c PK.crt -k PK.key PK noPK.esl noPK.auth
-> +for key in KEK db dbx; do
-> +    openssl req -x509 -sha256 -newkey rsa:2048 -subj "${SUBJECT}" \
-> +        -keyout "${KEYS_PATH}"/${key}.key -out "${KEYS_PATH}"/${key}.crt \
-> +        -nodes -days 3650
-> +    cert-to-efi-sig-list -g ${GUID} \
-> +        "${KEYS_PATH}"/${key}.crt "${KEYS_PATH}"/${key}.esl
-> +    sign-efi-sig-list -c "${KEYS_PATH}"/PK.crt -k "${KEYS_PATH}"/PK.key \
-> +        "${KEYS_PATH}"/${key} "${KEYS_PATH}"/${key}.esl "${KEYS_PATH}"/${key}.auth
-> +done
->  
-> +# Empty cert for testing
-> +touch "${KEYS_PATH}"/noPK.esl
-> +sign-efi-sig-list -c "${KEYS_PATH}"/PK.crt -k "${KEYS_PATH}"/PK.key \
-> +    "${KEYS_PATH}"/PK "${KEYS_PATH}"/noPK.esl "${KEYS_PATH}"/noPK.auth
 > -- 
 > 2.46.0
 > 
