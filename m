@@ -1,82 +1,70 @@
-Return-Path: <denis@denix.org>
+Return-Path: <harsimransingh.tungal@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C5DCA100C
-	for <webhook@archiver.kernel.org>; Fri, 30 Aug 2024 19:54:10 +0000 (UTC)
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.515.1725047640330155978
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 825ADCA100C
+	for <webhook@archiver.kernel.org>; Fri, 30 Aug 2024 20:15:00 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.953.1725048895558516216
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 30 Aug 2024 12:54:00 -0700
+ Fri, 30 Aug 2024 13:14:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 58FC340C3E;
-	Fri, 30 Aug 2024 19:53:59 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id qLEpStsvYq46; Fri, 30 Aug 2024 19:53:59 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-87-159.washdc.fios.verizon.net [100.15.87.159])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 3C5CA40A03;
-	Fri, 30 Aug 2024 19:53:58 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 414B3164064; Fri, 30 Aug 2024 15:53:57 -0400 (EDT)
-Date: Fri, 30 Aug 2024 15:53:57 -0400
-From: Denys Dmytriyenko <denis@denix.org>
-To: Jon Mason <jon.mason@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm/trusted-firmware-a: update LICENSE entry
-Message-ID: <20240830195357.GF17572@denix.org>
-References: <20240830155148.24392-1-jon.mason@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: harsimransingh.tungal@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC90EFEC;
+	Fri, 30 Aug 2024 13:15:20 -0700 (PDT)
+Received: from e132995.arm.com (unknown [10.57.73.77])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB97D3F762;
+	Fri, 30 Aug 2024 13:14:53 -0700 (PDT)
+From: harsimransingh.tungal@arm.com
+To: meta-arm@lists.yoctoproject.org
+Cc: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
+Subject: [PATCH 0/1] arm-bsp,kas: corstone1000: enable External System based on new yml file 
+Date: Fri, 30 Aug 2024 21:14:47 +0100
+Message-Id: <20240830201448.3695005-1-harsimransingh.tungal@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240830155148.24392-1-jon.mason@arm.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 19:54:10 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6043
+ <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 20:15:00 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6044
 
-On Fri, Aug 30, 2024 at 11:51:48AM -0400, Jon Mason wrote:
-> As pointed out by Denys Dmytriyenko, the LICENSE entry in
-> trusted-firmware-a is not accurate.  docs/license.rst specifies the
-> licenses to be BSD 3 Clause for the project, with code from other
-> projects imported as:
-> libc BSD-3-Clause
-> libfdt BSD-2-Clause
-> LLVM BSD-3-Clause
-> zlib BSD-3-Clause
-> STMicroelectronics platform source code BSD-3-Clause
-> Linux source  MIT
-> DICE Apache 2.0
-> 
-> Note: these are the license the code is imported with (according to
-> license.rst), not a listing of the license(s) of those sources.
-> 
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
+From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 
-Acked-by: Denys Dmytriyenko <denys@konsulko.com>
+Create new yml file "corstone1000-extsys.yml" which adds "corstone1000-ex=
+tsys" as
+new MACHINE_FEATURE.
+Based on this, external system components can be enabled or disabled from=
+ the
+Linux Kernel and U-Boot.
 
+Reason for change:
+DT-schema test is failing for the SystemReady-IR v2.0 certification becau=
+se
+device tree binding for remoteproc dts node corresponds to external syste=
+m has
+not been upstreamed in the Linux Kernel yet.
+So, it has been decided to make enablement of external system configurabl=
+e in
+order to make Corstone1000 FVP SystemReady-IR v2.0 certifiable.
 
-> ---
->  meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> index 80d41f328afa..f90b588444a4 100644
-> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> @@ -1,5 +1,5 @@
->  DESCRIPTION = "Trusted Firmware-A"
-> -LICENSE = "BSD-3-Clause & MIT"
-> +LICENSE = "BSD-2-Clause & BSD-3-Clause & MIT & Apache-2.0"
->  
->  PACKAGE_ARCH = "${MACHINE_ARCH}"
->  
-> -- 
-> 2.39.3 (Apple Git-146)
+Harsimran Singh Tungal (1):
+  arm-bsp,kas: corstone1000: enable External System based on new yml
+    file
+
+ kas/corstone1000-extsys.yml                   |  6 ++++
+ .../documentation/corstone1000/user-guide.rst |  7 ++++
+ .../u-boot/u-boot-corstone1000.inc            |  2 ++
+ ...rstone1000-purge-remoteproc-dts-node.patch | 34 +++++++++++++++++++
+ .../linux/linux-arm-platforms.inc             | 20 +++++++----
+ 5 files changed, 63 insertions(+), 6 deletions(-)
+ create mode 100644 kas/corstone1000-extsys.yml
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+051-corstone1000-purge-remoteproc-dts-node.patch
+
+--=20
+2.25.1
+
 
