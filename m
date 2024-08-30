@@ -2,238 +2,151 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306EECA0FF2
-	for <webhook@archiver.kernel.org>; Fri, 30 Aug 2024 13:24:59 +0000 (UTC)
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
- by mx.groups.io with SMTP id smtpd.web10.14774.1725024297308847433
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D882CA0FF6
+	for <webhook@archiver.kernel.org>; Fri, 30 Aug 2024 14:01:09 +0000 (UTC)
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+ by mx.groups.io with SMTP id smtpd.web10.16118.1725026459370649548
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 30 Aug 2024 06:24:57 -0700
+ Fri, 30 Aug 2024 07:00:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=RRKgeMBq;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.52, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6bf7ba05f75so23634506d6.0
-        for <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 06:24:57 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=wBP0nri8;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.182, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7a7fef9a5fdso180211985a.1
+        for <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 07:00:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725024296; x=1725629096; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725026458; x=1725631258; darn=lists.yoctoproject.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=D8tI7tyyvtVKkKI+lZinjUQcHwdlNEO40XqVGA2db1E=;
-        b=RRKgeMBqo+M0NwvRtGr3t1MklUMpMNj3S/QUuiRzFHlLCIFPhY6CBmOh1EhKtLCIhY
-         R3/pk8p5TcCyXU+WUB2f46+d/Cvl+mNEt0vgMz6jD/Bd+yzXSYnbb8C9M6sEU8mpsdn7
-         C6vZd7jzIQP1lbR0ps2VmwrChVj2sRYjDPfgH+/NkoP0QIZ5Y75c25WzjTc/uKx51XRX
-         hyL/PJPhdSvPRagMKQ2K2dlfoVvgyXXIOLrjhT8usQVwGGI+CK6LHv/HTbVRLZjHDslB
-         xi39bNH1u1v4IRNWF573i+eiKSGL40sMynHw33Tytnkr2ql+q8/IVnqg9dBKuiwFyuoE
-         +tDQ==
+        bh=5Bt4dG+ZfbtHO4AaOzBvIhnFGzVedX7dojG1s0uCWVw=;
+        b=wBP0nri8y+UF1NePqtlyC7AbWASpk1+8YoaVBzf9dQvFETPwRGwUmMMqeTlxilpnc4
+         lVI9Tz1CmwyEDQQ4jobOepvUSsylBBKhPmInuHN8wYfmvBnRqftoSEE2zPYGHwjJMXZ3
+         3WJojQsYAm6KIxRONeO9iMjQNJrjnrRhepxOU5pk54FGshG1+t0+nsH/Rh/iWzAY+Gj6
+         dcPWlkTCjOfBCOZzg/zNia4leU1a4e1jfLFezbcwVIzk0QQA9kpkQaCLvuEUTgmS5MeG
+         2PkIpl6e9gYPAPPdvTxzdZ5OOLlFVhBlTAXjnC3WISolfA17XOrJMc4ongAaFQxeW9iY
+         8XCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725024296; x=1725629096;
+        d=1e100.net; s=20230601; t=1725026458; x=1725631258;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D8tI7tyyvtVKkKI+lZinjUQcHwdlNEO40XqVGA2db1E=;
-        b=o8+GxuGrDwMOvIjygZhqQ1yqY7gC0j5TwPcRmovmmJQTha3N9MLya7tupL/sHzalj8
-         BZCOT4AMc0Fi74wkDBgYjcsJscIw6E5kLTSPzQZFH4de5ag6N9VRe4F7xIdZ4g8bYc+0
-         AyPqpfMHOYsg2pg05lrjDXnIsNHogzZ33bBRrFzKp2EV1EAm9BTJ/EZU5f0HmOzZ5TMO
-         dHfGvuvj80kmsdDl0DurF7QGJz5uXHP24CJn3swgfefKnAyJL4hkexz7b4e/jELTIuR/
-         NgODz1gJpgBxMAdtBswOlo+7L2AblV2O5pB2NEh4K0/+tsK5l3q8VGl1UE+ZYr9LA3C/
-         pn1w==
-X-Forwarded-Encrypted: i=1; AJvYcCWhabgnWl31lwOJYl7WSlvwchrQAGIoPaZ3iY8XTZ6u/AceEDvR0xabk8ehJSxtZ5l1YZ58NuH99Q==@lists.yoctoproject.org
-X-Gm-Message-State: AOJu0YyHfjXwywwUSQNVcg32J6ZPGKqZLIN+TlgmjBWs7hY21DbqdVph
-	1t3AVBSpFXzlakdDk/7aYmfPjTEwRIH4Dld5+GGRd21fEagZiP79HGOgd/I2lUiHzsBmBQM5vPY
-	=
-X-Google-Smtp-Source: AGHT+IF5CjJ8y8z6hUEds9hqzcGMols5yPnJss5oaE/gMLBj8S44XFsiioNglo5uk8gT22lTaoBzqQ==
-X-Received: by 2002:a05:6214:c42:b0:6b5:101c:6473 with SMTP id 6a1803df08f44-6c33f32405bmr96597946d6.2.1725024295716;
-        Fri, 30 Aug 2024 06:24:55 -0700 (PDT)
+        bh=5Bt4dG+ZfbtHO4AaOzBvIhnFGzVedX7dojG1s0uCWVw=;
+        b=RWLnmaHoKEG1DYK3Fw3slQqBy+ko3ZYnEHT6ULfF505rIER1CBGYpl4Gz6f62rRTna
+         i8uBYUM2wR89qiCTbR0ewltgUN4yJ4sKN/f9FTU3N48JRk9DJKLF4DEnnxk/B9uLQGPW
+         Rr+yfQdwHilJOr9gJgcrSZhwdsBxB8ak2kARMZleX/LBdZXpWlGJFCAzFEnDAlT7FDFx
+         g6+G8wZLjn144I/WFR2VbGhs1UTxX/ymHssen1FfFYp5GrJZIbkM2au6J7hHzKIIBSpo
+         jChdk1hF+XP7FWo/MW6GX+jGiq8RjGhpiD+Ec8vchsYrQnVwjwJucCbfwZjj+4pavXaS
+         mcDg==
+X-Gm-Message-State: AOJu0YyLPwAB+SPd+qcay3V7p+BWyQIY2xa71Q8eGu3t7SWutiGYhmMj
+	yhjagt+0JyXYXYvKSN4MS6a2ZNUxmq4lYwS2n0JsUGZwbNFivLvx3NSX2lEjKg==
+X-Google-Smtp-Source: AGHT+IGfeuhbMg0N5bK51w7R8nggLe68o3IiM50yaOsoiQpxf+If7m5htPOqty9L38YiaaSVQwozZg==
+X-Received: by 2002:a05:620a:4305:b0:7a4:d54f:7fe8 with SMTP id af79cd13be357-7a804c2a58bmr926257185a.19.1725026458095;
+        Fri, 30 Aug 2024 07:00:58 -0700 (PDT)
 Received: from kudzu.us ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c34f84c64bsm2947596d6.60.2024.08.30.06.24.55
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a806c00205sm145141885a.22.2024.08.30.07.00.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2024 06:24:55 -0700 (PDT)
-Date: Fri, 30 Aug 2024 09:24:53 -0400
+        Fri, 30 Aug 2024 07:00:57 -0700 (PDT)
+Date: Fri, 30 Aug 2024 10:00:56 -0400
 From: Jon Mason <jdmason@kudzu.us>
-To: Mikko Rapeli <mikko.rapeli@linaro.org>
-Cc: Javier Tia <javier.tia@linaro.org>, meta-arm@lists.yoctoproject.org,
+To: Javier Tia <javier.tia@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>, Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH v4 00/13] qemuarm64-secureboot: Add UEFI Secure Boot
-Message-ID: <ZtHIJUfxF7xwDM-Q@kudzu.us>
+Subject: Re: [PATCH v4 03/13] layer.conf: Introduce UEFI_SB_KEYS_DIR
+Message-ID: <ZtHQmBjng4mzrJyp@kudzu.us>
 References: <20240829163209.47945-1-javier.tia@linaro.org>
- <ZtE3MqOM2D40ei5r@kudzu.us>
- <ZtFiZjM7pRqSNm2l@nuoska>
+ <20240829163209.47945-4-javier.tia@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZtFiZjM7pRqSNm2l@nuoska>
+In-Reply-To: <20240829163209.47945-4-javier.tia@linaro.org>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 13:24:59 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6028
+ <meta-arm@lists.yoctoproject.org>; Fri, 30 Aug 2024 14:01:09 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6029
 
-On Fri, Aug 30, 2024 at 09:10:46AM +0300, Mikko Rapeli wrote:
-> Hi,
+On Thu, Aug 29, 2024 at 10:31:59AM -0600, Javier Tia wrote:
+> UEFI_SB_KEYS_DIR saves UEFI keys path.
 > 
-> On Thu, Aug 29, 2024 at 11:06:26PM -0400, Jon Mason wrote:
-> > Looks like this series is not building for me.  I'm seeing the
-> > following error:
-> > 
-> > ERROR: /builder/meta-arm/build/../poky/meta/recipes-kernel/linux/linux-yocto_6.10.bb: Unable to get checksum for linux-yocto SRC_URI entry db.key: file could not be found                     | ETA:  0:00:12
-> > The following paths were searched:
-> > /builder/meta-arm/build/../meta-arm/uefi-sb-keys/db.key
-> > ERROR: Parsing halted due to errors, see error messages above                                                                                                                                  | ETA:  0:00:14
-> > ERROR: /builder/meta-arm/build/../poky/meta/recipes-core/systemd/systemd-boot_256.5.bb: Unable to get checksum for systemd-boot SRC_URI entry db.key: file could not be found
-> > The following paths were searched:
-> > /builder/meta-arm/build/../meta-arm/uefi-sb-keys/db.key
-> > ERROR: /builder/meta-arm/build/../poky/meta/recipes-kernel/linux/linux-yocto_6.6.bb: Unable to get checksum for linux-yocto SRC_URI entry db.key: file could not be found
-> > The following paths were searched:
-> > /builder/meta-arm/build/../meta-arm/uefi-sb-keys/db.key
-> > 
-> > I've not looked into it, but it's being seen on mulitple setups and is
-> > trivial to replicate with:
-> > kas build ci/qemuarm64-secureboot.yml:ci/testimage.yml
+> To avoid security issues, UEFI keys are not provided and they can be
+> generated by gen_uefi_keys.sh script.
 > 
-> I think this is the secure boot key generation. You should run
-> meta-arm/uefi-sb-keys/gen_uefi_keys.sh in meta-arm/uefi-sb-keys before
-> building, or have some other way of distributing the keys to build machines.
+> Signed-off-by: Javier Tia <javier.tia@linaro.org>
+> ---
+>  meta-arm/conf/layer.conf               |  2 ++
+>  meta-arm/uefi-sb-keys/gen_uefi_keys.sh | 35 ++++++++++++++++++++++++++
+>  2 files changed, 37 insertions(+)
+>  create mode 100755 meta-arm/uefi-sb-keys/gen_uefi_keys.sh
 > 
-> This could be part of a recipe but that would be fully non-reproducible.
-
-Honestly, I don't even look at the patches if it doesn't pass CI.  It
-not generating keys as part of the build seems like a deal breaker.
-
-> Maybe there is some kas way of running this script before bitbake build
-> if the key files are not there?
-
-It is possible, but trying to add it is going to be difficult based on
-the rewrites that would be necessary based on the way the
-.gitlab-ci.yml file is laid out.
-
-Also, are we expecting a developer to know to run this and do this
-every time, or are we expecting to generate the keys once and reuse
-them?  Even if the latter, i think generating them as part of the
-build is logical (perhaps with a detection for existing keys in the
-directory or something).
-
-Is it not possible to have some kind of bbappend on u-boot that adds a
-dependency on gen-uefi-sb-keys.bb and calls the script?
-
-Thanks,
-Jon
-
-> 
-> Cheers,
-> 
-> -Mikko
+> diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+> index 9e9c9dbd..2854dd69 100644
+> --- a/meta-arm/conf/layer.conf
+> +++ b/meta-arm/conf/layer.conf
+> @@ -21,3 +21,5 @@ HOSTTOOLS_NONFATAL += "telnet"
+>  addpylib ${LAYERDIR}/lib oeqa
 >  
-> > Thanks,
-> > Jon
-> > 
-> > 
-> > On Thu, Aug 29, 2024 at 10:31:56AM -0600, Javier Tia wrote:
-> > > Hi,
-> > > 
-> > > Addressing comments from patch series v3.
-> > > 
-> > > A backport from meta-ts with the minimal changes to add UEFI Secure Boot
-> > > into qemuarm64-secureboot machine.
-> > > 
-> > > Requirements:
-> > > 
-> > >   - Create a UEFI disk partition to copy EFI apps.
-> > > 
-> > >   - Add UEFI settings to U-Boot, systemd-boot, and Linux kernel.
-> > > 
-> > >   - UEFI keys are to be stored in U-Boot and used to sign systemd-boot
-> > >     and Linux kernel images.
-> > > 
-> > >   - Add systemd as Init manager to auto-mount efivarfs.
-> > > 
-> > > Introduces uefi-secureboot machine feature.
-> > > 
-> > > UEFI keys must be genereated in order to be added to U-Boot. Sign both
-> > > systemd-boot EFI app and Linux kernel image.
-> > > 
-> > > Build and verification steps:
-> > > 
-> > > $ kas build 'ci/qemuarm64-secureboot.yml:ci/testimage.yml'
-> > > 
-> > > ---
-> > > 
-> > > Changes since v3:
-> > > - For image creation use core-image-minimal, instead of core-image-base.
-> > > 
-> > > Changes since v2:
-> > > - Remove commit "qemuarm64-secureboot.yml: Set branch to scarthgap".
-> > > 
-> > > Changes since v1:
-> > > - Rework all subject commits to follow OE, Yocto, and meta-arm guidelines.
-> > > - Add gen-uefi-sb-keys.bb recipe to generate UEFI keys.
-> > > - Add an OE test to validate UEFI Secure Boot.
-> > > - Simplify gen_uefi_keys.sh to avoid code repetition.
-> > > - Replace grub with systemd-boot.
-> > > - Simplify signing binary images with sbsign class.
-> > > - Set OE branch to Scarthgap.
-> > > 
-> > > Changes since the v0:
-> > > - Remove u-boot recipe.
-> > > - Split the change in several commits.
-> > > - Remove sample UEFI keys.
-> > > - Validate UEFI keys exist before building.
-> > > - Insolate most of changes under uefi-secureboot machine feature.
-> > > 
-> > > Javier Tia (13):
-> > >   qemuarm64-secureboot: Introduce uefi-secureboot machine feature
-> > >   core-image-minimal: Use UEFI layout disk partitions
-> > >   layer.conf: Introduce UEFI_SB_KEYS_DIR
-> > >   uefi-sb-keys.bbclass: Add class to validate UEFI keys
-> > >   sbsign.bbclass: Add class to sign binaries
-> > >   core-image-minimal: Inherit uefi-sb-keys
-> > >   meta-arm: Introduce gen-uefi-sb-keys.bb recipe
-> > >   u-boot: Setup UEFI and Secure Boot
-> > >   qemuarm64-secureboot: Add meta-secure-core layer as dependency
-> > >   linux-yocto: Setup UEFI and sign kernel image
-> > >   systemd: Add UEFI support
-> > >   systemd-boot: Use it as bootloader & sign UEFI image
-> > >   meta-arm: Add UEFI Secure Boot test
-> > > 
-> > >  ci/qemuarm64-secureboot.yml                   | 14 ++++---
-> > >  .../u-boot/u-boot-qemuarm64-secureboot.inc    | 18 +++++++++
-> > >  .../u-boot/u-boot/uefi-secureboot.cfg         | 10 +++++
-> > >  .../recipes-bsp/u-boot/u-boot_%.bbappend      |  2 +-
-> > >  meta-arm-bsp/wic/efi-disk-no-swap.wks.in      |  2 +-
-> > >  meta-arm/classes/sbsign.bbclass               | 39 +++++++++++++++++++
-> > >  meta-arm/classes/uefi-sb-keys.bbclass         | 24 ++++++++++++
-> > >  meta-arm/conf/layer.conf                      |  2 +
-> > >  .../conf/machine/qemuarm64-secureboot.conf    |  8 ++++
-> > >  .../oeqa/runtime/cases/uefi_secure_boot.py    | 32 +++++++++++++++
-> > >  meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb | 26 +++++++++++++
-> > >  .../core-image-minimal-uefi-secureboot.inc    | 17 ++++++++
-> > >  .../images/core-image-minimal.bbappend        |  1 +
-> > >  .../systemd/systemd-boot-uefi-secureboot.inc  | 12 ++++++
-> > >  .../systemd/systemd-boot_%.bbappend           |  1 +
-> > >  meta-arm/recipes-core/systemd/systemd-efi.inc |  1 +
-> > >  .../recipes-core/systemd/systemd_%.bbappend   |  1 +
-> > >  .../linux/linux-yocto%.bbappend               |  2 +
-> > >  .../linux/linux-yocto-uefi-secureboot.inc     | 19 +++++++++
-> > >  meta-arm/uefi-sb-keys/.gitignore              |  4 ++
-> > >  meta-arm/uefi-sb-keys/gen_uefi_keys.sh        | 33 ++++++++++++++++
-> > >  21 files changed, 261 insertions(+), 7 deletions(-)
-> > >  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-qemuarm64-secureboot.inc
-> > >  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg
-> > >  create mode 100644 meta-arm/classes/sbsign.bbclass
-> > >  create mode 100644 meta-arm/classes/uefi-sb-keys.bbclass
-> > >  create mode 100644 meta-arm/lib/oeqa/runtime/cases/uefi_secure_boot.py
-> > >  create mode 100644 meta-arm/recipes-bsp/uefi/gen-uefi-sb-keys.bb
-> > >  create mode 100644 meta-arm/recipes-core/images/core-image-minimal-uefi-secureboot.inc
-> > >  create mode 100644 meta-arm/recipes-core/images/core-image-minimal.bbappend
-> > >  create mode 100644 meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
-> > >  create mode 100644 meta-arm/recipes-core/systemd/systemd-boot_%.bbappend
-> > >  create mode 100644 meta-arm/recipes-core/systemd/systemd-efi.inc
-> > >  create mode 100644 meta-arm/recipes-core/systemd/systemd_%.bbappend
-> > >  create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
-> > >  create mode 100644 meta-arm/uefi-sb-keys/.gitignore
-> > >  create mode 100755 meta-arm/uefi-sb-keys/gen_uefi_keys.sh
-> > > 
-> > > -- 
-> > > 2.46.0
-> > > 
-> > > 
+>  WARN_QA:append:layer-meta-arm = " patch-status"
+> +
+> +UEFI_SB_KEYS_DIR ??= "${LAYERDIR}/uefi-sb-keys"
+
+I'm expecting the keys to be unique for each machine build.  If so,
+shouldn't the keys live in the deploy directory (assuming we want to
+reference them or reuse them) or the destination/work dir?  This would
+also remove the need to have the gitignore file, which I don't think
+is correct to have.
+
+> \ No newline at end of file
+> diff --git a/meta-arm/uefi-sb-keys/gen_uefi_keys.sh b/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
+> new file mode 100755
+> index 00000000..fc7f25c9
+> --- /dev/null
+> +++ b/meta-arm/uefi-sb-keys/gen_uefi_keys.sh
+> @@ -0,0 +1,35 @@
+> +#/bin/sh
+> +
+> +set -eux
+> +
+> +#Create PK
+> +openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout PK.key -out PK.crt -nodes -days 3650
+
+Here and below, do we want to say these are Linaro keys?  I'm not
+seeing anywhere else that checks (but I don't know this well enough to
+know if it does somewhere else).  If not, should we do something else
+like "OpenEmbedded"?
+
+> +cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc PK.crt PK.esl
+> +sign-efi-sig-list -c PK.crt -k PK.key PK PK.esl PK.auth
+> +
+> +#Create KEK
+> +openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout KEK.key -out KEK.crt -nodes -days 3650
+> +cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc KEK.crt KEK.esl
+> +sign-efi-sig-list -c PK.crt -k PK.key KEK KEK.esl KEK.auth
+> +
+> +#Create DB
+> +openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout db.key -out db.crt -nodes -days 3650
+> +cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc db.crt db.esl
+> +sign-efi-sig-list -c KEK.crt -k KEK.key db db.esl db.auth
+> +
+> +#Create DBX
+> +openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=Linaro_LEDGE/ -keyout dbx.key -out dbx.crt -nodes -days 3650
+> +cert-to-efi-sig-list -g 11111111-2222-3333-4444-123456789abc dbx.crt dbx.esl
+> +sign-efi-sig-list -c KEK.crt -k KEK.key dbx dbx.esl dbx.auth
+> +
+> +#Sign image
+> +#sbsign --key db.key --cert db.crt Image
+
+Here and below are commented out.  Is this intentional?  If so, then
+why are they being kept in here (e.g., larger commenets needed)?
+
+> +#Digest image
+> +#hash-to-efi-sig-list Image db_Image.hash
+> +#sign-efi-sig-list -c KEK.crt -k KEK.key db db_Image.hash db_Image.auth
+> +
+> +#Empty cert for testing
+> +touch noPK.esl
+> +sign-efi-sig-list -c PK.crt -k PK.key PK noPK.esl noPK.auth
+> +
+> -- 
+> 2.46.0
+> 
 > 
 
