@@ -2,61 +2,61 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D62CD3442
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DDDCD3443
 	for <webhook@archiver.kernel.org>; Tue,  3 Sep 2024 15:32:41 +0000 (UTC)
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
- by mx.groups.io with SMTP id smtpd.web11.26443.1725377559230742154
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+ by mx.groups.io with SMTP id smtpd.web11.26441.1725377551817977644
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 03 Sep 2024 08:32:39 -0700
+ Tue, 03 Sep 2024 08:32:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=EjGqPMj4;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.46, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6bf92f96f83so26572776d6.3
-        for <meta-arm@lists.yoctoproject.org>; Tue, 03 Sep 2024 08:32:39 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=q6mMM4Wn;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.161.44, mailfrom: jdmason@kudzu.us)
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5dfa315ccf1so3264932eaf.3
+        for <meta-arm@lists.yoctoproject.org>; Tue, 03 Sep 2024 08:32:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725377558; x=1725982358; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725377551; x=1725982351; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UaVcPzTHAVGZxWW1jxp/QW0gJn1qNkinXJpxZRqakv4=;
-        b=EjGqPMj4LNRTDn6ivfutMcqz03pQggvgaCqTsePY2j4fBL2H/yksip9l5oood6zgyC
-         +PI/qohev8sB33EvWc66TQ9BHUls2V/XOv47dQ56NxfGp87ap7+1C7bk1T5yKqZVq6hR
-         IIkK2isJup2/9UqzKp8Uzt81GoUR1C9BLFRNUBW8t19D4SbpoLZtglSpg0w3lIESXQo0
-         3Q0rHlTxVMOGFPBY02ZyphKXuppBk5BVOsYOq8Gmo6TjHnda+tM0ORTVr/qD6qi/Q6pO
-         SwcR7DacmMadJph5xLirnxA5E+Y58BVm0A3UyLqVZ1aEyihZDCIJLUm3G1+Mr7XY7eij
-         ncrQ==
+        bh=w2SkmKvBPRQocUdm50MchajVu0WhPsr7/siJS/4cTaQ=;
+        b=q6mMM4WnOuriwo5uouWq6sDu5yREkcOEc1R9nKgWIscwI1rdrnWntXkqcVS73jed8I
+         L+0yR5VaO66X1xsnSQh0JfqShX/kj04P+ckrtVGZejO3iKmgvVEQQKDayUK6GQVFlLD3
+         TBEBYgjJRiZdV/u38oPbaXKmZpjGYLiiFQyzRejJqLCHbVEEAhM0j38feb3XZxz0K5zC
+         tDkltP3D0IrBzYciLD+Z53ICbke5Ob354wSLmto8qWMvfOWA7fr0Ep2cCyfNUzS657yK
+         Yr8D9K2isnYTkR0XaxoYH80Pi1aqHopXCbofSi5jxo/Xl5SfgTCZUVup0l9hXRwtWNfE
+         Ywxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725377558; x=1725982358;
+        d=1e100.net; s=20230601; t=1725377551; x=1725982351;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UaVcPzTHAVGZxWW1jxp/QW0gJn1qNkinXJpxZRqakv4=;
-        b=WBeIr4ZIDJq04CHPE9EQS3DFuXQHSEQRweVm5/+BpTvRMZ43d8r7oCaNMbJC1CxHaP
-         xq0dOfnecwcSvabDKWscqxD8+g0y4nlC3rLcSzC1qxJLLiY1qKHagDEd3X6xG2LdTI/1
-         nomvLyR+1F/bftcvHdvwnTMV00zF8RPR09aTkItPtXlJf7SdnGyWY1+ZaF1+Nc1/muuh
-         so+msetnoPT6n4pxyomNFOGi9PghMnevQBNhZmvUV4unFCaQFHfXOamMN9ko3ybVxJA8
-         uLfjjzmLkdYhrJajxawZkJvOzxKFfHQwRWwPOdVHgR0PVjXR2FW2aScjqzAqbnOxXfic
-         7n/w==
-X-Gm-Message-State: AOJu0YzyutXOywRZ4seg/AH1Tll0rO8x9wTjc8uW8xtay6/yyXFLoRpk
-	6zXcxTMf8iZe/+z+Q88nNY32LbV74xk1OU+gtGlM3moNSUsE6QjYAV8IMSqTiVdhADkinj7R5AQ
+        bh=w2SkmKvBPRQocUdm50MchajVu0WhPsr7/siJS/4cTaQ=;
+        b=M0fyGiM7DfFclr9IF9S2n1LGGvpCocnVUHunI3p1ATFg/iv4suz02WYuwmKjaQDN1j
+         K4i2HgMoX6gOSZkaKCJFbdtCBe9G/o0xAYu7yzM+sw5G9GnLPFWyltmi8zE64D3ledIx
+         cD98yR9hVrDCYnlu9wQpyE6UHecJth9vEgLzTINcsJY9B3hlqMUkC4gQND7GyMFNj97I
+         rHtOuyqtaDEaoG88Gd6OcBSqOrQt7xu+gsV51y6SLLckTpBBAe0/5M7FhuXQV9cxmggf
+         XMJRZWu9QNO2FP6p7zlXan5q5gRoV41iFmhojZHRWeTpQtRH0e0NpJ1V/HHxmBVKU3se
+         sniQ==
+X-Gm-Message-State: AOJu0Ywv0kJzfKGTAjggHsADE88EhIu7pQRpf/s7+7aSmsXKrV1b+nZy
+	U/IIO2KeRF0Mq5kTrl+QjB9xbZNxWP/KaK765RybHUMB2/tx44czSd+fu6Dydo6vojDVVgDghqk
 	=
-X-Google-Smtp-Source: AGHT+IFq35t8oBOE27a5k+RxzmnsGW6aGm2xI4T1CleffW8aCwQDY/y5q4CKb3xh4CEeGUXu14mf/A==
-X-Received: by 2002:a05:6214:4697:b0:6c3:4823:22df with SMTP id 6a1803df08f44-6c3553ed971mr142550516d6.21.1725377557975;
-        Tue, 03 Sep 2024 08:32:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFA3sdqv8CbRBNJZMC8hq2ESuf/jtyaRQkeVFxg1Fcmj+4GQTP4OwZgxIvOKqqvAq08nwoF1A==
+X-Received: by 2002:a05:6358:720e:b0:1ac:62de:6c16 with SMTP id e5c5f4694b2df-1b603c144aamr2237459455d.8.1725377550503;
+        Tue, 03 Sep 2024 08:32:30 -0700 (PDT)
 Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c340bfa7d7sm54899966d6.4.2024.09.03.08.32.37
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a806bfc197sm537846285a.7.2024.09.03.08.32.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 08:32:37 -0700 (PDT)
+        Tue, 03 Sep 2024 08:32:30 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	harsimransingh.tungal@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp,documentation: corstone1000: update user documentation
-Date: Tue,  3 Sep 2024 11:32:22 -0400
-Message-Id: <172537754408.2698594.6950082403956003014.b4-ty@arm.com>
+	bence.balogh@arm.com
+Subject: Re: [PATCH 0/3] Add Secure Debug optional feature to Corstone-1000
+Date: Tue,  3 Sep 2024 11:32:21 -0400
+Message-Id: <172537754407.2698594.10733293104008293756.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240903095602.167973-1-harsimransingh.tungal@arm.com>
-References: <20240903095602.167973-1-harsimransingh.tungal@arm.com>
+In-Reply-To: <20240829110505.55826-1-bence.balogh@arm.com>
+References: <20240829110505.55826-1-bence.balogh@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -64,24 +64,29 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 03 Sep 2024 15:32:41 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6053
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6052
 
 
-On Tue, 03 Sep 2024 10:56:01 +0100, harsimransingh.tungal@arm.com wrote:
-> From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
+On Thu, 29 Aug 2024 13:05:02 +0200, bence.balogh@arm.com wrote:
+> From: Bence Balogh <bence.balogh@arm.com>
 > 
-> Add new usage details for running the secure boot testing
-> script located in the systemready-patch repository.
-> This script is used to create UEFI authenticated variables and sign the
-> Linux kernel image for the MPS3-FPGA and FVP secure boot tests.
-> Reflect the latest modifications to the script usage in the Corstone-1000 user guide.
+> The patchset:
+>   - Adds the psa-adac library as a TF-M dependency
+>   - Adds the necessary TF-M patches to make the Secure Debug work
+>   - Adds kas file that can be used to enable Secure Debug
+>   - Adds new CI entry to run Secure Debug
+>   - Updates Corstone-1000 user guide
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] arm-bsp,documentation: corstone1000: update user documentation
-      commit: 9d00aa03f6d1f88eca229fcb2677eccfbcaf392a
+[1/3] arm-bsp/trusted-firmware-m: corstone1000: add Secure Debug
+      commit: 7e94669f60818e198d7d9aa25e7d0cad05c86047
+[2/3] arm-bsp/documentation: corstone1000: add Secure Debug test
+      commit: db2b46a464560f8fa9960efb96193e664a729a2a
+[3/3] CI: Add secure debug build for Corstone-1000
+      commit: 36e8641cc9ed8efcd3d4ced3dd353733a40403d5
 
 Best regards,
 -- 
