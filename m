@@ -2,61 +2,61 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30023CD3443
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E1ECD3446
 	for <webhook@archiver.kernel.org>; Tue,  3 Sep 2024 15:32:51 +0000 (UTC)
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
- by mx.groups.io with SMTP id smtpd.web11.26448.1725377567971816146
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+ by mx.groups.io with SMTP id smtpd.web11.26451.1725377570924022977
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 03 Sep 2024 08:32:48 -0700
+ Tue, 03 Sep 2024 08:32:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=VpcXZb/a;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.177, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-456930b923fso22387811cf.1
-        for <meta-arm@lists.yoctoproject.org>; Tue, 03 Sep 2024 08:32:47 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=YmfvHxCO;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.170, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7a95efbaf49so198410885a.3
+        for <meta-arm@lists.yoctoproject.org>; Tue, 03 Sep 2024 08:32:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725377567; x=1725982367; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725377570; x=1725982370; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0BPdtRcjpeCnsa6za60wfSzC0Pa2ANWOjMnEOv8a9is=;
-        b=VpcXZb/aUx1SRqna6Rwn4Yxpu8Ngu8Dv+p+BfpUYElTzPPtLT05bUf9xpuOqXoOk3T
-         N/PurJQLMlG83Ki49K7WgURmEAEhWnEeLiOU7Pq1MKDLjIMhoZ84qEszhjDnBL8o2ag+
-         Zxawk4Ge7VzoO0pphqJ2faWaEZaD8zm/QwIk+ugpQ9ivB5IIOCsmP9zwYtz5r+3LC5tx
-         DZAVinQLr1qgrFqFtEPv8paqMtdZTbSKx/2br04kYAA8RP/x+fEnpywwjUngxN6YYS60
-         Gofrv005jvY9otODtags7r8ePmk07QjmHSN2hRAm3rhNPWc6vm3JbGhg9VC+zekTHvzB
-         Ym/w==
+        bh=nnOPKtnPga4stTJsWMUwBVkz7f7dzZlqBbyexIbCok8=;
+        b=YmfvHxCOihbEVniYjiSldUH0OhwfZ13ZP339xc0VhyKKDajeNpQp0Yo1WDeZ5T/jod
+         9ytkJIZau2Fy1UTWjbFLPLgb4QCe4ZLFxk43I4zTQrUOEEgegosMVfJE4WlvAEcpgv+k
+         icsjIgAe45jazkhdZdyF3A60FfDuIz6zd0GPvGYg4PFPSjGeG1c7kYBP0xe3N4T13xGM
+         JTNHKZBWrmv7bbtUycrjNMSjZKc9GEbrLAPF0NSaOKhFkH+aRsPt+82tNsE802PbDSEb
+         kY/xqaSgGNf38othw/lAcG+qwzeRieiJk0dt4JgtQOBnu5N4Ih9Fo4YrRBYQ89G9CII4
+         Sfsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725377567; x=1725982367;
+        d=1e100.net; s=20230601; t=1725377570; x=1725982370;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0BPdtRcjpeCnsa6za60wfSzC0Pa2ANWOjMnEOv8a9is=;
-        b=BaN4AKyI4mJ2HthbSuN6CS5ieY5d88wvENjgqvV/YzknEeW+y7xNVfo9PgzCVeQigS
-         IOXwI1De8LT4HGA0msIRUoWDPV6/VDk5jo0rrMRJ0L3yH/jnDWgD9c3WJ7ThAmxlZgB+
-         CCbFMAq8ECYjyaRlmXGYSNWrdPy3T7lDLcJGadp5reo3UyqfMNNZgunj4SNIMClUvvxM
-         L0o6tg7XWf6WIm3k4HsVBlK8bdm1mSj2GfESxTlBP0tAEM1xf8xuULn6PKI52FECGM9M
-         yv0tUaNe9cEf59WXbYC0n5rbrpKYW78WAW3AVl9FHXo0nLTr7YQD+qkkM98uD4RqHDdZ
-         jzvw==
-X-Gm-Message-State: AOJu0YxYoF5ffXnqGUDAUGVQJOx157XJp22gh/rfUNHc2zGa2lNt+hG6
-	v39x5Qx4ih9Oe9r3l2NLUD/eIrsoch/oaAzy0CsbmyuV2Cg1zRGOnNNHgrRIk2k2eZO7EWqzgfU
+        bh=nnOPKtnPga4stTJsWMUwBVkz7f7dzZlqBbyexIbCok8=;
+        b=d3RSCVPASLrJJ0QOJ9oJttvnCDFLTdww369BMgC1jEN496Lwl4j7tq+ydGp4rW/dHU
+         zrIz5TmDgJmVWns+81ClfEMBfkuG1HO74KBo85sL4z2gSAlASW0EEdI92xH+6ibkXv15
+         Jc4DjAm9qy35ZUb5OhUBSnIPSqJJoaeZ2ID05ekxDW7hIQydDFTezFd5QQXoViJ7wAUt
+         rzPGU+9naA6/M0RMNuhZdM2088LFCph2J+qHZ0JndLRkuSSKty1mbSN/F3F028bYZD6l
+         Mqi2X0XZclMq95c96yfgdU+LBNlrw2SJp1CojV4I8ZwVP0RIUaFWPk0cp5Q6+Xe/vHzO
+         yafw==
+X-Gm-Message-State: AOJu0YxRJuPBGP5zUVGxtfaPpPymwx+ho7zSUkuIEj2xhuouN7uWH+0M
+	vLpCabpzMglnSrKPqpL44Eg+k35fVR1/+I9vbxIx4nGV1dGY4Q9PwBT9boLvwzTcbrSobm4fF+I
 	=
-X-Google-Smtp-Source: AGHT+IEfy0H24K6LccFHS3l9tHCnZ8V5KADLEKef412TyJva1S1tGYsPgITuag3Xc9dtUhlHEG5MpQ==
-X-Received: by 2002:a05:622a:4c16:b0:456:8732:1878 with SMTP id d75a77b69052e-457054334bbmr132277651cf.59.1725377566723;
-        Tue, 03 Sep 2024 08:32:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqJpQ1a2uMYHjIztaBKf/HDgct8ovd8lToPYmwgCm0sQMVq/K4/PI05s0X4wEZFpLTYrXdrw==
+X-Received: by 2002:a05:620a:4481:b0:79d:5b21:804a with SMTP id af79cd13be357-7a9787ea737mr425214185a.14.1725377569581;
+        Tue, 03 Sep 2024 08:32:49 -0700 (PDT)
 Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45682d9573dsm50622461cf.84.2024.09.03.08.32.46
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a806d83d2csm535205785a.127.2024.09.03.08.32.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 08:32:46 -0700 (PDT)
+        Tue, 03 Sep 2024 08:32:49 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	harsimransingh.tungal@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp,kas: corstone1000: enable External System based on new yml file
-Date: Tue,  3 Sep 2024 11:32:23 -0400
-Message-Id: <172537754408.2698594.10831128446988672963.b4-ty@arm.com>
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] arm/trusted-firmware-a: update LICENSE entry
+Date: Tue,  3 Sep 2024 11:32:24 -0400
+Message-Id: <172537754408.2698594.13880875482245806485.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240830201448.3695005-1-harsimransingh.tungal@arm.com>
-References: <20240830201448.3695005-1-harsimransingh.tungal@arm.com>
+In-Reply-To: <20240830155148.24392-1-jon.mason@arm.com>
+References: <20240830155148.24392-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -64,23 +64,28 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 03 Sep 2024 15:32:51 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6054
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6055
 
 
-On Fri, 30 Aug 2024 21:14:47 +0100, harsimransingh.tungal@arm.com wrote:
-> From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-> 
-> Create new yml file "corstone1000-extsys.yml" which adds "corstone1000-extsys" as
-> new MACHINE_FEATURE.
-> Based on this, external system components can be enabled or disabled from the
-> Linux Kernel and U-Boot.
+On Fri, 30 Aug 2024 11:51:48 -0400, Jon Mason wrote:
+> As pointed out by Denys Dmytriyenko, the LICENSE entry in
+> trusted-firmware-a is not accurate.  docs/license.rst specifies the
+> licenses to be BSD 3 Clause for the project, with code from other
+> projects imported as:
+> libc BSD-3-Clause
+> libfdt BSD-2-Clause
+> LLVM BSD-3-Clause
+> zlib BSD-3-Clause
+> STMicroelectronics platform source code BSD-3-Clause
+> Linux source  MIT
+> DICE Apache 2.0
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] arm-bsp,kas: corstone1000: enable External System based on new yml file
-      commit: 0f87b7c46aecaae54b339d75bf8e25c1ae4fe951
+[1/1] arm/trusted-firmware-a: update LICENSE entry
+      commit: f741b4d8b92caf13aff99c11303a08385aabb09f
 
 Best regards,
 -- 
