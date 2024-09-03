@@ -1,160 +1,237 @@
-Return-Path: <javier.tia@linaro.org>
+Return-Path: <changqing.li@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E07CA0ED3
-	for <webhook@archiver.kernel.org>; Mon,  2 Sep 2024 17:53:43 +0000 (UTC)
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
- by mx.groups.io with SMTP id smtpd.web10.5003.1725299613066105244
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B387ECA101E
+	for <webhook@archiver.kernel.org>; Tue,  3 Sep 2024 03:25:16 +0000 (UTC)
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+ by mx.groups.io with SMTP id smtpd.web10.14963.1725333909387580172
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 02 Sep 2024 10:53:33 -0700
+ Mon, 02 Sep 2024 20:25:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=Jsyvtqks;
- spf=pass (domain: linaro.org, ip: 209.85.167.178, mailfrom: javier.tia@linaro.org)
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3df13906bcdso1869091b6e.0
-        for <meta-arm@lists.yoctoproject.org>; Mon, 02 Sep 2024 10:53:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725299612; x=1725904412; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=v7CZ66F9GsxXkkDevXx1VJC88IG5EXmdktNA6nDfo28=;
-        b=JsyvtqksmhOhw+lvgfXedX5aeB9BrAevAgkdImyVGWJkb93TdIJftXN4g2hJNk4akE
-         iEP6umdnu/Dhkbv+tJw/k+YysLoS0ezzLYu320lcLsa8BIIgNnNoGh51WZ+xoKg1PKOv
-         80/MFVy4on0ROR57MWHLKwqOr6h20OgyOUxLs67EsR+VROk/ovM/111OkF1tOH+yjP8M
-         GoXWGveyM+4948iI0waEV9Oc386tvZm2nlU16lRZWkmAcnoug1eKCyEdfLqYULJw7/Et
-         gELNX0QPngfJiYx7K1B1eEcUIWA9syoRxS91JFt0PKWv4/4DqbnlxuDzFHfj6r6KPdXr
-         onWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725299612; x=1725904412;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v7CZ66F9GsxXkkDevXx1VJC88IG5EXmdktNA6nDfo28=;
-        b=FIP2ike77SFVbJm2+pRz8sgyVD+koDj2L1gDjmTVoLMBvVTJeyeBusL/q3am6/wS+d
-         ltIOOhEJ5ioBK/KgMFe6n4F4mYSh/Or5uGYzsBO5hT8eDckHKJsWrwjecNOOziqz56Vc
-         Vg0OhC1GBDOEb5fydNDbqboVaBp5CGeLnqUPI+N/VmfKWOWehU5xW3Ygxm9IQi8pRTQh
-         WXQ0xyzqZo5afoFjexW8Sh836mmCiECezfy9Sw/1NyUtS89RsfxoSA2UwJhUU+vl0JNt
-         v/XlEbNrVzC/9PkoKihoXoV4XsOrNKtM+FSWJYL9nvoY86dZxgdGHM3ejr1Ip0SdXyGu
-         oN3g==
-X-Gm-Message-State: AOJu0YxYo1zhXtK7Yqdgq+uRvLGgHaJEdQvHy8aDilQ2pl8g02m20iy9
-	k7BPrOUH1m891A6jSzlXbH0mmiYpKRosPfZyRipxGfypkRnIFFbkcY6d9GuaeRw=
-X-Google-Smtp-Source: AGHT+IGWY2T72SMq7JjFo24pTYhus7SSVrHMCGiTSBXjs6Kr2xUVtceC9fJlgiVD0kNo2EC0SbgYiQ==
-X-Received: by 2002:a05:6808:1998:b0:3d9:e090:5e1e with SMTP id 5614622812f47-3df1b6f1bbdmr8408447b6e.7.1725299611956;
-        Mon, 02 Sep 2024 10:53:31 -0700 (PDT)
-Received: from [192.168.8.164] ([170.246.157.153])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45682cac1e2sm41574041cf.36.2024.09.02.10.53.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Sep 2024 10:53:31 -0700 (PDT)
-Message-ID: <78d9fd35-7594-41c4-9092-b3d011814dd6@linaro.org>
-Date: Mon, 2 Sep 2024 11:53:30 -0600
-MIME-Version: 1.0
+ dkim=none (message not signed); spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: windriver.com, ip: 205.220.178.238, mailfrom: prvs=99768ab3d4=changqing.li@windriver.com)
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48330Km0004913;
+	Tue, 3 Sep 2024 03:25:04 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2042.outbound.protection.outlook.com [104.47.70.42])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 41brd1aj7s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Sep 2024 03:25:04 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iMIkSe/UL+l67Kic873IDg8Z8Nkew9LxaWGBzGby8KsXtzhK9q5+cHJ9G7f0NRqupV+wflgwUI6Ac5RTqN6Ll9GVugftfbqTJe2zg3b1CiGjZii2VVbEm5GvPGx2BHrHQ8GSO+KELYFcgRUEz6zqaJkC5TEzqNgkyPPe0AGX9+V1nmV37EsA5lk4wfQlpqx/DIwSoFXNnL9qYyg8/jKUDnDzLNeNn2Y+zRZ0IxT5VfWb6iuZmuqLRoNF3VLllf/LbeS8HYgFNs3r8+p/mTtF0HHoKCZJF5kmUtva1w9YcycnVoDXOVfSaYcpqp4lWEgoQpI2VQhYNL2736pgdumpYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vkhnvYZ+gDmg8FZacWe/GJles7wOPO4A8MDEZvfowRU=;
+ b=tv4TRl0DkVH7PyRCuDfnlfmNI7DGXkbgQwCC0lGvmEzZ2EzeXuCDF21BDT3z5+SgTofrlSm3PykNAE7+D0XdxYpKcA7sgrgE4BupEs1DPmod7h1nvceB0rBikTK31MCj4H+6PbYqvvX18tpch5wZzuTF+sAO+stBNP1aBWNll2/pqQ9N6u8Rtl4dHWUXM1je8CLBnMcu+6GrNZIbMfB7pth7RVtGTJJelIxV9k4ySv+bPeBHQ5tFnc45AoqFILIeoLIXPMZyvT/Q0LnbVlq0rrYhB5CiP3bBXrJTgTi+cFs5Xate3r18S4OukU3tbO1xATLDTkvngjysIDmXWsu6FA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from DS0PR11MB7312.namprd11.prod.outlook.com (2603:10b6:8:11f::18)
+ by SA0PR11MB4590.namprd11.prod.outlook.com (2603:10b6:806:96::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.25; Tue, 3 Sep
+ 2024 03:25:01 +0000
+Received: from DS0PR11MB7312.namprd11.prod.outlook.com
+ ([fe80::8436:b2d3:31a9:1c8c]) by DS0PR11MB7312.namprd11.prod.outlook.com
+ ([fe80::8436:b2d3:31a9:1c8c%4]) with mapi id 15.20.7918.024; Tue, 3 Sep 2024
+ 03:25:01 +0000
+Content-Type: multipart/alternative;
+ boundary="------------lluOJuUnayQ3B8CMkQBQlCQU"
+Message-ID: <0ea706e0-2a9e-4cae-a423-262701df52e8@windriver.com>
+Date: Tue, 3 Sep 2024 11:24:54 +0800
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/13] qemuarm64-secureboot: Add UEFI Secure Boot
-To: Jon Mason <jdmason@kudzu.us>, Mikko Rapeli <mikko.rapeli@linaro.org>
-Cc: meta-arm@lists.yoctoproject.org, Ross Burton <Ross.Burton@arm.com>
-References: <20240829163209.47945-1-javier.tia@linaro.org>
- <ZtE3MqOM2D40ei5r@kudzu.us> <ZtFiZjM7pRqSNm2l@nuoska>
- <ZtHIJUfxF7xwDM-Q@kudzu.us>
-Content-Language: en-US, es-MX
-From: Javier Tia <javier.tia@linaro.org>
-Autocrypt: addr=javier.tia@linaro.org; keydata=
- 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
- WdJQjTu3/NJR54YogRY=
-In-Reply-To: <ZtHIJUfxF7xwDM-Q@kudzu.us>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] arm/oeqa/runtime/fvp_boot: move pexpect import into test
+ method
+To: Jon Mason <jdmason@kudzu.us>, meta-arm@lists.yoctoproject.org,
+        Ross Burton <ross.burton@arm.com>
+References: <20240515132252.3923595-1-ross.burton@arm.com>
+ <171591536813.1562024.2391704984433468710.b4-ty@arm.com>
+Content-Language: en-US
+Cc: Changqing Li <changqing.li@windriver.com>
+From: Changqing Li <changqing.li@windriver.com>
+In-Reply-To: <171591536813.1562024.2391704984433468710.b4-ty@arm.com>
+X-ClientProxiedBy: SG2PR04CA0152.apcprd04.prod.outlook.com (2603:1096:4::14)
+ To DS0PR11MB7312.namprd11.prod.outlook.com (2603:10b6:8:11f::18)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7312:EE_|SA0PR11MB4590:EE_
+X-MS-Office365-Filtering-Correlation-Id: f071ad7e-e6e5-497f-1501-08dccbc7fe8d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?OG1wOUNvYW80UENvMVh4TWRNbHIxa2h6Ukh6LyttSGZEMUo3UzZSakg0T3Uz?=
+ =?utf-8?B?WWZ5QVJkZ3prSHlyK2J2NWJOVFdxMEpuUWRQTm54NzdOMVFacjJrOVhYOG1Y?=
+ =?utf-8?B?TkJMUUVIVXdWUjJVNUk5WDZzcjhhOUlyaDZHZFVDTmdjdlpRc0tyRDB2Q0xE?=
+ =?utf-8?B?SmIyY3VhUXNJejVNaWdIMndvOFQ4ZWVOMmVIT0VJZEFsc2xNeHNrSVdpMHlB?=
+ =?utf-8?B?ZGtQd2FRTnc1aFNsR0dUaThVYWtWZTYrWkozNE9qSnlGSVJMaUdXS3Z4UWxR?=
+ =?utf-8?B?TGg0TEpqbkIrU0EycElHK1ZxR0pEQWRobzlLRTNTVnBWNCtuM3c5bUIrb0hH?=
+ =?utf-8?B?UDZxVWlDY1BoRzdRR0NBOGMxQjFiYnhwS05EZXNvekpLRXMzTWNhTUM5WHNO?=
+ =?utf-8?B?NkRBY0VkNEk1Z3F5STFLaDNrNWpQSVZKNmxRcmtYeWpyenBxR1VXMnRMRlVW?=
+ =?utf-8?B?dUJCS01lak83ZjY3bjltQ3MzVk5sYmVLdG44Z1RCWVdxa2N5NGlIWHdnbFgx?=
+ =?utf-8?B?ZWMxcERkdHZjZ0JTUUVtcC9ZSmpWNVhPVnY4N0Z4eHkwVFgrQm01ZS92YUh6?=
+ =?utf-8?B?cGliTEZrL0VDOFJ4VkFaN3Z5MCt0Z3VDV3FpdlAzVE1pVW9RdVN4YUNoWTg5?=
+ =?utf-8?B?d2xBbUtIVEhNditaVTFjMmJQdEpZYldJaXpFTEkraU56MjlUNWxoQmFFTFds?=
+ =?utf-8?B?akFWTmp0YXhHb3RtM2hLS2xWU08vS01sdmI4SkdHUWFTV3JtSlV1eGlab1pv?=
+ =?utf-8?B?WDAvSVh1M3FrYW9sMlRab1FsdGFaaW5lM1VQNUxZaEdNMlBkTTZ2N1J6R3My?=
+ =?utf-8?B?R3dDWHZVN3NpamRQYWtETzBvZDdvelptSndWUS9oVXF4T1A5S0ZqTnMvU2Nj?=
+ =?utf-8?B?SlczU2RxcVNkR3VxMlFHajloK1JObkJqZVJJQi9KUk5zTkw1L1I1Tm9PVHBG?=
+ =?utf-8?B?Njh3YkRxVkExZlltcEMwRGNBQTNISTZUeE8vUC9HZ0VPZlRNSDNRRlNjb0Fr?=
+ =?utf-8?B?Sk9GVG80M0Q2NG5DLzBMQTB5QjVMTlRSRzdHQ28vc1pXajRJWC96ajZWTVpG?=
+ =?utf-8?B?cDZldCt0SnRxaWQ2RzQ5V2JoZ0hNV0xSM2FaUFdvckVZbi9QTk5nQkNrQ045?=
+ =?utf-8?B?NHlXdkJiKzY3SnhrRFJNeTdtZmdIWnR2d2xIQ1JOdkZza2xPU2R6NXMrWmdp?=
+ =?utf-8?B?dkRmQm1UZVlHbUtpclVxUVhRK0ZJL0J6QzM5Uzhyek1mVWxBTVYvYWE5aS93?=
+ =?utf-8?B?R3dVWExRVVF5SGpSZkttc2MwSE42Y2JMVk1yak92dUhlNVNyUDREcG5ZUG9N?=
+ =?utf-8?B?WTIwM3FlUDRtT2grbGRQblJrSkNLTTZxamxSbjZvWjloK21waEtoa3labFpW?=
+ =?utf-8?B?OTdoc29ybXV0V01OSjFWVWZHQUZjbSt2RXFIVVNkR3B4dGpCcmVEWHlIZ1cw?=
+ =?utf-8?B?bFVlQzBCcnc4amZCUWZiU1pTRlk3eDhybm9Wb0UrNU95enpZQzVPNzh0cXlz?=
+ =?utf-8?B?ei9kazE2a3hML0tmNTN5eVNuMVQwZHZGUDhqZjgzdGtSNW9yajhONFY4Q01I?=
+ =?utf-8?B?cG15aCtsQWg5bEJXTGxrTGo4dVowazZSQnpvNFVRVzU0ejZnaTVIU1RaUVBR?=
+ =?utf-8?B?Vk1sQklYeHg2QWltdDZFQjRORTZLdEY1djlLSTJDQXVWNXRXT0dCSWZJZ3By?=
+ =?utf-8?B?UHdONEErUGluYWJIYzlqRUZSSXhoOW56MFAvenJkMmxtTVFIUW5hMGtUMVpp?=
+ =?utf-8?B?QUIrNVE2eHg0d216UFBGaWw0WDRaSkFUd2tEK1JWWkI1azJ1OUJLNG05dGZ1?=
+ =?utf-8?B?c2hHR3JkSEVkT0ZhZlRpZz09?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7312.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?Sjk4QTFTWjlvbkN3Um5vMzJsVGZpcnkxYkkwSE12OVNMYzBtZXZiN2hEM1pW?=
+ =?utf-8?B?WDR0bUpzV2JsZTlOam5GZFVlcURVRGVMU0hPRG1DOEZTZjJDNjNWMC9WcEtj?=
+ =?utf-8?B?UldSVEkwUDhxQUVZcGhNR2hhTXF4UWpTZlhRTmtCdHJBQVZvZVh5enZhSitu?=
+ =?utf-8?B?Rk9xellSMjBtamZpalUzZWdtd3dnZFlCNURnV2FtbFhJdzVSaDZDL1Fla09s?=
+ =?utf-8?B?SUU3SDBxeHdsZTViNmZ1dWt0VzBVZVgzNWh3RWhzZGNWZThOdG9IYkNidzQy?=
+ =?utf-8?B?aUFLaGZQemU5cjVCRkp4ZjlsZ1A1WlhEU202S2x6TkxRZWRxSENyRXlYOGNs?=
+ =?utf-8?B?VS9MSlY1cTltTDdpSWdpcTh5a25LblJBNGhQL2FwcnNSL0JCTGRUMXZIYmZr?=
+ =?utf-8?B?UmlLWFBlSWxydDZySEY3U2QrVlJwWitTcDBMMDg3YTFYbEdpU1ZjQmNUb0tC?=
+ =?utf-8?B?VEtOVFhiK0JKdVErTmM3STFjN1FvSWlvVkFXb0hKdHpKcGxvMWtOUEVDeE43?=
+ =?utf-8?B?Qyt3RE9SeVE2VmhwQmZjMnJZVDZzR2VOb2JzN1Arc0d4WHNRd1NDOWozMDA1?=
+ =?utf-8?B?TS82em5WNzBDeTBLODUrTldWNkgvcnVBN1EzTkJxVUg1TkxlR3VXcldxTC9o?=
+ =?utf-8?B?OFR1Z3M3SzB3eE5FSTF6bHJ1ZFdXNmZRN2ZwV1JXVUxKTjBuYmh3Y3BQTUVo?=
+ =?utf-8?B?VVBRWm1nV3ErWGRuZ0xFM2FIR1Y5NzBpUG1xWmNZY1NIQUthK1FJSmx0V3BK?=
+ =?utf-8?B?SlVRNnFrM2dHdWwxNDlaYzVtR2JBeEEwTHIwYWJvK2FkdEg0RVZlT2pqaXJk?=
+ =?utf-8?B?aXU0Y3hrd3JpZnNuTEhqVEdQS0lWMTBYcjZpcEZvWjNldFhOWVJWeW5kdHJC?=
+ =?utf-8?B?VEF0VUI2TFFCanJxdVg0elZyTXBpM0daOVNvU0d4bHY5aFZWMXJ0ZjZqMEo0?=
+ =?utf-8?B?MVNQQkdmQjRvUFMxZWhkM2dWZG9PbFlBRGhpdTQrRVRIamRwdXM4WS9IUE5X?=
+ =?utf-8?B?d0V4U1JuQXhIUUpuZWxxa1BCclJCVzRkK09KdmMxVk1zRXJybGt2dzF4VjZR?=
+ =?utf-8?B?MExsYk9FWnNCekZCZVJsdnJSVEVSOFkyTXA1YVlScVA2WE0reWRhWkwzVVZh?=
+ =?utf-8?B?bGdpS3lTKzExWnp3dy9pMk9BQjJuODJYSE9PNWJRRGRQY082K3BzSkFDVXJH?=
+ =?utf-8?B?Q085bWJ0emxnQ1MxRm44U2NodkFQTm9kTy91WUIwcFFBV1lYSGFnNWVFSzk3?=
+ =?utf-8?B?RnNvNEV3SkVNVnZCQTlkUVJkVXJIaDVLaStvS0VnSzdlaEM1aGJmakZ5WG41?=
+ =?utf-8?B?bmUzMFdwd1Q2bnRHOGFkUjQ5RDByRkxVdGM1WWhseFllN2tEdG9uZEY1clFW?=
+ =?utf-8?B?ajlwM3E3SnBtRVZjaDZ1eDRFTkJhOXNuUkpDU0UvYS9KN0dZa3NqckM5YzN6?=
+ =?utf-8?B?UTNnYyt6QWEycEJRK21DZ3lRMmtvelpTZWJ3YVBpYmRzb1FpMlh0QllkZ24r?=
+ =?utf-8?B?eXFEbC9sWnFjcXBvVE9tSENXNTRkeVVJODd6cVBWcHpmdFpJeEsyYUJVSmty?=
+ =?utf-8?B?WVVQUkk5S0s2M2xIa1JZeTVrMXU2MHJrUFp5dW5KUUU2ZHA4N2trb2JrS0c5?=
+ =?utf-8?B?VHovWkh4NGR3cS9KU1M0dnZ4ZFhwb2YyeVhncklYSUpvVnI0cHVIemN1bnd1?=
+ =?utf-8?B?SWpLWGRhK3BTVVlHczQwOU5PdVQzYmN0L3ZNYzlYVGRveTVWQ1JrL1hnSzhC?=
+ =?utf-8?B?SGV0cWVUbmNRdm9kdk1jWlV6bDlaMGFBU0E0WWZ4TkVzb2hJdytlam9LMnZO?=
+ =?utf-8?B?eGRZTituUXJzUVlXVVlPc0cyRGhPTWhkaGZlMDIrYnNTcXphRzM4b0hGclRa?=
+ =?utf-8?B?R0NpMkFtQUVTaFcwTk5CRCsycmtEd0dPOTNNUWFWdUpEd21vdGJXbzZuSjM4?=
+ =?utf-8?B?U2xRNDRIWEZXYlp5ODlvRTROZlhTZGh4R3hncThLS2tKQnY2R1BLOUtTbHJQ?=
+ =?utf-8?B?UXBwZDJyUmNkOWNOcmZJMjNhaUtUR3Z5OWExQUNxRGFWV2FVM21HNmNiNVlx?=
+ =?utf-8?B?OGNKd3BJYVZsTGtsNWR6SzA2bTI5UEpHZkMyYU1YU3dHaWdhNDErL2Q3NVo4?=
+ =?utf-8?B?ZUpBekc4d2xzWjJBcFh4cEdGSGtIa0dqZkF1M3pBdG9acXY3YUFVVnB4UzRY?=
+ =?utf-8?B?VGc9PQ==?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f071ad7e-e6e5-497f-1501-08dccbc7fe8d
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7312.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2024 03:25:01.2582
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IywiEdY7D5giI7ZVM062bWQrR0gNBZUZnD5VbwYGV/KO7xdm30Nxu0dbQXCjMxBgOiQAKQrZeOy8MXXr5nBtHzQ9oOTNDEIWEqaVY59btmo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4590
+X-Proofpoint-GUID: Ew7P3AIoSu4C3d6tj3x_2h2IMoOV7Izg
+X-Authority-Analysis: v=2.4 cv=Qdk0vdbv c=1 sm=1 tr=0 ts=66d68190 cx=c_pps a=Dwc0YCQp5x8Ajc78WMz93g==:117 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=EaEq8P2WXUwA:10 a=bRTqI5nwn0kA:10 a=CEztZ7PSQkwK3G8Yt00A:9 a=QEXdDO2ut3YA:10
+ a=3GJEsbVqAPbaK1gn9V0A:9 a=NZR_8riLEX4UAfgh:21 a=_W_S_7VecoQA:10
+X-Proofpoint-ORIG-GUID: Ew7P3AIoSu4C3d6tj3x_2h2IMoOV7Izg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-02_06,2024-09-02_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ phishscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
+ lowpriorityscore=0 suspectscore=0 spamscore=0 bulkscore=0 clxscore=1011
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.21.0-2407110000 definitions=main-2409030024
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 02 Sep 2024 17:53:43 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6048
+ <meta-arm@lists.yoctoproject.org>; Tue, 03 Sep 2024 03:25:16 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6049
 
-Hi,
+--------------lluOJuUnayQ3B8CMkQBQlCQU
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 8/30/24 7:24 AM, Jon Mason wrote:
-> On Fri, Aug 30, 2024 at 09:10:46AM +0300, Mikko Rapeli wrote:
->> Hi,
+
+On 5/17/24 11:09, Jon Mason wrote:
+> On Wed, 15 May 2024 13:22:52 +0000, Ross Burton wrote:
+>> Move the pexpect import inside the test method so that on machines without
+>> pexpect installed we can still parse the test cases, even if this one
+>> won't be pass.
 >>
->> On Thu, Aug 29, 2024 at 11:06:26PM -0400, Jon Mason wrote:
->>> Looks like this series is not building for me.  I'm seeing the
->>> following error:
->>>
->>> ERROR: /builder/meta-arm/build/../poky/meta/recipes-kernel/linux/linux-yocto_6.10.bb: Unable to get checksum for linux-yocto SRC_URI entry db.key: file could not be found                     | ETA:  0:00:12
->>> The following paths were searched:
->>> /builder/meta-arm/build/../meta-arm/uefi-sb-keys/db.key
->>> ERROR: Parsing halted due to errors, see error messages above                                                                                                                                  | ETA:  0:00:14
->>> ERROR: /builder/meta-arm/build/../poky/meta/recipes-core/systemd/systemd-boot_256.5.bb: Unable to get checksum for systemd-boot SRC_URI entry db.key: file could not be found
->>> The following paths were searched:
->>> /builder/meta-arm/build/../meta-arm/uefi-sb-keys/db.key
->>> ERROR: /builder/meta-arm/build/../poky/meta/recipes-kernel/linux/linux-yocto_6.6.bb: Unable to get checksum for linux-yocto SRC_URI entry db.key: file could not be found
->>> The following paths were searched:
->>> /builder/meta-arm/build/../meta-arm/uefi-sb-keys/db.key
->>>
->>> I've not looked into it, but it's being seen on mulitple setups and is
->>> trivial to replicate with:
->>> kas build ci/qemuarm64-secureboot.yml:ci/testimage.yml
 >>
->> I think this is the secure boot key generation. You should run
->> meta-arm/uefi-sb-keys/gen_uefi_keys.sh in meta-arm/uefi-sb-keys before
->> building, or have some other way of distributing the keys to build machines.
->>
->> This could be part of a recipe but that would be fully non-reproducible.
-> 
-> Honestly, I don't even look at the patches if it doesn't pass CI.  It
-> not generating keys as part of the build seems like a deal breaker.
-> 
->> Maybe there is some kas way of running this script before bitbake build
->> if the key files are not there?
-> 
-> It is possible, but trying to add it is going to be difficult based on
-> the rewrites that would be necessary based on the way the
-> .gitlab-ci.yml file is laid out.
-> 
-> Also, are we expecting a developer to know to run this and do this
-> every time, or are we expecting to generate the keys once and reuse
-> them?  Even if the latter, i think generating them as part of the
-> build is logical (perhaps with a detection for existing keys in the
-> directory or something).
-> 
-> Is it not possible to have some kind of bbappend on u-boot that adds a
-> dependency on gen-uefi-sb-keys.bb and calls the script?
+> Applied, thanks!
 
-I have added the keys generation as part of qemu64sb build. If keys are found, it will skip the keys generation. Also, it fixes the CI build error because of a design error in the keys generation. As long as the keys are the same, it will guarantee build reproducibility.
+Hi, Jon
 
-Pending to send patch series v5 addressing rest of Jon's comments.
+Could you also cherry-pick this commit to scarthgap branch?
 
-» Javier Tia 🖋
+Thanks
+
+Changqing
+
+>
+> [1/1] arm/oeqa/runtime/fvp_boot: move pexpect import into test method
+>        commit: 200786d3a84b2c484de6e41c1f51c04173226950
+>
+> Best regards,
+--------------lluOJuUnayQ3B8CMkQBQlCQU
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html><html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body text="#000000" bgcolor="#cceed0">
+    <p><br>
+    </p>
+    <div class="moz-cite-prefix">On 5/17/24 11:09, Jon Mason wrote:<br>
+    </div>
+    <blockquote type="cite">
+      <pre class="moz-quote-pre" wrap="">
+On Wed, 15 May 2024 13:22:52 +0000, Ross Burton wrote:
+</pre>
+      <blockquote type="cite">
+        <pre class="moz-quote-pre" wrap="">Move the pexpect import inside the test method so that on machines without
+pexpect installed we can still parse the test cases, even if this one
+won't be pass.
+
+
+</pre>
+      </blockquote>
+      <pre class="moz-quote-pre" wrap="">
+Applied, thanks!</pre>
+    </blockquote>
+    <p>Hi, Jon</p>
+    <p>Could you also cherry-pick this commit to scarthgap branch?</p>
+    <p>Thanks</p>
+    <p>Changqing<br>
+    </p>
+    <blockquote type="cite">
+      <pre class="moz-quote-pre" wrap="">
+
+[1/1] arm/oeqa/runtime/fvp_boot: move pexpect import into test method
+      commit: 200786d3a84b2c484de6e41c1f51c04173226950
+
+Best regards,
+</pre>
+    </blockquote>
+  </body>
+</html>
+
+--------------lluOJuUnayQ3B8CMkQBQlCQU--
 
