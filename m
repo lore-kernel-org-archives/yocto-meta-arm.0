@@ -1,69 +1,64 @@
-Return-Path: <hugues.kambampiana@arm.com>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF50ACD3431
-	for <webhook@archiver.kernel.org>; Wed,  4 Sep 2024 08:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B3ECD4851
+	for <webhook@archiver.kernel.org>; Wed,  4 Sep 2024 14:55:48 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.45254.1725439237215576386
+ by mx.groups.io with SMTP id smtpd.web10.52369.1725461740210102743
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 04 Sep 2024 01:40:37 -0700
+ Wed, 04 Sep 2024 07:55:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: hugues.kambampiana@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF9C8DA7;
-	Wed,  4 Sep 2024 01:41:02 -0700 (PDT)
-Received: from e129527.arm.com (unknown [10.57.75.78])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DADC33F66E;
-	Wed,  4 Sep 2024 01:40:35 -0700 (PDT)
-From: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2D301063;
+	Wed,  4 Sep 2024 07:56:05 -0700 (PDT)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9C47E3F73F;
+	Wed,  4 Sep 2024 07:55:39 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
-Subject: [PATCH] arm-bsp/documentation: corstone1000: Mention PMOD module as prerequisite
-Date: Wed,  4 Sep 2024 09:40:31 +0100
-Message-Id: <20240904084031.2032187-1-hugues.kambampiana@arm.com>
-X-Mailer: git-send-email 2.34.1
+Cc: Bence Balogh <bence.balogh@arm.com>
+Subject: [PATCH 2/3] arm-bsp/linux-yocto: corstone1000: bump to v6.10
+Date: Wed,  4 Sep 2024 09:55:37 -0500
+Message-Id: <20240904145538.2538-2-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20240904145538.2538-1-jon.mason@arm.com>
+References: <20240904145538.2538-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 04 Sep 2024 08:40:46 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6056
+ <meta-arm@lists.yoctoproject.org>; Wed, 04 Sep 2024 14:55:48 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6057
 
-Add a warning in the Corstone-1000 documentation to indicate to the
-end user that a 32 MB QSPI flash PMOD module is required to run
-the Corstone-1000 software stack on MPS3-FPGA with the AN550 Application
-note programmed.
+From: Bence Balogh <bence.balogh@arm.com>
 
-Signed-off-by: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
+This commit updates the linux-yocto version to the latest availabe one.
+No additional work was needed to make it work in Corstone-1000.
+
+Signed-off-by: Bence Balogh <bence.balogh@arm.com>
+Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm-bsp/documentation/corstone1000/user-guide.rst | 4 ++++
- 1 file changed, 4 insertions(+)
+ meta-arm-bsp/conf/machine/include/corstone1000.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm-bsp/documentation/corstone1000/user-guide.rst b/met=
-a-arm-bsp/documentation/corstone1000/user-guide.rst
-index 359caf2d..58231731 100644
---- a/meta-arm-bsp/documentation/corstone1000/user-guide.rst
-+++ b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
-@@ -36,10 +36,14 @@ Please follow the steps described in the Yocto mega m=
-anual:
+diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-ar=
+m-bsp/conf/machine/include/corstone1000.inc
+index db1880e56a59..d65906362d54 100644
+--- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
++++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
+@@ -34,7 +34,7 @@ IMAGE_CMD:wic[vardeps] +=3D "GRUB_LINUX_APPEND"
 =20
- Targets
- -------
-+The Corstone-1000 software stack can be run on:
-=20
- - `Arm Corstone-1000 Ecosystem FVP (Fixed Virtual Platform) <https://dev=
-eloper.arm.com/downloads/-/arm-ecosystem-fvps>`__
- - `Arm Corstone-1000 for MPS3 <https://developer.arm.com/documentation/d=
-ai0550/latest/>`__
-=20
-+.. warning::
-+    Arm Corstone-1000 for MPS3 requires an additional 32 MB QSPI flash P=
-MOD module. For more information see the `Application Note AN550 document=
- <https://developer.arm.com/documentation/dai0550/latest/>`__.
-+
- Yocto stable branch
- -------------------
-=20
+ # Linux kernel
+ PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-yocto"
+-PREFERRED_VERSION_linux-yocto ?=3D "6.6.%"
++PREFERRED_VERSION_linux-yocto ?=3D "6.10.%"
+ KERNEL_IMAGETYPE =3D "Image"
+ KERNEL_IMAGETYPE:firmware =3D "Image.gz"
+ # add FF-A support in the kernel
+--=20
+2.39.3 (Apple Git-146)
+
 
