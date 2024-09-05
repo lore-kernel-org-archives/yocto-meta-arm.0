@@ -1,213 +1,311 @@
-Return-Path: <javier.tia@linaro.org>
+Return-Path: <hv7005920@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0D4CD4F47
-	for <webhook@archiver.kernel.org>; Wed,  4 Sep 2024 22:44:01 +0000 (UTC)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
- by mx.groups.io with SMTP id smtpd.web11.63666.1725489839330412216
- for <meta-arm@lists.yoctoproject.org>;
- Wed, 04 Sep 2024 15:43:59 -0700
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=kGFw6EfY;
- spf=pass (domain: linaro.org, ip: 209.85.222.45, mailfrom: javier.tia@linaro.org)
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-846bc2104c8so115776241.0
-        for <meta-arm@lists.yoctoproject.org>; Wed, 04 Sep 2024 15:43:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725489838; x=1726094638; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PoxNITYWPcj8otBoh5aRQB7jtLca5oxAprVM/MsmfnI=;
-        b=kGFw6EfYpqF/oY6V5Y4Hi0N8bCSxpAx4rTmcf1/hXtAzG1Dv0Nke0lHhlA+uD9NN7g
-         Ob81+yDPD1hJlOSRCy494imqqujc2apPZC0Qt/LJ6tn3KiDRHBXXs8kLPJK7+uoJn3Oq
-         4ZqLyTmwIlF1rl3IhTjIJ0zoqnqF1rVsH2eVoaB27vrIV14+1T1836rs02u/69QBj6Ac
-         aDuhuocmDt8kBhHPuUQCEfKyAyio6HYJERnVwRPRgMAsoo7RWCoBGv1otAIxg7ux5UBp
-         UdqM1D+8GQRYYmVxpfheiqGlzdD5kEuxLOWdI4UqeQZECGCq1nUFFoUWZFRjUtbJc5je
-         Jz3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725489838; x=1726094638;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PoxNITYWPcj8otBoh5aRQB7jtLca5oxAprVM/MsmfnI=;
-        b=RD+mUXJVjHHc6T++BZfvZroHuACLQGgR9WoU8TvOtpZ/wXH2oyJlUbrqe5MZsFqpqc
-         GuOl2wihMvEu15A3/xbYZaxewMVw0Vpjuehkqv4eqIznrajz/c/8izMFYEMrHKJuu71y
-         cy4n5VVKCEGvOGtRgGmvYX4lEMPT1ZeIz2U5Lwl5Ui5eA9RSSzQVp3hCDXrqfzPOnTsC
-         bzqVp2IboRZgv/IQkxX90982RSbBVhXd0uZPqVgKjZbhS4Nzw93lEtbPlCFmhzDBCvN6
-         aEhOdrNUS/e+LPQHsQq5lm8Fhl4L7cmBo5ot4KvtwCg9qkzxqSZkTkji86Nd8Ai6kw5E
-         Z+LA==
-X-Gm-Message-State: AOJu0Yy197PENIXt9xAew23KTf4pCGAoTqDRqlyh2h5lVFj/fRIO6AMZ
-	TI623bXL6xEmWQVK/gJmgTzjgkTvfpAol+lUB6QYUAI5vSuTKI1giGvWjrirLJNIyY+R22bBWJV
-	N
-X-Google-Smtp-Source: AGHT+IGpOagXMIwxXtYRDzT1hZfilBwymHswBlqchVRf+QXgpZ8sH7rnYZgHus3wbQtJGD/LeFlCXw==
-X-Received: by 2002:a05:6102:3596:b0:498:f38a:2c5a with SMTP id ada2fe7eead31-49bba5d92camr2932701137.2.1725489838081;
-        Wed, 04 Sep 2024 15:43:58 -0700 (PDT)
-Received: from jetm-rog-x670e-gene.lan ([170.246.157.153])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-49bc733df39sm167299137.9.2024.09.04.15.43.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2024 15:43:57 -0700 (PDT)
-From: Javier Tia <javier.tia@linaro.org>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215C0CD5BC7
+	for <webhook@archiver.kernel.org>; Thu,  5 Sep 2024 13:17:28 +0000 (UTC)
+Subject: qt meta-toolchain for rzg2l #toolchain
 To: meta-arm@lists.yoctoproject.org
-Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
-	Ross Burton <Ross.Burton@arm.com>,
-	Jon Mason <jon.mason@arm.com>,
-	Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH v5 2/2] qemuarm64-secureboot: Enable UEFI Secure Boot
-Date: Wed,  4 Sep 2024 16:43:49 -0600
-Message-ID: <20240904224349.108885-3-javier.tia@linaro.org>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240904224349.108885-1-javier.tia@linaro.org>
-References: <20240904224349.108885-1-javier.tia@linaro.org>
+From: hv7005920@gmail.com
+X-Originating-Location: Bengaluru, Karnataka, IN (106.51.82.248)
+X-Originating-Platform: Windows Chrome 128
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Date: Thu, 05 Sep 2024 06:17:27 -0700
+Message-ID: <U7jb.1725542247813080822.I1o5@lists.yoctoproject.org>
+Content-Type: multipart/alternative; boundary="pQyyd53QMaTEhqINQ4l0"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 04 Sep 2024 22:44:01 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6063
+ <meta-arm@lists.yoctoproject.org>; Thu, 05 Sep 2024 13:17:28 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6064
 
-Encapsulate all UEFI Secure Boot required settings in one Kas
-configuration file.
+--pQyyd53QMaTEhqINQ4l0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Introduce SBSIGN_KEYS_DIR variable where UEFI keys will be generated
-to sign UEFI binaries. 
+I was trying to get toolchain for cross-compiling qt apps for rzg2l (having=
+ yocto on it), but int the process I am getting these fetch errors, I even =
+tried to change the SRC_URL , but errors like checksum are coming, can you =
+please help me with this.
 
-Introduce uefi-secureboot machine feature, which is being used to
-conditionally set the proper UEFI settings in recipes.
+$ bitbake meta-toolchain-qt5
+Loading cache: 100% |######################################################=
+####################################################| Time: 0:00:00
+Loaded 3084 entries from dependency cache.
+Parsing recipes: 100% |####################################################=
+####################################################| Time: 0:00:00
+Parsing of 2013 .bb files complete (2012 cached, 1 parsed). 3084 targets, 1=
+08 skipped, 1 masked, 0 errors.
+NOTE: Resolving any missing task queue dependencies
 
-Replace Grub bootloader with systemd-boot, which it makes easier to
-enable Secure Boot.
+Build Configuration:
+BB_VERSION =3D "1.46.0"
+BUILD_SYS =3D "x86_64-linux"
+NATIVELSBSTRING =3D "universal"
+TARGET_SYS =3D "aarch64-poky-linux"
+MACHINE =3D "smarc-rzg2l"
+DISTRO =3D "poky"
+DISTRO_VERSION =3D "3.1.33"
+TUNE_FEATURES =3D "aarch64 cortexa55"
+TARGET_FPU =3D ""
+SOC_FAMILY =3D "rzg2l:r9a07g044l"
+meta
+meta-poky
+meta-yocto-bsp =3D "my-dunfell:63d05fc061006bf1a88630d6d91cdc76ea33fbf2"
+meta-oe
+meta-python =3D "dunfell:01358b6d705071cc0ac5aefa7670ab235709729a"
+meta-rz-common
+meta-rzg2l =3D "dunfell/rz:b028eb836091fcfd8873c49ba46a9817b290105f"
+meta-qt5 =3D "dunfell:5ef3a0ffd3324937252790266e2b2e64d33ef34f"
 
-Advantages using systemd as Init Manager:
+Initialising tasks: 100% |#################################################=
+####################################################| Time: 0:00:04
+Sstate summary: Wanted 2419 Found 0 Missed 2419 Current 399 (0% match, 14% =
+complete)
+NOTE: Executing Tasks
+WARNING: qtdeclarative-5.6.3+gitAUTOINC+bb01612a88-r0 do_fetch: Failed to f=
+etch URL git://code.qt.io/qt/qtdeclarative.git;name=3Dqtdeclarative;branch=
+=3D5.14;protocol=3Dgit, attempting MIRRORS if available
+WARNING: qtbase-native-5.6.3+gitAUTOINC+e6f8b072d2-r0 do_fetch: Failed to f=
+etch URL git://code.qt.io/qt/qtbase.git;name=3Dqtbase;branch=3D5.14;protoco=
+l=3Dgit, attempting MIRRORS if available
+ERROR: qtdeclarative-5.6.3+gitAUTOINC+bb01612a88-r0 do_fetch: Fetcher failu=
+re: Unable to find revision bb01612a8809efd268903e41b9e3a17cff48f1c0 in bra=
+nch 5.14 even from upstream
+ERROR: qtdeclarative-5.6.3+gitAUTOINC+bb01612a88-r0 do_fetch: Bitbake Fetch=
+er Error: FetchError('Unable to fetch URL from any source.', 'git://code.qt=
+.io/qt/qtdeclarative.git;name=3Dqtdeclarative;branch=3D5.14;protocol=3Dgit'=
+)
+ERROR: Logfile of failure stored in: /media/harshavardhan/64a915db-de5e-413=
+8-8463-eb7c0923d483/rz-yocto/poky/build/tmp/work/aarch64-poky-linux/qtdecla=
+rative/5.6.3+gitAUTOINC+bb01612a88-r0/temp/log.do_fetch.37790
+ERROR: Task (/media/harshavardhan/64a915db-de5e-4138-8463-eb7c0923d483/rz-y=
+octo/poky/meta-qt5/recipes-qt/qt5/qtdeclarative_git.bb:do_fetch) failed wit=
+h exit code '1'
+ERROR: qtbase-native-5.6.3+gitAUTOINC+e6f8b072d2-r0 do_fetch: Fetcher failu=
+re: Unable to find revision e6f8b072d2bf15f8b82bede48ff29ce8ac8dbd9a in bra=
+nch 5.14 even from upstream
+ERROR: qtbase-native-5.6.3+gitAUTOINC+e6f8b072d2-r0 do_fetch: Bitbake Fetch=
+er Error: FetchError('Unable to fetch URL from any source.', 'git://code.qt=
+.io/qt/qtbase.git;name=3Dqtbase;branch=3D5.14;protocol=3Dgit')
+ERROR: Logfile of failure stored in: /media/harshavardhan/64a915db-de5e-413=
+8-8463-eb7c0923d483/rz-yocto/poky/build/tmp/work/x86_64-linux/qtbase-native=
+/5.6.3+gitAUTOINC+e6f8b072d2-r0/temp/log.do_fetch.37733
+ERROR: Task (/media/harshavardhan/64a915db-de5e-4138-8463-eb7c0923d483/rz-y=
+octo/poky/meta-qt5/recipes-qt/qt5/qtbase-native_git.bb:do_fetch) failed wit=
+h exit code '1'
+WARNING: qtbase-5.6.3+gitAUTOINC+e6f8b072d2-r0 do_fetch: Failed to fetch UR=
+L git://code.qt.io/qt/qtbase.git;name=3Dqtbase;branch=3D5.14;protocol=3Dgit=
+, attempting MIRRORS if available
+ERROR: qtbase-5.6.3+gitAUTOINC+e6f8b072d2-r0 do_fetch: Fetcher failure: Una=
+ble to find revision e6f8b072d2bf15f8b82bede48ff29ce8ac8dbd9a in branch 5.1=
+4 even from upstream
+ERROR: qtbase-5.6.3+gitAUTOINC+e6f8b072d2-r0 do_fetch: Bitbake Fetcher Erro=
+r: FetchError('Unable to fetch URL from any source.', 'git://code.qt.io/qt/=
+qtbase.git;name=3Dqtbase;branch=3D5.14;protocol=3Dgit')
+ERROR: Logfile of failure stored in: /media/harshavardhan/64a915db-de5e-413=
+8-8463-eb7c0923d483/rz-yocto/poky/build/tmp/work/aarch64-poky-linux/qtbase/=
+5.6.3+gitAUTOINC+e6f8b072d2-r0/temp/log.do_fetch.37734
+ERROR: Task (/media/harshavardhan/64a915db-de5e-4138-8463-eb7c0923d483/rz-y=
+octo/poky/meta-qt5/recipes-qt/qt5/qtbase_git.bb:do_fetch) failed with exit =
+code '1'
+NOTE: Tasks Summary: Attempted 1593 tasks of which 1360 didn't need to be r=
+erun and 3 failed.
 
-- Extending secure boot to userspace is a lot easier with systemd than
-with sysvinit where custom scripts will need to be written for all use
-cases.
+Summary: 3 tasks failed:
+/media/harshavardhan/64a915db-de5e-4138-8463-eb7c0923d483/rz-yocto/poky/met=
+a-qt5/recipes-qt/qt5/qtdeclarative_git.bb:do_fetch
+/media/harshavardhan/64a915db-de5e-4138-8463-eb7c0923d483/rz-yocto/poky/met=
+a-qt5/recipes-qt/qt5/qtbase-native_git.bb:do_fetch
+/media/harshavardhan/64a915db-de5e-4138-8463-eb7c0923d483/rz-yocto/poky/met=
+a-qt5/recipes-qt/qt5/qtbase_git.bb:do_fetch
+Summary: There were 3 WARNING messages shown.
+Summary: There were 6 ERROR messages shown, returning a non-zero exit code.
 
-- systemd supports dm-verity and TPM devices for encryption usecases out
-of the box. Enabling them is a lot easier than writing custom scripts
-for sysvinit.
+--pQyyd53QMaTEhqINQ4l0
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-- systemd also supports EUFI signing the UKI binaries which merge kernel,
-command line and initrd which helps in bringing secure boot towards
-rootfs.
+<div>
+<p dir=3D"auto" style=3D"box-sizing: border-box; margin-top: 0px; margin-bo=
+ttom: 1rem; max-height: 1e+06px; text-size-adjust: none; color: #000000; fo=
+nt-family: 'Titillium Web', Inter, system-ui, -apple-system, 'Segoe UI', Ro=
+boto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, =
+'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji=
+'; font-size: 16px; font-style: normal; font-variant-ligatures: normal; fon=
+t-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: =
+2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; wor=
+d-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; backgr=
+ound-color: #ffffff; text-decoration-thickness: initial; text-decoration-st=
+yle: initial; text-decoration-color: initial;">I was trying to get toolchai=
+n for cross-compiling qt apps for rzg2l (having yocto on it), but int the p=
+rocess I am getting these fetch errors, I even tried to change the SRC_URL =
+, but errors like checksum are coming, can you please help me with this.</p=
+>
+<p dir=3D"auto" style=3D"box-sizing: border-box; margin-top: 0px; margin-bo=
+ttom: 1rem; max-height: 1e+06px; text-size-adjust: none; color: #000000; fo=
+nt-family: 'Titillium Web', Inter, system-ui, -apple-system, 'Segoe UI', Ro=
+boto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, =
+'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji=
+'; font-size: 16px; font-style: normal; font-variant-ligatures: normal; fon=
+t-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: =
+2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; wor=
+d-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; backgr=
+ound-color: #ffffff; text-decoration-thickness: initial; text-decoration-st=
+yle: initial; text-decoration-color: initial;">$ bitbake meta-toolchain-qt5=
+<br style=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjust:=
+ none;" />Loading cache: 100% |############################################=
+##############################################################| Time: 0:00:=
+00<br style=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjus=
+t: none;" />Loaded 3084 entries from dependency cache.<br style=3D"box-sizi=
+ng: border-box; max-height: 1e+06px; text-size-adjust: none;" />Parsing rec=
+ipes: 100% |###############################################################=
+#########################################| Time: 0:00:00<br style=3D"box-si=
+zing: border-box; max-height: 1e+06px; text-size-adjust: none;" />Parsing o=
+f 2013 .bb files complete (2012 cached, 1 parsed). 3084 targets, 108 skippe=
+d, 1 masked, 0 errors.<br style=3D"box-sizing: border-box; max-height: 1e+0=
+6px; text-size-adjust: none;" />NOTE: Resolving any missing task queue depe=
+ndencies</p>
+<p dir=3D"auto" style=3D"box-sizing: border-box; margin-top: 0px; margin-bo=
+ttom: 1rem; max-height: 1e+06px; text-size-adjust: none; color: #000000; fo=
+nt-family: 'Titillium Web', Inter, system-ui, -apple-system, 'Segoe UI', Ro=
+boto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, =
+'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji=
+'; font-size: 16px; font-style: normal; font-variant-ligatures: normal; fon=
+t-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: =
+2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; wor=
+d-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; backgr=
+ound-color: #ffffff; text-decoration-thickness: initial; text-decoration-st=
+yle: initial; text-decoration-color: initial;">Build Configuration:<br styl=
+e=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjust: none;" =
+/>BB_VERSION =3D "1.46.0"<br style=3D"box-sizing: border-box; max-height: 1=
+e+06px; text-size-adjust: none;" />BUILD_SYS =3D "x86_64-linux"<br style=3D=
+"box-sizing: border-box; max-height: 1e+06px; text-size-adjust: none;" />NA=
+TIVELSBSTRING =3D "universal"<br style=3D"box-sizing: border-box; max-heigh=
+t: 1e+06px; text-size-adjust: none;" />TARGET_SYS =3D "aarch64-poky-linux"<=
+br style=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjust: =
+none;" />MACHINE =3D "smarc-rzg2l"<br style=3D"box-sizing: border-box; max-=
+height: 1e+06px; text-size-adjust: none;" />DISTRO =3D "poky"<br style=3D"b=
+ox-sizing: border-box; max-height: 1e+06px; text-size-adjust: none;" />DIST=
+RO_VERSION =3D "3.1.33"<br style=3D"box-sizing: border-box; max-height: 1e+=
+06px; text-size-adjust: none;" />TUNE_FEATURES =3D "aarch64 cortexa55"<br s=
+tyle=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjust: none=
+;" />TARGET_FPU =3D ""<br style=3D"box-sizing: border-box; max-height: 1e+0=
+6px; text-size-adjust: none;" />SOC_FAMILY =3D "rzg2l:r9a07g044l"<br style=
+=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjust: none;" /=
+>meta<br style=3D"box-sizing: border-box; max-height: 1e+06px; text-size-ad=
+just: none;" />meta-poky<br style=3D"box-sizing: border-box; max-height: 1e=
++06px; text-size-adjust: none;" />meta-yocto-bsp =3D "my-dunfell:63d05fc061=
+006bf1a88630d6d91cdc76ea33fbf2"<br style=3D"box-sizing: border-box; max-hei=
+ght: 1e+06px; text-size-adjust: none;" />meta-oe<br style=3D"box-sizing: bo=
+rder-box; max-height: 1e+06px; text-size-adjust: none;" />meta-python =3D "=
+dunfell:01358b6d705071cc0ac5aefa7670ab235709729a"<br style=3D"box-sizing: b=
+order-box; max-height: 1e+06px; text-size-adjust: none;" />meta-rz-common<b=
+r style=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjust: n=
+one;" />meta-rzg2l =3D "dunfell/rz:b028eb836091fcfd8873c49ba46a9817b290105f=
+"<br style=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjust=
+: none;" />meta-qt5 =3D "dunfell:5ef3a0ffd3324937252790266e2b2e64d33ef34f"<=
+/p>
+<p dir=3D"auto" style=3D"box-sizing: border-box; margin-top: 0px; margin-bo=
+ttom: 1rem; max-height: 1e+06px; text-size-adjust: none; color: #000000; fo=
+nt-family: 'Titillium Web', Inter, system-ui, -apple-system, 'Segoe UI', Ro=
+boto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, =
+'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji=
+'; font-size: 16px; font-style: normal; font-variant-ligatures: normal; fon=
+t-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: =
+2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; wor=
+d-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; backgr=
+ound-color: #ffffff; text-decoration-thickness: initial; text-decoration-st=
+yle: initial; text-decoration-color: initial;">Initialising tasks: 100% |##=
+###########################################################################=
+########################| Time: 0:00:04<br style=3D"box-sizing: border-box;=
+ max-height: 1e+06px; text-size-adjust: none;" />Sstate summary: Wanted 241=
+9 Found 0 Missed 2419 Current 399 (0% match, 14% complete)<br style=3D"box-=
+sizing: border-box; max-height: 1e+06px; text-size-adjust: none;" />NOTE: E=
+xecuting Tasks<br style=3D"box-sizing: border-box; max-height: 1e+06px; tex=
+t-size-adjust: none;" />WARNING: qtdeclarative-5.6.3+gitAUTOINC+bb01612a88-=
+r0 do_fetch: Failed to fetch URL git://code.qt.io/qt/qtdeclarative.git;name=
+=3Dqtdeclarative;branch=3D5.14;protocol=3Dgit, attempting MIRRORS if availa=
+ble<br style=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adju=
+st: none;" />WARNING: qtbase-native-5.6.3+gitAUTOINC+e6f8b072d2-r0 do_fetch=
+: Failed to fetch URL git://code.qt.io/qt/qtbase.git;name=3Dqtbase;branch=
+=3D5.14;protocol=3Dgit, attempting MIRRORS if available<br style=3D"box-siz=
+ing: border-box; max-height: 1e+06px; text-size-adjust: none;" />ERROR: qtd=
+eclarative-5.6.3+gitAUTOINC+bb01612a88-r0 do_fetch: Fetcher failure: Unable=
+ to find revision bb01612a8809efd268903e41b9e3a17cff48f1c0 in branch 5.14 e=
+ven from upstream<br style=3D"box-sizing: border-box; max-height: 1e+06px; =
+text-size-adjust: none;" />ERROR: qtdeclarative-5.6.3+gitAUTOINC+bb01612a88=
+-r0 do_fetch: Bitbake Fetcher Error: FetchError('Unable to fetch URL from a=
+ny source.', 'git://code.qt.io/qt/qtdeclarative.git;name=3Dqtdeclarative;br=
+anch=3D5.14;protocol=3Dgit')<br style=3D"box-sizing: border-box; max-height=
+: 1e+06px; text-size-adjust: none;" />ERROR: Logfile of failure stored in: =
+/media/harshavardhan/64a915db-de5e-4138-8463-eb7c0923d483/rz-yocto/poky/bui=
+ld/tmp/work/aarch64-poky-linux/qtdeclarative/5.6.3+gitAUTOINC+bb01612a88-r0=
+/temp/log.do_fetch.37790<br style=3D"box-sizing: border-box; max-height: 1e=
++06px; text-size-adjust: none;" />ERROR: Task (/media/harshavardhan/64a915d=
+b-de5e-4138-8463-eb7c0923d483/rz-yocto/poky/meta-qt5/recipes-qt/qt5/qtdecla=
+rative_git.bb:do_fetch) failed with exit code '1'<br style=3D"box-sizing: b=
+order-box; max-height: 1e+06px; text-size-adjust: none;" />ERROR: qtbase-na=
+tive-5.6.3+gitAUTOINC+e6f8b072d2-r0 do_fetch: Fetcher failure: Unable to fi=
+nd revision e6f8b072d2bf15f8b82bede48ff29ce8ac8dbd9a in branch 5.14 even fr=
+om upstream<br style=3D"box-sizing: border-box; max-height: 1e+06px; text-s=
+ize-adjust: none;" />ERROR: qtbase-native-5.6.3+gitAUTOINC+e6f8b072d2-r0 do=
+_fetch: Bitbake Fetcher Error: FetchError('Unable to fetch URL from any sou=
+rce.', 'git://code.qt.io/qt/qtbase.git;name=3Dqtbase;branch=3D5.14;protocol=
+=3Dgit')<br style=3D"box-sizing: border-box; max-height: 1e+06px; text-size=
+-adjust: none;" />ERROR: Logfile of failure stored in: /media/harshavardhan=
+/64a915db-de5e-4138-8463-eb7c0923d483/rz-yocto/poky/build/tmp/work/x86_64-l=
+inux/qtbase-native/5.6.3+gitAUTOINC+e6f8b072d2-r0/temp/log.do_fetch.37733<b=
+r style=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjust: n=
+one;" />ERROR: Task (/media/harshavardhan/64a915db-de5e-4138-8463-eb7c0923d=
+483/rz-yocto/poky/meta-qt5/recipes-qt/qt5/qtbase-native_git.bb:do_fetch) fa=
+iled with exit code '1'<br style=3D"box-sizing: border-box; max-height: 1e+=
+06px; text-size-adjust: none;" />WARNING: qtbase-5.6.3+gitAUTOINC+e6f8b072d=
+2-r0 do_fetch: Failed to fetch URL git://code.qt.io/qt/qtbase.git;name=3Dqt=
+base;branch=3D5.14;protocol=3Dgit, attempting MIRRORS if available<br style=
+=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjust: none;" /=
+>ERROR: qtbase-5.6.3+gitAUTOINC+e6f8b072d2-r0 do_fetch: Fetcher failure: Un=
+able to find revision e6f8b072d2bf15f8b82bede48ff29ce8ac8dbd9a in branch 5.=
+14 even from upstream<br style=3D"box-sizing: border-box; max-height: 1e+06=
+px; text-size-adjust: none;" />ERROR: qtbase-5.6.3+gitAUTOINC+e6f8b072d2-r0=
+ do_fetch: Bitbake Fetcher Error: FetchError('Unable to fetch URL from any =
+source.', 'git://code.qt.io/qt/qtbase.git;name=3Dqtbase;branch=3D5.14;proto=
+col=3Dgit')<br style=3D"box-sizing: border-box; max-height: 1e+06px; text-s=
+ize-adjust: none;" />ERROR: Logfile of failure stored in: /media/harshavard=
+han/64a915db-de5e-4138-8463-eb7c0923d483/rz-yocto/poky/build/tmp/work/aarch=
+64-poky-linux/qtbase/5.6.3+gitAUTOINC+e6f8b072d2-r0/temp/log.do_fetch.37734=
+<br style=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjust:=
+ none;" />ERROR: Task (/media/harshavardhan/64a915db-de5e-4138-8463-eb7c092=
+3d483/rz-yocto/poky/meta-qt5/recipes-qt/qt5/qtbase_git.bb:do_fetch) failed =
+with exit code '1'<br style=3D"box-sizing: border-box; max-height: 1e+06px;=
+ text-size-adjust: none;" />NOTE: Tasks Summary: Attempted 1593 tasks of wh=
+ich 1360 didn't need to be rerun and 3 failed.</p>
+<p dir=3D"auto" style=3D"box-sizing: border-box; margin-top: 0px; margin-bo=
+ttom: 1rem; max-height: 1e+06px; text-size-adjust: none; color: #000000; fo=
+nt-family: 'Titillium Web', Inter, system-ui, -apple-system, 'Segoe UI', Ro=
+boto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, =
+'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji=
+'; font-size: 16px; font-style: normal; font-variant-ligatures: normal; fon=
+t-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: =
+2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; wor=
+d-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; backgr=
+ound-color: #ffffff; text-decoration-thickness: initial; text-decoration-st=
+yle: initial; text-decoration-color: initial;">Summary: 3 tasks failed:<br =
+style=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjust: non=
+e;" />/media/harshavardhan/64a915db-de5e-4138-8463-eb7c0923d483/rz-yocto/po=
+ky/meta-qt5/recipes-qt/qt5/qtdeclarative_git.bb:do_fetch<br style=3D"box-si=
+zing: border-box; max-height: 1e+06px; text-size-adjust: none;" />/media/ha=
+rshavardhan/64a915db-de5e-4138-8463-eb7c0923d483/rz-yocto/poky/meta-qt5/rec=
+ipes-qt/qt5/qtbase-native_git.bb:do_fetch<br style=3D"box-sizing: border-bo=
+x; max-height: 1e+06px; text-size-adjust: none;" />/media/harshavardhan/64a=
+915db-de5e-4138-8463-eb7c0923d483/rz-yocto/poky/meta-qt5/recipes-qt/qt5/qtb=
+ase_git.bb:do_fetch<br style=3D"box-sizing: border-box; max-height: 1e+06px=
+; text-size-adjust: none;" />Summary: There were 3 WARNING messages shown.<=
+br style=3D"box-sizing: border-box; max-height: 1e+06px; text-size-adjust: =
+none;" />Summary: There were 6 ERROR messages shown, returning a non-zero e=
+xit code.</p>
+</div>
 
-- systemd offers a modular structure with unit files that are more
-predictable and easier to manage than the complex and varied scripts
-used by SysVinit. This modularity allows for better control and
-customization of the boot process, which is beneficial in Secure Boot
-environments.
-
-Add one test to verify Secure Boot using OE Testing infraestructure:
-
-$ kas build ci/qemuarm64-secureboot.yml:ci/testimage.yml
-...
-RESULTS - uefi_secureboot.UEFI_SB_TestSuite.test_uefi_secureboot: PASSED (0.62s)
-...
-SUMMARY:
-core-image-base () - Ran 73 tests in 28.281s
-core-image-base - OK - All required tests passed (successes=19, skipped=54, failures=0, errors=0)
-
-Signed-off-by: Javier Tia <javier.tia@linaro.org>
----
- ci/qemuarm64-secureboot.yml                   |  1 +
- ci/uefi-secureboot.yml                        | 34 +++++++++++++++++++
- .../lib/oeqa/runtime/cases/uefi_secureboot.py | 29 ++++++++++++++++
- 3 files changed, 64 insertions(+)
- create mode 100644 ci/uefi-secureboot.yml
- create mode 100644 meta-arm/lib/oeqa/runtime/cases/uefi_secureboot.py
-
-diff --git a/ci/qemuarm64-secureboot.yml b/ci/qemuarm64-secureboot.yml
-index b26941e0..7866adbb 100644
---- a/ci/qemuarm64-secureboot.yml
-+++ b/ci/qemuarm64-secureboot.yml
-@@ -4,6 +4,7 @@ header:
-   version: 14
-   includes:
-     - ci/base.yml
-+    - ci/uefi-secureboot.yml
- 
- machine: qemuarm64-secureboot
- 
-diff --git a/ci/uefi-secureboot.yml b/ci/uefi-secureboot.yml
-new file mode 100644
-index 00000000..d65beed3
---- /dev/null
-+++ b/ci/uefi-secureboot.yml
-@@ -0,0 +1,34 @@
-+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
-+
-+header:
-+  version: 14
-+  includes:
-+    - ci/meta-openembedded.yml
-+    - ci/meta-secure-core.yml
-+
-+local_conf_header:
-+  uefi_secureboot: |
-+    SBSIGN_KEYS_DIR = "${TOPDIR}/sbkeys"
-+    BB_ENV_PASSTHROUGH_ADDITIONS = "SBSIGN_KEYS_DIR"
-+
-+    # Detected by passing kernel parameter
-+    QB_KERNEL_ROOT = ""
-+
-+    # kernel is in the image, should not be loaded separately
-+    QB_DEFAULT_KERNEL = "none"
-+
-+    WKS_FILE = "efi-disk-no-swap.wks.in"
-+    KERNEL_IMAGETYPE = "Image"
-+
-+    MACHINE_FEATURES:append = " efi uefi-secureboot"
-+
-+    EFI_PROVIDER = "systemd-boot"
-+
-+    # Use systemd as the init system
-+    INIT_MANAGER = "systemd"
-+    DISTRO_FEATURES:append = " systemd"
-+    DISTRO_FEATURES_NATIVE:append = " systemd"
-+
-+    IMAGE_INSTALL:append = " systemd systemd-boot util-linux coreutils efivar"
-+
-+    TEST_SUITES:append = " uefi_secureboot"
-\ No newline at end of file
-diff --git a/meta-arm/lib/oeqa/runtime/cases/uefi_secureboot.py b/meta-arm/lib/oeqa/runtime/cases/uefi_secureboot.py
-new file mode 100644
-index 00000000..9e47ea8d
---- /dev/null
-+++ b/meta-arm/lib/oeqa/runtime/cases/uefi_secureboot.py
-@@ -0,0 +1,29 @@
-+#
-+# SPDX-License-Identifier: MIT
-+#
-+
-+from oeqa.runtime.case import OERuntimeTestCase
-+from oeqa.core.decorator.oetimeout import OETimeout
-+
-+
-+class UEFI_SB_TestSuite(OERuntimeTestCase):
-+    """
-+    Validate Secure Boot is Enabled
-+    """
-+
-+    @OETimeout(1300)
-+    def test_uefi_secureboot(self):
-+        # Validate Secure Boot is enabled by checking
-+        # 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot.
-+        # The GUID '8be4df61-93ca-11d2-aa0d-00e098032b8c' is a well-known
-+        # identifier for the Secure Boot UEFI variable. By checking the value of
-+        # this variable, specifically
-+        # '8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot', we can determine
-+        # whether Secure Boot is enabled or not. This variable is set by the
-+        # UEFI firmware to indicate the current Secure Boot state. If the
-+        # variable is set to a value of '0x1' (or '1'), it indicates that Secure
-+        # Boot is enabled. If the variable is set to a value of '0x0' (or '0'),
-+        # it indicates that Secure Boot is disabled.
-+        cmd = "efivar -d -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot"
-+        status, output = self.target.run(cmd, timeout=120)
-+        self.assertEqual(output, "1", msg="\n".join([cmd, output]))
--- 
-2.46.0
-
+--pQyyd53QMaTEhqINQ4l0--
 
