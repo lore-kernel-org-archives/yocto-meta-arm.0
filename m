@@ -1,109 +1,126 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <martin.jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91370CD5BC9
-	for <webhook@archiver.kernel.org>; Thu,  5 Sep 2024 14:28:38 +0000 (UTC)
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
- by mx.groups.io with SMTP id smtpd.web11.11034.1725546508669016444
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C35E6FE32
+	for <webhook@archiver.kernel.org>; Fri,  6 Sep 2024 16:58:26 +0000 (UTC)
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+ by mx.groups.io with SMTP id smtpd.web10.3987.1725641901719680694
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 05 Sep 2024 07:28:28 -0700
+ Fri, 06 Sep 2024 09:58:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=UtJlENhu;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.50, mailfrom: jdmason@kudzu.us)
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-27b55c4b35eso447175fac.3
-        for <meta-arm@lists.yoctoproject.org>; Thu, 05 Sep 2024 07:28:28 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=RsqSIRrf;
+ spf=pass (domain: gmail.com, ip: 209.85.218.45, mailfrom: martin.jansa@gmail.com)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a89c8db505bso307993966b.0
+        for <meta-arm@lists.yoctoproject.org>; Fri, 06 Sep 2024 09:58:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725546508; x=1726151308; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8FTpXReao8hvTAAYqpgecS94rPygpsXF4v0zDOLrB5A=;
-        b=UtJlENhupiQR7bEkoO2jt9npag3mHgdM05NDpdfHePPcMRfpeHNkSwDuuUsVuN12ZB
-         r66Swe8xRN/+QR+/+cDSWaJpiR+GvoeggIH3WssTteBe7KgpE1YL1li2DKkIVODo7YAw
-         pNNZcwHD+28vVh5r6fHLG1MasFHRI4NK0f/lqeAQ1fycIBm7NItseMtnutqLUT2UQKcL
-         QYHX2xn7UsWNFsmj/zjXDtA6c/OSWEUCRFukuRllzW6wAnN3Oe0E7BlkBxSWoJVsJ0ps
-         HDKJ6Lg6SkJHNxteT3cLL3wJrbq7AoxmSZdHa5rr9nlltQFkgbd4bX1uKOVXZaz5bkdj
-         o7/Q==
+        d=gmail.com; s=20230601; t=1725641900; x=1726246700; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B5CdQcb4d4NPQAvJpHRWFg/X3Ban7dCffayupt8CtlU=;
+        b=RsqSIRrfsXAhYYhFid//aNdYJNjUuHVLF76IPR4yOZqbXKJ2DSQ7YJn5sfYsq15Cv1
+         RG/UD2VmVrRqkwxcIlWzsvm5qBWc/bUqoeFtFn73OLbKEk7OA/MGg+kIY1y3AvHYKbJL
+         4IllJQjPmj/cUXqFX3ngcPUoi8B7Uz3k+ih2jZbTgoLmUX+AXk3iKRRslv/ZwcOT9Iew
+         Bzhwif8rMh/YuPmD5XRQ6PeUk810I4xceEG135N4AYutZLyddbGpxn8hLBgBhjaoMGTA
+         aXg2g6d0PBAsCBVYnYAPRI/W6MlyFFSVUspeWYdTNxTkrcg9Zki38kY5kU5rG88/Lr8H
+         sXkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725546508; x=1726151308;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8FTpXReao8hvTAAYqpgecS94rPygpsXF4v0zDOLrB5A=;
-        b=NhQLGtNUjkRat7c4afXnxwyM4LKAkT94Yr4R8Gr1NQ3e/alwZfvB6RMuo2b0yl3Oev
-         6KQHYQo/8y024UY1a/xsVr3S1tkYXBy785smJ3omDmuw0I/fjY2I4qUOuX16ReasNFCc
-         6qov2ULX8W4+dOEMRUu0GYN2G5I0lpqiOjFgEvksZjkDtS/hmSKrrbI9mb1YtHF9NeP3
-         zfwxw56Bsl2n1cMEr2ddvzHIFJwXMLbJaLTGs6Q0khWgTTiPz65WD814ecroeRie4XCh
-         z2OFxI/hHGK/61pAsJfhTU4K9uq14Z8pyz6MHCmlQt0szamStaaDW7wtfS7/yuzM095f
-         iQ4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUrnipHWIVNYqAHprd1IoPl4wTY3rtZWQdh7AeLuch6E00Yh3hhJ3pTaGhgd6bmThXcGAE/UELqtg==@lists.yoctoproject.org
-X-Gm-Message-State: AOJu0YxPQhxPw7EphnYO+WbFI2yfD0coeWLbVNZ5HEpZKUlv5JHONd16
-	fiw9ZaiuxQrL32WN/lW57W2pQGY4UeYS8Yp8/B9aFH0846z7SCEgu2DUnLNOGYBvHX51vFaPv2l
-	XFaBOwUQ54nj0msM2Mnr7S7h5iOwTZHbvMofr
-X-Google-Smtp-Source: AGHT+IHncuvNfkVVzZbghAlJbAwxjbVyh32QscthAjLXY72htpg/D0KOmtR77I78hlFRlVDBEDu6y88291u3TBKhK3k=
-X-Received: by 2002:a05:6870:390a:b0:25d:e3d:b441 with SMTP id
- 586e51a60fabf-277c81ed3a6mr19881931fac.40.1725546507820; Thu, 05 Sep 2024
- 07:28:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1725641900; x=1726246700;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B5CdQcb4d4NPQAvJpHRWFg/X3Ban7dCffayupt8CtlU=;
+        b=P2moP1xUa9e5vfytHq0FH5AUFeme7Q/u8DEPtjc3jsw9E2wwvVc+cjI09sg0CMqm9W
+         TyFczAB3L0CF/X0pqwmviEAgWJcjGnZOlUl9SidG6vDp8Rq5rhzfXBz9bDEE5psWByOt
+         VqblwPJVuj+yYbowqPpI7dcEo5bR/hS7s3U8iX+vP6HDAwno8ugxgCi2I5xxmbKacibv
+         PCwsEG2ESWlpiwV6AXdDzJjUdWWtWz5/JhL7cAj+Mdu2GOn8H+YNJPqEJnOAuTa+Mylk
+         HuWwj/utK7mEAh38CgZyGY+8GznNV+QJaNayS/bhZW/ZEHDiWdL1vHWqAzE/Hcq7USXn
+         fwTg==
+X-Gm-Message-State: AOJu0YzKH2m1sOk115fr9TuuxV77fiQQbhrwbma/Ssu3Bo4fwR07nEG2
+	uQdjQzY56/mpGfYCfTI4QbBRpC/piAPE633Phv+IgPmzlyj+i2ekmBdraA==
+X-Google-Smtp-Source: AGHT+IGKXH91St+9sY3QUt1Gs3hOK9RWAIW+w2sLBEF4k2xWzD2oDTmh+qLjUBMWuClIVak69hLuNQ==
+X-Received: by 2002:a17:906:478d:b0:a86:af28:fc2b with SMTP id a640c23a62f3a-a8a888ec65fmr296298866b.54.1725641899408;
+        Fri, 06 Sep 2024 09:58:19 -0700 (PDT)
+Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8a70ebd7c9sm240712466b.55.2024.09.06.09.58.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Sep 2024 09:58:18 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Martin Jansa <martin.jansa@gmail.com>
+Subject: [PATCH] layer.conf: Update to styhead release name series
+Date: Fri,  6 Sep 2024 18:58:09 +0200
+Message-ID: <20240906165809.3715892-1-martin.jansa@gmail.com>
+X-Mailer: git-send-email 2.46.0
 MIME-Version: 1.0
-References: <20240904145538.2538-1-jon.mason@arm.com> <Zth2nGkLSl7EOJH8@nuoska>
-In-Reply-To: <Zth2nGkLSl7EOJH8@nuoska>
-From: Jon Mason <jdmason@kudzu.us>
-Date: Thu, 5 Sep 2024 09:28:17 -0500
-Message-ID: <CAPoiz9zzonKUHnk-cVHszyC84xefBqGL6ow4+MEzru4jh-492A@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH 1/3] arm/libts: Patch to fix 6.10 kernel builds breaks
-To: mikko.rapeli@linaro.org
-Cc: jon.mason@arm.com, meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 05 Sep 2024 14:28:38 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6065
+ <meta-arm@lists.yoctoproject.org>; Fri, 06 Sep 2024 16:58:26 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6066
 
-On Wed, Sep 4, 2024 at 10:02=E2=80=AFAM Mikko Rapeli via
-lists.yoctoproject.org
-<mikko.rapeli=3Dlinaro.org@lists.yoctoproject.org> wrote:
->
-> Hi,
->
-> On Wed, Sep 04, 2024 at 09:55:36AM -0500, Jon Mason via lists.yoctoprojec=
-t.org wrote:
-> > The ts-tee driver was upstreamed into the v6.10 kernel.  Remove
-> > arm-tstee driver package, since the upstream one should be used.
-> >
-> > Parselogs is failing on the qemuarm64-secureboot tests because the
-> > arm ffs linux kernel driver requires gicv3 to be in the DT and logs an
-> > error if not (though still appears to work).
->
-> I think it would be better to filter out the specific warnings via
-> meta-arm side ignore list entries in
-> meta-arm/lib/oeqa/runtime/cases/parselogs-ignores-qemuarm64-secureboot.tx=
-t.
-> File content is the error string which is acceptable for now.
->
-> poky/meta/lib/oeqa/runtime/cases/parselogs-ignores-* has examples.
+oe-core switched to styhead only in:
+https://git.openembedded.org/openembedded-core/commit/?h=styhead&id=b4cf6d5236a3eacaf56ca2f805b006efac65b26c
 
-Thanks so much for letting me know about this.  I'll do as you suggest
-and ignore the appropriate errors, and send out a v2
+Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+---
+ meta-arm-bsp/conf/layer.conf         | 2 +-
+ meta-arm-systemready/conf/layer.conf | 2 +-
+ meta-arm-toolchain/conf/layer.conf   | 2 +-
+ meta-arm/conf/layer.conf             | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-Thanks,
-Jon
+diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
+index 1a458400..4f648ac8 100644
+--- a/meta-arm-bsp/conf/layer.conf
++++ b/meta-arm-bsp/conf/layer.conf
+@@ -9,7 +9,7 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
+ BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
+ BBFILE_PRIORITY_meta-arm-bsp = "5"
+ 
+-LAYERSERIES_COMPAT_meta-arm-bsp = "nanbield scarthgap"
++LAYERSERIES_COMPAT_meta-arm-bsp = "styhead"
+ 
+ LAYERDEPENDS_meta-arm-bsp = "core meta-arm"
+ # This won't be used by layerindex-fetch, but works everywhere else
+diff --git a/meta-arm-systemready/conf/layer.conf b/meta-arm-systemready/conf/layer.conf
+index 79ef3a14..58f84fd9 100644
+--- a/meta-arm-systemready/conf/layer.conf
++++ b/meta-arm-systemready/conf/layer.conf
+@@ -8,7 +8,7 @@ BBFILES += "${LAYERDIR}/recipes-*/*/*.bb \
+ BBFILE_COLLECTIONS += "meta-arm-systemready"
+ BBFILE_PATTERN_meta-arm-systemready = "^${LAYERDIR}/"
+ 
+-LAYERSERIES_COMPAT_meta-arm-systemready = "nanbield scarthgap"
++LAYERSERIES_COMPAT_meta-arm-systemready = "styhead"
+ 
+ LAYERDEPENDS_meta-arm-systemready = "core"
+ 
+diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
+index 06494936..456dbe0d 100644
+--- a/meta-arm-toolchain/conf/layer.conf
++++ b/meta-arm-toolchain/conf/layer.conf
+@@ -9,4 +9,4 @@ BBFILE_PATTERN_arm-toolchain := "^${LAYERDIR}/"
+ BBFILE_PRIORITY_arm-toolchain = "5"
+ 
+ LAYERDEPENDS_arm-toolchain = "core"
+-LAYERSERIES_COMPAT_arm-toolchain = "nanbield scarthgap"
++LAYERSERIES_COMPAT_arm-toolchain = "styhead"
+diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+index 9e9c9dbd..f2fb5c02 100644
+--- a/meta-arm/conf/layer.conf
++++ b/meta-arm/conf/layer.conf
+@@ -13,7 +13,7 @@ LAYERDEPENDS_meta-arm = " \
+     core \
+     arm-toolchain \
+ "
+-LAYERSERIES_COMPAT_meta-arm = "nanbield scarthgap"
++LAYERSERIES_COMPAT_meta-arm = "styhead"
+ 
+ # runfvp --console needs telnet, so pull this in for testimage.
+ HOSTTOOLS_NONFATAL += "telnet"
+-- 
+2.46.0
 
->
-> Cheers,
->
-> -Mikko
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#6060): https://lists.yoctoproject.org/g/meta-arm/mess=
-age/6060
-> Mute This Topic: https://lists.yoctoproject.org/mt/108266536/3616920
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [jdmason@kud=
-zu.us]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
 
