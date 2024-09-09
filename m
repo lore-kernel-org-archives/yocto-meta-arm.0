@@ -1,125 +1,86 @@
-Return-Path: <max.oss.09@gmail.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC53ECE57B
-	for <webhook@archiver.kernel.org>; Mon,  9 Sep 2024 09:48:53 +0000 (UTC)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
- by mx.groups.io with SMTP id smtpd.web11.49137.1725875328465761954
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D551ECE579
+	for <webhook@archiver.kernel.org>; Mon,  9 Sep 2024 13:41:24 +0000 (UTC)
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+ by mx.groups.io with SMTP id smtpd.web11.53240.1725889280188051145
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 09 Sep 2024 02:48:48 -0700
+ Mon, 09 Sep 2024 06:41:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=dljvJ1QA;
- spf=pass (domain: gmail.com, ip: 209.85.208.50, mailfrom: max.oss.09@gmail.com)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5c3c3b63135so4309017a12.3
-        for <meta-arm@lists.yoctoproject.org>; Mon, 09 Sep 2024 02:48:48 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=E8rO5/wh;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.182, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7a9aa913442so110463585a.1
+        for <meta-arm@lists.yoctoproject.org>; Mon, 09 Sep 2024 06:41:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725875326; x=1726480126; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BXPQWF/yXG0Mf/z/wzBdYYY2hFOXlEp9ykWAOsD3sfo=;
-        b=dljvJ1QAO0k4EHpC3aR9iAKg3wwN4cWrXSocgKnfX/r7E66poVbfg+RQSPYMuQ8fgu
-         fxKkhhHTK37SpE5RsZLueTrR/Tw3SkpAdFZBnl9uu67ZEiR63GNku5zCbNvtQunySnwv
-         i3z1ghQ4V2b/jgDFByGF6WbHMmdRh25crl1fO4vX/FmH1a1F89vl+zk1VKJAixKci4lh
-         QhULTO5lpZDdT+vaPuSO5lW4zVCPpriNWE1r3LgdHJAR7IZi0U4FqT7IoRfiszH0v9xX
-         tTPREpwvKX2BKR0weQT8bnIYIfUUgO4gHdiCMEPhMMPryBiEdStinr8EPWkvOMCMC7g0
-         C10A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725875326; x=1726480126;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1725889279; x=1726494079; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BXPQWF/yXG0Mf/z/wzBdYYY2hFOXlEp9ykWAOsD3sfo=;
-        b=rIfhngLaa2OnpJyfwCBM/XDpd7TT5N6LCo/wMmfQFbPQFKwl00jNPRFhWPX1Z1k4Eo
-         /ZPRRQbD8RgcgDgP42s7LGRX4J9hI8QSWKFNU1i+b02Gvu+JACc6orE7Vn66uyDPwf5T
-         m/6wwnUIp/bUP5mw9fwvV7AbeZWRkVEesx6ncxEmvxuGiIXAY0hPGejtkwqvCgkJdGuO
-         8MdDYnBGAaQE4Pc1AzxvoiswAetSpnB/zqaGF7hbOfz/1PV/ZENYOJxQ2rg/3eQYeWBu
-         CwEUWqr2xcGfoxMv65XRKjzvItHRw0Jo4TFyxZQ0pocDKRsgYe3/1NaRiq9ENPLlHxyx
-         uHGg==
-X-Gm-Message-State: AOJu0Yy7UhVrrtCAy/Ln9KdI4MSwjypkMg1O7JZZPaRn76tkXx+BqXpG
-	FlJax2m6sU+2vm9MZDLetGDIxSn0NkIYNoPoziBq4qwrTAgHhVDWCaQCew==
-X-Google-Smtp-Source: AGHT+IEfvoSr3J/Ou4AjXM7LUnvEiRB+QLH/KraHbHxC0sm9nrRSUkeUNw6Ec8N9SXNXStVv+EWf+g==
-X-Received: by 2002:a05:6402:4312:b0:5c2:43a0:47e3 with SMTP id 4fb4d7f45d1cf-5c3dc7e3856mr7376918a12.36.1725875326207;
-        Mon, 09 Sep 2024 02:48:46 -0700 (PDT)
-Received: from toolbox.int.toradex.com (31-10-206-125.static.upc.ch. [31.10.206.125])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5c3ebd8c4c6sm2796652a12.86.2024.09.09.02.48.45
+        bh=vhUay7KRkyWyQlQoUwnHOR7jv3FkIFl796wZuygRQaI=;
+        b=E8rO5/wh/AvMFBuPXXbIDRHJmEG5+D7CgK/e65aF15l/jFbBWboismI3aAbaNRLRaX
+         lkbz/GxswKWX/HuIibrwBp2BtARaLqieevcxW/Ps3yapsgj+YcJlVuNrn2uDfzLtJKzE
+         8xJSfL3FlrRq+SxvZ+WlN+gOWEuCzv9rCrAKUbmKBHDzRQwKCVdCmnhp3iJV4V1R/1kl
+         s5wnRpwdA/hsndRRcjRdKB+1bUDaLOWGW+I/6P1ygchCW4RzjL4PJ9Ho0ZqQKzwsR8ks
+         kqOKKiVeC6kJ1mKfRHrgd5POoRb6zRUrXbl/hPuu5Uf2kBXuPsYoUc/jK9HSMmCYlZ/q
+         AG4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725889279; x=1726494079;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vhUay7KRkyWyQlQoUwnHOR7jv3FkIFl796wZuygRQaI=;
+        b=laXrDl7G5khthqNOuDR8M1IA3nWloCBLYUL/LnfiF5Ed7s+8y4Gzy+ot07KoYHQhd+
+         PhmJhVxiOgL+/lCR/o6MMYyxtms0WM2LuP4XfPyyzaLWtRl6bLUlwiT564bKdUTuC8SW
+         vbmkaFRzSyJ2S5FfxfZzGKRIGJjH/X/KH4RrGHkzNYZjS5bNnuDBoqYVYp4trnTJwhwQ
+         BTSzMDtv1QQuwuIYFhyYl1iJPGtb8O4p5O3IIMjmb3gQZC9rIQOXHBXOzd8ObZtafeYA
+         2buo2zkSP/Clu9S1Tawu9L4kZaGM1qQYVVVELShmp/vmHRJtijHqYiAZK/EesmJbEp/b
+         7sLw==
+X-Gm-Message-State: AOJu0YywyWERMoMtBJGGc2eihkdxnJJrF7fjLZ6G6R3Z2t2pHUgdrf+1
+	Hf5ZMAQDIbQuZcc3yZE45myfsON2fMbz53FpsJLJX7ljXMbH/CfDpIRqr9mlv4GtJH7+OPJsaN4
+	=
+X-Google-Smtp-Source: AGHT+IEEnNrRx/EiP0clkJ0BIhFq70RrB3Wxq0USxepgEU6uY7+BgrLLqHLYEz4kYvwiKK/5g8Qv2g==
+X-Received: by 2002:a05:620a:288d:b0:7a1:da5e:c4c8 with SMTP id af79cd13be357-7a9973609afmr1126354085a.40.1725889278975;
+        Mon, 09 Sep 2024 06:41:18 -0700 (PDT)
+Received: from localhost ([136.54.20.50])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a9a7967499sm219396785a.28.2024.09.09.06.41.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Sep 2024 02:48:45 -0700 (PDT)
-From: max.oss.09@gmail.com
-To: meta-arm@lists.yoctoproject.org
-Cc: Max Krummenacher <max.krummenacher@toradex.com>
-Subject: [[PATCH] layer.conf: Update for the styhead release series
-Date: Mon,  9 Sep 2024 11:48:10 +0200
-Message-ID: <20240909094810.2801445-1-max.oss.09@gmail.com>
-X-Mailer: git-send-email 2.42.0
+        Mon, 09 Sep 2024 06:41:18 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
+Subject: Re: [PATCH] arm-bsp/documentation: corstone1000: Mention PMOD module as prerequisite
+Date: Mon,  9 Sep 2024 09:41:09 -0400
+Message-Id: <172588927045.3341816.9291972461407879633.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240904084031.2032187-1-hugues.kambampiana@arm.com>
+References: <20240904084031.2032187-1-hugues.kambampiana@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 09 Sep 2024 09:48:53 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6067
+ <meta-arm@lists.yoctoproject.org>; Mon, 09 Sep 2024 13:41:24 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6068
 
-From: Max Krummenacher <max.krummenacher@toradex.com>
 
-Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
----
- meta-arm-bsp/conf/layer.conf         | 2 +-
- meta-arm-systemready/conf/layer.conf | 2 +-
- meta-arm-toolchain/conf/layer.conf   | 2 +-
- meta-arm/conf/layer.conf             | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+On Wed, 04 Sep 2024 09:40:31 +0100, Hugues KAMBA MPIANA wrote:
+> Add a warning in the Corstone-1000 documentation to indicate to the
+> end user that a 32 MB QSPI flash PMOD module is required to run
+> the Corstone-1000 software stack on MPS3-FPGA with the AN550 Application
+> note programmed.
+> 
+> 
 
-diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
-index 1a458400831a..4f648ac885be 100644
---- a/meta-arm-bsp/conf/layer.conf
-+++ b/meta-arm-bsp/conf/layer.conf
-@@ -9,7 +9,7 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
- BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
- BBFILE_PRIORITY_meta-arm-bsp = "5"
- 
--LAYERSERIES_COMPAT_meta-arm-bsp = "nanbield scarthgap"
-+LAYERSERIES_COMPAT_meta-arm-bsp = "styhead"
- 
- LAYERDEPENDS_meta-arm-bsp = "core meta-arm"
- # This won't be used by layerindex-fetch, but works everywhere else
-diff --git a/meta-arm-systemready/conf/layer.conf b/meta-arm-systemready/conf/layer.conf
-index 79ef3a14414a..58f84fd9c8c4 100644
---- a/meta-arm-systemready/conf/layer.conf
-+++ b/meta-arm-systemready/conf/layer.conf
-@@ -8,7 +8,7 @@ BBFILES += "${LAYERDIR}/recipes-*/*/*.bb \
- BBFILE_COLLECTIONS += "meta-arm-systemready"
- BBFILE_PATTERN_meta-arm-systemready = "^${LAYERDIR}/"
- 
--LAYERSERIES_COMPAT_meta-arm-systemready = "nanbield scarthgap"
-+LAYERSERIES_COMPAT_meta-arm-systemready = "styhead"
- 
- LAYERDEPENDS_meta-arm-systemready = "core"
- 
-diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
-index 06494936ec7a..456dbe0d0459 100644
---- a/meta-arm-toolchain/conf/layer.conf
-+++ b/meta-arm-toolchain/conf/layer.conf
-@@ -9,4 +9,4 @@ BBFILE_PATTERN_arm-toolchain := "^${LAYERDIR}/"
- BBFILE_PRIORITY_arm-toolchain = "5"
- 
- LAYERDEPENDS_arm-toolchain = "core"
--LAYERSERIES_COMPAT_arm-toolchain = "nanbield scarthgap"
-+LAYERSERIES_COMPAT_arm-toolchain = "styhead"
-diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-index 9e9c9dbda13d..f2fb5c02b29b 100644
---- a/meta-arm/conf/layer.conf
-+++ b/meta-arm/conf/layer.conf
-@@ -13,7 +13,7 @@ LAYERDEPENDS_meta-arm = " \
-     core \
-     arm-toolchain \
- "
--LAYERSERIES_COMPAT_meta-arm = "nanbield scarthgap"
-+LAYERSERIES_COMPAT_meta-arm = "styhead"
- 
- # runfvp --console needs telnet, so pull this in for testimage.
- HOSTTOOLS_NONFATAL += "telnet"
+Applied, thanks!
+
+[1/1] arm-bsp/documentation: corstone1000: Mention PMOD module as prerequisite
+      commit: f975faf4c3ab479b4feb1dde42d6fce354b1a306
+
+Best regards,
 -- 
-2.42.0
-
+Jon Mason <jon.mason@arm.com>
 
