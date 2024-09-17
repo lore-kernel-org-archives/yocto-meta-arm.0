@@ -2,26 +2,26 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C03C3ABCE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B83C3ABCB
 	for <webhook@archiver.kernel.org>; Tue, 17 Sep 2024 00:04:14 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.9853.1726531446687654889
+ by mx.groups.io with SMTP id smtpd.web10.9854.1726531447020746493
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 16 Sep 2024 17:04:06 -0700
+ Mon, 16 Sep 2024 17:04:07 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8873B11FB;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE3AC12FC;
 	Mon, 16 Sep 2024 17:04:35 -0700 (PDT)
 Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D86013F66E;
-	Mon, 16 Sep 2024 17:04:05 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4385E3F66E;
+	Mon, 16 Sep 2024 17:04:06 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Bence Balogh <bence.balogh@arm.com>
-Subject: [PATCH v2 2/3] arm-bsp/linux-yocto: corstone1000: bump to v6.10
-Date: Mon, 16 Sep 2024 20:04:03 -0400
-Message-Id: <20240917000404.24807-2-jon.mason@arm.com>
+Subject: [PATCH v2 3/3] arm-bsp/documentation: corstone1000: remove TEE driver load
+Date: Mon, 16 Sep 2024 20:04:04 -0400
+Message-Id: <20240917000404.24807-3-jon.mason@arm.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 In-Reply-To: <20240917000404.24807-1-jon.mason@arm.com>
 References: <20240917000404.24807-1-jon.mason@arm.com>
@@ -31,33 +31,65 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 17 Sep 2024 00:04:14 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6075
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6077
 
 From: Bence Balogh <bence.balogh@arm.com>
 
-This commit updates the linux-yocto version to the latest availabe one.
-No additional work was needed to make it work in Corstone-1000.
+The arm-tstee driver was upstreamed to the v6.10 kernel so it doesn't
+have to be loaded manually. Updated the related parts in the
+Corstone-1000 user guide.
 
 Signed-off-by: Bence Balogh <bence.balogh@arm.com>
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm-bsp/conf/machine/include/corstone1000.inc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../documentation/corstone1000/user-guide.rst | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-ar=
-m-bsp/conf/machine/include/corstone1000.inc
-index db1880e56a59..d65906362d54 100644
---- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
-+++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
-@@ -34,7 +34,7 @@ IMAGE_CMD:wic[vardeps] +=3D "GRUB_LINUX_APPEND"
+diff --git a/meta-arm-bsp/documentation/corstone1000/user-guide.rst b/met=
+a-arm-bsp/documentation/corstone1000/user-guide.rst
+index 58231731b918..f397c641c407 100644
+--- a/meta-arm-bsp/documentation/corstone1000/user-guide.rst
++++ b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
+@@ -1236,25 +1236,24 @@ When running the tests on the Corstone-1000 FVP, =
+the user should follow the
+ instructions in `Running the software on FVP`_ section to boot Linux in =
+FVP
+ host_terminal_0, and login using the username ``root``.
 =20
- # Linux kernel
- PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-yocto"
--PREFERRED_VERSION_linux-yocto ?=3D "6.6.%"
-+PREFERRED_VERSION_linux-yocto ?=3D "6.10.%"
- KERNEL_IMAGETYPE =3D "Image"
- KERNEL_IMAGETYPE:firmware =3D "Image.gz"
- # add FF-A support in the kernel
+-First, load FF-A TEE kernel module:
++The tests use the `arm_tstee` driver to access Trusted Services Secure P=
+artitions from user space.
++This driver is included in the Linux Kernel, starting from v6.10.
+=20
+-::
+-
+-  insmod /lib/modules/*-yocto-standard/updates/arm-tstee.ko
+-
+-Then, check whether the FF-A TEE driver is loaded correctly by using the=
+ following command:
++Run the following command in the Host terminal (ttyUSB2) to verify that =
+the driver is present:
+=20
+ ::
+=20
+-  cat /proc/modules | grep arm_tstee
++  ls /sys/bus/arm_ffa/drivers | grep arm_tstee
+=20
+-The output should be similar to:
++
++The output should be:
+=20
+ ::
+=20
+-   arm_tstee 16384 - - Live 0xffffffc000510000 (O)
++  arm_tstee
++
+=20
+-Now, run the PSA API tests in the following order:
++Run the PSA API tests in the following order:
+=20
+ ::
+=20
 --=20
 2.39.3 (Apple Git-146)
 
