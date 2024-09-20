@@ -2,137 +2,105 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EA1C7883B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CA4C78838
 	for <webhook@archiver.kernel.org>; Fri, 20 Sep 2024 12:57:19 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.17583.1726837039033272182
+ by mx.groups.io with SMTP id smtpd.web10.17582.1726837038698958698
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 20 Sep 2024 05:57:19 -0700
+ Fri, 20 Sep 2024 05:57:18 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBC3A139F
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E70E1007
 	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Sep 2024 05:57:47 -0700 (PDT)
 Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4F1263F66E
-	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Sep 2024 05:57:18 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F285E3F66E
+	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Sep 2024 05:57:17 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/3] arm-bsp/fvp-base: Get 6.10 kernel working
-Date: Fri, 20 Sep 2024 08:57:15 -0400
-Message-Id: <20240920125716.13293-2-jon.mason@arm.com>
+Subject: [PATCH 1/3] arm-bsp/fvp-base: support poky-altcfg
+Date: Fri, 20 Sep 2024 08:57:14 -0400
+Message-Id: <20240920125716.13293-1-jon.mason@arm.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20240920125716.13293-1-jon.mason@arm.com>
-References: <20240920125716.13293-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 20 Sep 2024 12:57:19 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6093
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6092
 
-Apply upstream patch to get virtio networking functioning again and
-switch to the 6.10 kernel.
+Add the bits to enable poky-altcfg to boot to prompt on fvp-base.
+Unfortunately, ssh takes a very long time to come up, which causes the
+ssh test to timeout.  So, don't enable this by default in CI.
+Also, switch to building full-cmdline instead of sato, since we're never
+actually testing the graphics on this platform.
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- ...gso-csum-offset-check-in-virtio_net_.patch | 59 +++++++++++++++++++
- .../linux/linux-arm-platforms.inc             |  1 +
- 2 files changed, 60 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001=
--net-tighten-bad-gso-csum-offset-check-in-virtio_net_.patch
+ ci/fvp-base.yml                         | 2 +-
+ meta-arm-bsp/conf/machine/fvp-base.conf | 6 ++++--
+ meta-arm/wic/efi-disk.wks.in            | 2 +-
+ 3 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001-net-ti=
-ghten-bad-gso-csum-offset-check-in-virtio_net_.patch b/meta-arm-bsp/recip=
-es-kernel/linux/files/fvp-base/0001-net-tighten-bad-gso-csum-offset-check=
--in-virtio_net_.patch
-new file mode 100644
-index 000000000000..9985d57966f4
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001-net-tighten-b=
-ad-gso-csum-offset-check-in-virtio_net_.patch
-@@ -0,0 +1,59 @@
-+From 6513eb3d3191574b58859ef2d6dc26c0277c6f81 Mon Sep 17 00:00:00 2001
-+From: Willem de Bruijn <willemb@google.com>
-+Date: Tue, 10 Sep 2024 17:35:35 -0400
-+Subject: [PATCH] net: tighten bad gso csum offset check in virtio_net_hd=
-r
-+
-+The referenced commit drops bad input, but has false positives.
-+Tighten the check to avoid these.
-+
-+The check detects illegal checksum offload requests, which produce
-+csum_start/csum_off beyond end of packet after segmentation.
-+
-+But it is based on two incorrect assumptions:
-+
-+1. virtio_net_hdr_to_skb with VIRTIO_NET_HDR_GSO_TCP[46] implies GSO.
-+True in callers that inject into the tx path, such as tap.
-+But false in callers that inject into rx, like virtio-net.
-+Here, the flags indicate GRO, and CHECKSUM_UNNECESSARY or
-+CHECKSUM_NONE without VIRTIO_NET_HDR_F_NEEDS_CSUM is normal.
-+
-+2. TSO requires checksum offload, i.e., ip_summed =3D=3D CHECKSUM_PARTIA=
-L.
-+False, as tcp[46]_gso_segment will fix up csum_start and offset for
-+all other ip_summed by calling __tcp_v4_send_check.
-+
-+Because of 2, we can limit the scope of the fix to virtio_net_hdr
-+that do try to set these fields, with a bogus value.
-+
-+Link: https://lore.kernel.org/netdev/20240909094527.GA3048202@port70.net=
-/
-+Fixes: 89add40066f9 ("net: drop bad gso csum_start and offset in virtio_=
-net_hdr")
-+Signed-off-by: Willem de Bruijn <willemb@google.com>
-+Acked-by: Jason Wang <jasowang@redhat.com>
-+Acked-by: Michael S. Tsirkin <mst@redhat.com>
-+Cc: stable@vger.kernel.org
-+Link: https://patch.msgid.link/20240910213553.839926-1-willemdebruijn.ke=
-rnel@gmail.com
-+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-+
-+Upstream-Status: Backport
-+Signed-off-by: Jon Mason <jon.mason@arm.com>
-+
-+---
-+ include/linux/virtio_net.h | 3 ++-
-+ 1 file changed, 2 insertions(+), 1 deletion(-)
-+
-+diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
-+index 6c395a2600e8..276ca543ef44 100644
-+--- a/include/linux/virtio_net.h
-++++ b/include/linux/virtio_net.h
-+@@ -173,7 +173,8 @@ static inline int virtio_net_hdr_to_skb(struct sk_bu=
-ff *skb,
-+ 			break;
-+ 		case SKB_GSO_TCPV4:
-+ 		case SKB_GSO_TCPV6:
-+-			if (skb->csum_offset !=3D offsetof(struct tcphdr, check))
-++			if (skb->ip_summed =3D=3D CHECKSUM_PARTIAL &&
-++			    skb->csum_offset !=3D offsetof(struct tcphdr, check))
-+ 				return -EINVAL;
-+ 			break;
-+ 		}
-+--=20
-+2.39.2
-+
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/=
-meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-index 01803ba20561..ac7bcf7a9ab9 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-@@ -65,6 +65,7 @@ KMACHINE:fvp-base =3D "fvp"
- FILESEXTRAPATHS:prepend:fvp-base :=3D "${ARMBSPFILESPATHS}:${ARMFILESPAT=
-HS}"
- SRC_URI:append:fvp-base =3D " \
-     file://0001-arm64-dts-fvp-Enable-virtio-rng-support.patch \
-+    file://0001-net-tighten-bad-gso-csum-offset-check-in-virtio_net_.pat=
-ch \
-     file://tee.cfg \
-     ${@bb.utils.contains('MACHINE_FEATURES', 'ts-smm-gateway', \
-                          'file://no-strict-devmem.cfg', '' , d)} \
+diff --git a/ci/fvp-base.yml b/ci/fvp-base.yml
+index bbc6c44db3be..5719ea8066aa 100644
+--- a/ci/fvp-base.yml
++++ b/ci/fvp-base.yml
+@@ -9,5 +9,5 @@ header:
+ machine: fvp-base
+=20
+ target:
+-  - core-image-sato
++  - core-image-full-cmdline
+   - boot-wrapper-aarch64
+diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/=
+machine/fvp-base.conf
+index 353024e26b72..cbfd79d25828 100644
+--- a/meta-arm-bsp/conf/machine/fvp-base.conf
++++ b/meta-arm-bsp/conf/machine/fvp-base.conf
+@@ -11,13 +11,15 @@ ARM_SYSTEMREADY_ACS_CONSOLE =3D "default"
+ EXTRA_IMAGEDEPENDS =3D "${ARM_SYSTEMREADY_FIRMWARE}"
+ PREFERRED_VERSION_trusted-firmware-a ?=3D "2.10.%"
+=20
+-MACHINE_FEATURES =3D "efi"
++MACHINE_FEATURES =3D "efi vfat"
+=20
+ IMAGE_NAME_SUFFIX =3D ""
+ IMAGE_FSTYPES +=3D "wic"
+ WKS_FILE ?=3D "efi-disk.wks.in"
+=20
+ SERIAL_CONSOLES =3D "115200;ttyAMA0"
++# FIXME -  This is being upstreamed.  Remove once that has occurred.
++KERNEL_CONSOLE ?=3D "${@','.join(d.getVar('SERIAL_CONSOLES').split(' ')[=
+0].split(';')[::-1]) or 'ttyS0'}"
+=20
+ PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-yocto"
+ KERNEL_DTB_NAME =3D "fvp-base-revc.dtb"
+@@ -29,7 +31,7 @@ EXTRA_IMAGEDEPENDS +=3D "trusted-firmware-a"
+ # FVP u-boot configuration
+ UBOOT_MACHINE =3D "vexpress_fvp_defconfig"
+=20
+-EFI_PROVIDER ?=3D "grub-efi"
++EFI_PROVIDER ?=3D "${@bb.utils.contains("DISTRO_FEATURES", "systemd", "s=
+ystemd-boot", "grub-efi", d)}"
+=20
+ # As this is a virtual target that will not be used in the real world th=
+ere is
+ # no need for real SSH keys.
+diff --git a/meta-arm/wic/efi-disk.wks.in b/meta-arm/wic/efi-disk.wks.in
+index 198ae2a6d0b8..e1120da056cd 100644
+--- a/meta-arm/wic/efi-disk.wks.in
++++ b/meta-arm/wic/efi-disk.wks.in
+@@ -8,4 +8,4 @@ part / --source rootfs --fstype=3Dext4 --label root --ali=
+gn 1024 --use-uuid
+=20
+ part swap --size 44 --label swap --fstype=3Dswap --use-uuid
+=20
+-bootloader --ptable gpt --timeout=3D5 --append=3D"rootwait rootfstype=3D=
+ext4"
++bootloader --ptable gpt --timeout=3D5 --append=3D"rootwait rootfstype=3D=
+ext4 console=3D${KERNEL_CONSOLE}"
 --=20
 2.39.3 (Apple Git-146)
 
