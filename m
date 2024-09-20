@@ -1,86 +1,139 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98419CF3968
-	for <webhook@archiver.kernel.org>; Thu, 19 Sep 2024 20:05:04 +0000 (UTC)
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
- by mx.groups.io with SMTP id smtpd.web11.2776.1726776295255641752
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EA1C7883B
+	for <webhook@archiver.kernel.org>; Fri, 20 Sep 2024 12:57:19 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.17583.1726837039033272182
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 19 Sep 2024 13:04:55 -0700
+ Fri, 20 Sep 2024 05:57:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=ultuzI/j;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.179, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7a9a3071c6bso119419185a.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 19 Sep 2024 13:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1726776294; x=1727381094; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c461uLHVCYxwf4tOAbUGINWUAJuyhpkPvwAQ37pe52s=;
-        b=ultuzI/jMonl2h97kCvnUlM8QfkgJtZkJrlSHK97/AkfW8VOof/DMKrXQhgL3zZxa7
-         c8GuiqmmmYBnNfWrj22bSTeLGbCfsYqJlNDR25a1az3syETE3P4fq5q5shGrggzxUo9j
-         ufL5BlmAVdK2T8YK6VLMrChZlZ/u3SzFZ2GBJtPznZSZ9wst++AQRTRJ9YSd3Sj1WKGf
-         uz5EvpDtIDay3KOQtpEsnXEySKP9zmUyQQhbcnkBL4zlqY804jj3AXdpGmin19QMMudR
-         rETK54/ish/M/lYscrw2HwWf0LkGFXa718lrtDVtgAd539eauPQQBcfOa9gVihuRC3Ka
-         YZPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726776294; x=1727381094;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c461uLHVCYxwf4tOAbUGINWUAJuyhpkPvwAQ37pe52s=;
-        b=L23wMlvrBpaevMERIizYmqNGmV56k1eQORsFgi/GldI6iFpcK0zfvskrkAkOosiun3
-         +8EKobBkqqy8ZYq2BvooX1noOaDaUDdxKsOc50sopmiH9YdlrFui2WVx6Vxsmy+dFQdP
-         VEQ7/EWKD26i7oBaIQgrQl6YYmHF3B3wvdDOgxTuQAXJickmwKKS3W0oFx7hJzhcEHAB
-         dC1oeyBOMt3qqbifbA6EhEUdHDsVC8VY+QaUqBbelO+U4WnjCN22p6CVFF+VzuNJk8t+
-         fAYp/ZQtaUFROJP1K1zp65H9EdyaIbLyCe3ojF88uZAr590ZIC7tTO9Nt8QBKKdK5tX+
-         GOZg==
-X-Gm-Message-State: AOJu0YznmvMXSLq5HGzIwI2ciN8GoEsKQkKujw7nJajKP3Foqxp0iR4d
-	mMJcbyW3nsaIk4hlEwqJeB93RDSbQzEJs+wv1eA3J4WoBNUzdgq6BtC6r1CRmiI2qh2WUPN4zt0
-	=
-X-Google-Smtp-Source: AGHT+IEB2HlkdkGqAINpy1e6S7aVa/jmClFiD+P8J1HTv1F9aJ4OkmVlZNwgJSeD6zu/1Y1Akwp86g==
-X-Received: by 2002:a05:6214:4a89:b0:6c3:7047:71f5 with SMTP id 6a1803df08f44-6c7bc80e709mr7668236d6.49.1726776293958;
-        Thu, 19 Sep 2024 13:04:53 -0700 (PDT)
-Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c75e586d10sm10416566d6.141.2024.09.19.13.04.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2024 13:04:53 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] arm-toolchain: remove libmount-mountfd-support when using binary toolchain
-Date: Thu, 19 Sep 2024 16:04:27 -0400
-Message-Id: <172677626880.3549922.14508379959374383749.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240919151026.76035-1-jon.mason@arm.com>
-References: <20240919151026.76035-1-jon.mason@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EBC3A139F
+	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Sep 2024 05:57:47 -0700 (PDT)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4F1263F66E
+	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Sep 2024 05:57:18 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 2/3] arm-bsp/fvp-base: Get 6.10 kernel working
+Date: Fri, 20 Sep 2024 08:57:15 -0400
+Message-Id: <20240920125716.13293-2-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20240920125716.13293-1-jon.mason@arm.com>
+References: <20240920125716.13293-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 19 Sep 2024 20:05:04 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6091
+ <meta-arm@lists.yoctoproject.org>; Fri, 20 Sep 2024 12:57:19 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6093
 
+Apply upstream patch to get virtio networking functioning again and
+switch to the 6.10 kernel.
 
-On Thu, 19 Sep 2024 11:10:26 -0400, Jon Mason wrote:
-> util-linux is failing when compiling with:
-> | configure: error: libmount_mountfd_support selected, but required mount FDs based API not available
-> Remove this feature when building with the binary toolchain to avoid
-> this issue.
-> 
-> 
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ ...gso-csum-offset-check-in-virtio_net_.patch | 59 +++++++++++++++++++
+ .../linux/linux-arm-platforms.inc             |  1 +
+ 2 files changed, 60 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001=
+-net-tighten-bad-gso-csum-offset-check-in-virtio_net_.patch
 
-Applied, thanks!
+diff --git a/meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001-net-ti=
+ghten-bad-gso-csum-offset-check-in-virtio_net_.patch b/meta-arm-bsp/recip=
+es-kernel/linux/files/fvp-base/0001-net-tighten-bad-gso-csum-offset-check=
+-in-virtio_net_.patch
+new file mode 100644
+index 000000000000..9985d57966f4
+--- /dev/null
++++ b/meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001-net-tighten-b=
+ad-gso-csum-offset-check-in-virtio_net_.patch
+@@ -0,0 +1,59 @@
++From 6513eb3d3191574b58859ef2d6dc26c0277c6f81 Mon Sep 17 00:00:00 2001
++From: Willem de Bruijn <willemb@google.com>
++Date: Tue, 10 Sep 2024 17:35:35 -0400
++Subject: [PATCH] net: tighten bad gso csum offset check in virtio_net_hd=
+r
++
++The referenced commit drops bad input, but has false positives.
++Tighten the check to avoid these.
++
++The check detects illegal checksum offload requests, which produce
++csum_start/csum_off beyond end of packet after segmentation.
++
++But it is based on two incorrect assumptions:
++
++1. virtio_net_hdr_to_skb with VIRTIO_NET_HDR_GSO_TCP[46] implies GSO.
++True in callers that inject into the tx path, such as tap.
++But false in callers that inject into rx, like virtio-net.
++Here, the flags indicate GRO, and CHECKSUM_UNNECESSARY or
++CHECKSUM_NONE without VIRTIO_NET_HDR_F_NEEDS_CSUM is normal.
++
++2. TSO requires checksum offload, i.e., ip_summed =3D=3D CHECKSUM_PARTIA=
+L.
++False, as tcp[46]_gso_segment will fix up csum_start and offset for
++all other ip_summed by calling __tcp_v4_send_check.
++
++Because of 2, we can limit the scope of the fix to virtio_net_hdr
++that do try to set these fields, with a bogus value.
++
++Link: https://lore.kernel.org/netdev/20240909094527.GA3048202@port70.net=
+/
++Fixes: 89add40066f9 ("net: drop bad gso csum_start and offset in virtio_=
+net_hdr")
++Signed-off-by: Willem de Bruijn <willemb@google.com>
++Acked-by: Jason Wang <jasowang@redhat.com>
++Acked-by: Michael S. Tsirkin <mst@redhat.com>
++Cc: stable@vger.kernel.org
++Link: https://patch.msgid.link/20240910213553.839926-1-willemdebruijn.ke=
+rnel@gmail.com
++Signed-off-by: Jakub Kicinski <kuba@kernel.org>
++
++Upstream-Status: Backport
++Signed-off-by: Jon Mason <jon.mason@arm.com>
++
++---
++ include/linux/virtio_net.h | 3 ++-
++ 1 file changed, 2 insertions(+), 1 deletion(-)
++
++diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
++index 6c395a2600e8..276ca543ef44 100644
++--- a/include/linux/virtio_net.h
+++++ b/include/linux/virtio_net.h
++@@ -173,7 +173,8 @@ static inline int virtio_net_hdr_to_skb(struct sk_bu=
+ff *skb,
++ 			break;
++ 		case SKB_GSO_TCPV4:
++ 		case SKB_GSO_TCPV6:
++-			if (skb->csum_offset !=3D offsetof(struct tcphdr, check))
+++			if (skb->ip_summed =3D=3D CHECKSUM_PARTIAL &&
+++			    skb->csum_offset !=3D offsetof(struct tcphdr, check))
++ 				return -EINVAL;
++ 			break;
++ 		}
++--=20
++2.39.2
++
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/=
+meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+index 01803ba20561..ac7bcf7a9ab9 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+@@ -65,6 +65,7 @@ KMACHINE:fvp-base =3D "fvp"
+ FILESEXTRAPATHS:prepend:fvp-base :=3D "${ARMBSPFILESPATHS}:${ARMFILESPAT=
+HS}"
+ SRC_URI:append:fvp-base =3D " \
+     file://0001-arm64-dts-fvp-Enable-virtio-rng-support.patch \
++    file://0001-net-tighten-bad-gso-csum-offset-check-in-virtio_net_.pat=
+ch \
+     file://tee.cfg \
+     ${@bb.utils.contains('MACHINE_FEATURES', 'ts-smm-gateway', \
+                          'file://no-strict-devmem.cfg', '' , d)} \
+--=20
+2.39.3 (Apple Git-146)
 
-[1/1] arm-toolchain: remove libmount-mountfd-support when using binary toolchain
-      commit: 45a2b44284444aaf89e03c40258f876785425582
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
