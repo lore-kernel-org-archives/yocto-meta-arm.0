@@ -2,33 +2,33 @@ Return-Path: <luca.fancellu@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602F7CF9C72
-	for <webhook@archiver.kernel.org>; Mon, 23 Sep 2024 16:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D82CF9C6F
+	for <webhook@archiver.kernel.org>; Mon, 23 Sep 2024 16:04:35 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.40493.1727107396635189600
+ by mx.groups.io with SMTP id smtpd.web11.40475.1727107467793832138
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 23 Sep 2024 09:03:16 -0700
+ Mon, 23 Sep 2024 09:04:27 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: luca.fancellu@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E39EFEC
-	for <meta-arm@lists.yoctoproject.org>; Mon, 23 Sep 2024 09:03:45 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB42AFEC
+	for <meta-arm@lists.yoctoproject.org>; Mon, 23 Sep 2024 09:04:56 -0700 (PDT)
 Received: from e125770.cambridge.arm.com (e125770.arm.com [10.1.199.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56D9F3F528
-	for <meta-arm@lists.yoctoproject.org>; Mon, 23 Sep 2024 09:03:15 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 011723F528
+	for <meta-arm@lists.yoctoproject.org>; Mon, 23 Sep 2024 09:04:26 -0700 (PDT)
 From: Luca Fancellu <luca.fancellu@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm/lib: Handle timeout for spawn object on stop()
-Date: Mon, 23 Sep 2024 17:03:01 +0100
-Message-Id: <20240923160301.3137326-1-luca.fancellu@arm.com>
+Subject: [PATCH scarthgap] arm/lib: Handle timeout for spawn object on stop()
+Date: Mon, 23 Sep 2024 17:04:19 +0100
+Message-Id: <20240923160419.3160040-1-luca.fancellu@arm.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 23 Sep 2024 16:03:25 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6098
+ <meta-arm@lists.yoctoproject.org>; Mon, 23 Sep 2024 16:04:35 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6099
 
 The current code is waiting 5 seconds to get an EOF on the
 console pexpect spawn object, on a particularly slow machine
