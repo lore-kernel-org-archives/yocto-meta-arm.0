@@ -1,135 +1,74 @@
-Return-Path: <mikko.rapeli@linaro.org>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9C3CF9C6B
-	for <webhook@archiver.kernel.org>; Tue, 24 Sep 2024 08:19:02 +0000 (UTC)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
- by mx.groups.io with SMTP id smtpd.web10.8888.1727165940804497918
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5078CF9C69
+	for <webhook@archiver.kernel.org>; Tue, 24 Sep 2024 17:20:32 +0000 (UTC)
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+ by mx.groups.io with SMTP id smtpd.web11.943.1727198424087410801
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 24 Sep 2024 01:19:01 -0700
+ Tue, 24 Sep 2024 10:20:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=gklnWHv7;
- spf=pass (domain: linaro.org, ip: 209.85.208.171, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2f763e9e759so59749851fa.3
-        for <meta-arm@lists.yoctoproject.org>; Tue, 24 Sep 2024 01:19:00 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=HlkUINxd;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.167.176, mailfrom: jdmason@kudzu.us)
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3e039666812so2842910b6e.1
+        for <meta-arm@lists.yoctoproject.org>; Tue, 24 Sep 2024 10:20:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727165939; x=1727770739; darn=lists.yoctoproject.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oKPJ4Y5weGI9e7RXhXl05JXfSbjqHGx4sIXLgF0q1wA=;
-        b=gklnWHv7m1DN7tX1QSRM/ac6ynXmmXBPanDzzS1y6oA4C8aw2wj6Q4j2ua/TGif3LG
-         dZP5K9r682wLLREHZdz83u2edFbA6xWD14mZ7lrQx/NtMA1JBM08mVc9Da+v13/h3yrY
-         K2CkVLtr13R4tVvZneDavDStlI6oJ0ak5yL2yP7v34UYG6A/5RBvcw/BblXvuYzsRwJz
-         1wc5F/8VTU7X7XIAQwi0YXXTy1EUMbQk7Hy53Nvitoy7cGV5C+whJXrOILmT2qDGf7ry
-         MenQsIYOWu5aY6zo/d15t1TzDgSWO3V0LuyG1+6QRapjVhOJqOTN9T+RK0gV8bpgFFWE
-         4toQ==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1727198423; x=1727803223; darn=lists.yoctoproject.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fsUimgxwqO/J+ykCS4zNv/+uQhvHmvAg1Tk9YnrtqPk=;
+        b=HlkUINxdasmOdowlkk+MhbzrJtnEhRSXlmu8FuLHP3Ck3Lzxq1+FdKODbwj0hsRQAA
+         SPjyhxiLakmjGs87QoRaKyMim6o2cVSFVuh+diPn6vLkE05YKh/LJuoMnH4NONM8+/pH
+         i1CjeTpM2AEWM5JTbOS7YlWKgQVXeJNl6XF+KEHgMdQgtJuc8dGHaj3jkLOlDOG8McQn
+         iYfz0m9eszyTA6N3EDeeZe8ywMLaLlkgAK9i853n0YC3GyBwsivYzR7GJ9G381l4KgEw
+         DMctOEALa1ovZ+HXMAjz9z6yufcZL7e5uuBZ88c1JPlwthJU0I0gscka+n9FqTBh6vWd
+         wBuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727165939; x=1727770739;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oKPJ4Y5weGI9e7RXhXl05JXfSbjqHGx4sIXLgF0q1wA=;
-        b=GyP8UIQ63BBXbJDyFBgrC5xtv4E14cKReFXDz+pVYDFzUitUH0tNMHfv0Rf81IgiNH
-         ZXGLf9Jj5WjcnTBywhSelP6G+kPNkd1qs1YDA8uw6sgCGIaVr2BpSQEP6yFNViOOTntF
-         K+hDBf6fWUXKSI+AsbB2u5M+y2/fH/bi9Wsp4VHnmCp+KqTWTedkMS/a5TDbvqCIxYtk
-         duKVUUtw8k/L9XmUYfvKS/yeb0LsAHTAnphiwR6DyyTT4xCq6VXtIhhLT4Ma3TM1yXNF
-         4taCa9dYIUTrot/5bjQoKVcadEX2Sk6wQ1ygwisoLKtyA+IQ59UWNvygbhIlgVWwqZBw
-         SOqQ==
-X-Gm-Message-State: AOJu0YzRpd7Q7lbJ5eiSe77/l0+FcMQJ3Zq3MrckeJd7rlYXlqA3AqZS
-	hmAIqAvBiY6ZAtcBMVcL2QdxBuvpkGcXfm02ztK5IZaW5FZ4/tdoikCmCkG2wmA=
-X-Google-Smtp-Source: AGHT+IETuCsUhnH5xYlqRUsUgffUJPDxOBZw7psfdYbyV3MLyp/ehuiZsWg2aMU2eHCV/4ZAwiy0IA==
-X-Received: by 2002:a05:651c:1992:b0:2f5:a29:5a42 with SMTP id 38308e7fff4ca-2f7cb3190f8mr79080631fa.14.1727165938695;
-        Tue, 24 Sep 2024 01:18:58 -0700 (PDT)
-Received: from nuoska (78-27-76-97.bb.dnainternet.fi. [78.27.76.97])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f8d283bffasm1431351fa.38.2024.09.24.01.18.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Sep 2024 01:18:56 -0700 (PDT)
-Date: Tue, 24 Sep 2024 11:18:53 +0300
-From: Mikko Rapeli <mikko.rapeli@linaro.org>
-To: jon.mason@arm.com
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 3/3] arm-bsp/fvp: Re-enable parselogs
-Message-ID: <ZvJ17f543giDXFf8@nuoska>
-References: <20240920125716.13293-1-jon.mason@arm.com>
- <20240920125716.13293-3-jon.mason@arm.com>
+        d=1e100.net; s=20230601; t=1727198423; x=1727803223;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fsUimgxwqO/J+ykCS4zNv/+uQhvHmvAg1Tk9YnrtqPk=;
+        b=WDGYerKH1/23xgWEOwU3Sa0Kp+nyQCjz8m/xdqZ2XIgXHCjQe1lGvc6an006cAgDLX
+         P9RO+PhYFSLGuJcKZSFdyM5+JO8qJ2raPjg5PVkesRuyJxbzGU883i6rCNg7uSazqXU/
+         0AoiDN8WIgidzFl85+7OoiwUyN7w3gV8RPOZo/AamUA9acOkStS6O39lk2jNO/YKYhr1
+         psU+5UzuqX0N1iBgQqX/eqVFMGAIfR9XANeEcgBmuOAuQVaX3aJiZ2IvlSzQ9Mt9XakW
+         rYukwedTJlwMX3D65mdbC6iWZ0oM8HGOstccwGcu1xRz2L2DjqJFSzLJhV7AWYmMI8Gf
+         /N5w==
+X-Gm-Message-State: AOJu0YxyMIwUtetyXaN1fHGPSGddZ+aJxAwG2PLHwS6YZPSTXbSZmlrD
+	TArgZ6jVr+F2eB4u6qYlgd8vkuID6B+zlQ7Z7gJ2iHChbzKWF+Qxn5RZWHg9z7scqzJXf4c9YT4
+	s9EteNtuFnGIYnuXxiVTnjqDfI0CreqcF8cPCp0VyT8D5tngLdA==
+X-Google-Smtp-Source: AGHT+IHlDhFTEtYUwNj3pIf2rDd7KQMy0SJgn7zW0GnrxNvAeItVe3SyyrS4iQtanU/kHn1fYiFJ8lQeB6QHjlOGy8Q=
+X-Received: by 2002:a05:6808:4497:b0:3e2:936f:64c1 with SMTP id
+ 5614622812f47-3e2936f6574mr1662817b6e.4.1727198423046; Tue, 24 Sep 2024
+ 10:20:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240920125716.13293-3-jon.mason@arm.com>
+From: Jon Mason <jdmason@kudzu.us>
+Date: Tue, 24 Sep 2024 13:20:12 -0400
+Message-ID: <CAPoiz9y5d9bksfEOgUghMG68VUZQu=1E6CBThoVo0CtW5yr6Eg@mail.gmail.com>
+Subject: meta-arm styhead release freezing soon (Friday)
+To: meta-arm@lists.yoctoproject.org
+Cc: Ross Burton <ross.burton@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 24 Sep 2024 08:19:02 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6100
+ <meta-arm@lists.yoctoproject.org>; Tue, 24 Sep 2024 17:20:32 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6101
 
-Hi,
+With the Yocto Project Styhead release expected soon, meta-arm will be
+following suit.
 
-One minor issue,
+Barring an issue or something on the mailing list that is in the
+process of being integrated, we will cut the meta-arm styhead release
+on Friday, 4 October 2024.  To this end, we will be freezing on
+Friday, 27 September 2024.  So, please push all outstanding commits as
+soon as possible.  If you have something coming that you need in the
+styhead release, please let us know.
 
-On Fri, Sep 20, 2024 at 08:57:16AM -0400, Jon Mason via lists.yoctoproject.org wrote:
-> Re-enable parselogs testing for fvp-base and corstone1000-fvp, and add
-> an ignore file for the relevant entries.  Also, increase the testing
-> being done on corstone1000-fvp.
-> 
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
-> ---
->  ci/fvp.yml                                                | 5 -----
->  meta-arm-bsp/conf/machine/corstone1000-fvp.conf           | 3 ++-
->  .../runtime/cases/parselogs-ignores-corstone1000-fvp.txt  | 8 ++++++++
->  .../lib/oeqa/runtime/cases/parselogs-ignores-fvp-base.txt | 1 +
->  4 files changed, 11 insertions(+), 6 deletions(-)
->  create mode 100644 meta-arm-bsp/lib/oeqa/runtime/cases/parselogs-ignores-corstone1000-fvp.txt
->  create mode 100644 meta-arm-bsp/lib/oeqa/runtime/cases/parselogs-ignores-fvp-base.txt
-> 
-> diff --git a/ci/fvp.yml b/ci/fvp.yml
-> index 2bf1cef024a8..667bb641092a 100644
-> --- a/ci/fvp.yml
-> +++ b/ci/fvp.yml
-> @@ -7,8 +7,3 @@ local_conf_header:
->    testimagefvp: |
->      LICENSE_FLAGS_ACCEPTED += "Arm-FVP-EULA"
->      IMAGE_CLASSES += "fvpboot"
-> -  failing_tests: |
-> -    # This fails but we can't add to the ignorelist from meta-arm yet
-> -    # https://bugzilla.yoctoproject.org/show_bug.cgi?id=14604
-> -    TEST_SUITES:remove = "parselogs"
-> -    TEST_SUITES:remove = "xorg"
-> diff --git a/meta-arm-bsp/conf/machine/corstone1000-fvp.conf b/meta-arm-bsp/conf/machine/corstone1000-fvp.conf
-> index 2c724bfeb2b8..a605a695b19a 100644
-> --- a/meta-arm-bsp/conf/machine/corstone1000-fvp.conf
-> +++ b/meta-arm-bsp/conf/machine/corstone1000-fvp.conf
-> @@ -9,7 +9,8 @@ TFM_PLATFORM_IS_FVP = "TRUE"
->  
->  # testimage config
->  TEST_TARGET = "OEFVPTarget"
-> -TEST_SUITES = "fvp_boot"
-> +TEST_TARGET_IP = "127.0.0.1:2222"
-> +DEFAULT_TEST_SUITES:append = " fvp_boot fvp_devices"
->  
->  # FVP Config
->  FVP_PROVIDER ?= "fvp-corstone1000-native"
-> diff --git a/meta-arm-bsp/lib/oeqa/runtime/cases/parselogs-ignores-corstone1000-fvp.txt b/meta-arm-bsp/lib/oeqa/runtime/cases/parselogs-ignores-corstone1000-fvp.txt
-> new file mode 100644
-> index 000000000000..63cef943e792
-> --- /dev/null
-> +++ b/meta-arm-bsp/lib/oeqa/runtime/cases/parselogs-ignores-corstone1000-fvp.txt
-> @@ -0,0 +1,8 @@
-> +psci: failed to boot CPU1 (-95)
-> +CPU1: failed to boot: -95
-> +psci: failed to boot CPU2 (-95)
-> +CPU2: failed to boot: -95
-> +psci: failed to boot CPU3 (-95)
-> +CPU3: failed to boot: -95
-> +ARM FF-A: Notification setup failed -95, not enabled
-> +ARM FF-A: Failed to register driver sched callback -95
+If there are questions or comments, please feel free to respond to
+this thread on the mailing list or email me and/or Ross directly.
 
-These lines could be amended with comment lines using # in case
-some analysis of the failures has been done. Sometimes these
-could be open bug reports to upstream etc or HW related
-quirks.
-
-Cheers,
-
--Mikko
+Thanks,
+Jon
 
