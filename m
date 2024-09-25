@@ -2,57 +2,57 @@ Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12819C369AE
-	for <webhook@archiver.kernel.org>; Wed, 25 Sep 2024 09:02:46 +0000 (UTC)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
- by mx.groups.io with SMTP id smtpd.web11.10936.1727254959784438464
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A295C369AF
+	for <webhook@archiver.kernel.org>; Wed, 25 Sep 2024 09:02:56 +0000 (UTC)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+ by mx.groups.io with SMTP id smtpd.web10.10992.1727254969975311040
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 25 Sep 2024 02:02:40 -0700
+ Wed, 25 Sep 2024 02:02:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=OAoSmZAn;
- spf=pass (domain: linaro.org, ip: 209.85.208.178, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2f761cfa5e6so70731061fa.0
-        for <meta-arm@lists.yoctoproject.org>; Wed, 25 Sep 2024 02:02:39 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=EHsuOeUB;
+ spf=pass (domain: linaro.org, ip: 209.85.208.175, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2f7502f09fdso6470011fa.1
+        for <meta-arm@lists.yoctoproject.org>; Wed, 25 Sep 2024 02:02:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727254958; x=1727859758; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1727254968; x=1727859768; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QQGnmmRi1nU16WY3QHiqFBdRs8QwatKcCYueFacwUnU=;
-        b=OAoSmZAnqjRi5G65eG/0+Z1Ho53tu3WGMtRF1KqTKAJUG6mZnlVRJSz4/Fy3rHYaFJ
-         FmLlN6dp3/z/CN7/Tn/vpNZtWmm2DYyZLF9fQaNlt2BHTHeoMabEcDUNTQGYHT30uOL/
-         mdpNnuDmymw0wXfC/G/VZ5g/xYoG1RC9rCCHRbNUfjORoCFnua2vzN9R5wAWnNzL9dV1
-         GnxTHYr/sj//ySG4VWRC/NzuHvHeKyQfrioUU1BRZ6Y7RiVTQcjvPHAOChUtuI7BLTE1
-         +g/la/mYI7FwuaEm7RhEIK/LuJOiJzgd5SJTGc5Fl3XplCPhT4tRwmBhMWx5jSU5s2P2
-         Ov9w==
+        bh=jwuoVlJXBCBaiOZc2xST+DF7Qpw/Hqk37Qz6P7FQQus=;
+        b=EHsuOeUB/TIQ7PhhNuXunTXJdFewzamCdqKIZ3eP0eYDs4FA7EUqiQH0RSzgEDCa/L
+         SlQxlPtLDJMLWt9rhEo7jmlgCvMQUfL2WsyS7eFcOsAcdwLHwAW5AjE3+gZx9ibNrOW2
+         ZNeuIC5dkW5AxTVf5eI+cbtYRcM2F5tIMgxmbm17DVzED5L2tLVLAiUMJhtCMqHB55CJ
+         youBe/w4fNpFdFCq9Engwvd9w1geE10YvwtXs6OA7UyCyMR47txo48fRa1I/vSvCBfQy
+         59OzhjnU0vXHcL95v8ZW2eyleF81BFIH3daxes//nJBaomHAPcR+L3/DZe5DjVmRyexa
+         6f7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727254958; x=1727859758;
+        d=1e100.net; s=20230601; t=1727254968; x=1727859768;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QQGnmmRi1nU16WY3QHiqFBdRs8QwatKcCYueFacwUnU=;
-        b=JOkm3aqN3m/x6rKeLYTOhodINTu7spIagcoU8DAtc17WpKyR56iP5/qJMrh8LuYu28
-         L3NAj7+4HQWgFvVHzyBdO3PT1y4luOnOu+siRY06+GUKKdOEYgav0E7UL4fIj1EDmpYf
-         h2/bdLcJztNWr6DCMheHwaPW6yLEuKCoWgPqA9kxcQo0wp8ebJNiZ1nOQi63Z/Z+ev1h
-         E5rM1bd7RblLj52x7RyziMBLmthAgId2P8Qol9Zu24T00nRIhhYvu4wGEALNl0VGeZ7R
-         zn1/OF45r6Hl1IRJGrxNsoAygsv4E5OzZTSVdql2EoesOVruJ+dqn7iqBec+vO19j7mK
-         saPQ==
-X-Gm-Message-State: AOJu0YysD/YaQnVxzbejMyh3xaEvp+Gi3RcjeD7JcCl39j9iuPPDzGmk
-	7eKippu2GzFwbFbhJsy75f2REqcMmn1OaA0bomZf7Ig2TQDw31AoalSY26GhfU7mWVl7G2IIMki
-	4kyw=
-X-Google-Smtp-Source: AGHT+IGZgEcnVrKuRMQu2Z0ZW8byvwfZfear6I/t3bDwmI4QBpHNk1KOeuXHGw/qD9DKQBuCK6kJhA==
-X-Received: by 2002:a2e:851:0:b0:2f6:4cc0:5438 with SMTP id 38308e7fff4ca-2f91ca407c8mr9481321fa.29.1727254957674;
-        Wed, 25 Sep 2024 02:02:37 -0700 (PDT)
+        bh=jwuoVlJXBCBaiOZc2xST+DF7Qpw/Hqk37Qz6P7FQQus=;
+        b=Ad+kSKGNQKJ60fmaA0YtDrJ6c9yhxNA91Wu3L32dBmAhKSB9z25q7KIncCIVzulHfu
+         XHnOm6KvPG9tVckBx/zafQMLRmOxGe882XZ+joMIaRlVgCMFF6wdE+0rLIcba9X+2krQ
+         AwGqsJ2vyqfybt3B/JjKcx0proR1ZeV2PhMo/qxHjIwD+o4Ju0vH3fYwyrzUHhZE3BrW
+         LOCoXNF4c62gitxjHZ4lPoFzrxxZxRF6ObAZRCx4iuIUyntG2r+V3B61u2AXlxhnLEsd
+         eemyhu6quMbzB6ocmHR6ZZylWqKY7vIee5d0vHJtDPqLxY71sm7Y+e6qxylviEpsmQ0P
+         2naQ==
+X-Gm-Message-State: AOJu0YxGWw/6vB+qcvgsuq5Q+FyQCgT8cQdYFEKtAj5nqLg7urX4rGGv
+	t1TjQjqY0zrqWIn73jEDCa0jhYUfszvSv23vU8OHvNIH4MYyE28HF5GHwg9zO7w/1LqrLabcilN
+	+Kwk=
+X-Google-Smtp-Source: AGHT+IFIk+ZvaIGp8gJXksuTCU84EJPb03FuPjlYZlELLRZZXd2EZ9cpz2B0T8lhV8X4Fhn8sF6l9Q==
+X-Received: by 2002:a2e:bc84:0:b0:2f7:6664:f272 with SMTP id 38308e7fff4ca-2f8d0b67935mr24073321fa.6.1727254968040;
+        Wed, 25 Sep 2024 02:02:48 -0700 (PDT)
 Received: from localhost.localdomain (78-27-76-97.bb.dnainternet.fi. [78.27.76.97])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f8d289ef7fsm4686501fa.119.2024.09.25.02.02.34
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2f8d289ef7fsm4686501fa.119.2024.09.25.02.02.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Sep 2024 02:02:35 -0700 (PDT)
+        Wed, 25 Sep 2024 02:02:46 -0700 (PDT)
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
 To: meta-arm@lists.yoctoproject.org
-Cc: Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH 2/4] arm/optee: Add optee udev rules
-Date: Wed, 25 Sep 2024 12:01:45 +0300
-Message-ID: <20240925090147.66618-3-mikko.rapeli@linaro.org>
+Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
+Subject: [PATCH 3/4] optee-client: fix systemd service dependencies
+Date: Wed, 25 Sep 2024 12:01:46 +0300
+Message-ID: <20240925090147.66618-4-mikko.rapeli@linaro.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240925090147.66618-1-mikko.rapeli@linaro.org>
 References: <20240925090147.66618-1-mikko.rapeli@linaro.org>
@@ -61,68 +61,62 @@ Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 25 Sep 2024 09:02:46 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6104
+ <meta-arm@lists.yoctoproject.org>; Wed, 25 Sep 2024 09:02:56 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6105
 
-From: Javier Tia <javier.tia@linaro.org>
+udev starts tee-supplicant once optee has been found.
+Fix dependencies in systemd service so that starting it in
+initrd is possible. Stopping requires that ftpm
+kernel module is disabled or any TPM related actions will fail until
+the next reboot so working around these in the service file. These
+are limitations of current kernel optee and ftpm drivers.
 
-If a /dev/teepriv[0-9]* device is detected, start an instance of
-tee-supplicant.service with the device name as parameter.
+tpm2.target requires systemd 256 or newer. With older system version
+there is no simple way to queue in service before TPM device is
+available.
 
-Signed-off-by: Javier Tia <javier.tia@linaro.org>
+https://www.freedesktop.org/software/systemd/man/devel/systemd.special.html#tpm2.target
+
+Note that
+https://www.freedesktop.org/software/systemd/man/devel/systemd-tpm2-generator.html
+detects TPM support from either existing kernel driver (built in or
+loaded really early in initrd and rootfs boot) or ACPI table entry for
+TPM device. If firmware used a TPM device but doesn't provide ACPI table
+entry for it, then a kernel patch has been proposed to expose this to
+userspace:
+
+https://lore.kernel.org/lkml/20240422112711.362779-1-mikko.rapeli@linaro.org/
+
+and matching change proposal for systemd:
+
+https://github.com/systemd/systemd/pull/32400
+
+Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 ---
- meta-arm/recipes-security/optee/optee-client.inc          | 8 +++++++-
- .../recipes-security/optee/optee-client/optee-udev.rules  | 6 ++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
- create mode 100644 meta-arm/recipes-security/optee/optee-client/optee-udev.rules
+ .../optee/optee-client/tee-supplicant@.service         | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/recipes-security/optee/optee-client.inc
-index ddda2d1a..f387c805 100644
---- a/meta-arm/recipes-security/optee/optee-client.inc
-+++ b/meta-arm/recipes-security/optee/optee-client.inc
-@@ -5,12 +5,13 @@ HOMEPAGE = "https://www.op-tee.org/"
- LICENSE = "BSD-2-Clause"
- LIC_FILES_CHKSUM = "file://LICENSE;md5=69663ab153298557a59c67a60a743e5b"
+diff --git a/meta-arm/recipes-security/optee/optee-client/tee-supplicant@.service b/meta-arm/recipes-security/optee/optee-client/tee-supplicant@.service
+index 72c0b9aa..8325b6be 100644
+--- a/meta-arm/recipes-security/optee/optee-client/tee-supplicant@.service
++++ b/meta-arm/recipes-security/optee/optee-client/tee-supplicant@.service
+@@ -1,10 +1,12 @@
+ [Unit]
+ Description=TEE Supplicant on %i
++DefaultDependencies=no
++After=dev-%i.device
++Wants=dev-%i.device
++Conflicts=shutdown.target
++Before=tpm2.target sysinit.target shutdown.target
  
--inherit systemd update-rc.d cmake
-+inherit systemd update-rc.d cmake useradd
- 
- SRC_URI = " \
-     git://github.com/OP-TEE/optee_client.git;branch=master;protocol=https \
-     file://tee-supplicant@.service \
-     file://tee-supplicant.sh \
-+    file://optee-udev.rules \
- "
- 
- UPSTREAM_CHECK_GITTAGREGEX = "^(?P<pver>\d+(\.\d+)+)$"
-@@ -26,6 +27,8 @@ EXTRA_OECMAKE:append:toolchain-clang = " -DCFG_WERROR=0"
- do_install:append() {
-     install -D -p -m0644 ${UNPACKDIR}/tee-supplicant@.service ${D}${systemd_system_unitdir}/tee-supplicant@.service
-     install -D -p -m0755 ${UNPACKDIR}/tee-supplicant.sh ${D}${sysconfdir}/init.d/tee-supplicant
-+    install -d ${D}${sysconfdir}/udev/rules.d
-+    install -m 0644 ${UNPACKDIR}/optee-udev.rules ${D}${sysconfdir}/udev/rules.d/optee.rules
- 
-     sed -i -e s:@sysconfdir@:${sysconfdir}:g \
-            -e s:@sbindir@:${sbindir}:g \
-@@ -38,3 +41,6 @@ SYSTEMD_SERVICE:${PN} = "tee-supplicant@.service"
- INITSCRIPT_PACKAGES = "${PN}"
- INITSCRIPT_NAME:${PN} = "tee-supplicant"
- INITSCRIPT_PARAMS:${PN} = "start 10 1 2 3 4 5 . stop 90 0 6 ."
-+
-+USERADD_PACKAGES = "${PN}"
-+GROUPADD_PARAM:${PN} = "--system teeclnt"
-diff --git a/meta-arm/recipes-security/optee/optee-client/optee-udev.rules b/meta-arm/recipes-security/optee/optee-client/optee-udev.rules
-new file mode 100644
-index 00000000..075f469c
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-client/optee-udev.rules
-@@ -0,0 +1,6 @@
-+KERNEL=="tee[0-9]*", MODE="0660", OWNER="root", GROUP="teeclnt", TAG+="systemd"
-+
-+# If a /dev/teepriv[0-9]* device is detected, start an instance of
-+# tee-supplicant.service with the device name as parameter
-+KERNEL=="teepriv[0-9]*", MODE="0660", OWNER="root", GROUP="teeclnt", \
-+    TAG+="systemd", ENV{SYSTEMD_WANTS}+="tee-supplicant@%k.service"
+ [Service]
+-User=root
+ EnvironmentFile=-@sysconfdir@/default/tee-supplicant
+ ExecStart=@sbindir@/tee-supplicant $OPTARGS
+-
+-[Install]
+-WantedBy=basic.target
++ExecStop=-/bin/sh -c "/sbin/modprobe -v -r tpm_ftpm_tee ; /bin/kill $MAINPID"
 -- 
 2.34.1
 
