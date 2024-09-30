@@ -2,81 +2,92 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD17DCE8368
-	for <webhook@archiver.kernel.org>; Mon, 30 Sep 2024 16:25:12 +0000 (UTC)
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
- by mx.groups.io with SMTP id smtpd.web10.59002.1727713508886863260
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF718CE836B
+	for <webhook@archiver.kernel.org>; Mon, 30 Sep 2024 16:25:32 +0000 (UTC)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+ by mx.groups.io with SMTP id smtpd.web11.59501.1727713525634279694
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 30 Sep 2024 09:25:09 -0700
+ Mon, 30 Sep 2024 09:25:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=VObqLZ0w;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.173, mailfrom: jdmason@kudzu.us)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6dbc5db8a31so35056447b3.1
-        for <meta-arm@lists.yoctoproject.org>; Mon, 30 Sep 2024 09:25:08 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=OJ66gJ/I;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.178, mailfrom: jdmason@kudzu.us)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e25cf3c7278so4140365276.3
+        for <meta-arm@lists.yoctoproject.org>; Mon, 30 Sep 2024 09:25:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1727713508; x=1728318308; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1727713525; x=1728318325; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GFb1WsnoH2iW8J0lFeAj3PDK7R+br85oMJM0sfzZQRQ=;
-        b=VObqLZ0wgvemfRu+NQ6k/D80jjHpgrXTzgwdG0aQ+ELZLUaID10wuWyv5LH5P9HO66
-         Q0j1XjSnBOBrLn5hXLQIRn+6CHfRlMTeumgHlPTYoam1VfkJeliil85ucN44dPhzy7K1
-         yoKU4K0UgUvTtzT15zKLNwe4lq37FH1da4J9DEQE3nXwRT/ATMDul9xfAxXDteFPhYko
-         Vha6lLJctjD0sTGLZ0LNwtGWNSM2HANeX5XiQKfI6Vwkrz1eqkVFPOQ2XIWiS2VIPaG7
-         1iUiMjo72OljSyaiHGcK8dm1K922QknsLhSKENUwWWMjYGrlTgqhiVstKFibUdwvLJkR
-         sAUg==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cJQObzZBhdMAenLKFIdYPSAfwtutc5iUMiORS421Y7U=;
+        b=OJ66gJ/IaBrBCnljUVoqJKsafiT6YqajbhwkgcdFPgj0ZbxCcEwM6mqlpJqt3APnDc
+         KM4kRl5HN+2CiZkUcp8gSe521xzaoDAuqxd1RqXVb5f8aUqwR6BEJgF+SZVCnajmkZsj
+         ZvcBfDggsbNjpZwN4pDhi85Z4SI+h1D9ZRmuaEe/E3jKOyKiKlZVhmqr4a+swGTdnmtd
+         AkWdUSOftoV5zLnGbz1HE1ibTqJAlBNE9jT0stiNraSMkRQtM93B1FvcJP1lLsl+sV0F
+         svEB/pnA1lZtbNX85WbEMBvjhfRgIHpTblV0LCy8diAcpB2S6RzVM4YrVaNtupQ47l9D
+         WzWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727713508; x=1728318308;
+        d=1e100.net; s=20230601; t=1727713525; x=1728318325;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GFb1WsnoH2iW8J0lFeAj3PDK7R+br85oMJM0sfzZQRQ=;
-        b=SKt1AGZ/r5fRE1+UfAvtPJEuZM8EDPjxK7wLFISzyqxHHF7o9b+PFhR/HMRo7q8684
-         kxB45YQaSJqd+Jn/oJHO0qTwywOqWFmjqz4AKaZadO0Q6Ku2l4di/eN5BQPX8ZpzxbGM
-         tuhzfdS6TxYFyu9HWYJMTNHzorbm0OZL8Uu+YDFgZlOWxviOIthrgpqyqKyJQD3aWN27
-         zGr4sS30Vt989GN+sfgUaiBiEMUmkPJVe0yEvGmCryIHlxDcRhxbJydZfSk1pmfKWWQ+
-         8fAh+v9vpDoj44HqAfheWBI34tImNEJuI3LkoIiMANCBztBTIV2TK/ik2lig373Ohdgx
-         2t+A==
-X-Gm-Message-State: AOJu0Yxbg8bbvmANGpiVyapkZxSqTyTAVbfOlhfjo5iTWd0PPG9VzG7w
-	z47YvYNBoN3MvWiymxbmpIPBQTRoUZGW+9g5MD5UX2/xwwh1uZFX3Cv1poHXhgtaHBac2RMRooA
+        bh=cJQObzZBhdMAenLKFIdYPSAfwtutc5iUMiORS421Y7U=;
+        b=V5C44Uencc2gTDNklu2j8Ey6TO+Z39tVO5svvasEBhNpzyukCTZl67COXSqk+n3kaB
+         hpU1pq0m9sUN0nzrTZ5ZGHzr8MtCm7thW/de+W8GcKY5XhEbXXIrlJY3UDGvWBNP3vq0
+         itdy5NLpySVs9YvcrOSp3cqhWQrmngRugLcYfU9luKVwyiHOg2ggGc3SjNO7CZGf7dPJ
+         7rci6M59N0UToa9D3Rgiballxv3ZXZ/j98UbN0vEyLdj1R8HVZq4PtpiVL5w0jy7z3sX
+         nvoBWa/AJRndnmsU2KdxeQ7R/LczXYn3I7Ya0UmNRuxlqZGCtaKq7uhWtta6RbOWqskY
+         BW3w==
+X-Gm-Message-State: AOJu0YyJ8oIUj1KGhgwyeK65WSERoNrV/WvLboh1gUnqr+WujBgc0KKV
+	E0rtHJtifeDHHMxPLElglKlmMyGTPLMPzsNb9xnm/1l3u4pav5Yzlkxp3jK/9hHMAH8cBCuXmqY
 	=
-X-Google-Smtp-Source: AGHT+IEs0IUc1hoeC5pZgjzh5grvRkxJ61F2JHpIVc3l9cQbjAajK+8RL56XE0/1aEfW0p89vBp0HA==
-X-Received: by 2002:a05:690c:7246:b0:6db:d221:b739 with SMTP id 00721157ae682-6e290dca9e1mr1802587b3.10.1727713507922;
-        Mon, 30 Sep 2024 09:25:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFWdJltTYUktTA8DOdOepJBHgZpV+LXtmTk+J4717yAfSNGyoV8wfmXdmiUWrjjALym0/IwDQ==
+X-Received: by 2002:a05:6902:2584:b0:e26:f12:1dd9 with SMTP id 3f1490d57ef6-e260f122079mr4878815276.13.1727713521930;
+        Mon, 30 Sep 2024 09:25:21 -0700 (PDT)
 Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e24538aff0sm14395287b3.126.2024.09.30.09.25.07
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e25e6c31679sm2339401276.58.2024.09.30.09.25.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2024 09:25:07 -0700 (PDT)
+        Mon, 30 Sep 2024 09:25:21 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] arm-bsp/fvp-base: use trusted-firmware-a v2.11
-Date: Mon, 30 Sep 2024 12:24:35 -0400
-Message-Id: <172771348143.724488.17636566057505510535.b4-ty@arm.com>
+	Mikko Rapeli <mikko.rapeli@linaro.org>
+Cc: MaheedharSai.Bollapalli@amd.com,
+	michal.simek@amd.com
+Subject: Re: [PATCH] trusted-firmware-a: fix panic on kv260/zynqmp
+Date: Mon, 30 Sep 2024 12:24:38 -0400
+Message-Id: <172771348143.724488.12349214062260917131.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20240927174426.80998-1-jon.mason@arm.com>
-References: <20240927174426.80998-1-jon.mason@arm.com>
+In-Reply-To: <20240930133929.10654-1-mikko.rapeli@linaro.org>
+References: <20240930133929.10654-1-mikko.rapeli@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 30 Sep 2024 16:25:12 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6144
+ <meta-arm@lists.yoctoproject.org>; Mon, 30 Sep 2024 16:25:32 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6146
 
 
-On Fri, 27 Sep 2024 13:44:26 -0400, Jon Mason wrote:
-> Update to use the latest version of tf-a.  The patch for virtio was
-> upstreamed and already in v2.11.
+On Mon, 30 Sep 2024 16:39:29 +0300, Mikko Rapeli wrote:
+> kv260 with optee and secure-boot panics without this fix:
 > 
+> https://ledge.validation.linaro.org/scheduler/job/93620
 > 
+> Xilinx Zynq MP First Stage Boot Loader
+> 
+> Release 2022.2   Oct  7 2022  -  04:56:16
+> MultiBootOffset: 0x40
+> Reset Mode	:	System Reset
+> Platform: Silicon (4.0), Running on A53-0 (64-bit) Processor, Device
+> Name: XCZUUNKNEG
+> 
+> [...]
 
 Applied, thanks!
 
-[1/1] arm-bsp/fvp-base: use trusted-firmware-a v2.11
-      commit: eefb6a12ba66ff47fd6a146cf8a9f03c52a7793c
+[1/1] trusted-firmware-a: fix panic on kv260/zynqmp
+      commit: 890cbb98411407714224584e6b15cb1e7450a387
 
 Best regards,
 -- 
