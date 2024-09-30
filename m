@@ -2,135 +2,87 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24336CE8349
-	for <webhook@archiver.kernel.org>; Mon, 30 Sep 2024 14:01:02 +0000 (UTC)
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
- by mx.groups.io with SMTP id smtpd.web11.55553.1727704859037060710
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FA9CE8366
+	for <webhook@archiver.kernel.org>; Mon, 30 Sep 2024 16:24:52 +0000 (UTC)
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+ by mx.groups.io with SMTP id smtpd.web11.59478.1727713488440652197
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 30 Sep 2024 07:00:59 -0700
+ Mon, 30 Sep 2024 09:24:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=xbpHPwyr;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.173, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7a9a23fc16fso450635885a.2
-        for <meta-arm@lists.yoctoproject.org>; Mon, 30 Sep 2024 07:00:58 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=qIfe06Wh;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.174, mailfrom: jdmason@kudzu.us)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6e1f48e7c18so38570997b3.3
+        for <meta-arm@lists.yoctoproject.org>; Mon, 30 Sep 2024 09:24:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1727704858; x=1728309658; darn=lists.yoctoproject.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AQDMKBadMGiHdyZgezUtqEHMSP4DajEwyQr60SXlCkk=;
-        b=xbpHPwyrNbmubyWMeTskJybKyIzsw8DpFdSZSglsg3s7+iaiB9PCb2dBSqIMQpcyDk
-         CEpMpjakI3mvKbvljlHY2lMmVbUUIGs61GFcVtB8MGCPlwSJyDFlcX9nwBSKe7uUzOSS
-         q/MWjvK+HezypPGIXV4fIUiS1f4/tZhPfyq4bvQUyQi5Psg0w+/Fxy+mmy8Atjc46R/+
-         Ra690+qpVEhjneikd3LME3+FA/fUIrjiPaCVaqEp8ZjApSikI2Xakw10XRZYsrn0NDhs
-         G73BAkJjpQwuAie+BpoLDbCjiPOIp/+X2fv+FFJf3OQU4/cCccKSIiAEaMOFDnWskFdr
-         4kng==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1727713487; x=1728318287; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WnZVX/dzifi1P8zwOdVSHMUExLkt/w4aLxELNz0jDys=;
+        b=qIfe06WhfVvyIf+E+llOoof1xwfcUj5H0+JS/7QE17CryOexOERNQXd/pPlROEmAeY
+         jrbgGDtY3HiaBpmVj74zdTRlI0tfsACrsOgSbFazRLIrw3aqmyJkoq3P6AIChKBP1C+n
+         lvq4JiYTC+vQ7vSSKudh4iRKoYA0fFZTeUcehagBCSRjIoLyulcnPJcQlsGK6t4p7YA9
+         pI7WGZ58Bb6Jb0H/jHaMuzr4MtX6riF0RhJvzW0W9gSFxi6aWWiOpPFaGO0xrnlduIF5
+         wIWVrkHLz4hqHuKO95TimPZjN/QrUwpNV8r2wLbF0PXhr0Mf+gIZNphdgtDzuJA6rbqd
+         Graw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727704858; x=1728309658;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AQDMKBadMGiHdyZgezUtqEHMSP4DajEwyQr60SXlCkk=;
-        b=upKbmreckTQrKfGE0gSQfsb9s+Uv0qbcjyFWUVBtSznmcHhEhetMeoUrgfc2pyRHit
-         2Xw1uSSnZNk2whetUsmj0+ixqtkVddHdvL+Bf/kDvs4cG75ZURSdwcpA9kcHAtQKrZPM
-         f60a7qlUFUSyjVL/Fw1+d9ZNPFQxiq0cbssZWu/rt18VLpCPmntuRbhfg/9p20xIp8Hi
-         OcEFcQ1f6o4umTZu9X1jdp7DTZVb3AUI40Kc5ZgNsAdouKp2DoryVWV4J3BBohCbNnUU
-         4jgCwcmedAVCMC0LzRifXBAzLjhko1MEGukit5qwlBJAEGn3RorbyE8qYOMYCgNOu90O
-         C1zQ==
-X-Gm-Message-State: AOJu0Ywu2c67bjDZVebraQpwAP9evpD8oX9ZbUtfnoWmKlESmqZt9fBI
-	jVg88wsAeolA8HeUuWv4Qp/thb9t51BzVEtL/6YEukaoEgNmfP+cXzjCklVUAw==
-X-Google-Smtp-Source: AGHT+IEMls+wvuDi48/umbeOKvzKngoluKXqC/H5rsNVzRwkcGpWLDjmp6B36EoQkuZhhCVRgLfLlA==
-X-Received: by 2002:a05:620a:2956:b0:7a9:c146:a9e9 with SMTP id af79cd13be357-7ae3783b6d1mr2169407985a.15.1727704856216;
-        Mon, 30 Sep 2024 07:00:56 -0700 (PDT)
-Received: from kudzu.us ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ae377bc898sm419019885a.8.2024.09.30.07.00.55
+        d=1e100.net; s=20230601; t=1727713487; x=1728318287;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WnZVX/dzifi1P8zwOdVSHMUExLkt/w4aLxELNz0jDys=;
+        b=EJp23wbJOul3oJNQm3w8iWBxIO9sPNA7+R29zrLDEh6ILVakaEt9WXqNetBs/0PjYi
+         qz/TsPm2fUH6J9DOSVgMmbNC97uizsgLlGdLPcxBtT4kODzue5TEQ+qn4VBrHLeRLwUe
+         W9/YwGsiL49lRLKWwJfakxrNwtZYZ1Gh50FdIaY2aKntSMqT1ZqZo/rP+1vIho8pe9Kw
+         ED91b4P5+3rglnkU8X1ORou+Bmd1QKyp7gOyVayOVW7/4XiwbjysC/InIOFbpqh75Iy5
+         Wak14fvyNVbg+maFe372klwsjkk+vP3xmkwE2gA2Yv2CzRL77ifoPebU3SHQD8A05L13
+         UPog==
+X-Gm-Message-State: AOJu0YyDJ8FCdmk3H/YbFw8LdfUsLxHF6Dz3gO5S3x7leq1VAkJh97VP
+	RUhIIPNBDDM+q05J0UrymRe6wwPlIllxZ2+3uI0xvSGFoRlNtxjCQIMMADCqwlew+wT2dY5kCWY
+	=
+X-Google-Smtp-Source: AGHT+IHRIEInfHFfKfHDMTQnPIh9cNaKjSLHAjNLPZmwHBn11GB5nqLoMFGDOf894M90r+s+ppQFhg==
+X-Received: by 2002:a05:690c:6604:b0:6e2:993:917c with SMTP id 00721157ae682-6e28b624f69mr12455287b3.2.1727713487264;
+        Mon, 30 Sep 2024 09:24:47 -0700 (PDT)
+Received: from localhost ([136.54.20.50])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e2452f7c32sm14645257b3.5.2024.09.30.09.24.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Sep 2024 07:00:55 -0700 (PDT)
-Date: Mon, 30 Sep 2024 10:00:54 -0400
+        Mon, 30 Sep 2024 09:24:46 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
-To: Adrian DC <radian.dc@gmail.com>
-Cc: meta-arm@lists.yoctoproject.org, Javier Tia <javier.tia@linaro.org>,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] trusted-firmware-a: fix build error when using ccache
-Message-ID: <ZvqvFhYoRXQ9RQ4H@kudzu.us>
-References: <20240928155436.1145975-1-radian.dc@gmail.com>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	ali.oezaslan@arm.com
+Subject: Re: [PATCH 0/1] arm-bsp/optee: corstone1000: Update upstream status
+Date: Mon, 30 Sep 2024 12:24:30 -0400
+Message-Id: <172771348142.724488.4948070177767998562.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20240927154916.13427-1-ali.oezaslan@arm.com>
+References: <20240927154916.13427-1-ali.oezaslan@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240928155436.1145975-1-radian.dc@gmail.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 30 Sep 2024 14:01:02 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6139
-
-On Sat, Sep 28, 2024 at 05:54:36PM +0200, Adrian DC wrote:
-> From: Javier Tia <javier.tia@linaro.org>
-> 
-> When ccache is enabled trusted-firmware-a recipe fails with this
-> error message:
-> 
->     make: *** No rule to make target 'aarch64-poky-linux-gcc'. Stop.
-> 
-> ccache prefix CC variable with 'ccache' word before compiler. Because
-> there are no quotes assigned to CC, only 'ccache' is assigned. The
-> compiler becomes a make target, producing the build error.
-> 
-> Add single quotes to LD is a good measure to prevent this kind of error.
-> 
-> Signed-off-by: Javier Tia <javier.tia@linaro.org>
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
-> Signed-off-by: Adrian DC <radian.dc@gmail.com>
-
-I have questions about this patch's origins, given the above s-o-b's.
-Signed-off-by's state an authorship or handling (see Developer’s
-Certificate of Origin).  Since I have not seen this patch, I should
-not be listed.  It's on me to add my s-o-b.  Also, the ordering tends
-to matter, as each person handling the patch adds their s-o-b at the
-end of the patch.  So, you should be second, since you are taking this
-from Javier and submitting it for him (nd I would be last since
-I'mtaking it from you).
-
-Also, this feels like it needs a "Fixes:" line.  So, I know how far to
-pull this back in the stable branches.
-
-Finally, I find it weird that Javier isn't submitting this himself.
-Javier appears to be the author, and it includes his Linaro emaila
-ddress, and you are sending it from a gmail account.  Are you
-co-authors?  Are you sending it with his approval because he is
-busy/vacationing/ill?
-
-Overall the patch is fine and I would normally include it, but this is
-weird to me.  If Javier acks it to confirm his authoer, then I'll move
-my s-o-b to the end and include it.
-
-Thanks,
-Jon
+ <meta-arm@lists.yoctoproject.org>; Mon, 30 Sep 2024 16:24:52 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6140
 
 
-> ---
->  .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc     | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Fri, 27 Sep 2024 16:49:15 +0100, ali.oezaslan@arm.com wrote:
+> From: Ali Can Ozaslan <ali.oezaslan@arm.com>
 > 
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> index 2e3b50c5..5d3da59b 100644
-> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> @@ -101,9 +101,9 @@ def remove_options_tail (in_string):
->      from itertools import takewhile
->      return ' '.join(takewhile(lambda x: not x.startswith('-'), in_string.split(' ')))
->  
-> -EXTRA_OEMAKE += "LD=${@remove_options_tail(d.getVar('LD'))}"
-> +EXTRA_OEMAKE += "LD='${@remove_options_tail(d.getVar('LD'))}'"
->  
-> -EXTRA_OEMAKE += "CC=${@remove_options_tail(d.getVar('CC'))}"
-> +EXTRA_OEMAKE += "CC='${@remove_options_tail(d.getVar('CC'))}'"
->  
->  # Verbose builds, no -Werror
->  EXTRA_OEMAKE += "V=1 E=0"
-> -- 
-> 2.43.0
+> This MR just changes the upstream status for OP-TEE patch.
 > 
+> Ali Can Ozaslan (1):
+>   arm-bsp/optee: corstone1000: Update upstream status
 > 
+> [...]
+
+Applied, thanks!
+
+[1/1] arm-bsp/optee: corstone1000: Update upstream status
+      commit: 94c54c4f57a53119c07859df7e2bf3c54a0833c8
+
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
