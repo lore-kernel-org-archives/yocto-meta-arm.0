@@ -1,139 +1,124 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF806CE7D0B
-	for <webhook@archiver.kernel.org>; Tue,  1 Oct 2024 10:18:58 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.78123.1727777930473137776
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8528FCEACDD
+	for <webhook@archiver.kernel.org>; Tue,  1 Oct 2024 15:10:00 +0000 (UTC)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+ by mx.groups.io with SMTP id smtpd.web11.84279.1727795390895648594
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 01 Oct 2024 03:18:50 -0700
+ Tue, 01 Oct 2024 08:09:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C603339
-	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Oct 2024 03:19:19 -0700 (PDT)
-Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 872A83F58B
-	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Oct 2024 03:18:49 -0700 (PDT)
-From: Ross Burton <ross.burton@arm.com>
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=nukx55P2;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.181, mailfrom: jdmason@kudzu.us)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e251eda7f03so4645181276.0
+        for <meta-arm@lists.yoctoproject.org>; Tue, 01 Oct 2024 08:09:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1727795390; x=1728400190; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/wUPPW5ly/bZ6n58nmQjyKgR5yla4YDhrWIuZWk/qRA=;
+        b=nukx55P2uj1sbuL4rkCeNWWB0tNlxlpua9kjqr0PvFEtq96y2Q/wfZTorzrQzluEU5
+         agalYFM04Ej0TIq/Sz/4HtyXn1HFOQDryXjqKgfkvEHpP8YyIQtpYz2nlzbpwG8MUaQZ
+         QAaAmKJuykcKrEiKlDCJVU6uKM1gvH1hbCfAjpBaBsp8Aah4wfKDmP63nT0onEf/DliP
+         c1XqKqVMrrlNWblKON9MUvMUda3p269k9eDtEf/xwfEpLYuITgThbAeLIXWDJP4S8qMS
+         fBzwclc1AjO9mgoPrG7O5EmbTPmMZQjAUdpKl6HiFwON9QljLZGP9IYDijqkq8cUP4rU
+         rJvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727795390; x=1728400190;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/wUPPW5ly/bZ6n58nmQjyKgR5yla4YDhrWIuZWk/qRA=;
+        b=gqy9HMgIeBX3J5XsbzGdSCFnGHePnKTelWNSnNchngnzvddG3hHUb9kKvtOlwd7y/N
+         XWUHtngXgXBqQz1AT8u+H/aYEpO9esuXyXFlgyyRuDEsoLA6YrWEFcKInJruZ4+whC/H
+         TVe/xjm3XLvHii8saRm9GAi4ufUJlKcsq410+t5eok3fsP8+pM9sMdaW2rSCyc+mKLds
+         rk7wFLjL/gZkP6qRizQEzDI30ZjHgpwGBXiQi63WCiYmqwuMPWT8M6J6bnQ8+xgfu437
+         cHYzydSmdX7PG8AYf7+D2wHrHlwc9JY+3oGY8ph3YU9ofNPN2hRRgWlkv/2nv8cNiZA5
+         EyqA==
+X-Gm-Message-State: AOJu0YwN4gZLfde9ajAXB6ysJlt1pp++oqZQpndj5RxZwec92y1pKhOI
+	8q8Q9yjh0ytOo+ItqPtmryhyAUz/6+hc/dJUBwdQPff8cg0dqTRXbkSjuYldTZ8Lkp1IHaj33tQ
+	=
+X-Google-Smtp-Source: AGHT+IH9+8yu7hdcaaao0AooTbmXpvZD+b+aV+W4bcXMPyMjrGGuYfP9Pc1FQ76ft8hUhPa7htv7Gg==
+X-Received: by 2002:a25:d893:0:b0:e20:2da6:ed88 with SMTP id 3f1490d57ef6-e262c07f8famr2866026276.24.1727795389698;
+        Tue, 01 Oct 2024 08:09:49 -0700 (PDT)
+Received: from localhost ([136.54.20.50])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e25e6294af6sm3213652276.49.2024.10.01.08.09.49
+        for <meta-arm@lists.yoctoproject.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2024 08:09:49 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH][master] arm-base/linux-yocto: revert interim 6.10 patch for fvp-base
-Date: Tue,  1 Oct 2024 11:18:44 +0100
-Message-Id: <20241001101844.505373-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH] Revert "CI: switch to building against styhead branches where possible"
+Date: Tue,  1 Oct 2024 11:09:48 -0400
+Message-Id: <20241001150948.3543360-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.5
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 01 Oct 2024 10:18:58 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6153
+ <meta-arm@lists.yoctoproject.org>; Tue, 01 Oct 2024 15:10:00 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6154
 
-oe-core master now has 6.10.11 which incorporates this patch, so we don't
-need to carry it anymore.
+This reverts commit 2b1348d74f9fb4e49ece3a8a0107307ec432f392.
 
-This reverts commit 60fd47edd0f4757c11554848d717283f06c8c846.
-
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+Revert to allow the meta-arm master branch to use the master branch of
+other layers.
 ---
- ...gso-csum-offset-check-in-virtio_net_.patch | 59 -------------------
- .../linux/linux-arm-platforms.inc             |  1 -
- 2 files changed, 60 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001=
--net-tighten-bad-gso-csum-offset-check-in-virtio_net_.patch
+ ci/base.yml                | 2 +-
+ ci/clang.yml               | 1 -
+ ci/meta-secure-core.yml    | 1 -
+ ci/meta-virtualization.yml | 1 -
+ 4 files changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001-net-ti=
-ghten-bad-gso-csum-offset-check-in-virtio_net_.patch b/meta-arm-bsp/recip=
-es-kernel/linux/files/fvp-base/0001-net-tighten-bad-gso-csum-offset-check=
--in-virtio_net_.patch
-deleted file mode 100644
-index 9985d579..00000000
---- a/meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001-net-tighten-b=
-ad-gso-csum-offset-check-in-virtio_net_.patch
-+++ /dev/null
-@@ -1,59 +0,0 @@
--From 6513eb3d3191574b58859ef2d6dc26c0277c6f81 Mon Sep 17 00:00:00 2001
--From: Willem de Bruijn <willemb@google.com>
--Date: Tue, 10 Sep 2024 17:35:35 -0400
--Subject: [PATCH] net: tighten bad gso csum offset check in virtio_net_hd=
-r
--
--The referenced commit drops bad input, but has false positives.
--Tighten the check to avoid these.
--
--The check detects illegal checksum offload requests, which produce
--csum_start/csum_off beyond end of packet after segmentation.
--
--But it is based on two incorrect assumptions:
--
--1. virtio_net_hdr_to_skb with VIRTIO_NET_HDR_GSO_TCP[46] implies GSO.
--True in callers that inject into the tx path, such as tap.
--But false in callers that inject into rx, like virtio-net.
--Here, the flags indicate GRO, and CHECKSUM_UNNECESSARY or
--CHECKSUM_NONE without VIRTIO_NET_HDR_F_NEEDS_CSUM is normal.
--
--2. TSO requires checksum offload, i.e., ip_summed =3D=3D CHECKSUM_PARTIA=
-L.
--False, as tcp[46]_gso_segment will fix up csum_start and offset for
--all other ip_summed by calling __tcp_v4_send_check.
--
--Because of 2, we can limit the scope of the fix to virtio_net_hdr
--that do try to set these fields, with a bogus value.
--
--Link: https://lore.kernel.org/netdev/20240909094527.GA3048202@port70.net=
-/
--Fixes: 89add40066f9 ("net: drop bad gso csum_start and offset in virtio_=
-net_hdr")
--Signed-off-by: Willem de Bruijn <willemb@google.com>
--Acked-by: Jason Wang <jasowang@redhat.com>
--Acked-by: Michael S. Tsirkin <mst@redhat.com>
--Cc: stable@vger.kernel.org
--Link: https://patch.msgid.link/20240910213553.839926-1-willemdebruijn.ke=
-rnel@gmail.com
--Signed-off-by: Jakub Kicinski <kuba@kernel.org>
--
--Upstream-Status: Backport
--Signed-off-by: Jon Mason <jon.mason@arm.com>
--
-----
-- include/linux/virtio_net.h | 3 ++-
-- 1 file changed, 2 insertions(+), 1 deletion(-)
--
--diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
--index 6c395a2600e8..276ca543ef44 100644
----- a/include/linux/virtio_net.h
--+++ b/include/linux/virtio_net.h
--@@ -173,7 +173,8 @@ static inline int virtio_net_hdr_to_skb(struct sk_bu=
-ff *skb,
-- 			break;
-- 		case SKB_GSO_TCPV4:
-- 		case SKB_GSO_TCPV6:
---			if (skb->csum_offset !=3D offsetof(struct tcphdr, check))
--+			if (skb->ip_summed =3D=3D CHECKSUM_PARTIAL &&
--+			    skb->csum_offset !=3D offsetof(struct tcphdr, check))
-- 				return -EINVAL;
-- 			break;
-- 		}
----=20
--2.39.2
--
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/=
-meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-index ac7bcf7a..01803ba2 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-@@ -65,7 +65,6 @@ KMACHINE:fvp-base =3D "fvp"
- FILESEXTRAPATHS:prepend:fvp-base :=3D "${ARMBSPFILESPATHS}:${ARMFILESPAT=
-HS}"
- SRC_URI:append:fvp-base =3D " \
-     file://0001-arm64-dts-fvp-Enable-virtio-rng-support.patch \
--    file://0001-net-tighten-bad-gso-csum-offset-check-in-virtio_net_.pat=
-ch \
-     file://tee.cfg \
-     ${@bb.utils.contains('MACHINE_FEATURES', 'ts-smm-gateway', \
-                          'file://no-strict-devmem.cfg', '' , d)} \
---=20
-2.34.1
+diff --git a/ci/base.yml b/ci/base.yml
+index 7b550dbfa283..d1c933d027ae 100644
+--- a/ci/base.yml
++++ b/ci/base.yml
+@@ -7,7 +7,7 @@ distro: poky
+ 
+ defaults:
+   repos:
+-    branch: styhead
++    branch: master
+ 
+ repos:
+   meta-arm:
+diff --git a/ci/clang.yml b/ci/clang.yml
+index 7dd5d522a162..402292a6b86d 100644
+--- a/ci/clang.yml
++++ b/ci/clang.yml
+@@ -6,7 +6,6 @@ header:
+ repos:
+   meta-clang:
+     url: https://github.com/kraj/meta-clang
+-    branch: master
+ 
+ local_conf_header:
+   toolchain: |
+diff --git a/ci/meta-secure-core.yml b/ci/meta-secure-core.yml
+index 81280e737575..b34562b267cc 100644
+--- a/ci/meta-secure-core.yml
++++ b/ci/meta-secure-core.yml
+@@ -6,7 +6,6 @@ header:
+ repos:
+   meta-secure-core:
+     url: https://github.com/Wind-River/meta-secure-core.git
+-    branch: master
+     layers:
+       meta-secure-core-common:
+       meta-signing-key:
+diff --git a/ci/meta-virtualization.yml b/ci/meta-virtualization.yml
+index d699d70a7fa3..c0ba70ba8e52 100644
+--- a/ci/meta-virtualization.yml
++++ b/ci/meta-virtualization.yml
+@@ -8,4 +8,3 @@ header:
+ repos:
+   meta-virtualization:
+     url: https://git.yoctoproject.org/meta-virtualization
+-    branch: master
+-- 
+2.39.5
 
 
