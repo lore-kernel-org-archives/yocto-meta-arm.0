@@ -1,223 +1,181 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C32CF31B9
-	for <webhook@archiver.kernel.org>; Wed,  2 Oct 2024 13:07:54 +0000 (UTC)
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
- by mx.groups.io with SMTP id smtpd.web11.6809.1727874469836774150
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92434CF34C9
+	for <webhook@archiver.kernel.org>; Thu,  3 Oct 2024 21:33:49 +0000 (UTC)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+ by mx.groups.io with SMTP id smtpd.web11.8383.1727991228879798586
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 02 Oct 2024 06:07:50 -0700
+ Thu, 03 Oct 2024 14:33:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=qJS6A1n+;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.43, mailfrom: jdmason@kudzu.us)
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2876ef56d8bso809205fac.3
-        for <meta-arm@lists.yoctoproject.org>; Wed, 02 Oct 2024 06:07:49 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=lj1bbyp1;
+ spf=pass (domain: linaro.org, ip: 209.85.217.51, mailfrom: javier.tia@linaro.org)
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4a3bbd17d2eso839264137.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 03 Oct 2024 14:33:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1727874469; x=1728479269; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZBrFYrcoWRHEVL5FIP3T5/+9wQKMR6L231Ok6s+Nz9A=;
-        b=qJS6A1n++qwrds99NVXqw3zQaac3/leMLn4eQTVs5JsfYCtdQfDgOo4pDoORLQNwdy
-         ExFxYo2ubqpkPu53PJ0wvLw1mb1GpSfQy3vrYo4Q8kwqHty/EBy/P6rrb/I4Y43nc4pZ
-         21hYcbiPS2dhQr5Jmk/N6pgwEZ1S1+aqX8sBNUJF72PxmI/JdKdKtB5GPC6OCDY+mNOn
-         BRNp3U+S/srDt7DTcL9zkxbpqvQFijgoZSsL5Ft2uVEVv14l07Q55xDJuyGfcKfHGaJ/
-         QA9MGZxAiTX9WI89OQgzWWu4pTGi4//zAQeGp/aUj4+S3zbwdW/9wvMCJxvVoXo4U0lp
-         WZZA==
+        d=linaro.org; s=google; t=1727991228; x=1728596028; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S96oEITvkC7D6DYnptIjxTjro7qwAVV1j6SKa95rbaw=;
+        b=lj1bbyp1yTxB5rJTh6YIg/Jpl2Q0NKRFC4PYA//F7lLlpOVHINhQ9uU6fC6Fpkhs4f
+         0D8mgdQ5AUv+g+utDfEiQSavTxkLUVg0803lBatTi//ZHvwIRBa1NB/HqgsoDxTE54ss
+         J1ltAQntazu6BUsoWaDQGPSOJQHUJ4Wyj5C4AcoBruyh4Ja6PSnZNn8h5kMKyuT7BqhN
+         r4+qogAIDolpUVO8macB3A39M0uZvpVn/AhdPPIG85m6Tpv6nM+9MCldOikq+v2n3j1d
+         xsGr1OORolFi9Cv/lBCi8irsnJ/TJDh3HyeayH1dqgy48bIwqR+ElKT+DqDFuqzP+Whu
+         BOnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727874469; x=1728479269;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZBrFYrcoWRHEVL5FIP3T5/+9wQKMR6L231Ok6s+Nz9A=;
-        b=dlLZurB4YXblJU6j9y8MaFvfYQDXGdprjQjuGIrbhpVFup2gl6rlNtlQYGDqjSIpXP
-         0rT4dnZaKXllFiO/w9IRgskmuITQ9Q/3bmY/3fexKInjcQUJEHzs9pT1xVo20pgTjndJ
-         JuC74D2NgVq94sFDJMzNB3MiqZub4fdhi3J+t/oRtAlwS7g8jPsc+xLnxbCAWzQVMf9A
-         JrmyfOiqFhZ78CDjHUDSmBgLXbA0FrfI78+QMIKYXc+EgsxV0TlSwzaom1xsPFg3FhVU
-         jEkOiSbgaMSJ+awMjc3rGQwh7ThrNiwzShU+g5nGjd/urs4Uzss+FSlicGGuMVtTwap8
-         gG5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVoFNtRvySUaK/oD45d86r1af9F1qDqFKl4p/fXrgNDZj6y5r2T2VfKXrd2pPaD1H75xsOetQIuZQ==@lists.yoctoproject.org
-X-Gm-Message-State: AOJu0Yw9s9NMetJstoDbikYZgFxEnCYj8aMCYHX3t225PfmANVYSLUl1
-	gFAvmUpRBsdmSLpPmKR3KBJuyFKoidis25VEKLQONcGKEk+cxmO0YveXXW7QUITABtENF4O7SH9
-	qgdjdkVQ//DEAD8uPRG+S/7s/F/3dGOx3AB2E
-X-Google-Smtp-Source: AGHT+IHNRNZQyZdhGp178OrhZ72kzMupwJSGmiOy+QCujKyiJB15VxTnBcWWXLM90FAPX2rXejqaDL+5iLbDGNhHqEM=
-X-Received: by 2002:a05:6870:1609:b0:286:f74a:93cc with SMTP id
- 586e51a60fabf-28788a0ac2bmr1878558fac.2.1727874468939; Wed, 02 Oct 2024
- 06:07:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1727991228; x=1728596028;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S96oEITvkC7D6DYnptIjxTjro7qwAVV1j6SKa95rbaw=;
+        b=ceVvx3bA3q8Jes9ZK4sHl50gvGVVSA4UPo0SB65FPja4klKtOVNxcnqRkKfoMflQ1E
+         gq8Bb2qJ6GSl7kHJQVZfq3akx59dJAwhN5ot3Atj7GW5fKmILeMvaCW0+zr9VsnOPtzB
+         C8KMXpn3UNRJ5/UjEMBvc68GO/p832ccVErz9cYmhDJK3+6LGjJ0Lhiidd2fCExUAwJw
+         XrsR8mRV1XsaUwpcm8N+o9O+bC92oJ8dVnZbOA6dbxhwckP9coLGc/P18qUZd7D19QMG
+         z0KB375s2ZXJbAJvcmQ7Ww7NWl18X7nuoksr1R13fpIaWVsOAURN1NSO4guJmZAf3oMS
+         Aw+w==
+X-Gm-Message-State: AOJu0YyfEVocqbP89upcqFI2h/0uABuvEYt3DTaSivpyhVj8FIrN9jae
+	+pib7cRANfE7L/9Ghb7A7IgH6nAX2DHItb+D29/RlR2WS8i0YgJrjoBeiQw3TQxiq7+iA5U5ClG
+	l
+X-Google-Smtp-Source: AGHT+IFoQtjryofaHsEFIf8K9girS+8vZ9TBCK0rB2o3fk03YnAcX9yIH8pvoQe8wtLNo8gO4rP+wA==
+X-Received: by 2002:a05:6102:5092:b0:4a3:af39:c05d with SMTP id ada2fe7eead31-4a3f4c373c4mr3727317137.0.1727991227629;
+        Thu, 03 Oct 2024 14:33:47 -0700 (PDT)
+Received: from jetm-rog-x670e-gene.lan ([170.246.157.153])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4a3f9bad33esm287545137.13.2024.10.03.14.33.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2024 14:33:46 -0700 (PDT)
+From: Javier Tia <javier.tia@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
+	Ross Burton <Ross.Burton@arm.com>,
+	Jon Mason <jon.mason@arm.com>,
+	Javier Tia <javier.tia@linaro.org>
+Subject: [PATCH v8 0/2] Add UEFI Secure Boot
+Date: Thu,  3 Oct 2024 15:33:28 -0600
+Message-ID: <20241003213330.627644-1-javier.tia@linaro.org>
+X-Mailer: git-send-email 2.46.2
 MIME-Version: 1.0
-References: <20240928155436.1145975-1-radian.dc@gmail.com> <ZvqvFhYoRXQ9RQ4H@kudzu.us>
- <7afc0d4f-cf91-4750-93a3-3fc9c9a1b364@linaro.org> <CAPoiz9xr1DyEP-XWCRK_uhShDbb0kRrfcw8V8PL_CGwcCAP2PA@mail.gmail.com>
- <c5d876bf-2c3e-4fe2-8ebb-92dec0a0a3f5@gmail.com>
-In-Reply-To: <c5d876bf-2c3e-4fe2-8ebb-92dec0a0a3f5@gmail.com>
-From: Jon Mason <jdmason@kudzu.us>
-Date: Wed, 2 Oct 2024 09:07:38 -0400
-Message-ID: <CAPoiz9wVJSHMz_5NaUz3ZrGdO9yYX95iKURsSob=7dVL2KcpQg@mail.gmail.com>
-Subject: Re: [PATCH] trusted-firmware-a: fix build error when using ccache
-To: Adrian DC <radian.dc@gmail.com>
-Cc: Javier Tia <javier.tia@linaro.org>, meta-arm@lists.yoctoproject.org, 
-	Jon Mason <jon.mason@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 02 Oct 2024 13:07:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6162
+ <meta-arm@lists.yoctoproject.org>; Thu, 03 Oct 2024 21:33:49 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6163
 
-On Mon, Sep 30, 2024 at 9:56=E2=80=AFPM Adrian DC <radian.dc@gmail.com> wro=
-te:
->
-> Hi,
->
-> Sorry I wasn't available to respond earlier.
->
-> Apparently the details I added after the initial send got lost.
->
-> - Original commit : nanbield and scarthgap (f2efb2a45610216cb6c2d72bdb5d5=
-e61b990064a as you pointed out)
-> - Missing on : kirkstone and mickledore
-> - Tested on : kirkstone with CCache enabled
->
-> The cherry-pick was over kirkstone, without any changes except validation=
- hence signoff (old Android System habits),
-> proposal was to apply the fix on kirkstone (being LTS and used by most SO=
-M providers for now).
+Hi,
 
-No problem.  We only take patches for Yocto Project officially
-supported releases.  See
-https://wiki.yoctoproject.org/wiki/Releases
+Addressing comments from patch series v7.
 
-The logic behind this decision is:
-1.  We don't want to give the false impression that we support or test
-releases that are EOL'ed
-2.  We don't want to encourage developers/users to use releases which
-are no longer getting security updates
-3.  Some of them are currently broken and upstream will not take
-patches to fix this (broken download locations)
+Introduce uefi-secureboot.yml as an addon to add UEFI Secure Boot. Most
+of changes are backported from meta-ts.
 
-So, I'll only backport this to kirkstone.  Throwing at CI now to
-verify it doesn't break anything.
+UEFI Secure Boot requirements:
 
-Per Denys's comment, if you put the release you want this applied to
-in the subject line, then I have scripts that automatically apply it
-and run CI on it.
+  - Create a UEFI disk partition to copy EFI apps.
 
-Thanks,
-Jon
+  - Add UEFI settings to U-Boot, systemd-boot, and Linux kernel.
 
+  - Set up UEFI keys that are to be stored in U-Boot and used to sign
+    systemd-boot and Linux kernel images.
 
-> Thanks for your concern,
->
-> Adrian DC
->
->
-> On 01/10/2024 01:02, Jon Mason wrote:
->
-> On Mon, Sep 30, 2024 at 6:47=E2=80=AFPM Javier Tia <javier.tia@linaro.org=
-> wrote:
->
-> Hi,
->
-> On 9/30/24 8:00 AM, Jon Mason wrote:
->
-> On Sat, Sep 28, 2024 at 05:54:36PM +0200, Adrian DC wrote:
->
-> From: Javier Tia <javier.tia@linaro.org>
->
-> When ccache is enabled trusted-firmware-a recipe fails with this
-> error message:
->
->      make: *** No rule to make target 'aarch64-poky-linux-gcc'. Stop.
->
-> ccache prefix CC variable with 'ccache' word before compiler. Because
-> there are no quotes assigned to CC, only 'ccache' is assigned. The
-> compiler becomes a make target, producing the build error.
->
-> Add single quotes to LD is a good measure to prevent this kind of error.
->
-> Signed-off-by: Javier Tia <javier.tia@linaro.org>
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
-> Signed-off-by: Adrian DC <radian.dc@gmail.com>
->
-> I have questions about this patch's origins, given the above s-o-b's.
-> Signed-off-by's state an authorship or handling (see Developer=E2=80=99s
-> Certificate of Origin).  Since I have not seen this patch, I should
-> not be listed.  It's on me to add my s-o-b.  Also, the ordering tends
-> to matter, as each person handling the patch adds their s-o-b at the
-> end of the patch.  So, you should be second, since you are taking this
-> from Javier and submitting it for him (nd I would be last since
-> I'mtaking it from you).
->
-> Also, this feels like it needs a "Fixes:" line.  So, I know how far to
-> pull this back in the stable branches.
->
-> Finally, I find it weird that Javier isn't submitting this himself.
-> Javier appears to be the author, and it includes his Linaro emaila
-> ddress, and you are sending it from a gmail account.  Are you
-> co-authors?  Are you sending it with his approval because he is
-> busy/vacationing/ill?
->
-> Overall the patch is fine and I would normally include it, but this is
-> weird to me.  If Javier acks it to confirm his authoer, then I'll move
-> my s-o-b to the end and include it.
->
-> Oh, this is a surprise.
->
-> Jon has a good point.
->
-> I have not approved sending this patch on my behalf. Yes, it looks like I=
- am the original author because I recall fixing some issues around ccache a=
- time ago; maybe last year if I remember correctly. But, before I acked it,=
- I would like to know from where it was taken to have a bit more context. U=
-RL? Was the patch accepted or rejected?
->
-> I think I know what might've happened.  It's already in the tree
-> (commit f2efb2a45610216cb6c2d72bdb5d5e61b990064a).
-> I'm guessing that Adrian accidentally sent it to this list while
-> trying to backport it to an older release.  I got overly concerned
-> with the s-o-b lines and didn't think to check what it wasn't applying
-> :)
->
-> Anyway, I think we can disregard this.
->
-> Thanks,
-> Jon
->
->   >
->
-> Jon
->
->
-> ---
->   .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc     | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.i=
-nc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> index 2e3b50c5..5d3da59b 100644
-> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> @@ -101,9 +101,9 @@ def remove_options_tail (in_string):
->       from itertools import takewhile
->       return ' '.join(takewhile(lambda x: not x.startswith('-'), in_strin=
-g.split(' ')))
->
-> -EXTRA_OEMAKE +=3D "LD=3D${@remove_options_tail(d.getVar('LD'))}"
-> +EXTRA_OEMAKE +=3D "LD=3D'${@remove_options_tail(d.getVar('LD'))}'"
->
-> -EXTRA_OEMAKE +=3D "CC=3D${@remove_options_tail(d.getVar('CC'))}"
-> +EXTRA_OEMAKE +=3D "CC=3D'${@remove_options_tail(d.getVar('CC'))}'"
->
->   # Verbose builds, no -Werror
->   EXTRA_OEMAKE +=3D "V=3D1 E=3D0"
-> --
-> 2.43.0
->
->
-> Thanks,
->
-> =C2=BB Javier Tia =F0=9F=96=8B
->
->
+  - Add systemd as Init manager. systemd's modern architecture,
+    integrated security features, and enhanced management capabilities
+    make it a more suitable choice for systems using UEFI Secure Boot
+
+Introduce uefi-secureboot machine feature.
+
+Build and verification steps:
+
+$ kas build ci/qemuarm64-secureboot.yml:ci/meta-secure-core.yml:ci/uefi-secureboot.yml:ci/testimage.yml
+
+---
+
+Changes since v7:
+- Remove gen-sbkeys recipe. It was merged on meta-secure-core.
+- Replace efivar with coreutils command to reduce dependency.
+
+Changes since v6:
+- Add optee udev rules to fix OE optee and ftpm tests failures.
+- Fix tee-supplicant@.service to make it started in initrd. Disable ftpm
+  kernel module after stopping the service. Start service before
+  tpm2.target.
+- Move u-boot confs from meta-arm-bsp to meta-arm.
+
+Changes since v5:
+- Use uefi-secureboot.yml as an addon, taken out of
+  qemuarm64-secureboot.yml.
+- Comment Secure Boot keys setup in gen-sbkeys.sh.
+- Set up CI to build and test UEFI Secure Boot.
+
+Changes since v4:
+- Big refactor to only two commits to add Secure Boot in all required
+  recipes and enable it in qemuarm64-secureboot.
+- Fix the generation of SB keys in build time.
+- Remove the need to pass the keys in each recipe, as all the keys will
+  be generated in one directory.
+- Introduce uefi-secureboot.yml with all required settings for Secure
+  Boot.
+- Do several renamings to keep name consistency.
+- Explain why systemd is used as the Init Manager.
+- Revert the change using core-image-minimal; keep using
+  core-image-base.
+
+Changes since v3:
+- For image creation, use core-image-minimal instead of core-image-base.
+
+Changes since v2:
+- Remove commit "qemuarm64-secureboot.yml: Set branch to scarthgap".
+
+Changes since v1:
+- Rework all subject commits to follow OE, Yocto, and meta-arm
+  guidelines.
+- Add gen-uefi-sb-keys.bb recipe to generate UEFI keys.
+- Add an OE test to validate UEFI Secure Boot.
+- Simplify gen_uefi_keys.sh to avoid code repetition.
+- Replace grub with systemd-boot.
+- Simplify signing binary images with sbsign class.
+- Set OE branch to Scarthgap.
+
+Changes since the v0:
+- Remove u-boot recipe.
+- Split the change in several commits.
+- Remove sample UEFI keys.
+- Validate UEFI keys exist before building.
+- Insolate most of changes under uefi-secureboot machine feature.
+
+Javier Tia (2):
+  arm: Enable Secure Boot in all required recipes
+  arm/qemuarm64-secureboot: Enable UEFI Secure Boot
+
+ .gitlab-ci.yml                                |  1 +
+ ci/uefi-secureboot.yml                        | 36 +++++++++++++++++++
+ meta-arm/classes/sbsign.bbclass               | 31 ++++++++++++++++
+ .../lib/oeqa/runtime/cases/uefi_secureboot.py | 29 +++++++++++++++
+ .../u-boot/u-boot-uefi-secureboot.inc         | 17 +++++++++
+ .../u-boot/u-boot/uefi-secureboot.cfg         | 10 ++++++
+ meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend |  2 ++
+ .../systemd/systemd-boot-uefi-secureboot.inc  |  7 ++++
+ .../systemd/systemd-boot_%.bbappend           |  1 +
+ meta-arm/recipes-core/systemd/systemd-efi.inc |  1 +
+ .../recipes-core/systemd/systemd_%.bbappend   |  1 +
+ .../linux/linux-yocto%.bbappend               |  2 ++
+ .../linux/linux-yocto-uefi-secureboot.inc     | 14 ++++++++
+ 13 files changed, 152 insertions(+)
+ create mode 100644 ci/uefi-secureboot.yml
+ create mode 100644 meta-arm/classes/sbsign.bbclass
+ create mode 100644 meta-arm/lib/oeqa/runtime/cases/uefi_secureboot.py
+ create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
+ create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg
+ create mode 100644 meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
+ create mode 100644 meta-arm/recipes-core/systemd/systemd-boot_%.bbappend
+ create mode 100644 meta-arm/recipes-core/systemd/systemd-efi.inc
+ create mode 100644 meta-arm/recipes-core/systemd/systemd_%.bbappend
+ create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
+
+-- 
+2.46.2
+
 
