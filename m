@@ -2,216 +2,252 @@ Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D976CF34CA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 712AACF34CB
 	for <webhook@archiver.kernel.org>; Thu,  3 Oct 2024 21:33:59 +0000 (UTC)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
- by mx.groups.io with SMTP id smtpd.web10.8291.1727991232180168104
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+ by mx.groups.io with SMTP id smtpd.web11.8384.1727991230218014592
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 03 Oct 2024 14:33:52 -0700
+ Thu, 03 Oct 2024 14:33:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=zTBmSxQw;
- spf=pass (domain: linaro.org, ip: 209.85.217.43, mailfrom: javier.tia@linaro.org)
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4a28a1ae1adso545824137.3
-        for <meta-arm@lists.yoctoproject.org>; Thu, 03 Oct 2024 14:33:51 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=TuYo1rUb;
+ spf=pass (domain: linaro.org, ip: 209.85.217.47, mailfrom: javier.tia@linaro.org)
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4a3b80e4b3dso1352512137.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 03 Oct 2024 14:33:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727991231; x=1728596031; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1727991229; x=1728596029; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Iox566YZPmfCMI9TqMPtHhEhrC0flA8NU9SYsQqRKGc=;
-        b=zTBmSxQwNKTU04cLZ4XFdgSntn59XBJXxpeKe2ZNnU5I4ybNJJMdD32D37GVXdH5Oq
-         cvC4FR3hX6cvI+NXx6D9mpvACEVWC9qnaU/jOKxRnvUQJ51ltmG/vL2x8Z8uriHtRCvV
-         2ooVVg9sSgL5Tp+VLM6E1lt2/kaNF8ZhqxgM9SwrKIJw5KSzYwam+TQcF95j0zAO5dtG
-         9WcafuAbkW+bra4BvqEkF+j8B8JYBNJbYaoUMhlGoQ+EcL213w3HzX/MDlgiUl5ax3F4
-         ut3f6Ske836ztnlw+9BncigOxWTgWv8Mlg+zw0HKMDHep+Pdr1HwUNeCykoON+isaufV
-         Q7Zw==
+        bh=jPv1KMt4+pLXhPOM0rpNwxbOzxGU/r8afYdCQdy+hUo=;
+        b=TuYo1rUbndAWfV7YOBcMjBrTgnah0hBtzEIqlMFInbeqLPDVsZoB8bIJpD5Vt9G5IS
+         TiEK53N2YOjf2UHA7ueTXtq5rjwqPvaZdYiNrK9rbi19Jby0VsxnbJ9QAcN5Py7RqmPn
+         EQEz+mHtZUXuQkrKMP2RTqQ+T0hbzNjhZMn0HLfzp6a+yveYXPQVfapRHmN2gOavq6GF
+         1fCDIfKlh88/Gyt3MpqbLZoreyqubKPBVt+TN2BA+LkiuCk3epC95y7+9pi/ZIu+Iye5
+         040Y+Vov+lDpZnP0H/TBbZUcm245gcW48y1/s/kOPNpiAfy++LAm/IUKwEKEO0WhZPGp
+         hI3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727991231; x=1728596031;
+        d=1e100.net; s=20230601; t=1727991229; x=1728596029;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Iox566YZPmfCMI9TqMPtHhEhrC0flA8NU9SYsQqRKGc=;
-        b=E42YP0r2oA4xLH77ViZW5HxpjJPRJM9rt6BkwJV/wz1ZObo8KBCWAc8zDMSsLdJ9ey
-         v1oYAbs/CoayQWkR50IM7y1/nWKlwF9GsvTyEf0wZ3La882SOCENjz2ejMUY2G7IE3JC
-         11gVVt1CEoPFu9d0uhmkWJkFptSGNVQKK43/2Y3kjLeQbzctOBHjyUnCCewo1QAhIpCf
-         xPYgI5c8BSgSoRrDm77+b94Z2Vq3JquqgNdUDEhNqlpaIhYqaNUAnLz7cjhE2HAILa79
-         WLuX44uFVePfHt4hsTwH4au5J4hO3xtfoS6/oflLtc7X4rfe8SzVfxGrn7cldvvnyLHJ
-         4qow==
-X-Gm-Message-State: AOJu0YwTpzz3w5vC817KyE6HksbbWfJah70RjmdEbr5hk98+vSiZ6nue
-	wAdUJGHPL6uvqjSNNhOA6ZdOAckA5gKxlLD0vmTPeFp5BYtbj6SvMtPrMFxXa6zdq6TA/iSqoMn
-	H
-X-Google-Smtp-Source: AGHT+IFZc4sqTyBdnBp7skbKjG8AoGquaERKSAgHGMqBrEkdinZ/A5hUPje4fgbAGMeOLvkjtUEjLg==
-X-Received: by 2002:a05:6102:f0b:b0:49b:f255:179a with SMTP id ada2fe7eead31-4a405749686mr769722137.5.1727991230682;
-        Thu, 03 Oct 2024 14:33:50 -0700 (PDT)
+        bh=jPv1KMt4+pLXhPOM0rpNwxbOzxGU/r8afYdCQdy+hUo=;
+        b=sx8anwqJFdHRojmfIYJm5sZFX/oT1Y6ZyCHD+mgs1b+zfHzU4A+oca85shtdRWmXrN
+         /4CPu+1yf2LBie98qvMQRKEKhqZgGOU/pzAGb59c3KdT6sBTlSXAn3Km3CrbYfIBzQPh
+         x07G615Wv6MgkECKckY+OrGaeH/QiQYd8mPQNQDJTWkFhyhShNykEBTETydtUGXwBGGi
+         3iIiVHjy+YurbVSKMIPRco++cgmjircTCv7eVOnPv2rDZZPsQoTnqejZtGnoz9mEUQMw
+         Cz7leRc4TUBkFYrf/mPAOXZ+evjbyp4Qdfi8KzqJUJ/v+Kvk3Co5d1CemO6c9cCSos5s
+         WaCw==
+X-Gm-Message-State: AOJu0YyjD58DzGr5Tfc8GYyyxGO0mq5EPO2qSjB729g2g/k+8hL2oX6U
+	/iSW5Rw6KDChn78PMQZ/O3QKt3oT4nDLrCnTD12loHtzXEDVydJj+1zM9ZkVk3uijVeRBsdiS09
+	w
+X-Google-Smtp-Source: AGHT+IFs607W/9OuhR0leXF/3CTX/ELxYYXjYLeCOVbWSUHmNT3kXSShqx5QWUedd2TL3SgUHrCfeA==
+X-Received: by 2002:a05:6102:2c8b:b0:4a4:532:82bc with SMTP id ada2fe7eead31-4a4053283f6mr736815137.8.1727991229042;
+        Thu, 03 Oct 2024 14:33:49 -0700 (PDT)
 Received: from jetm-rog-x670e-gene.lan ([170.246.157.153])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4a3f9bad33esm287545137.13.2024.10.03.14.33.49
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4a3f9bad33esm287545137.13.2024.10.03.14.33.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2024 14:33:50 -0700 (PDT)
+        Thu, 03 Oct 2024 14:33:48 -0700 (PDT)
 From: Javier Tia <javier.tia@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Ross Burton <Ross.Burton@arm.com>,
 	Jon Mason <jon.mason@arm.com>,
 	Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH v8 2/2] arm/qemuarm64-secureboot: Enable UEFI Secure Boot
-Date: Thu,  3 Oct 2024 15:33:30 -0600
-Message-ID: <20241003213330.627644-3-javier.tia@linaro.org>
+Subject: [PATCH v8 1/2] arm: Enable Secure Boot in all required recipes
+Date: Thu,  3 Oct 2024 15:33:29 -0600
+Message-ID: <20241003213330.627644-2-javier.tia@linaro.org>
 X-Mailer: git-send-email 2.46.2
 In-Reply-To: <20241003213330.627644-1-javier.tia@linaro.org>
 References: <20241003213330.627644-1-javier.tia@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 03 Oct 2024 21:33:59 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6165
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6164
 
-Encapsulate all UEFI Secure Boot required settings in one Kas
-configuration file.
+In the target, Secure Boot starts from the firmware (u-boot), adds the
+signing keys, and verifies the bootloader (systemd-boot) and kernel
+(Linux).
 
-Introduce SBSIGN_KEYS_DIR variable where UEFI keys will be generated
-to sign UEFI binaries. 
-
-Introduce uefi-secureboot machine feature, which is being used to
-conditionally set the proper UEFI settings in recipes.
-
-Replace Grub bootloader with systemd-boot, which it makes easier to
-enable Secure Boot.
-
-Advantages using systemd as Init Manager:
-
-- Extending secure boot to userspace is a lot easier with systemd than
-with sysvinit where custom scripts will need to be written for all use
-cases.
-
-- systemd supports dm-verity and TPM devices for encryption usecases out
-of the box. Enabling them is a lot easier than writing custom scripts
-for sysvinit.
-
-- systemd also supports EUFI signing the UKI binaries which merge kernel,
-command line and initrd which helps in bringing secure boot towards
-rootfs.
-
-- systemd offers a modular structure with unit files that are more
-predictable and easier to manage than the complex and varied scripts
-used by SysVinit. This modularity allows for better control and
-customization of the boot process, which is beneficial in Secure Boot
-environments.
-
-- Add CI settings to build and test UEFI Secure Boot.
-
-Add one test to verify Secure Boot using OE Testing infraestructure:
-
-$ kas build ci/qemuarm64-secureboot.yml:ci/meta-secure-core.yml:ci/uefi-secureboot.yml:ci/testimage.yml
-...
-RESULTS - uefi_secureboot.UEFI_SB_TestSuite.test_uefi_secureboot: PASSED (0.62s)
-...
-SUMMARY:
-core-image-base () - Ran 73 tests in 28.281s
-core-image-base - OK - All required tests passed (successes=19, skipped=54, failures=0, errors=0)
+sbsign bbclass is used to sign the binaries. sbsign is the name of the
+tool used to sign these binaries. Hence the name of this class to sbsign
+and variables with SBSIGN prefix.
 
 Signed-off-by: Javier Tia <javier.tia@linaro.org>
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .gitlab-ci.yml                                |  1 +
- ci/uefi-secureboot.yml                        | 36 +++++++++++++++++++
- .../lib/oeqa/runtime/cases/uefi_secureboot.py | 29 +++++++++++++++
- 3 files changed, 66 insertions(+)
- create mode 100644 ci/uefi-secureboot.yml
- create mode 100644 meta-arm/lib/oeqa/runtime/cases/uefi_secureboot.py
+ meta-arm/classes/sbsign.bbclass               | 31 +++++++++++++++++++
+ .../u-boot/u-boot-uefi-secureboot.inc         | 17 ++++++++++
+ .../u-boot/u-boot/uefi-secureboot.cfg         | 10 ++++++
+ meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend |  2 ++
+ .../systemd/systemd-boot-uefi-secureboot.inc  |  7 +++++
+ .../systemd/systemd-boot_%.bbappend           |  1 +
+ meta-arm/recipes-core/systemd/systemd-efi.inc |  1 +
+ .../recipes-core/systemd/systemd_%.bbappend   |  1 +
+ .../linux/linux-yocto%.bbappend               |  2 ++
+ .../linux/linux-yocto-uefi-secureboot.inc     | 14 +++++++++
+ 10 files changed, 86 insertions(+)
+ create mode 100644 meta-arm/classes/sbsign.bbclass
+ create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
+ create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg
+ create mode 100644 meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
+ create mode 100644 meta-arm/recipes-core/systemd/systemd-boot_%.bbappend
+ create mode 100644 meta-arm/recipes-core/systemd/systemd-efi.inc
+ create mode 100644 meta-arm/recipes-core/systemd/systemd_%.bbappend
+ create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index e37f9d20..fcdae9f4 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -264,6 +264,7 @@ qemuarm64-secureboot:
-         TOOLCHAINS: [gcc, clang]
-         TCLIBC: [glibc, musl]
-         TS: [none, qemuarm64-secureboot-ts]
-+        UEFISB: [none, uefi-secureboot]
-         TESTING: testimage
-       - KERNEL: linux-yocto-dev
-         TESTING: testimage
-diff --git a/ci/uefi-secureboot.yml b/ci/uefi-secureboot.yml
+diff --git a/meta-arm/classes/sbsign.bbclass b/meta-arm/classes/sbsign.bbclass
 new file mode 100644
-index 00000000..0684266f
+index 00000000..551b951d
 --- /dev/null
-+++ b/ci/uefi-secureboot.yml
-@@ -0,0 +1,36 @@
-+# yaml-language-server: $schema=https://raw.githubusercontent.com/siemens/kas/master/kas/schema-kas.json
++++ b/meta-arm/classes/sbsign.bbclass
+@@ -0,0 +1,31 @@
++# Sign binaries for UEFI Secure Boot
++#
++# Usage in recipes:
++#
++# Set binary to sign per recipe:
++# SBSIGN_TARGET_BINARY = "${B}/binary_to_sign"
++#
++# Then call do_sbsign() in correct stage of the build
++# do_compile:append() {
++#     do_sbsign
++# }
 +
-+# UEFI Secure Boot: A mechanism to ensure that only trusted software is executed
-+# during the boot process.
++DEPENDS += 'gen-sbkeys'
++DEPENDS += "sbsigntool-native"
 +
-+header:
-+  version: 14
-+  includes:
-+    - ci/meta-openembedded.yml
++SBSIGN_KEY = "${SBSIGN_KEYS_DIR}/db.key"
++SBSIGN_CERT = "${SBSIGN_KEYS_DIR}/db.crt"
++SBSIGN_TARGET_BINARY ?= "binary_to_sign"
 +
-+local_conf_header:
-+  uefi_secureboot: |
-+    SBSIGN_KEYS_DIR = "${TOPDIR}/sbkeys"
-+    BB_ENV_PASSTHROUGH_ADDITIONS = "SBSIGN_KEYS_DIR"
-+
-+    # Detected by passing kernel parameter
-+    QB_KERNEL_ROOT = ""
-+
-+    # kernel is in the image, should not be loaded separately
-+    QB_DEFAULT_KERNEL = "none"
-+
-+    WKS_FILE = "efi-disk.wks.in"
-+    KERNEL_IMAGETYPE = "Image"
-+
-+    MACHINE_FEATURES:append = " efi uefi-secureboot"
-+
-+    EFI_PROVIDER = "systemd-boot"
-+
-+    # Use systemd as the init system
-+    INIT_MANAGER = "systemd"
-+    DISTRO_FEATURES:append = " systemd"
-+    DISTRO_FEATURES_NATIVE:append = " systemd"
-+
-+    IMAGE_INSTALL:append = " systemd systemd-boot util-linux coreutils"
-+
-+    TEST_SUITES:append = " uefi_secureboot"
-\ No newline at end of file
-diff --git a/meta-arm/lib/oeqa/runtime/cases/uefi_secureboot.py b/meta-arm/lib/oeqa/runtime/cases/uefi_secureboot.py
++# Not adding as task since recipes may need to sign binaries at different
++# stages. Instead they can call this function when needed by calling this function
++do_sbsign() {
++    bbnote "Signing ${PN} binary ${SBSIGN_TARGET_BINARY} with ${SBSIGN_KEY} and ${SBSIGN_CERT}"
++    ${STAGING_BINDIR_NATIVE}/sbsign \
++        --key "${SBSIGN_KEY}" \
++        --cert "${SBSIGN_CERT}" \
++        --output  "${SBSIGN_TARGET_BINARY}.signed" \
++        "${SBSIGN_TARGET_BINARY}"
++    cp "${SBSIGN_TARGET_BINARY}" "${SBSIGN_TARGET_BINARY}.unsigned"
++    cp "${SBSIGN_TARGET_BINARY}.signed" "${SBSIGN_TARGET_BINARY}"
++}
+diff --git a/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc b/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
 new file mode 100644
-index 00000000..bdd97f5e
+index 00000000..e58035a9
 --- /dev/null
-+++ b/meta-arm/lib/oeqa/runtime/cases/uefi_secureboot.py
-@@ -0,0 +1,29 @@
-+#
-+# SPDX-License-Identifier: MIT
-+#
++++ b/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
+@@ -0,0 +1,17 @@
++FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 +
-+from oeqa.runtime.case import OERuntimeTestCase
-+from oeqa.core.decorator.oetimeout import OETimeout
++SRC_URI += "file://uefi-secureboot.cfg"
 +
++inherit sbsign
 +
-+class UEFI_SB_TestSuite(OERuntimeTestCase):
-+    """
-+    Validate Secure Boot is Enabled
-+    """
++DEPENDS += 'python3-pyopenssl-native'
 +
-+    @OETimeout(1300)
-+    def test_uefi_secureboot(self):
-+        # Validate Secure Boot is enabled by checking
-+        # 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot.
-+        # The GUID '8be4df61-93ca-11d2-aa0d-00e098032b8c' is a well-known
-+        # identifier for the Secure Boot UEFI variable. By checking the value of
-+        # this variable, specifically
-+        # '8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot', we can determine
-+        # whether Secure Boot is enabled or not. This variable is set by the
-+        # UEFI firmware to indicate the current Secure Boot state. If the
-+        # variable is set to a value of '0x1' (or '1'), it indicates that Secure
-+        # Boot is enabled. If the variable is set to a value of '0x0' (or '0'),
-+        # it indicates that Secure Boot is disabled.
-+        cmd = "echo $( od -t u2  -A n -j 4 -N 4 /sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c )"
-+        status, output = self.target.run(cmd, timeout=120)
-+        self.assertEqual(output, "1", msg="\n".join([cmd, output]))
++do_compile:prepend() {
++    export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
++
++    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n pk  -d "${SBSIGN_KEYS_DIR}"/PK.esl  -t file
++    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n kek -d "${SBSIGN_KEYS_DIR}"/KEK.esl -t file
++    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n db  -d "${SBSIGN_KEYS_DIR}"/db.esl  -t file
++    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n dbx -d "${SBSIGN_KEYS_DIR}"/dbx.esl -t file
++    "${S}"/tools/efivar.py print -i "${S}"/ubootefi.var
++}
+diff --git a/meta-arm/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg b/meta-arm/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg
+new file mode 100644
+index 00000000..acdcfddd
+--- /dev/null
++++ b/meta-arm/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg
+@@ -0,0 +1,10 @@
++CONFIG_CMD_BOOTMENU=y
++CONFIG_USE_BOOTCOMMAND=y
++CONFIG_BOOTCOMMAND="bootmenu"
++CONFIG_USE_PREBOOT=y
++CONFIG_EFI_VAR_BUF_SIZE=65536
++CONFIG_FIT_SIGNATURE=y
++CONFIG_EFI_SECURE_BOOT=y
++CONFIG_EFI_VARIABLES_PRESEED=y
++CONFIG_PREBOOT="setenv bootmenu_0 UEFI Boot Manager=bootefi bootmgr; setenv bootmenu_1 UEFI Maintenance Menu=eficonfig"
++CONFIG_PREBOOT_DEFINED=y
+diff --git a/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
+index 0683a783..8542ccfc 100644
+--- a/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
++++ b/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -2,3 +2,5 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+ 
+ SRC_URI:append:qemuarm64-secureboot = " file://qemuarm64.cfg"
+ SRC_URI:append:qemuarm-secureboot = " file://qemuarm.cfg"
++
++require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'u-boot-uefi-secureboot.inc', '', d)}
+diff --git a/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc b/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
+new file mode 100644
+index 00000000..84196a68
+--- /dev/null
++++ b/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
+@@ -0,0 +1,7 @@
++inherit sbsign
++
++SBSIGN_TARGET_BINARY = "${B}/src/boot/efi/systemd-boot${EFI_ARCH}.efi"
++
++do_compile:append() {
++    do_sbsign
++}
+diff --git a/meta-arm/recipes-core/systemd/systemd-boot_%.bbappend b/meta-arm/recipes-core/systemd/systemd-boot_%.bbappend
+new file mode 100644
+index 00000000..9850bbf9
+--- /dev/null
++++ b/meta-arm/recipes-core/systemd/systemd-boot_%.bbappend
+@@ -0,0 +1 @@
++require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'systemd-boot-uefi-secureboot.inc', '', d)}
+diff --git a/meta-arm/recipes-core/systemd/systemd-efi.inc b/meta-arm/recipes-core/systemd/systemd-efi.inc
+new file mode 100644
+index 00000000..5572e51a
+--- /dev/null
++++ b/meta-arm/recipes-core/systemd/systemd-efi.inc
+@@ -0,0 +1 @@
++PACKAGECONFIG:append = " efi"
+diff --git a/meta-arm/recipes-core/systemd/systemd_%.bbappend b/meta-arm/recipes-core/systemd/systemd_%.bbappend
+new file mode 100644
+index 00000000..660358c2
+--- /dev/null
++++ b/meta-arm/recipes-core/systemd/systemd_%.bbappend
+@@ -0,0 +1 @@
++require ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'systemd-efi.inc', '', d)}
+diff --git a/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend
+index a287d0e1..71e643a9 100644
+--- a/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend
++++ b/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend
+@@ -25,3 +25,5 @@ SRC_URI:append:qemuarm = " \
+ 
+ FFA_TRANSPORT_INCLUDE = "${@bb.utils.contains('MACHINE_FEATURES', 'arm-ffa', 'arm-ffa-transport.inc', '' , d)}"
+ require ${FFA_TRANSPORT_INCLUDE}
++
++require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'linux-yocto-uefi-secureboot.inc', '', d)}
+diff --git a/meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc b/meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
+new file mode 100644
+index 00000000..5c1f4de7
+--- /dev/null
++++ b/meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
+@@ -0,0 +1,14 @@
++KERNEL_FEATURES += "cfg/efi-ext.scc"
++
++inherit sbsign
++
++# shell variable set inside do_compile task
++SBSIGN_TARGET_BINARY = "$KERNEL_IMAGE"
++
++do_compile:append() {
++    KERNEL_IMAGE=$(find ${B} -name ${KERNEL_IMAGETYPE} -print -quit)
++    do_sbsign
++}
++
++RRECOMMENDS:${PN} += "kernel-module-efivarfs"
++RRECOMMENDS:${PN} += "kernel-module-efivars"
 -- 
 2.46.2
 
