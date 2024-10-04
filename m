@@ -2,84 +2,103 @@ Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE3ECFA778
-	for <webhook@archiver.kernel.org>; Fri,  4 Oct 2024 13:04:54 +0000 (UTC)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
- by mx.groups.io with SMTP id smtpd.web11.21671.1728047086598445802
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7D1CFA779
+	for <webhook@archiver.kernel.org>; Fri,  4 Oct 2024 13:05:04 +0000 (UTC)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+ by mx.groups.io with SMTP id smtpd.web10.21446.1728047098308927052
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 04 Oct 2024 06:04:46 -0700
+ Fri, 04 Oct 2024 06:04:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=QEicbRf4;
- spf=pass (domain: linaro.org, ip: 209.85.208.171, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2fac275471dso21283561fa.0
-        for <meta-arm@lists.yoctoproject.org>; Fri, 04 Oct 2024 06:04:46 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=cMNTCSX5;
+ spf=pass (domain: linaro.org, ip: 209.85.208.181, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2fad15b3eeeso25110191fa.2
+        for <meta-arm@lists.yoctoproject.org>; Fri, 04 Oct 2024 06:04:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1728047085; x=1728651885; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r10k+yuikkzEl5olj527fHFx63Ru9Zav9f5Jq5K/5xo=;
-        b=QEicbRf4xNkINRIyDdk/+T7TglYOK7W11/KZBPz1o49ZbKeLfIKHmfcJYezUpRPomO
-         pkeBwwUz+A4b3LZexDTS/MgC7qsUvUVDes+5vtUxN5bzMQzetTH0YRzOs2MEwERhj47m
-         gpjXsp48Fok5gDik36KfaQ3ZOANiBSFELC+vjkkAjwyqPdecdRJVOvAki3Yy/pCpIpY4
-         vSRjhLx/fHVTmwuGUWh9mxeFqLfM+Zs3qYIHgWls/hOWze4EAXFts+eLILmCfDjH5NJb
-         npFeqz8JJiykfy1R6rYimt3ilDdeRJ7qy3TCBbP/6kgtApwXVETK9DRLXHhh6fmog4l9
-         cuQw==
+        d=linaro.org; s=google; t=1728047096; x=1728651896; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yj1f/cQEOcO5JAIgWruwfvGuS1Pz9glhyZ5IdEoCAxs=;
+        b=cMNTCSX5+oKQMLjp9h5sp+2M+6nEgJGqcJif2suBKQLtjkJFbNkD0fzSIVz5IxNTRG
+         YybYGTSHTkYz7J5jPqEy7Hs+Oql5pxrhTm75/vLf33vuFOL/uE7b6Q9d2pGJ2i/uZNf5
+         SGRBCKNIDP3IsvV2ldM2Pd0PXUN9HP6imGoniYtKqXP9J76Uz5fDrQf1SyufAaJ/P/mQ
+         dr4zipCVHSWNtASAf2qsXTjAmLHkXMi0eECxRcf1CMAFuOnay9spum2ZQtYUgzCn/oR4
+         2RvNhlTXFMuzG3I3kSiVq0qXmCvPEp829bwLFOIXoCDphuvG7hSAAhKJq8QsmNBehTK1
+         h4iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728047085; x=1728651885;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r10k+yuikkzEl5olj527fHFx63Ru9Zav9f5Jq5K/5xo=;
-        b=tWrKvGJ4t++dKa63+Edfkn2qRlrlF44XZNvvlhbUFKheLpNFIaU6XrMnpeK1K8wdLm
-         caXjks0ivrywMN8W1jrHz+/FkVDL9hbfj5jOzBq8Q2bwqoGNDMyrTKTpNnGDlUQj1vNT
-         iG0Dv6GBqzF8PSNLDBxTjQgrWXvyR61XnN9olmzVUQrJ3WUOixUsVdMvm0/yYYAAyPAq
-         rO86pIOcV2DaEamtfkFNpkzRDWfIvvbF5f+SpQaYLATi0Wq9ehja6OkqdJskTWTBJgpf
-         eMQv8ghvmFrtzkBaG9PghvfO973gI0JeYSLdETYDv6wlJiQDPCk4EFOug3YCRxT/N3YX
-         t7IA==
-X-Gm-Message-State: AOJu0YwzxpcKpeoSoxnWr66zuzw1jlj/5DM6+AthcBmtmP72v304BvTI
-	y89hwoA2Ir599UtDs5OihcukhQAd6YrzyRQ/iLYwa9A5I0Hgc5+exioaCpi/3FjzwYP+iV43gwu
-	BQe8=
-X-Google-Smtp-Source: AGHT+IEE89IZBZrReLanGFWuXsyWNgJ3qzqKyX1MwwS33Uboc76F+N7/zTOIsMa0JTHhAMQn5ceJ1A==
-X-Received: by 2002:a05:651c:508:b0:2fa:f3b6:a05a with SMTP id 38308e7fff4ca-2faf3b6a147mr10748421fa.14.1728047084591;
-        Fri, 04 Oct 2024 06:04:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1728047096; x=1728651896;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yj1f/cQEOcO5JAIgWruwfvGuS1Pz9glhyZ5IdEoCAxs=;
+        b=XYCMnizkcut8aynPAHqqQnFiIe6ghJe/9aXkocxt/mai7C79quMOM8tPXpLB2rWt4v
+         VVbiLsiWPTwMZoOUieurR2YVNNFX6fgJPZavQYquM554M3mSxnNqIM08H9mYrhnCGZyj
+         Q3+Uzx2GJ+0yoR49vJX7gGoiL3/KHy6iUX99SukyVxUouBpBOxYYMQtWyyG6xtObvJ02
+         nSKqnmJg+US2RMC9egapTs+dmNJNP/m4KPsngWzvIlM6srmMMbkHTT0zooHN4ReYgNRD
+         ZbRk/Zkgy2TcjcWUL0D/X7kKywlJW63ZZ+yP8yAZUHGsDfEMNcGkVNRFZ8+mXksIh5+V
+         ISAg==
+X-Gm-Message-State: AOJu0YxiejOY4vEu34nBwjHkA2d/0r7pEWe8SLRuftfpoT4rlPfmftqZ
+	xpdaBoIHwYwgwQtSTwgDONjUllAowabeHDpcw4FMAGa2XgnaSy3Bj4rQJAQUIU893dHEgEGdWou
+	lryc=
+X-Google-Smtp-Source: AGHT+IHfv5iT9N676cILYhR+DEoWjZO49J21xgWFxUZ8eHu+TW1GNPbhJrvIb4U6key3h5dPPvmJqQ==
+X-Received: by 2002:a2e:be86:0:b0:2fa:d9db:7bae with SMTP id 38308e7fff4ca-2faf3c142b3mr13838951fa.10.1728047096151;
+        Fri, 04 Oct 2024 06:04:56 -0700 (PDT)
 Received: from localhost.localdomain (2001-14ba-7430-3d00--193.rev.dnainternet.fi. [2001:14ba:7430:3d00::193])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2faeccae206sm4554691fa.137.2024.10.04.06.04.41
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2faeccae206sm4554691fa.137.2024.10.04.06.04.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2024 06:04:43 -0700 (PDT)
+        Fri, 04 Oct 2024 06:04:54 -0700 (PDT)
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
-Subject: [PATCH master-next 1/2] ci/uefi-secureboot.yml: include ci/meta-secure-core.yml
-Date: Fri,  4 Oct 2024 16:04:26 +0300
-Message-ID: <20241004130427.217611-1-mikko.rapeli@linaro.org>
+Subject: [PATCH master-next 2/2] qemuarm*-secureboot.conf: fix kernel serial consoles
+Date: Fri,  4 Oct 2024 16:04:27 +0300
+Message-ID: <20241004130427.217611-2-mikko.rapeli@linaro.org>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20241004130427.217611-1-mikko.rapeli@linaro.org>
+References: <20241004130427.217611-1-mikko.rapeli@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 04 Oct 2024 13:04:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6166
+ <meta-arm@lists.yoctoproject.org>; Fri, 04 Oct 2024 13:05:04 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6167
 
-Needed for UEFI secure boot signing keys.
+Kernel boot serial console is not visible in runqemu stdout.
+Fix this by setting SERIAL_CONSOLES to include ttyAMA0
+and use that as KERNEL_CONSOLE in .wks file bootloader
+configuration which assembles the kernel command line.
+Now kernel boot log is again visible, incase there are problems
+with it.
 
 Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 ---
- ci/uefi-secureboot.yml | 1 +
- 1 file changed, 1 insertion(+)
+ meta-arm/conf/machine/qemuarm-secureboot.conf   | 3 +++
+ meta-arm/conf/machine/qemuarm64-secureboot.conf | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/ci/uefi-secureboot.yml b/ci/uefi-secureboot.yml
-index 0684266f..f647f4b1 100644
---- a/ci/uefi-secureboot.yml
-+++ b/ci/uefi-secureboot.yml
-@@ -7,6 +7,7 @@ header:
-   version: 14
-   includes:
-     - ci/meta-openembedded.yml
-+    - ci/meta-secure-core.yml
+diff --git a/meta-arm/conf/machine/qemuarm-secureboot.conf b/meta-arm/conf/machine/qemuarm-secureboot.conf
+index f08b84fe..c01ca47a 100644
+--- a/meta-arm/conf/machine/qemuarm-secureboot.conf
++++ b/meta-arm/conf/machine/qemuarm-secureboot.conf
+@@ -21,3 +21,6 @@ WKS_FILE_DEPENDS = "trusted-firmware-a"
+ IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
  
- local_conf_header:
-   uefi_secureboot: |
+ MACHINE_FEATURES += "optee-ftpm"
++
++SERIAL_CONSOLES = "115200;ttyAMA0"
++KERNEL_CONSOLE ?= "${@','.join(d.getVar('SERIAL_CONSOLES').split(' ')[0].split(';')[::-1]) or 'ttyS0'}"
+diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+index 78a39c03..2f8c093a 100644
+--- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
++++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+@@ -22,3 +22,6 @@ WKS_FILE_DEPENDS = "trusted-firmware-a"
+ IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
+ 
+ MACHINE_FEATURES += "optee-ftpm"
++
++SERIAL_CONSOLES = "115200;ttyAMA0"
++KERNEL_CONSOLE ?= "${@','.join(d.getVar('SERIAL_CONSOLES').split(' ')[0].split(';')[::-1]) or 'ttyS0'}"
 -- 
 2.34.1
 
