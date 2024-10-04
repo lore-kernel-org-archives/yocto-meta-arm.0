@@ -1,254 +1,86 @@
-Return-Path: <javier.tia@linaro.org>
+Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 712AACF34CB
-	for <webhook@archiver.kernel.org>; Thu,  3 Oct 2024 21:33:59 +0000 (UTC)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
- by mx.groups.io with SMTP id smtpd.web11.8384.1727991230218014592
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE3ECFA778
+	for <webhook@archiver.kernel.org>; Fri,  4 Oct 2024 13:04:54 +0000 (UTC)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+ by mx.groups.io with SMTP id smtpd.web11.21671.1728047086598445802
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 03 Oct 2024 14:33:50 -0700
+ Fri, 04 Oct 2024 06:04:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=TuYo1rUb;
- spf=pass (domain: linaro.org, ip: 209.85.217.47, mailfrom: javier.tia@linaro.org)
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4a3b80e4b3dso1352512137.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 03 Oct 2024 14:33:50 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=QEicbRf4;
+ spf=pass (domain: linaro.org, ip: 209.85.208.171, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2fac275471dso21283561fa.0
+        for <meta-arm@lists.yoctoproject.org>; Fri, 04 Oct 2024 06:04:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1727991229; x=1728596029; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jPv1KMt4+pLXhPOM0rpNwxbOzxGU/r8afYdCQdy+hUo=;
-        b=TuYo1rUbndAWfV7YOBcMjBrTgnah0hBtzEIqlMFInbeqLPDVsZoB8bIJpD5Vt9G5IS
-         TiEK53N2YOjf2UHA7ueTXtq5rjwqPvaZdYiNrK9rbi19Jby0VsxnbJ9QAcN5Py7RqmPn
-         EQEz+mHtZUXuQkrKMP2RTqQ+T0hbzNjhZMn0HLfzp6a+yveYXPQVfapRHmN2gOavq6GF
-         1fCDIfKlh88/Gyt3MpqbLZoreyqubKPBVt+TN2BA+LkiuCk3epC95y7+9pi/ZIu+Iye5
-         040Y+Vov+lDpZnP0H/TBbZUcm245gcW48y1/s/kOPNpiAfy++LAm/IUKwEKEO0WhZPGp
-         hI3g==
+        d=linaro.org; s=google; t=1728047085; x=1728651885; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r10k+yuikkzEl5olj527fHFx63Ru9Zav9f5Jq5K/5xo=;
+        b=QEicbRf4xNkINRIyDdk/+T7TglYOK7W11/KZBPz1o49ZbKeLfIKHmfcJYezUpRPomO
+         pkeBwwUz+A4b3LZexDTS/MgC7qsUvUVDes+5vtUxN5bzMQzetTH0YRzOs2MEwERhj47m
+         gpjXsp48Fok5gDik36KfaQ3ZOANiBSFELC+vjkkAjwyqPdecdRJVOvAki3Yy/pCpIpY4
+         vSRjhLx/fHVTmwuGUWh9mxeFqLfM+Zs3qYIHgWls/hOWze4EAXFts+eLILmCfDjH5NJb
+         npFeqz8JJiykfy1R6rYimt3ilDdeRJ7qy3TCBbP/6kgtApwXVETK9DRLXHhh6fmog4l9
+         cuQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727991229; x=1728596029;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jPv1KMt4+pLXhPOM0rpNwxbOzxGU/r8afYdCQdy+hUo=;
-        b=sx8anwqJFdHRojmfIYJm5sZFX/oT1Y6ZyCHD+mgs1b+zfHzU4A+oca85shtdRWmXrN
-         /4CPu+1yf2LBie98qvMQRKEKhqZgGOU/pzAGb59c3KdT6sBTlSXAn3Km3CrbYfIBzQPh
-         x07G615Wv6MgkECKckY+OrGaeH/QiQYd8mPQNQDJTWkFhyhShNykEBTETydtUGXwBGGi
-         3iIiVHjy+YurbVSKMIPRco++cgmjircTCv7eVOnPv2rDZZPsQoTnqejZtGnoz9mEUQMw
-         Cz7leRc4TUBkFYrf/mPAOXZ+evjbyp4Qdfi8KzqJUJ/v+Kvk3Co5d1CemO6c9cCSos5s
-         WaCw==
-X-Gm-Message-State: AOJu0YyjD58DzGr5Tfc8GYyyxGO0mq5EPO2qSjB729g2g/k+8hL2oX6U
-	/iSW5Rw6KDChn78PMQZ/O3QKt3oT4nDLrCnTD12loHtzXEDVydJj+1zM9ZkVk3uijVeRBsdiS09
-	w
-X-Google-Smtp-Source: AGHT+IFs607W/9OuhR0leXF/3CTX/ELxYYXjYLeCOVbWSUHmNT3kXSShqx5QWUedd2TL3SgUHrCfeA==
-X-Received: by 2002:a05:6102:2c8b:b0:4a4:532:82bc with SMTP id ada2fe7eead31-4a4053283f6mr736815137.8.1727991229042;
-        Thu, 03 Oct 2024 14:33:49 -0700 (PDT)
-Received: from jetm-rog-x670e-gene.lan ([170.246.157.153])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4a3f9bad33esm287545137.13.2024.10.03.14.33.47
+        d=1e100.net; s=20230601; t=1728047085; x=1728651885;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r10k+yuikkzEl5olj527fHFx63Ru9Zav9f5Jq5K/5xo=;
+        b=tWrKvGJ4t++dKa63+Edfkn2qRlrlF44XZNvvlhbUFKheLpNFIaU6XrMnpeK1K8wdLm
+         caXjks0ivrywMN8W1jrHz+/FkVDL9hbfj5jOzBq8Q2bwqoGNDMyrTKTpNnGDlUQj1vNT
+         iG0Dv6GBqzF8PSNLDBxTjQgrWXvyR61XnN9olmzVUQrJ3WUOixUsVdMvm0/yYYAAyPAq
+         rO86pIOcV2DaEamtfkFNpkzRDWfIvvbF5f+SpQaYLATi0Wq9ehja6OkqdJskTWTBJgpf
+         eMQv8ghvmFrtzkBaG9PghvfO973gI0JeYSLdETYDv6wlJiQDPCk4EFOug3YCRxT/N3YX
+         t7IA==
+X-Gm-Message-State: AOJu0YwzxpcKpeoSoxnWr66zuzw1jlj/5DM6+AthcBmtmP72v304BvTI
+	y89hwoA2Ir599UtDs5OihcukhQAd6YrzyRQ/iLYwa9A5I0Hgc5+exioaCpi/3FjzwYP+iV43gwu
+	BQe8=
+X-Google-Smtp-Source: AGHT+IEE89IZBZrReLanGFWuXsyWNgJ3qzqKyX1MwwS33Uboc76F+N7/zTOIsMa0JTHhAMQn5ceJ1A==
+X-Received: by 2002:a05:651c:508:b0:2fa:f3b6:a05a with SMTP id 38308e7fff4ca-2faf3b6a147mr10748421fa.14.1728047084591;
+        Fri, 04 Oct 2024 06:04:44 -0700 (PDT)
+Received: from localhost.localdomain (2001-14ba-7430-3d00--193.rev.dnainternet.fi. [2001:14ba:7430:3d00::193])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2faeccae206sm4554691fa.137.2024.10.04.06.04.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Oct 2024 14:33:48 -0700 (PDT)
-From: Javier Tia <javier.tia@linaro.org>
+        Fri, 04 Oct 2024 06:04:43 -0700 (PDT)
+From: Mikko Rapeli <mikko.rapeli@linaro.org>
 To: meta-arm@lists.yoctoproject.org
-Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
-	Ross Burton <Ross.Burton@arm.com>,
-	Jon Mason <jon.mason@arm.com>,
-	Javier Tia <javier.tia@linaro.org>
-Subject: [PATCH v8 1/2] arm: Enable Secure Boot in all required recipes
-Date: Thu,  3 Oct 2024 15:33:29 -0600
-Message-ID: <20241003213330.627644-2-javier.tia@linaro.org>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241003213330.627644-1-javier.tia@linaro.org>
-References: <20241003213330.627644-1-javier.tia@linaro.org>
+Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
+Subject: [PATCH master-next 1/2] ci/uefi-secureboot.yml: include ci/meta-secure-core.yml
+Date: Fri,  4 Oct 2024 16:04:26 +0300
+Message-ID: <20241004130427.217611-1-mikko.rapeli@linaro.org>
+X-Mailer: git-send-email 2.45.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 03 Oct 2024 21:33:59 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6164
+ <meta-arm@lists.yoctoproject.org>; Fri, 04 Oct 2024 13:04:54 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6166
 
-In the target, Secure Boot starts from the firmware (u-boot), adds the
-signing keys, and verifies the bootloader (systemd-boot) and kernel
-(Linux).
+Needed for UEFI secure boot signing keys.
 
-sbsign bbclass is used to sign the binaries. sbsign is the name of the
-tool used to sign these binaries. Hence the name of this class to sbsign
-and variables with SBSIGN prefix.
-
-Signed-off-by: Javier Tia <javier.tia@linaro.org>
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 ---
- meta-arm/classes/sbsign.bbclass               | 31 +++++++++++++++++++
- .../u-boot/u-boot-uefi-secureboot.inc         | 17 ++++++++++
- .../u-boot/u-boot/uefi-secureboot.cfg         | 10 ++++++
- meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend |  2 ++
- .../systemd/systemd-boot-uefi-secureboot.inc  |  7 +++++
- .../systemd/systemd-boot_%.bbappend           |  1 +
- meta-arm/recipes-core/systemd/systemd-efi.inc |  1 +
- .../recipes-core/systemd/systemd_%.bbappend   |  1 +
- .../linux/linux-yocto%.bbappend               |  2 ++
- .../linux/linux-yocto-uefi-secureboot.inc     | 14 +++++++++
- 10 files changed, 86 insertions(+)
- create mode 100644 meta-arm/classes/sbsign.bbclass
- create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
- create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg
- create mode 100644 meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
- create mode 100644 meta-arm/recipes-core/systemd/systemd-boot_%.bbappend
- create mode 100644 meta-arm/recipes-core/systemd/systemd-efi.inc
- create mode 100644 meta-arm/recipes-core/systemd/systemd_%.bbappend
- create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
+ ci/uefi-secureboot.yml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/meta-arm/classes/sbsign.bbclass b/meta-arm/classes/sbsign.bbclass
-new file mode 100644
-index 00000000..551b951d
---- /dev/null
-+++ b/meta-arm/classes/sbsign.bbclass
-@@ -0,0 +1,31 @@
-+# Sign binaries for UEFI Secure Boot
-+#
-+# Usage in recipes:
-+#
-+# Set binary to sign per recipe:
-+# SBSIGN_TARGET_BINARY = "${B}/binary_to_sign"
-+#
-+# Then call do_sbsign() in correct stage of the build
-+# do_compile:append() {
-+#     do_sbsign
-+# }
-+
-+DEPENDS += 'gen-sbkeys'
-+DEPENDS += "sbsigntool-native"
-+
-+SBSIGN_KEY = "${SBSIGN_KEYS_DIR}/db.key"
-+SBSIGN_CERT = "${SBSIGN_KEYS_DIR}/db.crt"
-+SBSIGN_TARGET_BINARY ?= "binary_to_sign"
-+
-+# Not adding as task since recipes may need to sign binaries at different
-+# stages. Instead they can call this function when needed by calling this function
-+do_sbsign() {
-+    bbnote "Signing ${PN} binary ${SBSIGN_TARGET_BINARY} with ${SBSIGN_KEY} and ${SBSIGN_CERT}"
-+    ${STAGING_BINDIR_NATIVE}/sbsign \
-+        --key "${SBSIGN_KEY}" \
-+        --cert "${SBSIGN_CERT}" \
-+        --output  "${SBSIGN_TARGET_BINARY}.signed" \
-+        "${SBSIGN_TARGET_BINARY}"
-+    cp "${SBSIGN_TARGET_BINARY}" "${SBSIGN_TARGET_BINARY}.unsigned"
-+    cp "${SBSIGN_TARGET_BINARY}.signed" "${SBSIGN_TARGET_BINARY}"
-+}
-diff --git a/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc b/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
-new file mode 100644
-index 00000000..e58035a9
---- /dev/null
-+++ b/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
-@@ -0,0 +1,17 @@
-+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
-+
-+SRC_URI += "file://uefi-secureboot.cfg"
-+
-+inherit sbsign
-+
-+DEPENDS += 'python3-pyopenssl-native'
-+
-+do_compile:prepend() {
-+    export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
-+
-+    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n pk  -d "${SBSIGN_KEYS_DIR}"/PK.esl  -t file
-+    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n kek -d "${SBSIGN_KEYS_DIR}"/KEK.esl -t file
-+    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n db  -d "${SBSIGN_KEYS_DIR}"/db.esl  -t file
-+    "${S}"/tools/efivar.py set -i "${S}"/ubootefi.var -n dbx -d "${SBSIGN_KEYS_DIR}"/dbx.esl -t file
-+    "${S}"/tools/efivar.py print -i "${S}"/ubootefi.var
-+}
-diff --git a/meta-arm/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg b/meta-arm/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg
-new file mode 100644
-index 00000000..acdcfddd
---- /dev/null
-+++ b/meta-arm/recipes-bsp/u-boot/u-boot/uefi-secureboot.cfg
-@@ -0,0 +1,10 @@
-+CONFIG_CMD_BOOTMENU=y
-+CONFIG_USE_BOOTCOMMAND=y
-+CONFIG_BOOTCOMMAND="bootmenu"
-+CONFIG_USE_PREBOOT=y
-+CONFIG_EFI_VAR_BUF_SIZE=65536
-+CONFIG_FIT_SIGNATURE=y
-+CONFIG_EFI_SECURE_BOOT=y
-+CONFIG_EFI_VARIABLES_PRESEED=y
-+CONFIG_PREBOOT="setenv bootmenu_0 UEFI Boot Manager=bootefi bootmgr; setenv bootmenu_1 UEFI Maintenance Menu=eficonfig"
-+CONFIG_PREBOOT_DEFINED=y
-diff --git a/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
-index 0683a783..8542ccfc 100644
---- a/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -2,3 +2,5 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+diff --git a/ci/uefi-secureboot.yml b/ci/uefi-secureboot.yml
+index 0684266f..f647f4b1 100644
+--- a/ci/uefi-secureboot.yml
++++ b/ci/uefi-secureboot.yml
+@@ -7,6 +7,7 @@ header:
+   version: 14
+   includes:
+     - ci/meta-openembedded.yml
++    - ci/meta-secure-core.yml
  
- SRC_URI:append:qemuarm64-secureboot = " file://qemuarm64.cfg"
- SRC_URI:append:qemuarm-secureboot = " file://qemuarm.cfg"
-+
-+require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'u-boot-uefi-secureboot.inc', '', d)}
-diff --git a/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc b/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
-new file mode 100644
-index 00000000..84196a68
---- /dev/null
-+++ b/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
-@@ -0,0 +1,7 @@
-+inherit sbsign
-+
-+SBSIGN_TARGET_BINARY = "${B}/src/boot/efi/systemd-boot${EFI_ARCH}.efi"
-+
-+do_compile:append() {
-+    do_sbsign
-+}
-diff --git a/meta-arm/recipes-core/systemd/systemd-boot_%.bbappend b/meta-arm/recipes-core/systemd/systemd-boot_%.bbappend
-new file mode 100644
-index 00000000..9850bbf9
---- /dev/null
-+++ b/meta-arm/recipes-core/systemd/systemd-boot_%.bbappend
-@@ -0,0 +1 @@
-+require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'systemd-boot-uefi-secureboot.inc', '', d)}
-diff --git a/meta-arm/recipes-core/systemd/systemd-efi.inc b/meta-arm/recipes-core/systemd/systemd-efi.inc
-new file mode 100644
-index 00000000..5572e51a
---- /dev/null
-+++ b/meta-arm/recipes-core/systemd/systemd-efi.inc
-@@ -0,0 +1 @@
-+PACKAGECONFIG:append = " efi"
-diff --git a/meta-arm/recipes-core/systemd/systemd_%.bbappend b/meta-arm/recipes-core/systemd/systemd_%.bbappend
-new file mode 100644
-index 00000000..660358c2
---- /dev/null
-+++ b/meta-arm/recipes-core/systemd/systemd_%.bbappend
-@@ -0,0 +1 @@
-+require ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'systemd-efi.inc', '', d)}
-diff --git a/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend
-index a287d0e1..71e643a9 100644
---- a/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend
-+++ b/meta-arm/recipes-kernel/linux/linux-yocto%.bbappend
-@@ -25,3 +25,5 @@ SRC_URI:append:qemuarm = " \
- 
- FFA_TRANSPORT_INCLUDE = "${@bb.utils.contains('MACHINE_FEATURES', 'arm-ffa', 'arm-ffa-transport.inc', '' , d)}"
- require ${FFA_TRANSPORT_INCLUDE}
-+
-+require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'linux-yocto-uefi-secureboot.inc', '', d)}
-diff --git a/meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc b/meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
-new file mode 100644
-index 00000000..5c1f4de7
---- /dev/null
-+++ b/meta-arm/recipes-kernel/linux/linux-yocto-uefi-secureboot.inc
-@@ -0,0 +1,14 @@
-+KERNEL_FEATURES += "cfg/efi-ext.scc"
-+
-+inherit sbsign
-+
-+# shell variable set inside do_compile task
-+SBSIGN_TARGET_BINARY = "$KERNEL_IMAGE"
-+
-+do_compile:append() {
-+    KERNEL_IMAGE=$(find ${B} -name ${KERNEL_IMAGETYPE} -print -quit)
-+    do_sbsign
-+}
-+
-+RRECOMMENDS:${PN} += "kernel-module-efivarfs"
-+RRECOMMENDS:${PN} += "kernel-module-efivars"
+ local_conf_header:
+   uefi_secureboot: |
 -- 
-2.46.2
+2.34.1
 
 
