@@ -1,422 +1,149 @@
-Return-Path: <radian.dc@gmail.com>
+Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD771CFB424
-	for <webhook@archiver.kernel.org>; Sun,  6 Oct 2024 10:07:54 +0000 (UTC)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web11.28672.1728209265459620780
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4C1CFB440
+	for <webhook@archiver.kernel.org>; Mon,  7 Oct 2024 03:35:50 +0000 (UTC)
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+ by mx.groups.io with SMTP id smtpd.web11.45305.1728272140850237313
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 06 Oct 2024 03:07:45 -0700
+ Sun, 06 Oct 2024 20:35:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=Tg5mJYKn;
- spf=pass (domain: gmail.com, ip: 209.85.128.46, mailfrom: radian.dc@gmail.com)
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-42cc43454d5so26142605e9.3
-        for <meta-arm@lists.yoctoproject.org>; Sun, 06 Oct 2024 03:07:45 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=eTap36I7;
+ spf=pass (domain: linaro.org, ip: 209.85.221.175, mailfrom: javier.tia@linaro.org)
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-509bd2e944dso1209424e0c.2
+        for <meta-arm@lists.yoctoproject.org>; Sun, 06 Oct 2024 20:35:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728209263; x=1728814063; darn=lists.yoctoproject.org;
-        h=in-reply-to:from:content-language:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m+SEbqpMSifNUrn+dyQwtbjU4M3mmrjL3uYOT2wSO84=;
-        b=Tg5mJYKntaxKvSoLwVO5EQQ9VQNURpdYzia8pprAD41CjNruit402H9w3dPcZJ4b9/
-         GvWHN8KgcmiD71ig/sgqEAZe+OUih/ebAfUbOFIgaLkFU1OTMDo7rRT9eVwBt5dtYjzH
-         UDR2D7jnig8j4Ku07pHU0nN1fQQwtIYSjVcIhAxOqk1kAu+1i5TYMV0vbwexwE+KURJJ
-         v8/yZkL5np/hpmjQ2fcq+at2pgnkcSd3zhc9jNvoIlLpXbwEAEbPLXfys2LgeFptoNyf
-         q0vvCtXobjP8l441V6faMxDOWZHo1V2Ayc1f0OKb5v+YLii4Mujccehf1shUoYYVGLIn
-         l/jA==
+        d=linaro.org; s=google; t=1728272139; x=1728876939; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uMPeK0nne7E86NSk6PQg12mriD8E8w280GwHhm1V/c4=;
+        b=eTap36I7iQev40CePLc47F6zCspxhpd/sJZ+q8j+Xsia1QJr2tE5/8zSe9Sz9fbGLO
+         G8sw4+/uyos4idzafTX8sY/+hvAEM8xddZ6p34vW8FU+SuhHKDzVhbcXedzt5DK6Ip5m
+         7Ch0BcOYK3eQeyX2L8dEKkNubnWMirIIA4tjjiKPqra5PF8L2+4pqtJqu3WinWlhXlk+
+         ED+inlMBeqt/SI0CbLHnBFi2ehO82tKy2YxdBTvqWKwSpagH+AhTUGHB0LS0vuEkXX8W
+         Nh07EK2fE5jGvpL1Gg9XULmfs1zaxZG34ZGueM6awkNJo+jQvLK0PJIfgX5E46wxmq9+
+         ZfAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728209263; x=1728814063;
-        h=in-reply-to:from:content-language:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=m+SEbqpMSifNUrn+dyQwtbjU4M3mmrjL3uYOT2wSO84=;
-        b=RqN+n+IZJjjA8yC1gttwIo/E2Uny42sUQV4okbXq4V3kSNU5WZ4LJqR/yGNjx5GyV2
-         nx1Mr5xiV3MKw/1BP1DVVBkB5hBfEAVFuP+Dq/755xLIYovs4DN01avofcgOMI9QvUqh
-         tsddZHeBz3LxgOGQCS8AigJwNZ1UBAyjkCpnTs/qg3KGzi24Knlu4kr1ht8de25TNaQS
-         SnjptP0VM7DEPyRC47C8drNbHVkKMn3ITG9cePRScIO9vwtacV7o+yvdsHmv+G0eHWsT
-         fbURicfxR8+P20xTH/JSgoy48jVAaEgMCjTThy9TUVcgv/6xwJRGtJHLhpnzg4mVHxhN
-         KZHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyOUNBdcLFNE4My814W40YaCBINPTsWDy69U6gmunnT97KutnMc3RJULeFlJsWg3f/ZYZIUcV6bg==@lists.yoctoproject.org
-X-Gm-Message-State: AOJu0YzgIZwZ4f7sL2TywBERvM9nKspiP97WYwWa20SXFt6cGMVnNsaN
-	9m2E4QUhIsqY5jbldH+AIeyp1CJ+Tf2unUEhrLbx35BblOu3/efA
-X-Google-Smtp-Source: AGHT+IEXcTNEpsu3J/QsR2tRRjbIY8iBQ6g/VV00N2/Lqmo550+60OOuZ//5QHPlbMOPxZdy0U+bgA==
-X-Received: by 2002:a5d:404c:0:b0:374:c8dd:ea47 with SMTP id ffacd0b85a97d-37d0eb0b38fmr4340463f8f.50.1728209263127;
-        Sun, 06 Oct 2024 03:07:43 -0700 (PDT)
-Received: from [192.168.1.60] (176-136-226-28.abo.bbox.fr. [176.136.226.28])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42f89e8af91sm42827765e9.19.2024.10.06.03.07.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Oct 2024 03:07:42 -0700 (PDT)
-Content-Type: multipart/alternative;
- boundary="------------VBhTIuFO3fHFnF5xVKvDJwb9"
-Message-ID: <a55df2fa-1cc8-41d1-b91b-0061f415adf8@gmail.com>
-Date: Sun, 6 Oct 2024 12:07:42 +0200
+        d=1e100.net; s=20230601; t=1728272139; x=1728876939;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uMPeK0nne7E86NSk6PQg12mriD8E8w280GwHhm1V/c4=;
+        b=EC4Ud0mrLNSd4/tZuS12TjDf3w6VsEtD69NQMWaGNlSNXf4kO4c2e5upJ3AVnKcGGv
+         6Hz/Mc1k77gc5rtszyt5SI5/+njQuysJu7EIIrr1Oo5ENUJDKLV7Fy9GxFcwVMENVpjb
+         AGKpYwkp61dXzLNqeb7UjFi2v/Qdw7jpMEp9ZTTBjEp9WajzzCE30pF6GRSZTyNi8O9b
+         HMufPbizg6VffHqbNfov41gmbd82rLLE66u4cEXaSsqIYPm+RseoEiXEEXCjuqVe93bq
+         2gGX0pZHXyxZSVHXOwf6wfjfkkedJvUtq2H9EcOp33VlwxgWEgcSEZ1y5LORO1824Z3B
+         5Rpg==
+X-Gm-Message-State: AOJu0YyOlWaDkbtE6nWEOHE/xm2xG32l5STNsW5eWLNxMCxvyCEXcO7e
+	QVB7I0WR6bBl8A0oKU0SgG4pCRld1ba9f/wnA93JSiqaqSlU3ZLLXv10M6jbiUhiER43BipM/mX
+	r
+X-Google-Smtp-Source: AGHT+IFTWYDu1s3osGgAsSXujAMUv8EOme4qTj0pp9eON+7kf9frsxJ9Locc0ycBP7zQmd6bIfI7Aw==
+X-Received: by 2002:a05:6122:a09:b0:50a:b5a3:e00c with SMTP id 71dfb90a1353d-50c8544edb9mr5696622e0c.1.1728272139521;
+        Sun, 06 Oct 2024 20:35:39 -0700 (PDT)
+Received: from localhost.localdomain ([170.246.157.153])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-50c9ad9ba2dsm678476e0c.30.2024.10.06.20.35.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Oct 2024 20:35:38 -0700 (PDT)
+From: Javier Tia <javier.tia@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
+	Ross Burton <Ross.Burton@arm.com>,
+	Jon Mason <jon.mason@arm.com>,
+	Javier Tia <javier.tia@linaro.org>
+Subject: [PATCH v0] arm/uefi-secureboot: Add uefi http boot support
+Date: Sun,  6 Oct 2024 21:35:28 -0600
+Message-ID: <20241007033528.784737-1-javier.tia@linaro.org>
+X-Mailer: git-send-email 2.46.2
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] trusted-firmware-a: fix build error when using ccache
-To: Jon Mason <jdmason@kudzu.us>, Adrian DC <radian.dc@gmail.com>
-Cc: Javier Tia <javier.tia@linaro.org>, meta-arm@lists.yoctoproject.org,
- Jon Mason <jon.mason@arm.com>
-References: <20240928155436.1145975-1-radian.dc@gmail.com>
- <ZvqvFhYoRXQ9RQ4H@kudzu.us> <7afc0d4f-cf91-4750-93a3-3fc9c9a1b364@linaro.org>
- <CAPoiz9xr1DyEP-XWCRK_uhShDbb0kRrfcw8V8PL_CGwcCAP2PA@mail.gmail.com>
- <c5d876bf-2c3e-4fe2-8ebb-92dec0a0a3f5@gmail.com>
- <CAPoiz9wVJSHMz_5NaUz3ZrGdO9yYX95iKURsSob=7dVL2KcpQg@mail.gmail.com>
-Content-Language: en-GB
-From: Adrian DC <radian.dc@gmail.com>
-In-Reply-To: <CAPoiz9wVJSHMz_5NaUz3ZrGdO9yYX95iKURsSob=7dVL2KcpQg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sun, 06 Oct 2024 10:07:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6175
+ <meta-arm@lists.yoctoproject.org>; Mon, 07 Oct 2024 03:35:50 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6176
 
-This is a multi-part message in MIME format.
---------------VBhTIuFO3fHFnF5xVKvDJwb9
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Enable network boot via HTTP protocol. Many embedded and server-class
+systems use network boot for booting. Enabling network boot on devices
+allows:
 
-Thanks for the feedback, and for the kirkstone backport approval 👍.
+- Shipping devices without OS images. When we power up the device, the
+  firmware can connect to the Internet and download and install suitable
+  boot images for this specific device. Administrators can centrally
+  manage the boot images and configuration files on a network server.
+  This centralization streamlines the management of boot options and
+  ensures consistency across all devices.
 
-Regarding mickledore, no problem, LTS and active versions only is normal,
-not using it (apart from some backports to kirkstone when needed), was 
-just a note of relevant branches.
+- This is particularly useful in enterprise environments. On mass
+  deployments, there is a need to install the operating system on
+  multiple devices simultaneously.
 
-Noted for the [kirkstone] customized title to ease CI.
+- Ability to maintain a completely diskless system if needed 
 
-Thanks,
-*Adrian DC*
+The plain HTTP protocol lacks encryption. It's intended to be used on
+local networks. Secure http protocol support is under review. 
 
-
-On 02/10/2024 15:07, Jon Mason wrote:
-> On Mon, Sep 30, 2024 at 9:56 PM Adrian DC<radian.dc@gmail.com>  wrote:
->> Hi,
->>
->> Sorry I wasn't available to respond earlier.
->>
->> Apparently the details I added after the initial send got lost.
->>
->> - Original commit : nanbield and scarthgap (f2efb2a45610216cb6c2d72bdb5d5e61b990064a as you pointed out)
->> - Missing on : kirkstone and mickledore
->> - Tested on : kirkstone with CCache enabled
->>
->> The cherry-pick was over kirkstone, without any changes except validation hence signoff (old Android System habits),
->> proposal was to apply the fix on kirkstone (being LTS and used by most SOM providers for now).
-> No problem.  We only take patches for Yocto Project officially
-> supported releases.  See
-> https://wiki.yoctoproject.org/wiki/Releases
->
-> The logic behind this decision is:
-> 1.  We don't want to give the false impression that we support or test
-> releases that are EOL'ed
-> 2.  We don't want to encourage developers/users to use releases which
-> are no longer getting security updates
-> 3.  Some of them are currently broken and upstream will not take
-> patches to fix this (broken download locations)
->
-> So, I'll only backport this to kirkstone.  Throwing at CI now to
-> verify it doesn't break anything.
->
-> Per Denys's comment, if you put the release you want this applied to
-> in the subject line, then I have scripts that automatically apply it
-> and run CI on it.
->
-> Thanks,
-> Jon
->
->
->> Thanks for your concern,
->>
->> Adrian DC
->>
->>
->> On 01/10/2024 01:02, Jon Mason wrote:
->>
->> On Mon, Sep 30, 2024 at 6:47 PM Javier Tia<javier.tia@linaro.org>  wrote:
->>
->> Hi,
->>
->> On 9/30/24 8:00 AM, Jon Mason wrote:
->>
->> On Sat, Sep 28, 2024 at 05:54:36PM +0200, Adrian DC wrote:
->>
->> From: Javier Tia<javier.tia@linaro.org>
->>
->> When ccache is enabled trusted-firmware-a recipe fails with this
->> error message:
->>
->>       make: *** No rule to make target 'aarch64-poky-linux-gcc'. Stop.
->>
->> ccache prefix CC variable with 'ccache' word before compiler. Because
->> there are no quotes assigned to CC, only 'ccache' is assigned. The
->> compiler becomes a make target, producing the build error.
->>
->> Add single quotes to LD is a good measure to prevent this kind of error.
->>
->> Signed-off-by: Javier Tia<javier.tia@linaro.org>
->> Signed-off-by: Jon Mason<jon.mason@arm.com>
->> Signed-off-by: Adrian DC<radian.dc@gmail.com>
->>
->> I have questions about this patch's origins, given the above s-o-b's.
->> Signed-off-by's state an authorship or handling (see Developer’s
->> Certificate of Origin).  Since I have not seen this patch, I should
->> not be listed.  It's on me to add my s-o-b.  Also, the ordering tends
->> to matter, as each person handling the patch adds their s-o-b at the
->> end of the patch.  So, you should be second, since you are taking this
->> from Javier and submitting it for him (nd I would be last since
->> I'mtaking it from you).
->>
->> Also, this feels like it needs a "Fixes:" line.  So, I know how far to
->> pull this back in the stable branches.
->>
->> Finally, I find it weird that Javier isn't submitting this himself.
->> Javier appears to be the author, and it includes his Linaro emaila
->> ddress, and you are sending it from a gmail account.  Are you
->> co-authors?  Are you sending it with his approval because he is
->> busy/vacationing/ill?
->>
->> Overall the patch is fine and I would normally include it, but this is
->> weird to me.  If Javier acks it to confirm his authoer, then I'll move
->> my s-o-b to the end and include it.
->>
->> Oh, this is a surprise.
->>
->> Jon has a good point.
->>
->> I have not approved sending this patch on my behalf. Yes, it looks like I am the original author because I recall fixing some issues around ccache a time ago; maybe last year if I remember correctly. But, before I acked it, I would like to know from where it was taken to have a bit more context. URL? Was the patch accepted or rejected?
->>
->> I think I know what might've happened.  It's already in the tree
->> (commit f2efb2a45610216cb6c2d72bdb5d5e61b990064a).
->> I'm guessing that Adrian accidentally sent it to this list while
->> trying to backport it to an older release.  I got overly concerned
->> with the s-o-b lines and didn't think to check what it wasn't applying
->> :)
->>
->> Anyway, I think we can disregard this.
->>
->> Thanks,
->> Jon
->>
->>    >
->>
->> Jon
->>
->>
->> ---
->>    .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc     | 4 ++--
->>    1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
->> index 2e3b50c5..5d3da59b 100644
->> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
->> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
->> @@ -101,9 +101,9 @@ def remove_options_tail (in_string):
->>        from itertools import takewhile
->>        return ' '.join(takewhile(lambda x: not x.startswith('-'), in_string.split(' ')))
->>
->> -EXTRA_OEMAKE +="LD=${@remove_options_tail(d.getVar('LD'))}"
->> +EXTRA_OEMAKE +="LD='${@remove_options_tail(d.getVar('LD'))}'"
->>
->> -EXTRA_OEMAKE +="CC=${@remove_options_tail(d.getVar('CC'))}"
->> +EXTRA_OEMAKE +="CC='${@remove_options_tail(d.getVar('CC'))}'"
->>
->>    # Verbose builds, no -Werror
->>    EXTRA_OEMAKE += "V=1 E=0"
->> --
->> 2.43.0
->>
->>
->> Thanks,
->>
->> » Javier Tia 🖋
->>
->>
-
---------------VBhTIuFO3fHFnF5xVKvDJwb9
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body>
-    Thanks for the feedback, and for the kirkstone backport approval 👍.<br>
-    <br>
-    Regarding mickledore, no problem, LTS and active versions only is
-    normal,<br>
-    not using it (apart from some backports to kirkstone when needed),
-    was just a note of relevant branches.<br>
-    <br>
-    Noted for the [kirkstone] customized title to ease CI.<br>
-    <br>
-    Thanks,<br>
-    <div class="moz-signature"><b>Adrian DC</b>
-      <br>
-      <br>
-      <br>
-    </div>
-    <div class="moz-cite-prefix">On 02/10/2024 15:07, Jon Mason wrote:<br>
-    </div>
-    <blockquote type="cite"
-cite="mid:CAPoiz9wVJSHMz_5NaUz3ZrGdO9yYX95iKURsSob=7dVL2KcpQg@mail.gmail.com">
-      <pre class="moz-quote-pre" wrap="">On Mon, Sep 30, 2024 at 9:56 PM Adrian DC <a class="moz-txt-link-rfc2396E" href="mailto:radian.dc@gmail.com">&lt;radian.dc@gmail.com&gt;</a> wrote:
-</pre>
-      <blockquote type="cite">
-        <pre class="moz-quote-pre" wrap="">
-Hi,
-
-Sorry I wasn't available to respond earlier.
-
-Apparently the details I added after the initial send got lost.
-
-- Original commit : nanbield and scarthgap (f2efb2a45610216cb6c2d72bdb5d5e61b990064a as you pointed out)
-- Missing on : kirkstone and mickledore
-- Tested on : kirkstone with CCache enabled
-
-The cherry-pick was over kirkstone, without any changes except validation hence signoff (old Android System habits),
-proposal was to apply the fix on kirkstone (being LTS and used by most SOM providers for now).
-</pre>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-No problem.  We only take patches for Yocto Project officially
-supported releases.  See
-<a class="moz-txt-link-freetext" href="https://wiki.yoctoproject.org/wiki/Releases">https://wiki.yoctoproject.org/wiki/Releases</a>
-
-The logic behind this decision is:
-1.  We don't want to give the false impression that we support or test
-releases that are EOL'ed
-2.  We don't want to encourage developers/users to use releases which
-are no longer getting security updates
-3.  Some of them are currently broken and upstream will not take
-patches to fix this (broken download locations)
-
-So, I'll only backport this to kirkstone.  Throwing at CI now to
-verify it doesn't break anything.
-
-Per Denys's comment, if you put the release you want this applied to
-in the subject line, then I have scripts that automatically apply it
-and run CI on it.
-
-Thanks,
-Jon
-
-
-</pre>
-      <blockquote type="cite">
-        <pre class="moz-quote-pre" wrap="">Thanks for your concern,
-
-Adrian DC
-
-
-On 01/10/2024 01:02, Jon Mason wrote:
-
-On Mon, Sep 30, 2024 at 6:47 PM Javier Tia <a class="moz-txt-link-rfc2396E" href="mailto:javier.tia@linaro.org">&lt;javier.tia@linaro.org&gt;</a> wrote:
-
-Hi,
-
-On 9/30/24 8:00 AM, Jon Mason wrote:
-
-On Sat, Sep 28, 2024 at 05:54:36PM +0200, Adrian DC wrote:
-
-From: Javier Tia <a class="moz-txt-link-rfc2396E" href="mailto:javier.tia@linaro.org">&lt;javier.tia@linaro.org&gt;</a>
-
-When ccache is enabled trusted-firmware-a recipe fails with this
-error message:
-
-     make: *** No rule to make target 'aarch64-poky-linux-gcc'. Stop.
-
-ccache prefix CC variable with 'ccache' word before compiler. Because
-there are no quotes assigned to CC, only 'ccache' is assigned. The
-compiler becomes a make target, producing the build error.
-
-Add single quotes to LD is a good measure to prevent this kind of error.
-
-Signed-off-by: Javier Tia <a class="moz-txt-link-rfc2396E" href="mailto:javier.tia@linaro.org">&lt;javier.tia@linaro.org&gt;</a>
-Signed-off-by: Jon Mason <a class="moz-txt-link-rfc2396E" href="mailto:jon.mason@arm.com">&lt;jon.mason@arm.com&gt;</a>
-Signed-off-by: Adrian DC <a class="moz-txt-link-rfc2396E" href="mailto:radian.dc@gmail.com">&lt;radian.dc@gmail.com&gt;</a>
-
-I have questions about this patch's origins, given the above s-o-b's.
-Signed-off-by's state an authorship or handling (see Developer’s
-Certificate of Origin).  Since I have not seen this patch, I should
-not be listed.  It's on me to add my s-o-b.  Also, the ordering tends
-to matter, as each person handling the patch adds their s-o-b at the
-end of the patch.  So, you should be second, since you are taking this
-from Javier and submitting it for him (nd I would be last since
-I'mtaking it from you).
-
-Also, this feels like it needs a "Fixes:" line.  So, I know how far to
-pull this back in the stable branches.
-
-Finally, I find it weird that Javier isn't submitting this himself.
-Javier appears to be the author, and it includes his Linaro emaila
-ddress, and you are sending it from a gmail account.  Are you
-co-authors?  Are you sending it with his approval because he is
-busy/vacationing/ill?
-
-Overall the patch is fine and I would normally include it, but this is
-weird to me.  If Javier acks it to confirm his authoer, then I'll move
-my s-o-b to the end and include it.
-
-Oh, this is a surprise.
-
-Jon has a good point.
-
-I have not approved sending this patch on my behalf. Yes, it looks like I am the original author because I recall fixing some issues around ccache a time ago; maybe last year if I remember correctly. But, before I acked it, I would like to know from where it was taken to have a bit more context. URL? Was the patch accepted or rejected?
-
-I think I know what might've happened.  It's already in the tree
-(commit f2efb2a45610216cb6c2d72bdb5d5e61b990064a).
-I'm guessing that Adrian accidentally sent it to this list while
-trying to backport it to an older release.  I got overly concerned
-with the s-o-b lines and didn't think to check what it wasn't applying
-:)
-
-Anyway, I think we can disregard this.
-
-Thanks,
-Jon
-
-  &gt;
-
-Jon
-
-
+Signed-off-by: Javier Tia <javier.tia@linaro.org>
 ---
-  .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc     | 4 ++--
-  1 file changed, 2 insertions(+), 2 deletions(-)
+ ci/uefi-secureboot.yml                                 | 2 +-
+ meta-arm/recipes-bsp/u-boot/u-boot-uefi-http-boot.inc  | 3 +++
+ meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc | 2 ++
+ meta-arm/recipes-bsp/u-boot/u-boot/uefi-http-boot.cfg  | 6 ++++++
+ 4 files changed, 12 insertions(+), 1 deletion(-)
+ create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot-uefi-http-boot.inc
+ create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot/uefi-http-boot.cfg
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index 2e3b50c5..5d3da59b 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -101,9 +101,9 @@ def remove_options_tail (in_string):
-      from itertools import takewhile
-      return ' '.join(takewhile(lambda x: not x.startswith('-'), in_string.split(' ')))
+diff --git a/ci/uefi-secureboot.yml b/ci/uefi-secureboot.yml
+index f647f4b1..4e9572cc 100644
+--- a/ci/uefi-secureboot.yml
++++ b/ci/uefi-secureboot.yml
+@@ -23,7 +23,7 @@ local_conf_header:
+     WKS_FILE = "efi-disk.wks.in"
+     KERNEL_IMAGETYPE = "Image"
+ 
+-    MACHINE_FEATURES:append = " efi uefi-secureboot"
++    MACHINE_FEATURES:append = " efi uefi-secureboot uefi-http-boot"
+ 
+     EFI_PROVIDER = "systemd-boot"
+ 
+diff --git a/meta-arm/recipes-bsp/u-boot/u-boot-uefi-http-boot.inc b/meta-arm/recipes-bsp/u-boot/u-boot-uefi-http-boot.inc
+new file mode 100644
+index 00000000..490a9684
+--- /dev/null
++++ b/meta-arm/recipes-bsp/u-boot/u-boot-uefi-http-boot.inc
+@@ -0,0 +1,3 @@
++FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
++
++SRC_URI += "file://uefi-http-boot.cfg"
+\ No newline at end of file
+diff --git a/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc b/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
+index e58035a9..48c2de86 100644
+--- a/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
++++ b/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
+@@ -4,6 +4,8 @@ SRC_URI += "file://uefi-secureboot.cfg"
+ 
+ inherit sbsign
+ 
++require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-http-boot', 'u-boot-uefi-http-boot.inc', '', d)}
++
+ DEPENDS += 'python3-pyopenssl-native'
+ 
+ do_compile:prepend() {
+diff --git a/meta-arm/recipes-bsp/u-boot/u-boot/uefi-http-boot.cfg b/meta-arm/recipes-bsp/u-boot/u-boot/uefi-http-boot.cfg
+new file mode 100644
+index 00000000..a9edf2a2
+--- /dev/null
++++ b/meta-arm/recipes-bsp/u-boot/u-boot/uefi-http-boot.cfg
+@@ -0,0 +1,6 @@
++CONFIG_PROT_TCP=y
++CONFIG_PROT_TCP_SACK=y
++CONFIG_CMD_WGET=y
++CONFIG_CMD_DNS=y
++CONFIG_BLKMAP=y
++CONFIG_EFI_HTTP_BOOT=y
+-- 
+2.46.2
 
--EXTRA_OEMAKE += <a class="moz-txt-link-rfc2396E" href="mailto:LD=${@remove_options_tail(d.getVar('LD'))}">"LD=${@remove_options_tail(d.getVar('LD'))}"</a>
-+EXTRA_OEMAKE += <a class="moz-txt-link-rfc2396E" href="mailto:LD='${@remove_options_tail(d.getVar('LD'))}'">"LD='${@remove_options_tail(d.getVar('LD'))}'"</a>
-
--EXTRA_OEMAKE += <a class="moz-txt-link-rfc2396E" href="mailto:CC=${@remove_options_tail(d.getVar('CC'))}">"CC=${@remove_options_tail(d.getVar('CC'))}"</a>
-+EXTRA_OEMAKE += <a class="moz-txt-link-rfc2396E" href="mailto:CC='${@remove_options_tail(d.getVar('CC'))}'">"CC='${@remove_options_tail(d.getVar('CC'))}'"</a>
-
-  # Verbose builds, no -Werror
-  EXTRA_OEMAKE += "V=1 E=0"
---
-2.43.0
-
-
-Thanks,
-
-» Javier Tia 🖋
-
-
-</pre>
-      </blockquote>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------VBhTIuFO3fHFnF5xVKvDJwb9--
 
