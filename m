@@ -2,91 +2,79 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77712CFC5FA
-	for <webhook@archiver.kernel.org>; Thu, 10 Oct 2024 19:12:42 +0000 (UTC)
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
- by mx.groups.io with SMTP id smtpd.web10.52599.1728587553052295532
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A05CFC5FB
+	for <webhook@archiver.kernel.org>; Thu, 10 Oct 2024 19:13:12 +0000 (UTC)
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+ by mx.groups.io with SMTP id smtpd.web10.52620.1728587591777630374
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 10 Oct 2024 12:12:33 -0700
+ Thu, 10 Oct 2024 12:13:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=cFw3lT4f;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.43, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6cbbe3f6931so11921286d6.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 10 Oct 2024 12:12:32 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=Y9YYXQWr;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.179, mailfrom: jdmason@kudzu.us)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6e330a7b120so11076297b3.2
+        for <meta-arm@lists.yoctoproject.org>; Thu, 10 Oct 2024 12:13:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1728587552; x=1729192352; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1728587591; x=1729192391; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eiDGbOEPvdEHFhMuo4l8Gs03uPx7c9vG+qVHxJXbxCM=;
-        b=cFw3lT4fc1bVQ6W86OznF4trWGPaiiJ6lnz2kwEIg/48JOLd1bV8k0YCUFAaDj1gEO
-         eS7nLxUbfP+CZJZICPs9uwZfuTgE1hrM4Vpmg9cYxd4jO0vAQtiGrgrCbI5OVNYN9Nrr
-         vFJAIiyj9G/Tn2be484iJGMziZZiY076pLsuiNanFM/J9aAKnqJPr4LauqGx+P0ZvS0p
-         XuYUf6hV1s8xtQg1mLQVCPQPsxpF3OU2xWhtsOgEl3FT1ptNL5MWRxSJzFt2w+ibAfOB
-         2A1ecJUtdGHGnbM7NWVIa2NUy/Y357mPXeqVx4ZBYZ6DM2Ko7NKYza1AX9RsLEo439Oy
-         EpWw==
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OxT6PhpeeGwxn1UfQbAe3W5sIYKHcSYq0sluCr8UyaU=;
+        b=Y9YYXQWrrFh54bSmkh6X3k9QDWpbzuqNBoWbV74CY0Y1l+7OjZ3Hr5m5IIQ/FyvRLg
+         wYJdxYTJQnvQc4cRgWVm5p698jLTnGXortlw5JuuUXxN6asUjLv4qYFUCGr14fxGR8Yv
+         +i8QndWaE6KzHEDt0vdKhnSIFvOUNKtTzYSB0JRPd+QkJZuPfi2U3zHAUZPiUBpGEQDE
+         pUTHdnaR+GL15wWft555yClVo0tiyZw5SagvdjnOuu/XHOz4DLqSo54yVfsjbFEKZaHc
+         V7QOy3onAWLi6AvPfIx2Ltd9WCBZ3xdbi0OQSwz6c+MZuEVTkGSPD4WOJrCwm04GU80g
+         Z66w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728587552; x=1729192352;
+        d=1e100.net; s=20230601; t=1728587591; x=1729192391;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eiDGbOEPvdEHFhMuo4l8Gs03uPx7c9vG+qVHxJXbxCM=;
-        b=OXDYpNJvElAvmaBeH6On0VUFlOvyVGkoqbhCPntGhk1ASaUUVrtBMQRGK/X2Vs+SLe
-         gTLCvATZIFmdZTHnZ+T1N7EANDs2ZWBD/xZsK0OSl+bYD03I0dxkmXKeG+gzy/c4F+Fg
-         cVOE9yeVe09PK2cFj3lZZaDEMWkqh5TNZd+gEN/8VsPjSbXmhohcq36RwY+LYxsWCCrU
-         rCA5sCOmZNbEcWql9NNovVbjMDZa+dNHj2noA85RLqfmywoxIsJx45TqLX7bgsy56mIp
-         mYpfxUZMgAbXlSgubP5KN46dJz17cNgTkUxK1wjiYuBrKO1xlykO1oI9H4oMKEJ9IQLi
-         tvAw==
-X-Gm-Message-State: AOJu0Yxg5ufxzjHbk0Rk3QaUVjj9opFxCxW8Hjr5i7RsYuriYmfdYpPp
-	JpydKiaACxJBncS+neVpuNCfutGNm0h2oECXEibXI+iK9y8o4EYlV3RNmHT5Go1IwXkRV/OymaM
+        bh=OxT6PhpeeGwxn1UfQbAe3W5sIYKHcSYq0sluCr8UyaU=;
+        b=Vk9Eqn0r+h2f3DIV3i+ex8D1iXDe4RopzK/20z6CSrDvhTIu9xzcpychlDxXPOdSaT
+         w8w4LzRqaO4SZHQAFwBTWlZtrRRPJmhkSaov4/nL6mTK2DMphvrmO71CMS/YUB+d2/3V
+         WP7TDiVuMqLm/nByQcZwExbmA+lYWU2TfikpIitkUQSttN2mrlTA9WS22CSr3wUvQs/Y
+         yajdYtN3aNj31OZrptXZ8EYI+AKOk3sO24DDBbqzz7+jUdB978P0+BmhS4s3MFfGbgLt
+         hLw93FpPFYrIhruDJiXjUzCytmM7rnb/1KSJ7C5wOdSBJqtvFjc1xB9hnmG5B51KnArw
+         v1zQ==
+X-Gm-Message-State: AOJu0YzNZV0nCHqDpQb2eEQUrrKOPwQe9yAXLRyK6aK5q+X1AyQTgTc5
+	n43T2FioR3I/lYIqsgJWj1cT0o4vNrj7kkszSNouD+rQb0fXgq2zQIGWqqC3nQxT6O9vu+mFVLA
 	=
-X-Google-Smtp-Source: AGHT+IG3rmP37kOwvEKgWXai+0+ST6lBmWe0pJgp9L+BCuHiICegxiE3AibgjFfsbQs8BTaCu7/+3w==
-X-Received: by 2002:a05:6214:5982:b0:6cb:d512:e6e6 with SMTP id 6a1803df08f44-6cbeff6043fmr1828986d6.23.1728587551791;
-        Thu, 10 Oct 2024 12:12:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHUGs/goN9nNYtuX1dmEentslaq4+lV46sAuhWlhqzpXwrGRqo5wmEaf5xxZhuhGC2uOVMJUg==
+X-Received: by 2002:a05:690c:85:b0:6b9:d327:9ad6 with SMTP id 00721157ae682-6e3224d1eb6mr84244237b3.33.1728587590791;
+        Thu, 10 Oct 2024 12:13:10 -0700 (PDT)
 Received: from localhost ([136.56.18.214])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cbe863152bsm8052006d6.118.2024.10.10.12.12.31
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cbe8638c15sm8118546d6.129.2024.10.10.12.13.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2024 12:12:31 -0700 (PDT)
+        Thu, 10 Oct 2024 12:13:10 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Javier Tia <javier.tia@linaro.org>
-Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
-	Ross Burton <Ross.Burton@arm.com>
-Subject: Re: [PATCH v0] arm/uefi-secureboot: Add uefi http boot support
-Date: Thu, 10 Oct 2024 15:11:39 -0400
-Message-Id: <172858750055.591681.8899917931404805511.b4-ty@arm.com>
+	Khem Raj <raj.khem@gmail.com>
+Subject: Re: [PATCH] layer.conf: Update to walnascar (5.2) layer/release series
+Date: Thu, 10 Oct 2024 15:11:40 -0400
+Message-Id: <172858750055.591681.7845853986136797878.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20241007033528.784737-1-javier.tia@linaro.org>
-References: <20241007033528.784737-1-javier.tia@linaro.org>
+In-Reply-To: <20241005023818.1689930-1-raj.khem@gmail.com>
+References: <20241005023818.1689930-1-raj.khem@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 10 Oct 2024 19:12:42 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6187
+ <meta-arm@lists.yoctoproject.org>; Thu, 10 Oct 2024 19:13:12 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6188
 
 
-On Sun, 06 Oct 2024 21:35:28 -0600, Javier Tia wrote:
-> Enable network boot via HTTP protocol. Many embedded and server-class
-> systems use network boot for booting. Enabling network boot on devices
-> allows:
+On Fri, 04 Oct 2024 19:38:18 -0700, Khem Raj wrote:
 > 
-> - Shipping devices without OS images. When we power up the device, the
->   firmware can connect to the Internet and download and install suitable
->   boot images for this specific device. Administrators can centrally
->   manage the boot images and configuration files on a network server.
->   This centralization streamlines the management of boot options and
->   ensures consistency across all devices.
-> 
-> [...]
+
 
 Applied, thanks!
 
-[1/1] arm/uefi-secureboot: Add uefi http boot support
-      commit: a93bdc8e4ea60ef461dc7154145c15912f04431c
+[1/1] layer.conf: Update to walnascar (5.2) layer/release series
+      commit: 72546aff8917ba145a265255a722a073c95ae296
 
 Best regards,
 -- 
