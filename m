@@ -2,126 +2,107 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D57D18132
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CC1D18131
 	for <webhook@archiver.kernel.org>; Mon, 14 Oct 2024 16:54:53 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.292.1728924890225946495
+ by mx.groups.io with SMTP id smtpd.web10.255.1728924890215438910
  for <meta-arm@lists.yoctoproject.org>;
  Mon, 14 Oct 2024 09:54:50 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 731981063
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 393B41007
 	for <meta-arm@lists.yoctoproject.org>; Mon, 14 Oct 2024 09:55:19 -0700 (PDT)
 Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AE5773F58B
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 758173F58B
 	for <meta-arm@lists.yoctoproject.org>; Mon, 14 Oct 2024 09:54:49 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/2] arm/scp-firmware: update to v2.15.0
-Date: Mon, 14 Oct 2024 12:54:48 -0400
-Message-Id: <20241014165448.46530-2-jon.mason@arm.com>
+Subject: [PATCH 1/2] arm/edk2: update to 202408
+Date: Mon, 14 Oct 2024 12:54:47 -0400
+Message-Id: <20241014165448.46530-1-jon.mason@arm.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20241014165448.46530-1-jon.mason@arm.com>
-References: <20241014165448.46530-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 14 Oct 2024 16:54:53 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6190
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6189
 
-Update SCP to the latest tagged version, and update the related patch to
-the new location of the relevant files.
-
-For a comparison of the changes, please go to
-https://git.gitlab.arm.com/firmware/SCP-firmware/-/compare/v2.14.0...v2.1=
-5.0
+Update edk2 to the latest stable release tag, and update edk2-platforms
+to the last SHA that seems to work.
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../files/0001-OPTEE-Private-Includes.patch    | 18 +++++++++---------
- ...rmware_2.14.0.bb =3D> scp-firmware_2.15.0.bb} |  2 +-
- 2 files changed, 10 insertions(+), 10 deletions(-)
- rename meta-arm/recipes-bsp/scp-firmware/{scp-firmware_2.14.0.bb =3D> sc=
-p-firmware_2.15.0.bb} (98%)
+ ...ls-native_202405.bb =3D> edk2-basetools-native_202408.bb} | 2 +-
+ meta-arm/recipes-bsp/uefi/edk2-firmware_202405.bb          | 7 -------
+ meta-arm/recipes-bsp/uefi/edk2-firmware_202408.bb          | 7 +++++++
+ meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.4.bb                | 2 +-
+ 4 files changed, 9 insertions(+), 9 deletions(-)
+ rename meta-arm/recipes-bsp/uefi/{edk2-basetools-native_202405.bb =3D> e=
+dk2-basetools-native_202408.bb} (93%)
+ delete mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware_202405.bb
+ create mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware_202408.bb
 
-diff --git a/meta-arm/recipes-bsp/scp-firmware/files/0001-OPTEE-Private-I=
-ncludes.patch b/meta-arm/recipes-bsp/scp-firmware/files/0001-OPTEE-Privat=
-e-Includes.patch
-index f3063a957e1e..84f501567bbc 100644
---- a/meta-arm/recipes-bsp/scp-firmware/files/0001-OPTEE-Private-Includes=
-.patch
-+++ b/meta-arm/recipes-bsp/scp-firmware/files/0001-OPTEE-Private-Includes=
-.patch
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202405.bb b/=
+meta-arm/recipes-bsp/uefi/edk2-basetools-native_202408.bb
+similarity index 93%
+rename from meta-arm/recipes-bsp/uefi/edk2-basetools-native_202405.bb
+rename to meta-arm/recipes-bsp/uefi/edk2-basetools-native_202408.bb
+index 851150744c6d..d89a79015a83 100644
+--- a/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202405.bb
++++ b/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202408.bb
+@@ -10,7 +10,7 @@ LICENSE =3D "BSD-2-Clause-Patent"
+ SRC_URI =3D "git://github.com/tianocore/edk2.git;branch=3Dmaster;protoco=
+l=3Dhttps"
+ LIC_FILES_CHKSUM =3D "file://License.txt;md5=3D2b415520383f7964e96700ae1=
+2b4570a"
+=20
+-SRCREV =3D "3e722403cd16388a0e4044e705a2b34c841d76ca"
++SRCREV =3D "b158dad150bf02879668f72ce306445250838201"
+=20
+ UPSTREAM_CHECK_GITTAGREGEX =3D "^edk2-stable(?P<pver>\d+)$"
+=20
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_202405.bb b/meta-arm=
+/recipes-bsp/uefi/edk2-firmware_202405.bb
+deleted file mode 100644
+index 294a22322d9a..000000000000
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware_202405.bb
++++ /dev/null
+@@ -1,7 +0,0 @@
+-SRCREV_edk2           ?=3D "3e722403cd16388a0e4044e705a2b34c841d76ca"
+-SRCREV_edk2-platforms ?=3D "59c686673992d7549c2b054773d5d1b5e739a88b"
+-
+-# FIXME - clang is having issues with antlr
+-TOOLCHAIN:aarch64 =3D "gcc"
+-
+-require recipes-bsp/uefi/edk2-firmware.inc
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_202408.bb b/meta-arm=
+/recipes-bsp/uefi/edk2-firmware_202408.bb
+new file mode 100644
+index 000000000000..81bfc0002396
+--- /dev/null
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_202408.bb
+@@ -0,0 +1,7 @@
++SRCREV_edk2           ?=3D "b158dad150bf02879668f72ce306445250838201"
++SRCREV_edk2-platforms ?=3D "a3c898956a4d48dc5980336fa6ce6eeb23c4f72b"
++
++# FIXME - clang is having issues with antlr
++TOOLCHAIN:aarch64 =3D "gcc"
++
++require recipes-bsp/uefi/edk2-firmware.inc
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.4.bb b/meta-arm/recip=
+es-bsp/uefi/sbsa-acs_7.1.4.bb
+index 305588d1a11b..b6361346c5b4 100644
+--- a/meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.4.bb
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.4.bb
 @@ -1,4 +1,4 @@
--From b298400a5783453f64d8bebbd92db2c84c4a49fd Mon Sep 17 00:00:00 2001
-+From 8b4b14943de92a2c7f8b328c2de75771493b7d18 Mon Sep 17 00:00:00 2001
- From: Ross Burton <ross.burton@arm.com>
- Date: Mon, 10 Jul 2023 14:09:16 +0100
- Subject: [PATCH] OPTEE Private Includes
-@@ -11,14 +11,14 @@ For some reason this behaviour isn't deterministic, a=
- ticket has been filed with
- Upstream-Status: Pending
- Signed-off-by: Ross Burton <ross.burton@arm.com>
- ---
-- module/optee/console/CMakeLists.txt | 2 +-
-- module/optee/mbx/CMakeLists.txt     | 2 +-
-+ product/optee/common/module/console/CMakeLists.txt | 2 +-
-+ product/optee/common/module/mbx/CMakeLists.txt     | 2 +-
-  2 files changed, 2 insertions(+), 2 deletions(-)
+-require recipes-bsp/uefi/edk2-firmware_202405.bb
++require recipes-bsp/uefi/edk2-firmware_202408.bb
+ PROVIDES:remove =3D "virtual/bootloader"
 =20
--diff --git a/module/optee/console/CMakeLists.txt b/module/optee/console/=
-CMakeLists.txt
-+diff --git a/product/optee/common/module/console/CMakeLists.txt b/produc=
-t/optee/common/module/console/CMakeLists.txt
- index aebb7cc79766..942aa98c85ff 100644
----- a/module/optee/console/CMakeLists.txt
--+++ b/module/optee/console/CMakeLists.txt
-+--- a/product/optee/common/module/console/CMakeLists.txt
-++++ b/product/optee/common/module/console/CMakeLists.txt
- @@ -14,7 +14,7 @@ target_include_directories(${SCP_MODULE_TARGET}
-  # Those includes are needed for mutex definitnion that is used in optee=
-_smt
-  # notification
-@@ -28,10 +28,10 @@ index aebb7cc79766..942aa98c85ff 100644
-                                    "${SCP_OPTEE_DIR}/core/include/"
-                                    "${SCP_OPTEE_DIR}/lib/libutils/ext/in=
-clude/"
-                                    "${SCP_OPTEE_DIR}/lib/libutee/include=
-/")
--diff --git a/module/optee/mbx/CMakeLists.txt b/module/optee/mbx/CMakeLis=
-ts.txt
-+diff --git a/product/optee/common/module/mbx/CMakeLists.txt b/product/op=
-tee/common/module/mbx/CMakeLists.txt
- index 305fa42b7370..783a7970c2d5 100644
----- a/module/optee/mbx/CMakeLists.txt
--+++ b/module/optee/mbx/CMakeLists.txt
-+--- a/product/optee/common/module/mbx/CMakeLists.txt
-++++ b/product/optee/common/module/mbx/CMakeLists.txt
- @@ -15,7 +15,7 @@ target_include_directories(${SCP_MODULE_TARGET}
-  # Those includes are needed for mutex defifitnion that is used in optee=
-_smt
-  # notification
-diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.14.0.bb b/m=
-eta-arm/recipes-bsp/scp-firmware/scp-firmware_2.15.0.bb
-similarity index 98%
-rename from meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.14.0.bb
-rename to meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.15.0.bb
-index c0e40d903e12..b305234347f2 100644
---- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.14.0.bb
-+++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.15.0.bb
-@@ -12,7 +12,7 @@ SRC_URI =3D "${SRC_URI_SCP_FIRMWARE};branch=3D${SRCBRAN=
-CH} \
-           "
-=20
- SRCBRANCH =3D "main"
--SRCREV  =3D "3267f2964114a56faaf46a40704be6ca78240725"
-+SRCREV  =3D "25681b34bdc838b7231e0056e3ef5164e8005382"
-=20
- PROVIDES +=3D "virtual/control-processor-firmware"
-=20
+ LICENSE +=3D "& Apache-2.0"
 --=20
 2.39.5 (Apple Git-154)
 
