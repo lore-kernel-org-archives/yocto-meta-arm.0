@@ -1,86 +1,130 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ben.cownley@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117A5D216A9
-	for <webhook@archiver.kernel.org>; Tue, 15 Oct 2024 13:49:56 +0000 (UTC)
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
- by mx.groups.io with SMTP id smtpd.web11.14097.1729000191150152796
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99795D1D875
+	for <webhook@archiver.kernel.org>; Tue, 15 Oct 2024 14:59:56 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.15786.1729004389330644891
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 15 Oct 2024 06:49:51 -0700
+ Tue, 15 Oct 2024 07:59:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=oa9QcHJk;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.179, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4603d3e456bso48328011cf.2
-        for <meta-arm@lists.yoctoproject.org>; Tue, 15 Oct 2024 06:49:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1729000190; x=1729604990; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GUdWVDwcDs4h4TVeSAw23no0Su4i9INpv1he+sISLwc=;
-        b=oa9QcHJkwZTf4weEwTX1b8YE1yqiYdnPv4YDpybKO/PEmlSYu6ElTsuFyN9uuDvkcQ
-         v6qs6XkLyxJHOHevwQIWmXgwwNqscL4ADL91DuOCW+g79l48Y5vIP9LYBoe+pF+6G5kC
-         YDa9UkQLReQxr5la5/Hb/OE30DBGBGdRQhu7DcW/B0GxeqzxDdDdHrftLl1PfjfbKdZX
-         Sc7HV+IEHK7sE3eZSe09od+mEdSvH6cabsQBYLCyxAptX+FY1UtvjA3D5fTz27NRZP1b
-         nCK4TLzsle8QcttJNlzd5AuiTpr62plusGChsAWjdiSC5alk5aW0QXpO+W5t9VMQgbIG
-         Nlfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729000190; x=1729604990;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GUdWVDwcDs4h4TVeSAw23no0Su4i9INpv1he+sISLwc=;
-        b=OdyTbJAAr0skOG2LSo02YhKyoi9m/KnzjOCC1HhGjBGDWAcUJglZNMMgsaWSuNyCVw
-         CZd7WxyaSvl9aEogPPZrS84ATqsoAHLLe1Z62j8XSlOAWoIVxd2n572d8RjLJNy14uCY
-         ph2YxDr6SS7JxwdeeHTSvWZyLUF+Cn6sHo51p/kUsdUIisiLPTRI6WxIsXSkIaCCSv+u
-         EL2sktz8k2Z45wVd1Igo8Oqr+ReGrB1YrEw7aOQWSgCDKXoyld8PRcEomIIYBo7418iu
-         IoxheH7oKwSKbPbbDgsjUx7jhiJ/J3u4yEfl75or/tiWbEnvM2mFUVg1LDYuPk03c5V3
-         wZ3Q==
-X-Gm-Message-State: AOJu0YwW59F8+JFnsW7lSU3GogSPTIxwRB0TA2HHgJfLTFHGQQlrCBXH
-	E78ZW+tUiQJcoKtnzHvbP0nqAx/eQyQg3drLwHGjylor24xG3sZdk29l2spRvmDE9lG87muN5/I
-	=
-X-Google-Smtp-Source: AGHT+IFHsw8474gPHuFdLBDskSgYME2B1uZ/wCSAav3/zUM8o8BQHcRxzzhV04LsFeoOw36J7EW0lQ==
-X-Received: by 2002:a05:622a:48d:b0:458:2fb7:503a with SMTP id d75a77b69052e-4604bca6914mr231933691cf.50.1729000189643;
-        Tue, 15 Oct 2024 06:49:49 -0700 (PDT)
-Received: from localhost ([136.56.18.214])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4607b378b02sm6600901cf.64.2024.10.15.06.49.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2024 06:49:49 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH 1/2] arm/edk2: update to 202408
-Date: Tue, 15 Oct 2024 09:49:39 -0400
-Message-Id: <172900017888.4133599.3091546510206494718.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20241014165448.46530-1-jon.mason@arm.com>
-References: <20241014165448.46530-1-jon.mason@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ben.cownley@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B19DFEC;
+	Tue, 15 Oct 2024 08:00:18 -0700 (PDT)
+Received: from e125927.manchester.arm.com (e125927.arm.com [10.32.102.160])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19D4B3F528;
+	Tue, 15 Oct 2024 07:59:47 -0700 (PDT)
+From: Ben <Ben.Cownley@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Ben Cownley <ben.cownley@arm.com>
+Subject: [PATCH scarthgap 2/3] arm-systemready/oeqa: Add unattended installation testcase
+Date: Tue, 15 Oct 2024 15:59:33 +0100
+Message-Id: <20241015145934.67938-2-Ben.Cownley@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241015145934.67938-1-Ben.Cownley@arm.com>
+References: <20241015145934.67938-1-Ben.Cownley@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 15 Oct 2024 13:49:56 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6194
+ <meta-arm@lists.yoctoproject.org>; Tue, 15 Oct 2024 14:59:56 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6196
 
+Add test for openSUSE unattended installation
 
-On Mon, 14 Oct 2024 12:54:47 -0400, Jon Mason wrote:
-> Update edk2 to the latest stable release tag, and update edk2-platforms
-> to the last SHA that seems to work.
-> 
-> 
+Signed-off-by: Ben Cownley <ben.cownley@arm.com>
+---
+ .../arm_systemready_opensuse_unattended.py    | 42 +++++++++++++++++++
+ .../arm-systemready-linux-distros-opensuse.bb |  2 +
+ 2 files changed, 44 insertions(+)
+ create mode 100644 meta-arm-systemready/lib/oeqa/runtime/cases/arm_syste=
+mready_opensuse_unattended.py
 
-Applied, thanks!
+diff --git a/meta-arm-systemready/lib/oeqa/runtime/cases/arm_systemready_=
+opensuse_unattended.py b/meta-arm-systemready/lib/oeqa/runtime/cases/arm_=
+systemready_opensuse_unattended.py
+new file mode 100644
+index 00000000..aea8df3e
+--- /dev/null
++++ b/meta-arm-systemready/lib/oeqa/runtime/cases/arm_systemready_opensus=
+e_unattended.py
+@@ -0,0 +1,42 @@
++from oeqa.runtime.case import OERuntimeTestCase
++
++class SystemReadyOpenSUSEUnattendedTest(OERuntimeTestCase):
++    def setUp(self):
++        super().setUp()
++        self.console =3D self.target.DEFAULT_CONSOLE
++
++    def test_opensuse_unattended(self):
++        # Turn on the FVP.
++        self.target.transition('on')
++
++        # Timeout value =3D elapsed time * 2; where elapsed time was col=
+lected
++        # from the elapsed time in the log.do_testimage for each functio=
+n after
++        # the build is finished on the development machine.
++        self.target.expect(self.console,
++                           'Booting `Installation\'',
++                           timeout=3D(2 * 60))
++        bb.plain('Installation status: Loading the kernel, initrd and ba=
+sic drivers...')
++
++        self.target.expect(self.console,
++                           'Starting hardware detection...',
++                           timeout=3D(40 * 60))
++        bb.plain('Installation status: Starting hardware detection...')
++
++        self.target.expect(self.console,
++                           'Loading Installation System',
++                           timeout=3D(60 * 60))
++        bb.plain('Installation status: Loading Installation System...')
++
++        self.target.expect(self.console,
++                           'Starting Installer',
++                           timeout=3D(40 * 60))
++        bb.plain('Installation status: Performing Installation...')
++
++        self.target.expect(self.console,
++                           'Finishing Configuration',
++                           timeout=3D(15 * 60 * 60))
++        bb.plain('Installation status: Finishing Configuration...')
++
++        # Waiting till the installation is finished.
++        self.target.expect(self.console, r'.*login: ', timeout=3D(6 * 60=
+ * 60))
++        bb.plain('Installation status: openSUSE installation finished su=
+ccessfully.')
+diff --git a/meta-arm-systemready/recipes-test/arm-systemready-linux-dist=
+ros/arm-systemready-linux-distros-opensuse.bb b/meta-arm-systemready/reci=
+pes-test/arm-systemready-linux-distros/arm-systemready-linux-distros-open=
+suse.bb
+index 7d02a258..33f20587 100644
+--- a/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
+-systemready-linux-distros-opensuse.bb
++++ b/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
+-systemready-linux-distros-opensuse.bb
+@@ -73,6 +73,8 @@ BUILD_NO =3D "491.1"
+ SRC_URI =3D "https://download.opensuse.org/distribution/leap/${PV}/iso/o=
+penSUSE-Leap-${PV}-${ISO_TYPE}-aarch64-Build${BUILD_NO}-Media.iso;unpack=3D=
+0;downloadfilename=3D${ISO_IMAGE_NAME}.iso"
+ SRC_URI[sha256sum] =3D "456cc4f99b044429d8a89bd302c06e9e382d6ac4dc590139=
+a7096ebb54f5357b"
+=20
++TEST_SUITES =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "ar=
+m_systemready_opensuse_unattended", "", d)}"
++
+ ISO_LABEL =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "OEMD=
+RV", "", d)}"
+ BOOT_CATALOG =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "b=
+oot.catalog", "", d)}"
+ BOOT_IMAGE =3D "${@oe.utils.vartrue("DISTRO_UNATTENDED_INST_TESTS", "EFI=
+/BOOT/bootaa64.efi", "", d)}"
+--=20
+2.34.1
 
-[1/2] arm/edk2: update to 202408
-      commit: 603130b75a5a52f3b0ab1972d4e3bec3a4aaf411
-[2/2] arm/scp-firmware: update to v2.15.0
-      commit: 3b59949155054cebead9a7c1ee441c8fe53419a9
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
