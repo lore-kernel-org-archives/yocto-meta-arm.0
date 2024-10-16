@@ -2,36 +2,36 @@ Return-Path: <ben.cownley@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D988D1D878
-	for <webhook@archiver.kernel.org>; Tue, 15 Oct 2024 14:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5FCD1AD3E
+	for <webhook@archiver.kernel.org>; Wed, 16 Oct 2024 10:04:36 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.15787.1729004391757564471
+ by mx.groups.io with SMTP id smtpd.web11.19595.1729073070148720733
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 15 Oct 2024 07:59:51 -0700
+ Wed, 16 Oct 2024 03:04:30 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ben.cownley@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E70DBFEC;
-	Tue, 15 Oct 2024 08:00:20 -0700 (PDT)
-Received: from e125927.manchester.arm.com (e125927.arm.com [10.32.102.160])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 57A483F528;
-	Tue, 15 Oct 2024 07:59:50 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74D7AFEC;
+	Wed, 16 Oct 2024 03:04:59 -0700 (PDT)
+Received: from e125927.manchester.arm.com (unknown [10.32.102.196])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 086653F71E;
+	Wed, 16 Oct 2024 03:04:28 -0700 (PDT)
 From: Ben <Ben.Cownley@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Ben Cownley <ben.cownley@arm.com>
-Subject: [PATCH scarthgap 3/3] kas: Include unattended openSUSE test
-Date: Tue, 15 Oct 2024 15:59:34 +0100
-Message-Id: <20241015145934.67938-3-Ben.Cownley@arm.com>
+Subject: [PATCH styhead 3/3] kas: Include unattended openSUSE test
+Date: Wed, 16 Oct 2024 11:04:12 +0100
+Message-Id: <20241016100412.9691-3-Ben.Cownley@arm.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20241015145934.67938-1-Ben.Cownley@arm.com>
-References: <20241015145934.67938-1-Ben.Cownley@arm.com>
+In-Reply-To: <20241016100412.9691-1-Ben.Cownley@arm.com>
+References: <20241016100412.9691-1-Ben.Cownley@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 15 Oct 2024 14:59:56 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6197
+ <meta-arm@lists.yoctoproject.org>; Wed, 16 Oct 2024 10:04:36 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6200
 
 Add unattended installation class to openSUSE target
 
