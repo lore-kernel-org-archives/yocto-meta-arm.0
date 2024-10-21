@@ -1,93 +1,101 @@
-Return-Path: <mikko.rapeli@linaro.org>
+Return-Path: <romain.naour@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982E4D3C54E
-	for <webhook@archiver.kernel.org>; Fri, 18 Oct 2024 05:52:06 +0000 (UTC)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
- by mx.groups.io with SMTP id smtpd.web11.16318.1729230724961498618
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D861AD15DA2
+	for <webhook@archiver.kernel.org>; Mon, 21 Oct 2024 14:38:58 +0000 (UTC)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web11.47506.1729521529740518646
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 17 Oct 2024 22:52:05 -0700
+ Mon, 21 Oct 2024 07:38:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=Um0G1Cke;
- spf=pass (domain: linaro.org, ip: 209.85.208.174, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2fb58980711so20636901fa.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 17 Oct 2024 22:52:04 -0700 (PDT)
+ dkim=pass header.i=@smile.fr header.s=google header.b=P/9TU43F;
+ spf=pass (domain: smile.fr, ip: 209.85.128.54, mailfrom: romain.naour@smile.fr)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42f6bec84b5so50996075e9.1
+        for <meta-arm@lists.yoctoproject.org>; Mon, 21 Oct 2024 07:38:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1729230723; x=1729835523; darn=lists.yoctoproject.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Id/Qr2WEObxktUCswC4ellAYCMa+HzhoJsLCHE2bNAQ=;
-        b=Um0G1CkeTufTEH3Bf3e6iQQiUfxu0BbtpRwheW2J54eiE0GytSLtRraQVVhbXuWmrp
-         nXjoWRyKeK1MQsf7hJVaXewLDYyDVk+OblDo6U0J1ypqeWffBnvUny5sAPNRfzbEssRY
-         Ud3H8JSy49ol6Y3O5imjT3DaSVg4B8FH6m1rta03z0Yj4AXoF2Vt9AztOpCzC1MzYyA8
-         iDnW7Zr8qHUZvlBuwcerW+1LWPANoFPqtF8wPYwh94lc0pztuuFWSiPSNe2ay0YTvUFh
-         6ii+AyVFk5MuLk8pYu+73j0LRwSTeThZqjmJOGW/a7xPGs09l2KKHrVFbdc6G3vsxlwX
-         hIlQ==
+        d=smile.fr; s=google; t=1729521528; x=1730126328; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=u/vI/vkuPE3OGiOcUwtcvjK1rcH2TQdaF9W4AEia/Yc=;
+        b=P/9TU43FyWuNj74IcKRAiATLZal+FxCUO9/xh0SDVSACYkuuateBpGYvDijFViRAA/
+         882kWa9zJ6v6x36bLC2zVYA5sjJyrsiovug5oVCeEg7tRrl6TiDDQinYgbYPmm8Hc5vT
+         CHazZmXLWjkKixTOXzztiULiKxIfHh6C5QT2w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729230723; x=1729835523;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Id/Qr2WEObxktUCswC4ellAYCMa+HzhoJsLCHE2bNAQ=;
-        b=NaRbowYRAomLEJ5lBG6Te6+5hdZ8Msghmir5jWUZMk7oAseRiDWbSQ1pebhiFCXFK7
-         E6/5XO1eHUd01x5hTuWmTXN9CVmiIW8AYoQ5JvH7wOiftDMYvO/FZ38GaXNE7VNoqOaq
-         Uy31tAbvGk3ZB4FCdjwlOtpOIYucW5W9ZqbkB5Gl2PZK6rZ2QOOCfVl/UvrdihF7HBTN
-         O8REQxos6fHnVPQ+MPfgkyHR3RhAd6tC/PXIZu1bmOZeFfgMadXdy/8bmbfK2xNCRDOk
-         TP4vIMbALQ7BjYDb9vrgySCI0wC+9aItbc4pwsHzX5h0/aJwN/EWWhWrghp11yWXyMKP
-         s7sw==
-X-Gm-Message-State: AOJu0YxoOTKkZVFYlBIBLDjM+pRkEltELz9bVR5NVgBzD7WBd14v6t/s
-	b4WZ2Qm4zqN8yoBbG4HA1KxPV9PazX+rDy7IpLAQ8auwxfiegoDz3txGAWr/MKE=
-X-Google-Smtp-Source: AGHT+IGyUKCsTkVyFQc//XCL6tmg1lIo70YLg0E22HMxOtJN7EXD8iZ1iZAQuDiCl/SCuCV2a1WdZw==
-X-Received: by 2002:a2e:be0d:0:b0:2fb:70a0:91e7 with SMTP id 38308e7fff4ca-2fb82fc923cmr4725261fa.10.1729230722773;
-        Thu, 17 Oct 2024 22:52:02 -0700 (PDT)
-Received: from nuoska (85-76-112-112-nat.elisa-mobile.fi. [85.76.112.112])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-2fb809b21a3sm1281231fa.30.2024.10.17.22.51.59
+        d=1e100.net; s=20230601; t=1729521528; x=1730126328;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u/vI/vkuPE3OGiOcUwtcvjK1rcH2TQdaF9W4AEia/Yc=;
+        b=n8ceYUK5zO4XxkGcYFHtwuPnHiJKn9e5aQT6RtTGNtZIMQRfVNSH4x4pnS4A7vzRbX
+         5UVlJQTeuiq/9/0hzB79rIQ2WMFfdrxZzuOPW5eIC08hrCL7SEsX3Cca/HDoRGqZs8s0
+         B9ezvUNDQ6Trg3FwXk8z0dJDF3SSjVCpv87frId66q4NeOz0RBdNXNraMUNjFZ9HH92Y
+         f1YQqi6g58EMgSJOBpoTHJI0Cvvhj6HhjdcAGUaNXoKOT1M3HhuDuDjQ+th2oyzCYyJk
+         I23R16cyNfPWgNt9Mn0+gdxCLvT2r3pB9nSy8IK7ojz2kMFSfT5oE5pM/0rFIv6c2bdw
+         sQmg==
+X-Gm-Message-State: AOJu0Yynz30SrrwtH4xfRECpJJXrHMYzstIJnLxxqmxRBGYkjB3BvrfV
+	k9kj31io6WN51LfjLjLIQfGpBc1omkzSz8I9ZaZ7wLqFZ+EDSQg9EdwPxZ7JgYuXb2nuEeVB/Ot
+	D
+X-Google-Smtp-Source: AGHT+IHJVQHalIoaLGPUbdoNP+iiXcCzgsm8FL63ZSgHL31JyPpi0cOavif3eYmohSHqjjEkIwmRQg==
+X-Received: by 2002:a5d:4581:0:b0:37d:492c:4f54 with SMTP id ffacd0b85a97d-37ea21de09fmr6838495f8f.3.1729521527927;
+        Mon, 21 Oct 2024 07:38:47 -0700 (PDT)
+Received: from P-NTS-Evian.home (2a01cb05949d5800e3ef2d7a4131071f.ipv6.abo.wanadoo.fr. [2a01:cb05:949d:5800:e3ef:2d7a:4131:71f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4316f5cc4c7sm58935205e9.48.2024.10.21.07.38.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Oct 2024 22:52:00 -0700 (PDT)
-Date: Fri, 18 Oct 2024 08:51:57 +0300
-From: Mikko Rapeli <mikko.rapeli@linaro.org>
-To: anton.antonov@arm.com
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH v3 2/2] trusted-service: remove optee udev and
- group settings
-Message-ID: <ZxH3fUZB1Q1ozwSP@nuoska>
-References: <ZxDwXeOdfwuCsI_p@nuoska>
- <18350.1729176507648104860@lists.yoctoproject.org>
+        Mon, 21 Oct 2024 07:38:47 -0700 (PDT)
+From: Romain Naour <romain.naour@smile.fr>
+To: meta-arm@lists.yoctoproject.org
+Cc: jon.mason@arm.com,
+	Romain Naour <romain.naour@smile.fr>
+Subject: [PATCH] CI: test external-arm-toolchain with usrmerge enabled
+Date: Mon, 21 Oct 2024 16:38:41 +0200
+Message-ID: <20241021143841.110336-1-romain.naour@smile.fr>
+X-Mailer: git-send-email 2.45.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18350.1729176507648104860@lists.yoctoproject.org>
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 18 Oct 2024 05:52:06 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6214
+ <meta-arm@lists.yoctoproject.org>; Mon, 21 Oct 2024 14:38:58 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6215
 
-Hi,
+We want to test meta-arm-toolchain layer with usrmerge enabled [1]
+since it produce some breakage with current external ARM toolchains [2].
 
-On Thu, Oct 17, 2024 at 07:48:27AM -0700, Anton Antonov via lists.yoctoproject.org wrote:
-> On Thu, Oct 17, 2024 at 04:09 AM, Mikko Rapeli wrote:
-> 
-> > 
-> > I'm still not sure of the right direction. Which recipes and layers have
-> > userspace
-> > SW which needs to access /dev/tee* or /dev/teepriv* devices nodes without
-> > root
-> > rights in userspace? Where is a test for these recipes or functionality?
-> 
-> Parsec is the example you're looking for. And parsec oeqa tests would test TS provider if included
+Instead of using a custom setting (poky + usrmerge enabled), use the
+existing poky-altcfg provided by Yocto. poky-altcfg uses systemd as
+init system and imply usermerge being enabled since Yocto scarthgap
+(new systemd v255 requirement) [3].
 
-Thanks! So meta-security/recipes-parsec/parsec-service/parsec-service_1.4.1.bb
-would need to change from "teeclnt" to "tee" group to access /dev/tee* devices
-according to optee-client udev rule. I can provide the change when/if this
-series gets merged. Same for meta-cassini.
+Note: It must be a 32bit machine, since there are currently no aarch64
+host toolchains for aarch64 (some gitlab runner used by meta-arm are
+aarch64 host) [4].
 
-But does the really need to be a separate copy of the optee-client udev rule
-for TS setups which need optee but not tee-supplicant from optee-client binary
-package?
+[1] https://docs.yoctoproject.org/scarthgap/ref-manual/features.html?highlight=usrmerge#distro-features
+[2] https://lists.yoctoproject.org/g/meta-arm/message/5557
+[3] https://git.openembedded.org/openembedded-core/commit/?id=802e853eeddf16d73db1900546cc5f045d1fb7ed
+[4] 4bfa191ada5c44baaa1f4b8aabbeb314961c0134
 
-Cheers,
+Signed-off-by: Romain Naour <romain.naour@smile.fr>
+---
+ .gitlab-ci.yml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
--Mikko
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index f211ea97..0e9ad688 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -295,7 +295,8 @@ qemuarm-secureboot:
+         TOOLCHAINS: [gcc, clang]
+         TCLIBC: [glibc, musl]
+         TESTING: testimage
+-      - TOOLCHAINS: external-gccarm
++      - DISTRO: [poky, poky-altcfg]
++        TOOLCHAINS: external-gccarm
+         TESTING: testimage
+       - KERNEL: linux-yocto-dev
+         TESTING: testimage
+-- 
+2.45.0
+
 
