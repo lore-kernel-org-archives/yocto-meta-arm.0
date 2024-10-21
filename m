@@ -1,101 +1,88 @@
-Return-Path: <romain.naour@smile.fr>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D861AD15DA2
-	for <webhook@archiver.kernel.org>; Mon, 21 Oct 2024 14:38:58 +0000 (UTC)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
- by mx.groups.io with SMTP id smtpd.web11.47506.1729521529740518646
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC53D15DAD
+	for <webhook@archiver.kernel.org>; Mon, 21 Oct 2024 15:21:59 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.49299.1729524114458874569
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 21 Oct 2024 07:38:50 -0700
+ Mon, 21 Oct 2024 08:21:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@smile.fr header.s=google header.b=P/9TU43F;
- spf=pass (domain: smile.fr, ip: 209.85.128.54, mailfrom: romain.naour@smile.fr)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42f6bec84b5so50996075e9.1
-        for <meta-arm@lists.yoctoproject.org>; Mon, 21 Oct 2024 07:38:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1729521528; x=1730126328; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=u/vI/vkuPE3OGiOcUwtcvjK1rcH2TQdaF9W4AEia/Yc=;
-        b=P/9TU43FyWuNj74IcKRAiATLZal+FxCUO9/xh0SDVSACYkuuateBpGYvDijFViRAA/
-         882kWa9zJ6v6x36bLC2zVYA5sjJyrsiovug5oVCeEg7tRrl6TiDDQinYgbYPmm8Hc5vT
-         CHazZmXLWjkKixTOXzztiULiKxIfHh6C5QT2w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729521528; x=1730126328;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u/vI/vkuPE3OGiOcUwtcvjK1rcH2TQdaF9W4AEia/Yc=;
-        b=n8ceYUK5zO4XxkGcYFHtwuPnHiJKn9e5aQT6RtTGNtZIMQRfVNSH4x4pnS4A7vzRbX
-         5UVlJQTeuiq/9/0hzB79rIQ2WMFfdrxZzuOPW5eIC08hrCL7SEsX3Cca/HDoRGqZs8s0
-         B9ezvUNDQ6Trg3FwXk8z0dJDF3SSjVCpv87frId66q4NeOz0RBdNXNraMUNjFZ9HH92Y
-         f1YQqi6g58EMgSJOBpoTHJI0Cvvhj6HhjdcAGUaNXoKOT1M3HhuDuDjQ+th2oyzCYyJk
-         I23R16cyNfPWgNt9Mn0+gdxCLvT2r3pB9nSy8IK7ojz2kMFSfT5oE5pM/0rFIv6c2bdw
-         sQmg==
-X-Gm-Message-State: AOJu0Yynz30SrrwtH4xfRECpJJXrHMYzstIJnLxxqmxRBGYkjB3BvrfV
-	k9kj31io6WN51LfjLjLIQfGpBc1omkzSz8I9ZaZ7wLqFZ+EDSQg9EdwPxZ7JgYuXb2nuEeVB/Ot
-	D
-X-Google-Smtp-Source: AGHT+IHJVQHalIoaLGPUbdoNP+iiXcCzgsm8FL63ZSgHL31JyPpi0cOavif3eYmohSHqjjEkIwmRQg==
-X-Received: by 2002:a5d:4581:0:b0:37d:492c:4f54 with SMTP id ffacd0b85a97d-37ea21de09fmr6838495f8f.3.1729521527927;
-        Mon, 21 Oct 2024 07:38:47 -0700 (PDT)
-Received: from P-NTS-Evian.home (2a01cb05949d5800e3ef2d7a4131071f.ipv6.abo.wanadoo.fr. [2a01:cb05:949d:5800:e3ef:2d7a:4131:71f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4316f5cc4c7sm58935205e9.48.2024.10.21.07.38.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Oct 2024 07:38:47 -0700 (PDT)
-From: Romain Naour <romain.naour@smile.fr>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BEC8CFEC
+	for <meta-arm@lists.yoctoproject.org>; Mon, 21 Oct 2024 08:22:23 -0700 (PDT)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 000B03F528
+	for <meta-arm@lists.yoctoproject.org>; Mon, 21 Oct 2024 08:21:53 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: jon.mason@arm.com,
-	Romain Naour <romain.naour@smile.fr>
-Subject: [PATCH] CI: test external-arm-toolchain with usrmerge enabled
-Date: Mon, 21 Oct 2024 16:38:41 +0200
-Message-ID: <20241021143841.110336-1-romain.naour@smile.fr>
-X-Mailer: git-send-email 2.45.0
+Subject: [PATCH scarthgap 2/2] arm/linux-yocto: disable CONFIG_MTD_NAND_FSL_IFC
+Date: Mon, 21 Oct 2024 11:21:52 -0400
+Message-Id: <20241021152152.73664-2-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20241021152152.73664-1-jon.mason@arm.com>
+References: <20241021152152.73664-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 21 Oct 2024 14:38:58 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6215
+ <meta-arm@lists.yoctoproject.org>; Mon, 21 Oct 2024 15:21:59 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6216
 
-We want to test meta-arm-toolchain layer with usrmerge enabled [1]
-since it produce some breakage with current external ARM toolchains [2].
+Linux stable kernel v6.6.44 added commit c22649e217457d732a51112aaa8721a0=
+e79e2c30,
+which modifies the depends for the Freescale IFC NAND controller.  See
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?=
+h=3Dlinux-6.6.y&id=3Dc22649e217457d732a51112aaa8721a0e79e2c30
 
-Instead of using a custom setting (poky + usrmerge enabled), use the
-existing poky-altcfg provided by Yocto. poky-altcfg uses systemd as
-init system and imply usermerge being enabled since Yocto scarthgap
-(new systemd v255 requirement) [3].
+Because of this change, do_kernel_configcheck is logging an warning
+about values not matching.  To address this issue, disable it manually
+in a config fragment, but only for the affected machines in meta-arm.
 
-Note: It must be a 32bit machine, since there are currently no aarch64
-host toolchains for aarch64 (some gitlab runner used by meta-arm are
-aarch64 host) [4].
-
-[1] https://docs.yoctoproject.org/scarthgap/ref-manual/features.html?highlight=usrmerge#distro-features
-[2] https://lists.yoctoproject.org/g/meta-arm/message/5557
-[3] https://git.openembedded.org/openembedded-core/commit/?id=802e853eeddf16d73db1900546cc5f045d1fb7ed
-[4] 4bfa191ada5c44baaa1f4b8aabbeb314961c0134
-
-Signed-off-by: Romain Naour <romain.naour@smile.fr>
+Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .gitlab-ci.yml | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ meta-arm-bsp/recipes-kernel/linux/files/no-fsl-ifc-nand.cfg | 1 +
+ meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc   | 4 ++++
+ 2 files changed, 5 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/no-fsl-ifc-na=
+nd.cfg
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index f211ea97..0e9ad688 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -295,7 +295,8 @@ qemuarm-secureboot:
-         TOOLCHAINS: [gcc, clang]
-         TCLIBC: [glibc, musl]
-         TESTING: testimage
--      - TOOLCHAINS: external-gccarm
-+      - DISTRO: [poky, poky-altcfg]
-+        TOOLCHAINS: external-gccarm
-         TESTING: testimage
-       - KERNEL: linux-yocto-dev
-         TESTING: testimage
--- 
-2.45.0
+diff --git a/meta-arm-bsp/recipes-kernel/linux/files/no-fsl-ifc-nand.cfg =
+b/meta-arm-bsp/recipes-kernel/linux/files/no-fsl-ifc-nand.cfg
+new file mode 100644
+index 000000000000..85f956a12e71
+--- /dev/null
++++ b/meta-arm-bsp/recipes-kernel/linux/files/no-fsl-ifc-nand.cfg
+@@ -0,0 +1 @@
++CONFIG_MTD_NAND_FSL_IFC=3Dn
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/=
+meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+index e2b261f515ff..82966db761bd 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+@@ -78,6 +78,9 @@ SRC_URI:append:fvp-base =3D " \
+ #
+ COMPATIBLE_MACHINE:juno =3D "juno"
+ FILESEXTRAPATHS:prepend:juno :=3D "${ARMBSPFILESPATHS}"
++SRC_URI:append:juno =3D " \
++    file://no-fsl-ifc-nand.cfg \
++    "
+=20
+ #
+ # Musca B1/S2 can't run Linux
+@@ -104,6 +107,7 @@ SRC_URI:append:n1sdp =3D " \
+     file://enable-realtek-R8169.cfg \
+     file://enable-usb_conn_gpio.cfg \
+     file://usb_xhci_pci_renesas.cfg \
++    file://no-fsl-ifc-nand.cfg \
+     "
+ # Since we use the intree defconfig and the preempt-rt turns off some co=
+nfigs
+ # do_kernel_configcheck will display warnings. So, lets disable it.
+--=20
+2.39.5 (Apple Git-154)
 
 
