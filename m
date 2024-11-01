@@ -1,75 +1,130 @@
-Return-Path: <hugues.kambampiana@arm.com>
+Return-Path: <denis@denix.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886AAE6B27C
-	for <webhook@archiver.kernel.org>; Fri,  1 Nov 2024 13:23:05 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.37839.1730467384165924430
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F76CE6F083
+	for <webhook@archiver.kernel.org>; Fri,  1 Nov 2024 18:55:34 +0000 (UTC)
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web11.1985.1730487325183677910
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 01 Nov 2024 06:23:04 -0700
+ Fri, 01 Nov 2024 11:55:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: hugues.kambampiana@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78DE71007;
-	Fri,  1 Nov 2024 06:23:33 -0700 (PDT)
-Received: from e129527.arm.com (unknown [10.57.64.245])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF7BB3F528;
-	Fri,  1 Nov 2024 06:23:02 -0700 (PDT)
-From: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
-Subject: [PATCH] arm-bsp/documentation: corstone1000: Add SystemReady IR v2.0 certification
-Date: Fri,  1 Nov 2024 13:22:58 +0000
-Message-Id: <20241101132258.789596-1-hugues.kambampiana@arm.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=none (message not signed); spf=pass (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 7B64D4126D;
+	Fri,  1 Nov 2024 18:55:24 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id bjMNnoW7GGT0; Fri,  1 Nov 2024 18:55:24 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-87-159.washdc.fios.verizon.net [100.15.87.159])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 4FF8E4126C;
+	Fri,  1 Nov 2024 18:55:22 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 0E93A1640C3; Fri,  1 Nov 2024 14:55:22 -0400 (EDT)
+Date: Fri, 1 Nov 2024 14:55:22 -0400
+From: Denys Dmytriyenko <denis@denix.org>
+To: romain.naour@smile.fr
+Cc: meta-arm@lists.yoctoproject.org, jon.mason@arm.com
+Subject: Re: [meta-arm] [PATCH v2 1/8] external-arm-toolchain: remove old
+ sed fixup for libc.so
+Message-ID: <20241101185522.GJ20070@denix.org>
+References: <20241025165002.2794821-1-romain.naour@smile.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241025165002.2794821-1-romain.naour@smile.fr>
+User-Agent: Mutt/1.5.20 (2009-06-14)
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 01 Nov 2024 13:23:05 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6238
+ <meta-arm@lists.yoctoproject.org>; Fri, 01 Nov 2024 18:55:34 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6239
 
-- Add details on SystemReady IR v2.0 certification achievement
-- Document additional patch added
-- Update release notes with new milestone tag `CORSTONE1000-2024.06-syste=
-mready-ir-v2.0`
+FYI, Ross and I discussed the whole external toolchain support a while back 
+and we were under the impression that there were no users of it and he was 
+planning to deprecate the entire external toolchain support after Styhead was 
+out. I wonder if your patchset changes the plans...
 
-Signed-off-by: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
----
- .../documentation/corstone1000/release-notes.rst       | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Either way, I reviewed your patches and they seem reasonable. I currently 
+don't have an active setup with external toolchain, so was not able to do any 
+testing yet.
 
-diff --git a/meta-arm-bsp/documentation/corstone1000/release-notes.rst b/=
-meta-arm-bsp/documentation/corstone1000/release-notes.rst
-index 0cad0266..5f88d69c 100644
---- a/meta-arm-bsp/documentation/corstone1000/release-notes.rst
-+++ b/meta-arm-bsp/documentation/corstone1000/release-notes.rst
-@@ -38,6 +38,16 @@ Platform Support
-  - This software release is tested on Corstone-1000 Fast Model platform =
-(FVP) version 11.23_25
-    https://developer.arm.com/tools-and-software/open-source-software/arm=
--platforms-software/arm-ecosystem-fvps
-=20
-+SystemReady IR v2.0 Certification Milestone
-+-------------------------------------------
-+
-+As of this release, Corstone-1000 has achieved `SystemReady IR v2.0 cert=
-ification <https://www.arm.com/architecture/system-architectures/systemre=
-ady-certification-program/ve>`__.
-+This milestone confirms compliance with the SystemReady IR requirements,=
- ensuring broader compatibility and reliability for deployment.
-+
-+Applied patch `313ad2a0e600 <https://git.yoctoproject.org/meta-arm/commi=
-t/?h=3Dscarthgap&id=3D313ad2a0e600655d9bfbe53646e356372ff02644>`__ to add=
-ress compatibility requirements for SystemReady IR v2.0.
-+
-+This update is included in tag `CORSTONE1000-2024.06-systemready-ir-v2.0=
- <https://git.yoctoproject.org/meta-arm/tag/?h=3DCORSTONE1000-2024.06-sys=
-temready-ir-v2.0>`__ and builds on the `CORSTONE1000-2024.06` release.
-+
- ***********************
- Release notes - 2023.11
- ***********************
+If Jon is willing to run these through the CI paces, I won't mind giving my 
+Reviewed-by: stamp.
+
+-- 
+Denys
+
+
+On Fri, Oct 25, 2024 at 06:49:55PM +0200, Romain Naour via lists.yoctoproject.org wrote:
+> As reported by Vasyl Vavrychuk [1], /${EAT_LIBDIR}/${EAT_TARGET_SYS}
+> is not present in libc.so in the latest prebuilt toolchains:
+> 
+> ARM32:
+>   $ cat ./gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/arm-linux-gnueabihf/libc/usr/lib/libc.so
+>   OUTPUT_FORMAT(elf32-littlearm)
+>   GROUP ( /lib/libc.so.6 /usr/lib/libc_nonshared.a  AS_NEEDED ( /lib/ld-linux-armhf.so.3 ) )
+> 
+>   $ cat ./gcc-arm-9.2-2019.12-x86_64-arm-none-linux-gnueabihf/arm-none-linux-gnueabihf/libc/usr/lib/libc.so
+>   OUTPUT_FORMAT(elf32-littlearm)
+>   GROUP ( /lib/libc.so.6 /usr/lib/libc_nonshared.a  AS_NEEDED ( /lib/ld-linux-armhf.so.3 ) )
+> 
+>   $ cat ./arm-gnu-toolchain-12.3.rel1-x86_64-arm-none-linux-gnueabihf/arm-none-linux-gnueabihf/libc/usr/lib/libc.so
+>   OUTPUT_FORMAT(elf32-littlearm)
+>   GROUP ( /lib/libc.so.6 /usr/lib/libc_nonshared.a  AS_NEEDED ( /lib/ld-linux-armhf.so.3 ) )
+> 
+>   $ cat ./arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-linux-gnueabihf/arm-none-linux-gnueabihf/libc/usr/lib/libc.so
+>   OUTPUT_FORMAT(elf32-littlearm)
+>   GROUP ( /lib/libc.so.6 /usr/lib/libc_nonshared.a  AS_NEEDED ( /lib/ld-linux-armhf.so.3 ) )
+> 
+> Aarch64:
+>   $ cat ./gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu/aarch64-linux-gnu/libc/usr/lib/libc.so
+>   OUTPUT_FORMAT(elf64-littleaarch64)
+>   GROUP ( /lib/libc.so.6 /usr/lib/libc_nonshared.a  AS_NEEDED ( /lib/ld-linux-aarch64.so.1 ) )
+> 
+>   $ cat ./gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/aarch64-none-linux-gnu/libc/usr/lib64/libc.so
+>   OUTPUT_FORMAT(elf64-littleaarch64)
+>   GROUP ( /lib64/libc.so.6 /usr/lib64/libc_nonshared.a  AS_NEEDED ( /lib/ld-linux-aarch64.so.1 ) )
+> 
+>   $ cat ./arm-gnu-toolchain-12.3.rel1-x86_64-aarch64-none-linux-gnu/aarch64-none-linux-gnu/libc/usr/lib64/libc.so
+>   OUTPUT_FORMAT(elf64-littleaarch64)
+>   GROUP ( /lib64/libc.so.6 /usr/lib64/libc_nonshared.a  AS_NEEDED ( /lib/ld-linux-aarch64.so.1 ) )
+> 
+>   $ cat ./arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-linux-gnu/aarch64-none-linux-gnu/libc/usr/lib64/libc.so
+>   OUTPUT_FORMAT(elf64-littleaarch64)
+>   GROUP ( /lib64/libc.so.6 /usr/lib64/libc_nonshared.a  AS_NEEDED ( /lib/ld-linux-aarch64.so.1 ) )
+> 
+> We can safely remove old sed fixup for libc.so.
+> 
+> [1] https://lists.yoctoproject.org/g/meta-arm/message/5565
+> 
+> Signed-off-by: Romain Naour <romain.naour@smile.fr>
+> ---
+>  .../external-arm-toolchain/external-arm-toolchain.bb          | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> index 1e8c1116..1095736b 100644
+> --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> @@ -213,13 +213,13 @@ do_install() {
+>  	rm -rf ${D}${includedir}/rpcsvc/rquota.*
+>  
+>  	if [ -f ${D}${libdir}/libc.so ];then
+> -		sed -i -e "s# /${EAT_LIBDIR}/${EAT_TARGET_SYS}# ../../${EAT_LIBDIR}#g" -e "s# /usr/${EAT_LIBDIR}/# /usr/lib/#g" -e "s# /usr/${EAT_LIBDIR}/${EAT_TARGET_SYS}# .#g" -e "s# /${EAT_LIBDIR}/ld-linux# ../../${EAT_LIBDIR}/ld-linux#g" ${D}${libdir}/libc.so
+> +		sed -i -e "s# /usr/${EAT_LIBDIR}/# /usr/lib/#g" -e "s# /${EAT_LIBDIR}/ld-linux# ../../${EAT_LIBDIR}/ld-linux#g" ${D}${libdir}/libc.so
+>  		sed -i -e "s# /${EAT_LIBDIR}/libc.so.6# /lib/libc.so.6#g" ${D}${libdir}/libc.so
+>  		sed -i -e "s# /lib# ../../lib#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libc.so
+>  	fi
+>  
+>  	if [ -f ${D}${base_libdir}/libc.so ];then
+> -		sed -i -e "s# /${EAT_LIBDIR}/${EAT_TARGET_SYS}# ../../lib#g" -e "s# /usr/${EAT_LIBDIR}/${EAT_TARGET_SYS}# .#g" -e "s# /${EAT_LIBDIR}/# /lib/#g" ${D}${base_libdir}/libc.so
+> +		sed -i -e "s# /${EAT_LIBDIR}/# /lib/#g" ${D}${base_libdir}/libc.so
+>  		if [ -f ${D}${base_libdir}/libc.so.6 ]; then
+>  			sed -i -e "s# /usr/${EAT_LIBDIR}/libc.so.6# /lib/libc.so.6#g" -e "s# /${EAT_LIBDIR}/libc.so.6# /lib/libc.so.6#g" ${D}${base_libdir}/libc.so.6
+>  		fi
+> -- 
+> 2.45.0
 
