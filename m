@@ -1,143 +1,85 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343ACD3177D
-	for <webhook@archiver.kernel.org>; Tue,  5 Nov 2024 18:18:14 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.27184.1730830690583297415
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F676D3E788
+	for <webhook@archiver.kernel.org>; Wed,  6 Nov 2024 05:51:53 +0000 (UTC)
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+ by mx.groups.io with SMTP id smtpd.web10.39687.1730872305598573569
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 05 Nov 2024 10:18:10 -0800
+ Tue, 05 Nov 2024 21:51:45 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66FF41063;
-	Tue,  5 Nov 2024 10:18:39 -0800 (PST)
-Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4C7F43F528;
-	Tue,  5 Nov 2024 10:18:09 -0800 (PST)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Ross Burton <ross.burton@arm.com>
-Subject: [PATCH scarthgap] arm-base/linux-yocto: revert interim 6.10 patch for fvp-base
-Date: Tue,  5 Nov 2024 13:18:08 -0500
-Message-Id: <20241105181808.42156-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=Pqw1RfD7;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.43, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6cbcd8ce5f9so46386066d6.2
+        for <meta-arm@lists.yoctoproject.org>; Tue, 05 Nov 2024 21:51:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1730872304; x=1731477104; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3WlsIAvNdBN8vGazMv8DLFjPUoCB19Otk0Kp+MPrSa4=;
+        b=Pqw1RfD7+c3ZgFgUiQJ+0JKtetkESt96ZLTeHcd7f3ViZ/KKCLynoaX7rD8dWmPd4m
+         2Qp3oBbfpYULUW0t553GGuC8lj0Pcqhu7EbJP0dl043y8cwR1qQQJWMaQI25EnMNwID3
+         wi6TER6+N6X1DR8E5/BbROTtBsVH5m88suw6HPtSvPM2D0dg7XZdg113IitE5Osjjmd/
+         GyAfz9LwRjA/j5pBBtQbUiKNBp6hgkbzFGY2dpfjuvycYWjH1eLJqxo0WMkRUfPhK4HE
+         cg0bIMueG/laUB03w/o6/t9uizVSoDy497ZIQaiX/iipM/y4sWQ7bDCkVLJBaQagEDXi
+         rYqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730872304; x=1731477104;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3WlsIAvNdBN8vGazMv8DLFjPUoCB19Otk0Kp+MPrSa4=;
+        b=eXiqqbTyTalPs5FRI2InYHA9bxYy36jbYWFAM8VHoMribGYIXs1u7+tLDvu7WNP/BK
+         0OXvGltat1QKdRW3XoaNhLmv03EDvyLwYxi5SXwNO5woNpHVFJytRlToejGye3KEJ8y8
+         7WfLKLuwNeSFcdARWLM4jPY1CEAY9edNR9QHMd5GRtnZ15HTxJ0PcwXCWwtUNgX3b/td
+         hf3s0+ZiqtFWCEAkjPnNoLPfXSpuwnEG5LRrtb530VLVg5fAjM+QvQSgpqK4pL3fFcly
+         uMY1X6Z55cFRXbLSRGHyg/7J2H6zMkF+zJ5RoQPxrC+jLby2sBqkSmQGRrwg+aq5qsM7
+         e3ZA==
+X-Gm-Message-State: AOJu0Yz/i6mUXdmXvC00tuT0E9143riH3Wq7IzINIAqj00lOZimjItXz
+	zdj5uwY7H+BhpJYWJDt+PoP/DDh9QkcD4eus0iKvCQvXvU32k96Zi6t6DJg0BTNdpAMFULnqcts
+	=
+X-Google-Smtp-Source: AGHT+IGF2QekN8B0PwPLVFzgMBerX7t9V9hDH0F+joN4WfB9E76KKYTmJqvuDEfhWO7SpAw0BqYUHg==
+X-Received: by 2002:a05:6214:3bc3:b0:6cc:2c28:2ab3 with SMTP id 6a1803df08f44-6d35c19b190mr285071316d6.41.1730872304367;
+        Tue, 05 Nov 2024 21:51:44 -0800 (PST)
+Received: from localhost ([136.56.18.214])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d353fc718csm68517516d6.38.2024.11.05.21.51.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2024 21:51:43 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
+Subject: Re: [PATCH] arm-bsp/documentation: corstone1000: Add SystemReady IR v2.0 certification
+Date: Wed,  6 Nov 2024 00:51:31 -0500
+Message-Id: <173087229577.1888529.17271807759623059594.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20241101132258.789596-1-hugues.kambampiana@arm.com>
+References: <20241101132258.789596-1-hugues.kambampiana@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 05 Nov 2024 18:18:14 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6241
+ <meta-arm@lists.yoctoproject.org>; Wed, 06 Nov 2024 05:51:53 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6242
 
-From: Ross Burton <ross.burton@arm.com>
 
-oe-core master now has 6.6.54 which incorporates this patch, so we don't
-need to carry it anymore.
+On Fri, 01 Nov 2024 13:22:58 +0000, Hugues KAMBA MPIANA wrote:
+> - Add details on SystemReady IR v2.0 certification achievement
+> - Document additional patch added
+> - Update release notes with new milestone tag `CORSTONE1000-2024.06-systemready-ir-v2.0`
+> 
+> 
 
-This reverts commit 60fd47edd0f4757c11554848d717283f06c8c846.
+Applied, thanks!
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- ...gso-csum-offset-check-in-virtio_net_.patch | 59 -------------------
- .../linux/linux-arm-platforms.inc             |  1 -
- 2 files changed, 60 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001=
--net-tighten-bad-gso-csum-offset-check-in-virtio_net_.patch
+[1/1] arm-bsp/documentation: corstone1000: Add SystemReady IR v2.0 certification
+      commit: bf9010c6849f7bd608fe1b6b6ef84650d35c3635
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001-net-ti=
-ghten-bad-gso-csum-offset-check-in-virtio_net_.patch b/meta-arm-bsp/recip=
-es-kernel/linux/files/fvp-base/0001-net-tighten-bad-gso-csum-offset-check=
--in-virtio_net_.patch
-deleted file mode 100644
-index 9985d57966f4..000000000000
---- a/meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001-net-tighten-b=
-ad-gso-csum-offset-check-in-virtio_net_.patch
-+++ /dev/null
-@@ -1,59 +0,0 @@
--From 6513eb3d3191574b58859ef2d6dc26c0277c6f81 Mon Sep 17 00:00:00 2001
--From: Willem de Bruijn <willemb@google.com>
--Date: Tue, 10 Sep 2024 17:35:35 -0400
--Subject: [PATCH] net: tighten bad gso csum offset check in virtio_net_hd=
-r
--
--The referenced commit drops bad input, but has false positives.
--Tighten the check to avoid these.
--
--The check detects illegal checksum offload requests, which produce
--csum_start/csum_off beyond end of packet after segmentation.
--
--But it is based on two incorrect assumptions:
--
--1. virtio_net_hdr_to_skb with VIRTIO_NET_HDR_GSO_TCP[46] implies GSO.
--True in callers that inject into the tx path, such as tap.
--But false in callers that inject into rx, like virtio-net.
--Here, the flags indicate GRO, and CHECKSUM_UNNECESSARY or
--CHECKSUM_NONE without VIRTIO_NET_HDR_F_NEEDS_CSUM is normal.
--
--2. TSO requires checksum offload, i.e., ip_summed =3D=3D CHECKSUM_PARTIA=
-L.
--False, as tcp[46]_gso_segment will fix up csum_start and offset for
--all other ip_summed by calling __tcp_v4_send_check.
--
--Because of 2, we can limit the scope of the fix to virtio_net_hdr
--that do try to set these fields, with a bogus value.
--
--Link: https://lore.kernel.org/netdev/20240909094527.GA3048202@port70.net=
-/
--Fixes: 89add40066f9 ("net: drop bad gso csum_start and offset in virtio_=
-net_hdr")
--Signed-off-by: Willem de Bruijn <willemb@google.com>
--Acked-by: Jason Wang <jasowang@redhat.com>
--Acked-by: Michael S. Tsirkin <mst@redhat.com>
--Cc: stable@vger.kernel.org
--Link: https://patch.msgid.link/20240910213553.839926-1-willemdebruijn.ke=
-rnel@gmail.com
--Signed-off-by: Jakub Kicinski <kuba@kernel.org>
--
--Upstream-Status: Backport
--Signed-off-by: Jon Mason <jon.mason@arm.com>
--
-----
-- include/linux/virtio_net.h | 3 ++-
-- 1 file changed, 2 insertions(+), 1 deletion(-)
--
--diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
--index 6c395a2600e8..276ca543ef44 100644
----- a/include/linux/virtio_net.h
--+++ b/include/linux/virtio_net.h
--@@ -173,7 +173,8 @@ static inline int virtio_net_hdr_to_skb(struct sk_bu=
-ff *skb,
-- 			break;
-- 		case SKB_GSO_TCPV4:
-- 		case SKB_GSO_TCPV6:
---			if (skb->csum_offset !=3D offsetof(struct tcphdr, check))
--+			if (skb->ip_summed =3D=3D CHECKSUM_PARTIAL &&
--+			    skb->csum_offset !=3D offsetof(struct tcphdr, check))
-- 				return -EINVAL;
-- 			break;
-- 		}
----=20
--2.39.2
--
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/=
-meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-index 82966db761bd..b8ed916f1947 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-@@ -66,7 +66,6 @@ KMACHINE:fvp-base =3D "fvp"
- FILESEXTRAPATHS:prepend:fvp-base :=3D "${ARMBSPFILESPATHS}:${ARMFILESPAT=
-HS}"
- SRC_URI:append:fvp-base =3D " \
-     file://0001-arm64-dts-fvp-Enable-virtio-rng-support.patch \
--    file://0001-net-tighten-bad-gso-csum-offset-check-in-virtio_net_.pat=
-ch \
-     file://tee.cfg \
-     ${@bb.utils.contains('MACHINE_FEATURES', 'ts-smm-gateway', \
-                          'file://no-strict-devmem.cfg', '' , d)} \
---=20
-2.39.5 (Apple Git-154)
-
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
