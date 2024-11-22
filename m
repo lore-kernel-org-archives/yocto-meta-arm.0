@@ -2,62 +2,62 @@ Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDE9D75E46
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C760D75E45
 	for <webhook@archiver.kernel.org>; Fri, 22 Nov 2024 13:39:36 +0000 (UTC)
 Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
- by mx.groups.io with SMTP id smtpd.web10.24129.1732282772019550564
+ by mx.groups.io with SMTP id smtpd.web10.24126.1732282766959434567
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 22 Nov 2024 05:39:32 -0800
+ Fri, 22 Nov 2024 05:39:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=ru0lgWkY;
+ dkim=pass header.i=@linaro.org header.s=google header.b=OkWtzkjc;
  spf=pass (domain: linaro.org, ip: 209.85.167.48, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-539f6e1f756so2400402e87.0
-        for <meta-arm@lists.yoctoproject.org>; Fri, 22 Nov 2024 05:39:31 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-539d9fffea1so2130229e87.2
+        for <meta-arm@lists.yoctoproject.org>; Fri, 22 Nov 2024 05:39:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1732282770; x=1732887570; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1732282765; x=1732887565; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=THpwYuK/66N/83Nv4l54qiRGvZkoaaQq0A1yRLUBTb4=;
-        b=ru0lgWkYl/oa/lmXLCKo/gaiQf7XD1VDAXXDSNavmFUEBPjwJq1zjBNoRrpCiJGvpG
-         Tp6MWRXd4/JDO2GhrDdnQ8UzwzdwAeFIEOmBySnTha6rkx8ACRN1Cg/bzmlDDclkHabJ
-         hyRG9NuffsIgE3c8ArKwTamtyobJA/ZVfVTcZBL4pkWI8lrgFuAPOo3Hvwdk7vhvlRRB
-         bqZQITy9Er/BNCwyakZbaeoa0Vi7Dkb/h1tqEST4+8STGoL4luM0pRqKJsqzTpNKjiHd
-         KSXZkhqmSppFmK7O2lzGtZCg7+mqjmg7x9YxQJ9AtcndreJDbrPCI9W6xbtABfIjTAiW
-         Qp8w==
+        bh=ZwIjXW5TxlU0iK/kJtxivnqKjJJmZwvz08aIe/198oU=;
+        b=OkWtzkjcr1xvmX00Ahr205OEJe9AlyNt/PQqfQv09+D+r7M2ScWUNDk4VsfSO6DlYS
+         iQCNu84Jm5g/zFIISbhz1ADWqExv0oSnauk3d3GkL5bdB0iNE3hc9EynglHd/j3gUWby
+         vjS4UqzTqvSYlnn7Je67Mto6geyPcIqOD7JQqJXvR47wJZuenitkpY7JQMo3MHojnc+A
+         2Z7BVcT7E9TViO/kQjlgPXvnADWkvu4GyxjyzHbzxeadJdy/nBFEaMRFNuR4TwKdIeLd
+         0g8gAGZcgMZKILU/OdVQxMnXC+y8aLok7vNZmXSPChncpuH9/m5QiW0vc6Z6XlDtN2Sj
+         v/Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732282770; x=1732887570;
+        d=1e100.net; s=20230601; t=1732282765; x=1732887565;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=THpwYuK/66N/83Nv4l54qiRGvZkoaaQq0A1yRLUBTb4=;
-        b=rPE3tXN2xqsv9DhE8i65e63ae8kl+BLGakSp5a/8YSDW3eslMCU/UzdSO3djRThnd2
-         tCaosU862XIchYTGvBljYIHaUUtO3DghsBKNvUziVmyQdZzV4GmY1mSmQpIf3NXQXjG2
-         QdT2cw5/aV9TGRYDMN+DDjmcCHsRvHuYPu7rG2iTOiKUM+m441FPOkXniSRERbdAa/Gs
-         3BX5doiPspvQWcjBs2tDbcBMIIdEDDGl893nC/ZIIo7+kJSssJ5g/5MsHfBZiICNAwPF
-         NTbwKNl8nY1lcOE+BvoQUYyEpiSJfCTiB4rZDlKKgCSeALCT9roxrUThQRUWX0SAG9a9
-         iZWQ==
-X-Gm-Message-State: AOJu0YzXE7cXAHRXQFv+BE5uCCOV6u+5RY2X+XsmOCR+ssisfrq3s8dB
-	Ahsh3e8tun5OVBoELyNnmSsjCoUd2K5IsbChPkY8e1pKhbIJsYg/6rWrcDL3GnOm0XWNMRxMI/0
-	c
-X-Gm-Gg: ASbGncvZXiybyXJ0f2Rnw8ZHoFkBLuL6yZFdRThs5VuV20z2IKAQIKeeVx636MMDV2P
-	efCzJqYvbAFCjngXioJMv9RqKbj4LXVAU1PU4CyXyJ9Iqm9kxdR3tMTHceLppkwOCex4goHUH71
-	izue3dM4tnRraIXnhF03Gp0yTdLXMuzENi4cSCNO3UPVgobFWNSaYG099In9F6Nx0DP/D4i7n5M
-	cCwmpDuGCJ5TqnDa0flSgl5HHkF1QIaEIPCv8sHXrFXQ349BjVuEXlSXvFiY2CV2nRjmTf0aCmL
-	mmWNRe4dl/NXCp9aukW1vFKyrg==
-X-Google-Smtp-Source: AGHT+IG4e2rrZo5rQMa8LucVOyXuz1595ZnUzUFZPukJqwFPQUfCS0eYA1JgxXpWv1r6dHr3I3ehsQ==
-X-Received: by 2002:a05:6512:3c98:b0:539:920a:f886 with SMTP id 2adb3069b0e04-53dd39b56fbmr1581360e87.50.1732282770177;
-        Fri, 22 Nov 2024 05:39:30 -0800 (PST)
+        bh=ZwIjXW5TxlU0iK/kJtxivnqKjJJmZwvz08aIe/198oU=;
+        b=mURnXmCOqvW1XLo8/h+Fu/aHyWRpyTUA8owtWsuqUC02Uw/ayAQ0jhOsqGjhXmtWOP
+         9g1K7xiYbOsLpY4ZOl5n0QLr6mnmZHpzF4WThw2KyCIxGGAgG7z5NoJUpru6UvN/9805
+         qltVQqcsR791N3V4Qj70wKIZCntO5nl1uask2jn0rIPpRY8L8RNzW4jMZQluV4oxtnXy
+         h6xCtbhkL33J98zL+j6w6XflCM/uacXvwFp27JE8bLXyYsDjOxa5ZzPIWF1V9eRwh/tI
+         q1ZRXT5bGow82NjbSD1nAEQNUU22EcmtKhDFf0Y6lhxs3a5YK8JWdF5OcXvwbSHEv1xK
+         qGVg==
+X-Gm-Message-State: AOJu0YxcDK07wR77gfuqAV/gTqc7QrPkUns4OVVlImsFpsLILbNNPxLY
+	BUEYUgOiDElZ5kCF2Qw1yrOXkZVVbKgMvuclQRM1GjOq0fSvFaXa9bA/gXKotjeB1rxY8RwlU2u
+	o
+X-Gm-Gg: ASbGncupLMTjhcGMbgcuV+oKZGjoYvw0FNLTC59v8tzAnIPM9L2wNqpCT8HMb56tTrg
+	JmiHdey7mKKbZEwuE2C8x0S2LMnWyerC7OzYI8xK45K1RH8v8XpKTfa0myZWdB4hXTvuylB3wK0
+	frsZmYhzrOG16ZRFXWgczT6IRBMUC6695hn9eXEDCa6UMPtjzfWCpwD1sKWOu8v+SNqtsuxKBUg
+	wUhrUxpsAPWEaeFGcK/4njOXXhOVsPz7ZkHjv3ehV65MdQ9Fsh1QuMZz24rh4UUpJ5UIKJlUK53
+	Al97qv4oTtMpagCVYrfzFn8EGg==
+X-Google-Smtp-Source: AGHT+IEBG5hjxG7T8RcRvfG1PBCzdszMwQ2nTaWbviVrulotPIyulbO6tKDA6B1yKSsNsL0lz+Xngw==
+X-Received: by 2002:a05:6512:4028:b0:53d:d727:a93b with SMTP id 2adb3069b0e04-53dd727b376mr936375e87.36.1732282764993;
+        Fri, 22 Nov 2024 05:39:24 -0800 (PST)
 Received: from localhost.localdomain (2001-14ba-7452-eb00--133.rev.dnainternet.fi. [2001:14ba:7452:eb00::133])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53dd248b1dcsm375253e87.203.2024.11.22.05.39.28
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-53dd248b1dcsm375253e87.203.2024.11.22.05.39.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Nov 2024 05:39:28 -0800 (PST)
+        Fri, 22 Nov 2024 05:39:24 -0800 (PST)
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
-Subject: [PATCH 3/4] uefi-secureboot.yml: switch to Unified Kernel Image (UKI)
-Date: Fri, 22 Nov 2024 15:39:03 +0200
-Message-ID: <20241122133904.202082-4-mikko.rapeli@linaro.org>
+Subject: [PATCH 1/4] qemuarm64-secureboot.conf: append to WKS_FILE_DEPENDS
+Date: Fri, 22 Nov 2024 15:39:01 +0200
+Message-ID: <20241122133904.202082-2-mikko.rapeli@linaro.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20241122133904.202082-1-mikko.rapeli@linaro.org>
 References: <20241122133904.202082-1-mikko.rapeli@linaro.org>
@@ -67,47 +67,28 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 22 Nov 2024 13:39:36 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6255
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6253
 
-Unified Kernel Image includes kernel and initrd which
-both are signed with UEFI secure boot. This brings secure
-boot closer to userspace.
-
-Use core-image-initramfs-boot to find the real
-rootfs and boot systemd init there. No need to hard code
-rootfs via qemuboot/runqemu variables.
+Various classes add dependencies so don't overwrite them.
 
 Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 ---
- ci/uefi-secureboot.yml | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ meta-arm/conf/machine/qemuarm64-secureboot.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/ci/uefi-secureboot.yml b/ci/uefi-secureboot.yml
-index e84d3bc6..4cc4e658 100644
---- a/ci/uefi-secureboot.yml
-+++ b/ci/uefi-secureboot.yml
-@@ -32,4 +32,20 @@ local_conf_header:
+diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+index 78a39c03..10216631 100644
+--- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
++++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+@@ -18,7 +18,7 @@ QB_KERNEL_ROOT = "/dev/vda2"
+ IMAGE_FSTYPES += "wic wic.qcow2"
  
-     IMAGE_INSTALL:append = " systemd systemd-boot util-linux coreutils"
+ WKS_FILE ?= "qemuarm64.wks"
+-WKS_FILE_DEPENDS = "trusted-firmware-a"
++WKS_FILE_DEPENDS:append = " trusted-firmware-a"
+ IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
  
--    TEST_SUITES:append = " uefi_secureboot"
-+    TEST_SUITES:append = " uefi_secureboot uki"
-+
-+    IMAGE_CLASSES += "uki"
-+
-+    IMAGE_CLASSES += "sbsign"
-+    UKI_SB_KEY = "${SBSIGN_KEY}"
-+    UKI_SB_CERT = "${SBSIGN_CERT}"
-+    QB_KERNEL_ROOT = ""
-+    IMAGE_BOOT_FILES:remove = "Image"
-+
-+    INITRAMFS_IMAGE = "core-image-initramfs-boot"
-+    # not for initramfs image recipe
-+    IMAGE_CLASSES:remove:pn-core-image-initramfs-boot = "uki"
-+    IMAGE_CLASSES:remove:pn-core-image-initramfs-boot = "sbsign"
-+    IMAGE_CLASSES:remove:pn-core-image-initramfs-boot = "testimage"
-+    IMAGE_FEATURES:remove:pn-core-image-initramfs-boot = "ssh-server-dropbear"
-+    CORE_IMAGE_EXTRA_INSTALL:remove:pn-core-image-initramfs-boot = "ssh-pregen-hostkeys"
+ MACHINE_FEATURES += "optee-ftpm"
 -- 
 2.43.0
 
