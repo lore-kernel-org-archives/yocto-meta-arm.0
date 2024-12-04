@@ -1,84 +1,77 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <hugues.kambampiana@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EF5E64AB4
-	for <webhook@archiver.kernel.org>; Tue,  3 Dec 2024 14:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F65E77176
+	for <webhook@archiver.kernel.org>; Wed,  4 Dec 2024 17:13:05 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.21082.1733236152174192544
+ by mx.groups.io with SMTP id smtpd.web11.20038.1733332378814403965
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 03 Dec 2024 06:29:12 -0800
+ Wed, 04 Dec 2024 09:12:58 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: hugues.kambampiana@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C699FEC
-	for <meta-arm@lists.yoctoproject.org>; Tue,  3 Dec 2024 06:29:39 -0800 (PST)
-Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C95E73F71E
-	for <meta-arm@lists.yoctoproject.org>; Tue,  3 Dec 2024 06:29:10 -0800 (PST)
-From: Ross Burton <ross.burton@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68EEF1474;
+	Wed,  4 Dec 2024 09:13:26 -0800 (PST)
+Received: from e129527.cambridge.arm.com (e129527.cambridge.arm.com [10.1.29.170])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F38FB3F71E;
+	Wed,  4 Dec 2024 09:12:57 -0800 (PST)
+From: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm/fvp-base-a-aem: upgrade to 11.27.19
-Date: Tue,  3 Dec 2024 14:29:04 +0000
-Message-Id: <20241203142904.2700807-1-ross.burton@arm.com>
+Cc: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
+Subject: [PATCH 2/2] kas: corstone-1000: Update the SHA of the Yocto layer dependencies for the CORSTONE1000-2024.11 release.
+Date: Wed,  4 Dec 2024 17:12:50 +0000
+Message-Id: <20241204171250.220387-3-hugues.kambampiana@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20241204171250.220387-1-hugues.kambampiana@arm.com>
+References: <20241204171250.220387-1-hugues.kambampiana@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 03 Dec 2024 14:29:14 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6262
+ <meta-arm@lists.yoctoproject.org>; Wed, 04 Dec 2024 17:13:05 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6265
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+The SHA of the dependent community layers are commented out and set to
+the tested SHA from the `styhead` branch of each layer.
+
+The set SHAs are to be uncommented in the `styhead` branch which is
+to be used to create the `CORSTONE1000-2024.11` tag.
+
+Signed-off-by: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
 ---
- ...-base-a-aem_11.26.11.bb =3D> fvp-base-a-aem_11.27.19.bb} | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
- rename meta-arm/recipes-devtools/fvp/{fvp-base-a-aem_11.26.11.bb =3D> fv=
-p-base-a-aem_11.27.19.bb} (65%)
+ kas/corstone1000-base.yml | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.26.11.bb b/m=
-eta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.27.19.bb
-similarity index 65%
-rename from meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.26.11.bb
-rename to meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.27.19.bb
-index 54c7e0fd..dc9086c9 100644
---- a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.26.11.bb
-+++ b/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.27.19.bb
-@@ -2,13 +2,13 @@ require fvp-envelope.inc
+diff --git a/kas/corstone1000-base.yml b/kas/corstone1000-base.yml
+index a8b98603..c36b294a 100644
+--- a/kas/corstone1000-base.yml
++++ b/kas/corstone1000-base.yml
+@@ -16,14 +16,14 @@ repos:
 =20
- SUMMARY =3D "Arm Fixed Virtual Platform - Armv-A Base RevC Architecture =
-Envelope Model FVP"
- LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
-a33828e132ba71861c11688dbb0bd16 \
--                    file://license_terms/third_party_licenses/third_part=
-y_licenses.txt;md5=3D58b552b918d097a8ba802168312d76b2 \
-+                    file://license_terms/third_party_licenses/third_part=
-y_licenses.txt;md5=3Da3ce84371977a6b9c624408238309a90 \
-                     file://license_terms/third_party_licenses/arm_licens=
-e_management_utilities/third_party_licenses.txt;md5=3Dabcaafefc7b7a0cdf66=
-64c51f9075c5b"
+   poky:
+     url: https://git.yoctoproject.org/git/poky
+-    # commit: 2e9c2a2381105f1306bcbcb54816cbc5d8110eff
++    # commit: 5465094be9a61a1639e1dab6d2b4ebea2bee7440
+     layers:
+       meta:
+       meta-poky:
 =20
+   meta-openembedded:
+     url: https://git.openembedded.org/meta-openembedded
+-    # commit: 1750c66ae8e4268c472c0b2b94748a59d6ef866d
++    # commit: 461d85a1831318747af5abe86da193bcde3fd9b4
+     layers:
+       meta-oe:
+       meta-python:
+@@ -31,7 +31,7 @@ repos:
 =20
--SRC_URI =3D "https://developer.arm.com/-/cdn-downloads/permalink/Fixed-V=
-irtual-Platforms/${PV_URL_SHORT}/${MODEL_CODE}_${PV_URL}_${FVP_ARCH}.tgz;=
-subdir=3D${BP};name=3Dfvp-${HOST_ARCH}"
--SRC_URI[fvp-aarch64.sha256sum] =3D "0a262327073d410146a6689c068162f60e72=
-f45845734650b08a1d45483853ca"
--SRC_URI[fvp-x86_64.sha256sum] =3D "a314f0f8c55492b70ab469fbbe2bb71ab8bb7=
-c7ae4608ed1c432d8de8f4edb27"
-+SRC_URI =3D "https://developer.arm.com/-/cdn-downloads/permalink/FVPs-Ar=
-chitecture/${PV_URL_SHORT}/${MODEL_CODE}_${PV_URL}_${FVP_ARCH}.tgz;subdir=
-=3D${BP};name=3Dfvp-${HOST_ARCH}"
-+SRC_URI[fvp-aarch64.sha256sum] =3D "66c9939cb2b2104e415dcddb46a2ab52168e=
-8a2b7f30a339e1c05d5d4864ed1d"
-+SRC_URI[fvp-x86_64.sha256sum] =3D "cd70946a6b632950dca5def33d7656991a298=
-27fa2f6f72f75011d85bdcee248"
-=20
- # The CSS used in the FVP homepage make it too difficult to query with t=
-he tooling currently in Yocto
- UPSTREAM_VERSION_UNKNOWN =3D "1"
---=20
-2.34.1
-
+   meta-secure-core:
+     url: https://github.com/wind-river/meta-secure-core.git
+-    # commit: e29165a1031dcf601edbed1733cedd64826672a5
++    # commit: 59d7e90542947c342098863b9998693ac79352b0
+     layers:
+       meta-secure-core-common:
+       meta-signing-key:
 
