@@ -2,65 +2,65 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B809E77173
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAF7E7717D
 	for <webhook@archiver.kernel.org>; Fri,  6 Dec 2024 15:44:12 +0000 (UTC)
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
- by mx.groups.io with SMTP id smtpd.web11.39882.1733499848548315087
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+ by mx.groups.io with SMTP id smtpd.web11.39879.1733499845529420304
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 06 Dec 2024 07:44:08 -0800
+ Fri, 06 Dec 2024 07:44:05 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=SwdkKnHP;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.46, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6d8a3e99e32so18795296d6.2
-        for <meta-arm@lists.yoctoproject.org>; Fri, 06 Dec 2024 07:44:08 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=emG+uZqC;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.43, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6d8878ec049so16098966d6.3
+        for <meta-arm@lists.yoctoproject.org>; Fri, 06 Dec 2024 07:44:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1733499847; x=1734104647; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1733499844; x=1734104644; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HiQiADIhjC1v/OIPGSy3zbtxIY/DLi5vENitwXksQUg=;
-        b=SwdkKnHPmjGbTP76FGOOsT8Qi5PItYM9027Pw3fnWLjssPchOuZNfypVSAxXlY02Mv
-         JXJCcxG1He/VfDl2BPJCiEiWmw2ZnEDCTiBCB7gRu3smXO3isINQEvO5hWHC+dA8ZaEt
-         1Wb3uqoFn9bCqk3h80DwKRMUhnlOGkRWb6GSnJTvYHHT+2q058iU4ASTibSa6Fd1bfkx
-         8XLLKX6sbA+Isx3m7oyZttID4vin+jNZM54ZmQOM79sPOxPElox+uL1sXzJoE6bd3etx
-         mmME6EFleW+3AKWsj93PImpUX7gwe3U3j4MpL94fm0K8Mh6w4xQfu1TLyajPzzek9iMT
-         9/FA==
+        bh=E08rb15y7TY0CjkDPydwmh9btoLt+U4F/WXcoLw0cJc=;
+        b=emG+uZqCW66yctQloniVs0RIzDFfzsfPJckNkHpeHnOnh6gxNvNg40U8pPsqXhxabo
+         atP8ceRUkAs3KBMXO/ez2UIS+SeAJ5PylRRT8pAuMAZoRW2bFYJ6fKmKgNCTWNYnkThO
+         bSImwCc6fq4LjJAaCPFZxskZ8CgHvGZms8a1xGywADVfM8YLGQCYsfLt2owhV7C0LQby
+         LE4DtpnKPaGEYx8f7LRVd0MNFz5i1ZJ51Z4r2YdIuha9jna7/2MW4bEIgpltpuQ2mb0b
+         kv0z5Ma7ocCrLbhraD2/5OWFtR9eAZ81nbmz4X/epOq0RRIvxkCTJrSJgTtqn9rWQ9bU
+         NgZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733499847; x=1734104647;
+        d=1e100.net; s=20230601; t=1733499844; x=1734104644;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HiQiADIhjC1v/OIPGSy3zbtxIY/DLi5vENitwXksQUg=;
-        b=HNFy4ckDyB6WwIXuDfHFvy7ADXWAduyx3rw8LECOHyJpUwTmNsK7FRtGRPFK6sWKKQ
-         2AAYwfbWwwrt6fpXzDVvSa5OASVNEdnbl3aI638ta9yBGHs1e8/xVUqtc6Z21Meokvjy
-         209Z6DH6juZqLpvwJ8ZFStgHD7zNpqgl7+4fG3jZcgAT54z4IQdxKxOa45WsBxcV8YBR
-         LHb7e6pGUOn+iXSPu0UXI6UwOmSkw2pdl7QVYcc12hV2XCeHkxe557Rn1IAh0bxq6rtR
-         8m4Hj7y+/Rgt00aMddP54ocB+/wpqcpY0wk2NmHMJlN0bhxQBk6RJtS7Rkqf/B69hfpe
-         SD7Q==
-X-Gm-Message-State: AOJu0Yw0vYnTEuAfJcmnG8wczHdSr05IWncyDRLrY/raDRzpOUkgzLp5
-	1zCTwO668sLjRBZo3xV1hGBy7bzbiC+ooD9WILc2Go278EB4XOwSPYwrJ71WaC+PtErSgLGmyek
+        bh=E08rb15y7TY0CjkDPydwmh9btoLt+U4F/WXcoLw0cJc=;
+        b=LCHPzC76mNGnUIpc/LseOPpChzQNELZeyiOuUqc8ETLKv9dZUBpToh00WaDAfmCfxa
+         zXpdE8RfC3FK8Nia+Zss6Dz2BcSA/U4YC0YlKITd9MI7Aer/+NyAbGGcS6UksHMLyW0E
+         LSMRIvyuQawe2YuMhPXEcx9Jzk1jiitOTDbiFhXTd/kA5PaVMoKgHI+8/YShCUuZ6ngO
+         H0zHxhK5JTR3fxtcRWmiiL1fBISCJFh3jRcctmtIYgwTHJqSroE0JTpQnaDlWVD+MWXR
+         CHbYtAopa2mEbp6gN4L80hP7wEE+Gvm91XqphdHTaGZOKZNctFz0YJt/7zcPoVCylKm3
+         HUxg==
+X-Gm-Message-State: AOJu0YzHFaVMMe/PU60c/icdG/qVCesKp80SoJlXvgOuDI6WbXrNQCFn
+	cQM0uGD8XYyEdCrQUS0QuLgKW/Q8/SYLGk8VyDnP919DTKA8KoK+YL9JqaK5DsssKjqGNh+F+IM
 	=
-X-Gm-Gg: ASbGncuCZSL55xv0pJ0+0cg8lX2ei9H+ec7DvEZfrUMjOZSN92EPf+vsD+m47sdsn0s
-	J0LNn6VGFMDIGkt4aBnHD1QvWcxM9VopjzfUHNs4i/0brG4g6hO1NWujsyZtv03qoRjmHfR6CD4
-	6sGJjgOzncOHzleR3ac49TDN6EyvEnJBIUgStCF1Q2jdtQMak5EUevGrZQXLbJg4dJq6vQvuMBH
-	5rUzq4kYc+TYBXEgsVPnWiN31DS5aGeG7isgYD8VA==
-X-Google-Smtp-Source: AGHT+IHphSsz1ftw1pl75U3iIpGD2Loe8gE897ud021ubDYujKG5fexCvyf1yOCxrqtth+opEoCtJg==
-X-Received: by 2002:a05:6214:21ea:b0:6d4:19a0:202 with SMTP id 6a1803df08f44-6d8e71e091emr38408066d6.33.1733499847428;
-        Fri, 06 Dec 2024 07:44:07 -0800 (PST)
+X-Gm-Gg: ASbGncuFrJhfGn2+KhlNkZA97YHyqiNweBCSw2Wg6RUDdVqrO6DNf6M6Gf4WETR+G29
+	SeY5wLxman2jdkarqHAPF2qpss2okkr3dz3TH33N1kPcMEudOgJSmdmknM4kFPGQMN7X1Z4Ykqo
+	Xpc+lPC7LG3u0owyaUKSMNVATUlvQsbTxJx8pjMBSVF8umcZtt9Tt7LAx4W2e2p4sv8h2p8msYO
+	dwXxEOfOmAURm7yTrWN//JkFFpvZYCxdhr/WBw4Aw==
+X-Google-Smtp-Source: AGHT+IHnCu8C/xw3lr+5NN5n4doYHjZBXZKfm5/1S3hdcprbJ5Mtae5qkbTVqaAMAi9kmLq8hv/s7g==
+X-Received: by 2002:ad4:5745:0:b0:6d4:180e:e7a with SMTP id 6a1803df08f44-6d8e7128c4fmr42382236d6.24.1733499844332;
+        Fri, 06 Dec 2024 07:44:04 -0800 (PST)
 Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d8da695c98sm20307956d6.33.2024.12.06.07.44.07
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d8da9fd1d5sm20046246d6.95.2024.12.06.07.44.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Dec 2024 07:44:07 -0800 (PST)
+        Fri, 06 Dec 2024 07:44:04 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
-Subject: Re: [PATCH styhead 0/3] arm-bsp: corstone1000: `CORSTONE1000-2024.11` release
-Date: Fri,  6 Dec 2024 10:35:40 -0500
-Message-Id: <173349934368.2735333.14735461411276303673.b4-ty@arm.com>
+Subject: Re: [PATCH 0/2] arm-bsp: corstone1000: `CORSTONE1000-2024.11` pre-release
+Date: Fri,  6 Dec 2024 10:35:39 -0500
+Message-Id: <173349934368.2735333.7239664120078609975.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20241205155948.787069-1-hugues.kambampiana@arm.com>
-References: <20241205155948.787069-1-hugues.kambampiana@arm.com>
+In-Reply-To: <20241204171250.220387-1-hugues.kambampiana@arm.com>
+References: <20241204171250.220387-1-hugues.kambampiana@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -68,27 +68,26 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 06 Dec 2024 15:44:12 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6277
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6276
 
 
-On Thu, 05 Dec 2024 15:59:45 +0000, Hugues KAMBA MPIANA wrote:
-> This patchset backports two commits related to the `CORSTONE1000-2024.11` pre-release.
+On Wed, 04 Dec 2024 17:12:48 +0000, Hugues KAMBA MPIANA wrote:
+> This patchset contains commits related to the `CORSTONE1000-2024.11` pre-release.
 > 
-> It also adds one commit to pin the required SHA for the dependencies.
-> 
-> To-Do after merge:
-> * Create `CORSTONE1000-2024.11` tag in meta-arm on `styhead` branch.
+> Remaining steps for the release:
+> - [ ] Merge the commits to meta-arm `master` branch.
+> - [ ] Backport the commits to `styhead` branch of meta-arm.
+> - [ ] On `styhead` branch, add a commit to uncomment pinned dependency layers SHAs and change branch to `styhead` in `kas/corstone1000-base.yml`.
+> - [ ] Create `CORSTONE1000-2024.11` tag in meta-arm on `styhead` branch after above.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/3] arm-bsp/documentation: corstone1000: Amend documentation for CORSTONE1000-2024.11 release
+[1/2] arm-bsp/documentation: corstone1000: Amend documentation for CORSTONE1000-2024.11 release
       commit: 5c40c5f7f740a59b669c74da898a3687d53e2d6e
-[2/3] kas: corstone-1000: Update the SHA of the Yocto layer dependencies for the CORSTONE1000-2024.11 release.
+[2/2] kas: corstone-1000: Update the SHA of the Yocto layer dependencies for the CORSTONE1000-2024.11 release.
       commit: 8af2f218d45387851fe870dada856a85d5b98438
-[3/3] kas: corstone-1000: Pin Yocto layer dependencies for CORSTONE1000-2024.11 release
-      (no commit info)
 
 Best regards,
 -- 
