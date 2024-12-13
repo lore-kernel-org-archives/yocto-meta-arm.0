@@ -1,92 +1,88 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <adam.johnston@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836D0E7717D
-	for <webhook@archiver.kernel.org>; Fri, 13 Dec 2024 04:32:00 +0000 (UTC)
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
- by mx.groups.io with SMTP id smtpd.web11.8784.1734064310919840670
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7ACE7717D
+	for <webhook@archiver.kernel.org>; Fri, 13 Dec 2024 14:10:43 +0000 (UTC)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+ by mx.groups.io with SMTP id smtpd.web11.16222.1734099033923097224
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 12 Dec 2024 20:31:51 -0800
+ Fri, 13 Dec 2024 06:10:34 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=D6SRIjuF;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.170, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7b6c375b4f0so126765085a.3
-        for <meta-arm@lists.yoctoproject.org>; Thu, 12 Dec 2024 20:31:50 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=ckLnPYwJ;
+ spf=pass (domain: linaro.org, ip: 209.85.221.45, mailfrom: adam.johnston@linaro.org)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3862b364538so1036317f8f.1
+        for <meta-arm@lists.yoctoproject.org>; Fri, 13 Dec 2024 06:10:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1734064310; x=1734669110; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zszDrneotceb2DpAvLm7WyKjAwur1QN7qIpeGOudl94=;
-        b=D6SRIjuFxdcR1pFEA5/7Fa38hBnLGaZV87dcUWlWDxq3MEp6LSX2tDaVNwYSVGOvsF
-         gV23J1fOI+dp7WVsZ4UjDG4WMyXgV6TSE4hAJd7fAg22otM/cRmQkmQ578as+8fviyjy
-         HzQH5Lnl7ZbDssl2I83m0k8VoOAb2J/UXlom9RcZMHCb/dHMyke70CIkv69bv/43dfK1
-         ysNGf4hYRV073a9uGjiQ5fbg5vLUkcFrHTcZnCcNwnKu+N6sNhCwzpZ8Rwh9niP6GUbR
-         KN00bgL9BlT9LnGe1VEDparv1eqsMHYkBsZd5+V163wZQWX2CBsmCY12Ia9D6k6bmgr3
-         Z+xA==
+        d=linaro.org; s=google; t=1734099032; x=1734703832; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VrCXBfFCqV9R77LGlIqtLfs5gYtkRoUzCXb6dJ4y2SM=;
+        b=ckLnPYwJ7WGA/X752sUFdB4vOLgTj1QbzOC52TW2d/5L59YyaUwOekm43vV40yKU1/
+         SZhdaitjYmicf39Hni0mA2YADxKBnM/j1PGk+ok9JzA/ZDzm/87VYk5rDs3s/TIpOo9r
+         zYTB4YPAbWHdcLZ5D645QBhwR6pRYJ51JTSfkVWFKW8sR02ghHTo7pqP1Jg0W1QOmPtZ
+         NkdT/7ThPKThu4FYtl/e1FLqISau+g0rgNmdMIEFVT/qfdedvNlg9FAtFSA+6k5cekkV
+         /Jc6UADjhSZXxvifBvHeB+cpM01UlZAAoXMipkEAqTSleZrKGkidrz0cjCJ1lg0GjZB8
+         dVMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734064310; x=1734669110;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zszDrneotceb2DpAvLm7WyKjAwur1QN7qIpeGOudl94=;
-        b=k8COgCi/F0sUOFx2aB+6M2xVj936BurulV9YmYxSozTwDcLDbgAipNfn82eNsemfLK
-         rhb/EoR3e21uRhRNPvv646YlNX/R6A6FDVak5Kg7aiWkKMD2K/ZLfH0/0pLph9hoDBhB
-         nBQKu5wNSJl/U6Fv8dcBgvlj9REMAHiZ+0RFoTi5TUAXNmYP/3jbj1e7MR4bc21BCueh
-         khpiapu78f/471RmoiwdKTJzKj2OzHgSjlgyZb1N91uhaoxEnkn6+QNOIE6JAxG7+RI3
-         RnWPTsay9izbioDpjYQyIRnGa08hK7RzzArR05AjsWA/YRLVJE4IV8zAmSq4C8tiUycv
-         wvPQ==
-X-Gm-Message-State: AOJu0YzD9gfZvkn2lirCh4AK3QhQtu0ZJZ651l2kvXai/4jHueH4Aylo
-	NsiP1o3nutwGKgyCnVN6Tb//RcnAGvalWAASRWWm+AjiWIoh0WY7XZlDkPtm0xev1DTISKgS1/s
-	=
-X-Gm-Gg: ASbGncvWiQxV7cMI7583y7ZgBaPcmjOfCD6otXPEZV4U4+/tZwi7gg51rMlmDlQquBF
-	Qch0SAsdobcondTUQdt1jTINZi5YkWLyM1Q7ojD4CSXJiwz5NY2yqRMT7jQlw+g3wKsXNNsin9n
-	WXM505ioM3UYzmSpVF2+PehXNJFqcto7Cy/hUQil86ChjWlGf+ASLxUkhV8QIaQ5pI83W9eS8gr
-	AB5r2W38BSqIbDhzgkkzMFvwKy9W8LE3XftLOiqY6QHn+0R
-X-Google-Smtp-Source: AGHT+IHHu977g6/LM+We6XpD8KM5yUuS6smrcLLenUorK1eYp6MBuTmjyz9xoOwZleU2C/XmmQhAUw==
-X-Received: by 2002:a05:620a:1711:b0:7b6:e8c3:4b5f with SMTP id af79cd13be357-7b6fbee8157mr167325785a.16.1734064309551;
-        Thu, 12 Dec 2024 20:31:49 -0800 (PST)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b6ed409c58sm214911785a.6.2024.12.12.20.31.48
+        d=1e100.net; s=20230601; t=1734099032; x=1734703832;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VrCXBfFCqV9R77LGlIqtLfs5gYtkRoUzCXb6dJ4y2SM=;
+        b=fkU8xYwv8zPBzvJoL09s0DubW7kdaCzMfKOxlN0dywx+jKd7gBCmXtqL5F+Luh5sxS
+         PTYtksdQBi5ip+c6/jtkBeECArGpp1sFWtC4SE3uUTwoZ4w2Q/U78n/TFE4bz3FLdhQT
+         i4EwamAEAgmsIunZRC0GSM+wHggPKU7DqoUjc2TmNj6sIZRWIzRTNPZVI7+I2zIRMnn5
+         615iIYsczaqBJ45Np3smEAvCMvyNwPEY1nPfiJoZBIOHrN1JMjc6nDgFzT04oNU97mAl
+         in0ClD+C5XE5dKtR2Es4kH9Ed2V54ofkP1Tqc1y8ZzuLPdPRhYr+SU6zOd9tn5V+PNMq
+         F3Gg==
+X-Gm-Message-State: AOJu0YwTv9ZO1Sz8ytbKoqf0PuMex+BI8PFARJgnaZJSR0CpFYmFPQ4m
+	Zr11J8R2UPqzSU/F04LGh5hmFbYZFfIK73TGHIjIf86gr68wquRJrcVTdO1I6PiCI8Pikoskzoz
+	4xKU=
+X-Gm-Gg: ASbGncu2q6dzxScOaZdExg0S6tve26rUhKwo2wijOQh+szdYWrnRtRlaUq4JWmvcz3o
+	DB/S7UfzR0LoYZPHdXOnpZq2ipghpBGuZczYk8atBA7enoHGonnooRAzgIs0Y9HmgjGPSq0CAba
+	pRF8djUmKosd2QFzxKAHWGbjj1i4huWuZXZdJa/1QyhAf1h7pdwuYi/rpBB4eggVzM7QpLu5IB5
+	TBdSYggUVB05WjyqpBSbUn+cmL3/2HtthTX/lLvROFg9VvambmlcltpkD0I9pCz0WY8P0wdSvoP
+	FsroTVjTZsW+UqLR8EXPZAi9c3w=
+X-Google-Smtp-Source: AGHT+IFdWvmHoAvs+apYL5Qp4aw+tGfD+KteigiLq1BDa1EaHJdjbl8muY8pZLCguXd/TEZdMFi96A==
+X-Received: by 2002:a5d:6d08:0:b0:386:3d33:a61a with SMTP id ffacd0b85a97d-38788869cfdmr5799086f8f.27.1734099031699;
+        Fri, 13 Dec 2024 06:10:31 -0800 (PST)
+Received: from ip-10-252-32-24.eu-west-1.compute.internal ([217.140.109.21])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-387824a4d19sm7196218f8f.32.2024.12.13.06.10.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2024 20:31:48 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Gabor Abonyi <gabor.abonyi@arm.com>
-Subject: Re: [PATCH] lib/fvp: add name to terminal title in FVP runner
-Date: Thu, 12 Dec 2024 23:31:44 -0500
-Message-Id: <173406430486.3607662.16438809333871380168.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20241209132529.619713-1-gabor.abonyi@arm.com>
-References: <20241209132529.619713-1-gabor.abonyi@arm.com>
+        Fri, 13 Dec 2024 06:10:31 -0800 (PST)
+From: adam.johnston@linaro.org
+To: meta-arm@lists.yoctoproject.org
+Cc: Adam Johnston <adam.johnston@linaro.org>
+Subject: [PATCH 0/1] arm-bsp/corstone-1000: IMAGE_ROOTFS_EXTRA_SPACE workaround
+Date: Fri, 13 Dec 2024 14:10:26 +0000
+Message-Id: <20241213141027.486517-1-adam.johnston@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 13 Dec 2024 04:32:00 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6285
+ <meta-arm@lists.yoctoproject.org>; Fri, 13 Dec 2024 14:10:43 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6286
 
+From: Adam Johnston <adam.johnston@linaro.org>
 
-On Mon, 09 Dec 2024 13:25:29 +0000, Gabor Abonyi wrote:
-> Currently, terminal title is %title, which is populated with the
-> component name by the FVP. This commit prepends it with {name},
-> which is already a mandatory parameter for terminals to be launched.
-> E.g. FVP_TERMINALS[terminal_uart] ?= "My Name" will launch a terminal
-> with a title "My Name - terminal_uart".
-> 
-> 
-> [...]
+When images are repacked IMAGE_ROOTFS_EXTRA_SPACE is ignored.
+This is not necessarily a bug but an undocumented quirk of how wic
+works.
+    
+Evaluate IMAGE_ROOTFS_EXTRA_SPACE and use the value with the
+ --extra-space option. Note that, since IMAGE_ROOTFS_EXTRA_SPACE is in
+Kb, the value for `--extra-space` requires the explicit 'K' suffix (the
+default is 'M')
 
-Applied, thanks!
+Adam Johnston (1):
+  arm-bsp/corstone-1000: IMAGE_ROOTFS_EXTRA_SPACE workaround
 
-[1/1] lib/fvp: add name to terminal title in FVP runner
-      commit: b2c43dbf9b4e7c22038bdd5d01633962afe8f18f
+ meta-arm-bsp/conf/layer.conf                       | 2 ++
+ meta-arm-bsp/conf/machine/include/corstone1000.inc | 3 +++
+ meta-arm-bsp/wic/efi-disk-no-swap.wks.in           | 2 +-
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
