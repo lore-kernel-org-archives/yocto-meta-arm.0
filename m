@@ -1,90 +1,104 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <foss@0leil.net>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 938B8E7717F
-	for <webhook@archiver.kernel.org>; Tue, 17 Dec 2024 14:02:48 +0000 (UTC)
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
- by mx.groups.io with SMTP id smtpd.web10.82059.1734444164811869089
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06466E77184
+	for <webhook@archiver.kernel.org>; Tue, 17 Dec 2024 15:06:19 +0000 (UTC)
+Received: from smtp-bc0c.mail.infomaniak.ch (smtp-bc0c.mail.infomaniak.ch [45.157.188.12])
+ by mx.groups.io with SMTP id smtpd.web10.83592.1734447976750177762
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 17 Dec 2024 06:02:44 -0800
+ Tue, 17 Dec 2024 07:06:17 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=kdbOzS5C;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.49, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6d888fc8300so25274276d6.3
-        for <meta-arm@lists.yoctoproject.org>; Tue, 17 Dec 2024 06:02:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1734444164; x=1735048964; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PwECSg8AvUZFBo6LowM9dZNOJkUxLlFkSWzyhmfJfFU=;
-        b=kdbOzS5CdKSw5TNBF1qDZQ9gAFpfq478NH5GgNZ7o6WIVQDJHcQu9MntWi1ASP+j4m
-         4YCjFB5oQgElu1m2AepSSEPMQ85c1xyK6E4qg/o4OYqi8b7Z/DvTy0D9w98FUQu8SZwi
-         9CU0HKBmp+w9yUVnfMzFc186tVfseevFonh2SMftYlrDFLrZCzqZaAKDEwlazM7CwA5R
-         i97bTbFfCR9/mZ+Z+DpEfmN1uCzdMI3IKwW+jY3sWosJkvQwhIOnhKE2/1uHAUPWOY1t
-         R0UO/kVCojDnJe/L9kPOVaeBzIr7dsTsvIV6vHTgIYoWjP5E7pDeopCCtuMFrtJUJeS9
-         umFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734444164; x=1735048964;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PwECSg8AvUZFBo6LowM9dZNOJkUxLlFkSWzyhmfJfFU=;
-        b=m+PsmD3cXf0SHyOGGkU6SFFGjPJwaSW3TgLNk+w4JpVf3VIayw1HgZzFApp73XVoq0
-         GBnHtxMWidukAuqF/dOtNRWeKJQ+1YbT6wnx+N6hUw7KAuDGljqLCPz5ILkNyt+8vTIW
-         aOBiGMhou5TMZFsUaeu6luLWL4BEqsFBTdHlYKiB/3/SWNkrtXZZFX334Et+XtzrdM3b
-         MVTN/WPx29+S3RC9kzBkoFEgJwJ+ObCxk6vq5Qsb+zY7omJfPeHbTG2jJ7sstudzS5uw
-         p9LVyWnLaWdR8eADhNdS9Ni0zZOWo8XBW9Qz7mgjUW6t7QayaVsvvoN463upK5sZWWtN
-         NQuQ==
-X-Gm-Message-State: AOJu0Yx7lheOZeoutBpRFR7QPpe8Lvu3HnDrQ79puBpXM+iPWE8b5Z5e
-	KkXqIli0H79eygEqCtMvXScWUd+PfWcZU583KLySD8PlVDKypP1fLdlffcYa3KuJzZUasAWxY+k
-	=
-X-Gm-Gg: ASbGncup8rMfai4stWjlLrvkiFqKTaC+ip68E/GT6DD/oVEgR08XEWo5czEy0soFoX/
-	5j+uiWwh6ayqLTSSmY/Xfrc4ecvzkb5HsmXgkO2GpK3rpAhCs3uNKu/iDYyrVm7X5sAsyHZygDL
-	s5bygupEZg/Z1bbzp63dgjNdJ3btP1g0ipRnzNNPjr2UiSHJf4yxdHjLmzrXrWLh5PSmCGOFKME
-	2PF6cQz7P5RF2NW+IyrsJ1OlTynG0VBD46d9AUnmn6OjiRL
-X-Google-Smtp-Source: AGHT+IFfvRk2FODRexWCMptPt4MPs1D3KSzY421XoTpHviPQ4Fj74vYw0BzXdoI3fO2xspiobayHeQ==
-X-Received: by 2002:a05:6214:2524:b0:6d4:254f:1c8e with SMTP id 6a1803df08f44-6dc903206f5mr231560556d6.37.1734444162976;
-        Tue, 17 Dec 2024 06:02:42 -0800 (PST)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dccd387c92sm38774006d6.120.2024.12.17.06.02.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2024 06:02:42 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH 1/2] arm-bsp/linux-yocto: fix Juno build with linux 6.12
-Date: Tue, 17 Dec 2024 09:02:23 -0500
-Message-Id: <173444414287.2113109.875232791366385643.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20241213155608.726466-1-ross.burton@arm.com>
-References: <20241213155608.726466-1-ross.burton@arm.com>
+ dkim=none (message not signed); spf=pass (domain: 0leil.net, ip: 45.157.188.12, mailfrom: foss+yocto@0leil.net)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YCKrk53JvzshM;
+	Tue, 17 Dec 2024 16:06:14 +0100 (CET)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4YCKrk16kPz3tw;
+	Tue, 17 Dec 2024 16:06:14 +0100 (CET)
+From: Quentin Schulz <foss+yocto@0leil.net>
+Date: Tue, 17 Dec 2024 16:05:59 +0100
+Subject: [PATCH] arm/trusted-firmware-a: add support for 2.12.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241217-tf-a-2-12-v1-1-cca762965260@cherry.de>
+X-B4-Tracking: v=1; b=H4sIAFaTYWcC/x3MQQqAIBBA0avIrBvQSSi6SrSQnKnZWGhEEN49a
+ fng818onJULTOaFzLcWPVKD6wyse0gbo8ZmIEvekRvwEgxI6AiJR2t98CKxh9afmUWf/zUvtX4
+ FxWFfWwAAAA==
+X-Change-ID: 20241217-tf-a-2-12-2e8004a4ffd3
+To: meta-arm@lists.yoctoproject.org
+Cc: Quentin Schulz <quentin.schulz@cherry.de>, 
+ Trevor Woerner <twoerner@gmail.com>
+X-Mailer: b4 0.14.2
+X-Infomaniak-Routing: alpha
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 17 Dec 2024 14:02:48 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6295
+ <meta-arm@lists.yoctoproject.org>; Tue, 17 Dec 2024 15:06:19 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6296
 
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
-On Fri, 13 Dec 2024 15:56:07 +0000, Ross Burton wrote:
-> The DesignWare platform driver is hidden behind a DesignWare Core option
-> now, so enable that too.
-> 
-> 
+Add support for TF-A version v2.12.0 and mbedtls 3.6.1.
 
-Applied, thanks!
+GCC-compiled boot tested on RK3588 Tiger, RK3399 Puma and PX30 Ringneck.
 
-[1/2] arm-bsp/linux-yocto: fix Juno build with linux 6.12
-      commit: fd2ba2d29094aea8fd839352d4906be23f708bc6
-[2/2] arm-bsp/linux-yocto: add temporary 6.10 recipe
-      commit: 83d9575a381b650b90965c6eda585a434255d975
+0001-fix-zynqmp-handle-secure-SGI-at-EL1-for-OP-TEE.patch is merged in
+2.12.0 so no need to have it in SRC_URI as for 2.11.0 and earlier
+recipes.
+
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+This is interesting for meta-rockchip since it now has support for
+RK3588 and initial/incomplete support for RK356x (see
+https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/31265 for
+missing patch). I do not own RK356x devices so cannot test their
+support.
+
+Cc Trevor as maintainer of meta-rockchip as he could have interest
+making upstream TF-A the default for RK3588(s) instead of using
+Rockchip's blob.
+
+Cc: Trevor Woerner <twoerner@gmail.com>
+
+Tested on master branch of poky, meta-arm, meta-openembedded and
+meta-rockchip.
+---
+ .../trusted-firmware-a/trusted-firmware-a_2.12.0.bb   | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.12.0.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.12.0.bb
+new file mode 100644
+index 0000000000000000000000000000000000000000..ceaac263fc7504a6c876eb7c217027936a2889f9
+--- /dev/null
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.12.0.bb
+@@ -0,0 +1,19 @@
++require recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
++
++# TF-A v2.12.0
++SRCREV_tfa = "4ec2948fe3f65dba2f19e691e702f7de2949179c"
++SRCBRANCH = "master"
++
++LIC_FILES_CHKSUM += "file://docs/license.rst;md5=83b7626b8c7a37263c6a58af8d19bee1"
++
++# in TF-A src, docs/getting_started/prerequisites.rst lists the expected version mbedtls
++# mbedtls-3.6.1
++SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls;branch=mbedtls-3.6"
++SRCREV_mbedtls = "71c569d44bf3a8bd53d874c81ee8ac644dd6e9e3"
++
++LIC_FILES_CHKSUM_MBEDTLS = "file://mbedtls/LICENSE;md5=379d5819937a6c2f1ef1630d341e026d"
++
++# continue to boot also without TPM
++SRC_URI += "\
++    file://0001-qemu_measured_boot.c-ignore-TPM-error-and-continue-w.patch \
++"
+
+---
+base-commit: b2c43dbf9b4e7c22038bdd5d01633962afe8f18f
+change-id: 20241217-tf-a-2-12-2e8004a4ffd3
 
 Best regards,
 -- 
-Jon Mason <jon.mason@arm.com>
+Quentin Schulz <quentin.schulz@cherry.de>
+
 
