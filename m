@@ -2,66 +2,66 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1F4E77187
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD5CE7717F
 	for <webhook@archiver.kernel.org>; Tue, 17 Dec 2024 14:02:38 +0000 (UTC)
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
- by mx.groups.io with SMTP id smtpd.web10.82050.1734444149300850322
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+ by mx.groups.io with SMTP id smtpd.web10.82054.1734444158106652548
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 17 Dec 2024 06:02:29 -0800
+ Tue, 17 Dec 2024 06:02:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=NoCzn8Ma;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.47, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6d8fd060e27so43944946d6.1
-        for <meta-arm@lists.yoctoproject.org>; Tue, 17 Dec 2024 06:02:29 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=1N3qx4HV;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.175, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-467a6ecaa54so34039141cf.0
+        for <meta-arm@lists.yoctoproject.org>; Tue, 17 Dec 2024 06:02:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1734444148; x=1735048948; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1734444157; x=1735048957; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9EsBDdIxerirY4QwqY3Zc+ppr65pqOHfgn9kUEORrFE=;
-        b=NoCzn8MaSTyGYhmAikaNJwyvzfuP1MzSkd55NRmxvdwSgLriZ7A6n9cTwupUjHRFVP
-         uXHfFF3104Ik/voxUlKScZmS8/tFnvp9Q6IE+UzJ8Xug3dCcSCnGq9vDCDJKd5sy8xri
-         oJMm1lg5RhF+bwsSUArga6g8sQk2y5NIS59P/rfcMHFUEsX5UAFIoGQ/knDOZHaHzvme
-         TBbjpqE0qi1goQM/ZdpwvIcqySh/SaVmS2TQv5eCfoYcfzO9qATbpP9qYwCD6DALROfb
-         qwx16Pee+uzBrPOoJ59C7si+FTIeJe1jbtC6nw6cajMJ2h/pazD++vQ8wsmHi1Kf6O2Y
-         pYRw==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1C3u9Wd5N1Hrm+T959S4TsJDE1oNV3gBySFAWsacqcU=;
+        b=1N3qx4HVJwO8l8MitFsgrPrGcHxsu4u5S0QJTK1F6NLPIMHb9aTwJebm98wy9hYVmS
+         XwzwL0Y/J7Sf4sH+r9yDMWTVFN2lPfFgYRvEYCqOQHdB5DlTwgpXRfkhmCHBVDCcLyql
+         GO3EV1gXgfMpwIYBp53we8JfY3kYFyFkbJuq00HH+ZA6UTyghUXuY6vdls0ZIB0lWekM
+         TMIu3wSZbyetriu6te9UeLXXDWiHa7JGCJeCCC5IOo/jMAFNpF5sgYVHZBvDFFiMUNxl
+         9jEtsjTP5jeiKuy3OqmOSTBKYJdacfLoHUDLBLmLhjGALJC1FjBa5IL07FUIa7EnnSzP
+         kxfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734444148; x=1735048948;
+        d=1e100.net; s=20230601; t=1734444157; x=1735048957;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9EsBDdIxerirY4QwqY3Zc+ppr65pqOHfgn9kUEORrFE=;
-        b=aYMp7KxfQvBpTryaDOWoZAjVPHAQXfQ/1ua2oQUl+jXN+rRY4o/OQSP4Y+1K4q63DO
-         Ew0PSFWlCFoJ8NjSbZJBoB9nC0W12cDqd3H8/Wytk3cBs/cD4RMTDe+7/fhXuYE0hWFq
-         j45aRfvNljAe+kf1uz875idG+tXNJ2xEnZUeQwn6sDzVIbUX6rO+Pxcu4MY50qU5Xf0U
-         ahXItZ/z9yXFrqpc2JemqNYLA4l78b61tm0LNnA5cTcBnxOeEXdWTbKg8pDvEcXZmiIE
-         E9lQfziabK12R14HzoIC42dF4wMmqtRHVDmSJx2ejBCIjdJp+xPCojXTkDxTX1pkbbnF
-         pviQ==
-X-Gm-Message-State: AOJu0Yw9Hvm6m9N9KnZ8kc5nCPXp2tHRmV4iecx1sXRrn8sQpAG4wr+y
-	nA/dhQxA766hGcHLeCfIE8FDrG8xoTDvEwyzSJxtoBJY2Hha0H8EORoIlBEuBA4p/H2lyPs7yGk
+        bh=1C3u9Wd5N1Hrm+T959S4TsJDE1oNV3gBySFAWsacqcU=;
+        b=oQuU7ekVB7is+gg4T4ffTCO1QIs+oavZfXcDw/gZeLwWjH+NR8QESwy8XjZ9o+Ke3B
+         p/l+/7pGvHr1Vbf3l8+ACr2R+K9WKdEsrawe6wFc4vlLJMy4bUEjQMw363xUExvBkaWp
+         agUuhdgZZyutX4woxJKsYI6ZBVn4g8IvNntriFw+q66YMuih8uoSKAsAwamt0fKZRUbu
+         AaYCi4oW3aelYSA+UkSm81No2+B4FEs1vUQkBXWD79D2ZjEfSCEza2JZmV75EmgVnu2S
+         AxvhWt/l9eNDUFZ6+oRhkUoHSlMaSZthewbqa+LuIhOsYRC3zoAlXPEZ99By7q3IXhzO
+         eWmg==
+X-Gm-Message-State: AOJu0YxMeG3sG5Noo4cNKa6NM86ZYmin60fXFhAPguJA/h/yQrHHGvv9
+	FsZyX1AoXgcUvJ1ezX/LLgxhRR2tjlw/AgpSGZQwNn4vlDYF/ZIgSH9uGFuyAGJ7Y5Lg9VjeB5M
 	=
-X-Gm-Gg: ASbGncuvZzBmPUcE4+VOmVdJ6DmYCt2Oi40YbnlTrHHhW/Ty61zW0qL83vCRiTG2NrG
-	Sg2nDxVNRFfhIsFYSegMXrZPEKUr4Okq05lX4xkKZ1xpE+u6UseiOjg9UKDxhmgzEuFo1qSnewG
-	qvfrTz/XcEPBFUw+X4rrAAjbf6NV+WknDTtcybAHqBtJ0SQx0FCZbC6Aaw2Xiu9RGGvdau3wewC
-	92a+qbJDn4cFD8dqgANGyGJ9fta2onLUXmTvDG8BX+6SLtj
-X-Google-Smtp-Source: AGHT+IFTcqL6CzYSGnsllHCiSUMzGNPqtniWIPSE6Nm0Su8nATTeq6x9f3u2jVZQJSSJmSdWPxYh9Q==
-X-Received: by 2002:ad4:4206:0:b0:6d8:af37:ae5b with SMTP id 6a1803df08f44-6dc9686feb9mr231588296d6.43.1734444147855;
-        Tue, 17 Dec 2024 06:02:27 -0800 (PST)
+X-Gm-Gg: ASbGncvlhuEz2sIXxu6oU0N3ifutS0VX52s4OuMs0bUahj3uMacaLyP5ThEZBzeApLq
+	/P19B0R5WVm87axSUvFUJxGWHwIch9I2nOijufEbe7lENj4In3hfvlQCcIMTBUTJgr38t5ZTDMP
+	i8fF+ixz46Mkzj1ucBYD3lrczku2bnjS2xHFBXQAYxPZDyShsKvC6G6/G1Mqm6W1j0vS4/nSqpd
+	KVcuP+uYyKUenWNlTOd1WKscnAN202j1232YdH1kRmxIHSX
+X-Google-Smtp-Source: AGHT+IE2ylbjvbHH8k4iimCDBfC7cBz+lAN+mZrmLZDGsZSFy09ubXVlKRHi1CsobTsPbP1ro3Ymeg==
+X-Received: by 2002:a05:622a:488e:b0:467:5367:7d09 with SMTP id d75a77b69052e-467a5755427mr252805891cf.16.1734444156613;
+        Tue, 17 Dec 2024 06:02:36 -0800 (PST)
 Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dccd366305sm38695886d6.84.2024.12.17.06.02.27
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-467b2e83181sm39347861cf.62.2024.12.17.06.02.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Dec 2024 06:02:27 -0800 (PST)
+        Tue, 17 Dec 2024 06:02:36 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon.Mason@arm.com,
-	abdellatif.elkhlifi@arm.com
-Subject: Re: [PATCH] arm-bsp/linux-yocto: corstone1000: Update the Upstream-Status of the remoteproc patches
-Date: Tue, 17 Dec 2024 09:02:19 -0500
-Message-Id: <173444414286.2113109.6866974207460851370.b4-ty@arm.com>
+	Jamin Lin <jamin_lin@aspeedtech.com>
+Cc: troy_lee@aspeedtech.com
+Subject: Re: [PATCH v1] arm: remove python3-pyhsslms recipe
+Date: Tue, 17 Dec 2024 09:02:21 -0500
+Message-Id: <173444414285.2113109.1276563620165356584.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20241212101238.53250-1-abdellatif.elkhlifi@arm.com>
-References: <20241212101238.53250-1-abdellatif.elkhlifi@arm.com>
+In-Reply-To: <20241212021256.1911359-1-jamin_lin@aspeedtech.com>
+References: <20241212021256.1911359-1-jamin_lin@aspeedtech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -69,27 +69,21 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 17 Dec 2024 14:02:38 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6291
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6293
 
 
-On Thu, 12 Dec 2024 10:12:38 +0000, abdellatif.elkhlifi@arm.com wrote:
-> Set the Upstream-Status to Denied because the community suggests a different design
+On Thu, 12 Dec 2024 10:12:56 +0800, Jamin Lin wrote:
+> I upstreamed this recipe in meta-openembedded/meta-python,
+> so removes this recipe from meta-arm meta layer.
 > 
-> The external system implementation in Corstone-1000 is user-defined.
-> In the implementation provided by he FPGA board and by the FVP, the
-> Cortex-A35 (Linux) can not access the memory of the external system (Cortex-M3).
-> So, Linux can not load the external system firmware and can not communicate
-> with the external system using Rpmsg over remoteproc subsystem. The reason is Rpmsg
-> needs vrings memory buffers to be shared between both cores.
-> The community prefers that the HW is updated with memory sharing before they
-> consider merging the remoteproc driver.
+> https://github.com/openembedded/meta-openembedded/blob/master/meta-python/recipes-devtools/python/python3-pyhsslms_2.0.0.bb
 > 
-> [...]
+> 
 
 Applied, thanks!
 
-[1/1] arm-bsp/linux-yocto: corstone1000: Update the Upstream-Status of the remoteproc patches
-      commit: 258277bab5a716abf35071fd9ffd250166f4df1d
+[1/1] arm: remove python3-pyhsslms recipe
+      commit: 22de236233d4c53ed86d04364e003e41f77abfc5
 
 Best regards,
 -- 
