@@ -1,137 +1,92 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EB6E7719D
-	for <webhook@archiver.kernel.org>; Fri, 10 Jan 2025 15:26:40 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.21251.1736522797176952726
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DABE7719C
+	for <webhook@archiver.kernel.org>; Fri, 10 Jan 2025 22:22:52 +0000 (UTC)
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+ by mx.groups.io with SMTP id smtpd.web11.3848.1736547765273012677
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 10 Jan 2025 07:26:37 -0800
+ Fri, 10 Jan 2025 14:22:45 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 000221477
-	for <meta-arm@lists.yoctoproject.org>; Fri, 10 Jan 2025 07:27:04 -0800 (PST)
-Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 902043F59E
-	for <meta-arm@lists.yoctoproject.org>; Fri, 10 Jan 2025 07:26:36 -0800 (PST)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/3] arm/trusted-firmware-a: update 2.10 LTS to the latest versions
-Date: Fri, 10 Jan 2025 10:26:33 -0500
-Message-Id: <20250110152635.99735-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=ZcpUI8Sn;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.50, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6d88cb85987so21481276d6.1
+        for <meta-arm@lists.yoctoproject.org>; Fri, 10 Jan 2025 14:22:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1736547764; x=1737152564; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e9Fs842BzYkLem/epyEMP7RYmCjQozD8V6aRezqG7Zg=;
+        b=ZcpUI8Sne0xltqFTF741K9QZ4ZeukCTOif+y3rx2G8o2J2RC3TSNFM7fOa8MlOP3IY
+         BdIXSWx22i06UmELRt3hxQbxrYhVABi2FndKlP0CRtcpUOwReZsOmavasWQO/aNRENSj
+         tpa/eUFESQpwaficIDFYoC5SIxgX3VKfDIOqeB9QLl0eYgU9SGzn1usxE4m7/iGvnQFw
+         z4a02qirCcU5YpZL+gXJBgCRItYlXI9Y/1ztJz3Dv+EKVvqX39+zfEARaJ/4NpR+QB+M
+         DIMNrPQKlmruM4FuG5BmPigNhjfcA6qZvjqHhxWJ4XueHyGADSHJ/6TtxCBBsGTLuaeL
+         QjQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736547764; x=1737152564;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e9Fs842BzYkLem/epyEMP7RYmCjQozD8V6aRezqG7Zg=;
+        b=ScbdOMUlbLUqp9n+yNmFp7RJ4cwXEB6sO9FtDmuUkq52MRwmfYzsjuhqjHsCQWDW6I
+         XbOgAsRz1jdsrb9sI9EGpZoDXNjQEVS1fvOYu8ZymNr/XqV4ZHeY7rMrLG6btqS0QSOS
+         ct1XOQgC2NhaYjOMLzWnPzGX70CXB4rC4S5Ka4UQFC/kVoDpPjigrcf50Si10srYgxJo
+         floMbc8J/7PN6+zjGfWfyKEPVtNTMHjqCe1lbbfyYt8fBn++6hzMUMGnpGrGlZRZNwYI
+         T016hcgBCr7sGeVjYXLPmFQKV1GlhQmIZF9Mjgudn+PQE0LmwhAjQuwUwcIXHUwJgOHP
+         soig==
+X-Gm-Message-State: AOJu0YwFj8QhE34/u86HilJ//U/K1ylIF/J4UG+knIuU4vsKcwud31lB
+	FwjS3MhCm++zMfeE0Pi72vqxQbDGfohe2XAvtyv9BiNusb5lPmX15l8FK6pnlmFVuWV9nptJzy4
+	=
+X-Gm-Gg: ASbGncshmiYaH2WGvAN3OscPHo4dmanaLo71S41AUCRfqdvpmBoMWmDuRftOz9UL1ve
+	y8pNtpB/16HZWwBkhxrgUKfxKXhbQopIKUPOnLYnA0bMU3k3FP/PRCrQYhpowQaRysvUKnfgLMB
+	RlLtbtv2oVx6r+bKPpLpzKBJnQvFbPo922ICe5yySezUyON230kRz5w8rATdF4qVZj7dC8BmYYd
+	Fv94KDejAy9FUEV3KhOg7OXAV3+MbmEGJ8y72+lbEpl3aVT
+X-Google-Smtp-Source: AGHT+IHLKvHE5gAIoAdMao8kEVg+qfntNdCKV5/YVupkUZbwoD6qHpQq9uO8gq/okJdu9Kw15HW9FQ==
+X-Received: by 2002:a0c:e01b:0:b0:6d8:a5a1:b153 with SMTP id 6a1803df08f44-6dfba9dd36amr180736d6.3.1736547764060;
+        Fri, 10 Jan 2025 14:22:44 -0800 (PST)
+Received: from localhost ([136.56.27.188])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dfade73245sm13645306d6.76.2025.01.10.14.22.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2025 14:22:43 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	ali.oezaslan@arm.com
+Subject: Re: [PATCH 0/1] arm-bsp/linux-yocto: corstone1000: Update to version 6.12
+Date: Fri, 10 Jan 2025 17:22:14 -0500
+Message-Id: <173654773643.57277.14353626751316683150.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250107133454.29502-1-ali.oezaslan@arm.com>
+References: <20250107133454.29502-1-ali.oezaslan@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 10 Jan 2025 15:26:40 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6313
+ <meta-arm@lists.yoctoproject.org>; Fri, 10 Jan 2025 22:22:52 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6316
 
-Update TF-A LTS to 2.10.9 (which includes an mbedtls bump to 3.6.1, per
-docs).  Also, bump the TF-A tests to the latest version.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- ...ptool-native_2.10.4.bb =3D> fiptool-native_2.10.9.bb} |  4 ++--
- .../{tf-a-tests_2.10.0.bb =3D> tf-a-tests_2.10.3.bb}     |  5 ++---
- ...rmware-a_2.10.4.bb =3D> trusted-firmware-a_2.10.9.bb} | 10 +++++-----
- 3 files changed, 9 insertions(+), 10 deletions(-)
- rename meta-arm/recipes-bsp/trusted-firmware-a/{fiptool-native_2.10.4.bb=
- =3D> fiptool-native_2.10.9.bb} (92%)
- rename meta-arm/recipes-bsp/trusted-firmware-a/{tf-a-tests_2.10.0.bb =3D=
-> tf-a-tests_2.10.3.bb} (90%)
- rename meta-arm/recipes-bsp/trusted-firmware-a/{trusted-firmware-a_2.10.=
-4.bb =3D> trusted-firmware-a_2.10.9.bb} (74%)
+On Tue, 07 Jan 2025 13:34:53 +0000, ali.oezaslan@arm.com wrote:
+> From: Ali Can Ozaslan <ali.oezaslan@arm.com>
+> 
+> Set Linux kernel preferred version for Corstone-1000 to 6.12
+> 
+> Ali Can Ozaslan (1):
+>   arm-bsp/linux-yocto: corstone1000: Update to version 6.12
+> 
+> [...]
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.=
-4.bb b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.9.bb
-similarity index 92%
-rename from meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.4=
-.bb
-rename to meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.9.b=
-b
-index 9072dca50a50..a6ebea976d1c 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.4.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.9.bb
-@@ -9,8 +9,8 @@ SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://git.trustedfirmwar=
-e.org/TF-A/trusted-firmwa
- SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A};destsuffix=3Dfiptool-${PV};br=
-anch=3D${SRCBRANCH}"
- LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3Db2c740efedc159745b9b=
-31f88ff03dde"
-=20
--# Use fiptool from TF-A v2.10.4
--SRCREV =3D "569e16caad976a0684147da1ecc6333fd9b7f813"
-+# Use fiptool from TF-A v2.10.9
-+SRCREV =3D "7e63213601425c7a6d83e47dc936b264deb9df2b"
- SRCBRANCH =3D "lts-v2.10"
-=20
- DEPENDS +=3D "openssl-native"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.0.bb=
- b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.3.bb
-similarity index 90%
-rename from meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.0.bb
-rename to meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.3.bb
-index fffdf5d3653d..645e8d86a8a6 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.0.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.3.bb
-@@ -8,10 +8,9 @@ inherit deploy
- COMPATIBLE_MACHINE ?=3D "invalid"
-=20
- SRC_URI_TRUSTED_FIRMWARE_A_TESTS ?=3D "git://git.trustedfirmware.org/TF-=
-A/tf-a-tests.git;protocol=3Dhttps"
--SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A_TESTS};branch=3D${SRCBRANCH} \
--          "
-+SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A_TESTS};nobranch=3D1"
- SRCBRANCH =3D "master"
--SRCREV =3D "42b99719d5dde58bdde07712bcb70a20d87f9067"
-+SRCREV =3D "8917cf8b5eeb409b63256076d0dc35c60930ce18"
-=20
- DEPENDS +=3D "optee-os"
-=20
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
-.10.4.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1=
-0.9.bb
-similarity index 74%
-rename from meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.=
-10.4.bb
-rename to meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10=
-.9.bb
-index 8cdfda443cde..aab78477f484 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.4.b=
-b
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.9.b=
-b
-@@ -1,15 +1,15 @@
- require recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-=20
--# TF-A v2.10.4
--SRCREV_tfa =3D "569e16caad976a0684147da1ecc6333fd9b7f813"
-+# TF-A v2.10.9
-+SRCREV_tfa =3D "7e63213601425c7a6d83e47dc936b264deb9df2b"
- SRCBRANCH =3D "lts-v2.10"
-=20
- LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3Db2c740efedc159745b9=
-b31f88ff03dde"
-=20
- # in TF-A src, docs/getting_started/prerequisites.rst lists the expected=
- version mbedtls
--# mbedtls-3.4.1
--SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls=
-;protocol=3Dhttps;destsuffix=3Dgit/mbedtls;branch=3Dmaster"
--SRCREV_mbedtls =3D "72718dd87e087215ce9155a826ee5a66cfbe9631"
-+# mbedtls-3.6.1
-+SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls=
-;protocol=3Dhttps;destsuffix=3Dgit/mbedtls;branch=3Dmbedtls-3.6"
-+SRCREV_mbedtls =3D "71c569d44bf3a8bd53d874c81ee8ac644dd6e9e3"
-=20
- LIC_FILES_CHKSUM_MBEDTLS =3D "file://mbedtls/LICENSE;md5=3D3b83ef96387f1=
-4655fc854ddc3c6bd57"
-=20
---=20
-2.39.5 (Apple Git-154)
+Applied, thanks!
 
+[1/1] arm-bsp/linux-yocto: corstone1000: Update to version 6.12
+      commit: bc5967ad8747874006a199365702df9b25f13ced
+
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
