@@ -2,91 +2,117 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0C0E7719C
-	for <webhook@archiver.kernel.org>; Fri, 10 Jan 2025 22:23:02 +0000 (UTC)
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
- by mx.groups.io with SMTP id smtpd.web11.3855.1736547775019377276
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331D5C02180
+	for <webhook@archiver.kernel.org>; Mon, 13 Jan 2025 15:08:27 +0000 (UTC)
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+ by mx.groups.io with SMTP id smtpd.web11.19216.1736780902722127902
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 10 Jan 2025 14:22:55 -0800
+ Mon, 13 Jan 2025 07:08:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=kX7hAOpx;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.170, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4679fc9b5f1so19005911cf.1
-        for <meta-arm@lists.yoctoproject.org>; Fri, 10 Jan 2025 14:22:54 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=oiPgemMp;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.43, mailfrom: jdmason@kudzu.us)
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2a8690dcb35so1296154fac.3
+        for <meta-arm@lists.yoctoproject.org>; Mon, 13 Jan 2025 07:08:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1736547774; x=1737152574; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i6OzpDVBE/oTziLOEY90bENxIQahEu1eY3v7o/A/Q5U=;
-        b=kX7hAOpx73843+RL9CHxT0SpQogi419p0ZOQChWTR8enQPJiGIM/aapKwuqYm2APqs
-         ilKXQdVMzIE1NsI9zJBis8cXWtASvGaglAdDAzIfT0/DzOJRbnqpvrvKVInWtXV6f1Nw
-         Je7RP1CeuPOtOnxiL+irHE9MGeb8cHARFzRdr5iNE5E5GLJUlcTcZbeOBve6F/VUaIKx
-         N7Kr6XshGZV+FZgrReFjoh+cCcvaK95cPl+pYX07U0K1D6i5mvB42CKhoXxVqYxpqcAd
-         GwQ+C8g3MdTGxAXVqdV76Y2IcbY/6Vsi5nAHP2U8cohAqzLoUakJC+iJkMp/VuIDEoYW
-         FTew==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1736780902; x=1737385702; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NOkY0n+DOCH9Le9nYEKYKYuBL5HrrVjdwr3woOsVwiU=;
+        b=oiPgemMpA7hkOXaRNG7Z9c+dvulSzbOGcyTco/AV235CASSThgIpSVL22O4ZZLW5Px
+         QcrkGUOwOctm7Ry1EQErXcOKHMcjEsCnIO6PjpxPymMMRNvF43v2HcWq3dQ2hOIjugY/
+         KBHPJ8ivDJq4G1fqr5FHTlcAWtx27QPxnm2qoFEVngKBqU/Ax92x49w7HrXcVk/jEUp6
+         bZdAAd9dhJeBo7WATZEjDgrciQMW1Pvb66m/uQjGYxS9iqmG3T91y/Z2874z5xHAKqQ/
+         n1B8ILR6dWkN4UsIRoSU2dq+HZKk1/pt1ph3HEcejptlupW7E4ioR6/UeBsnmJlY1oUx
+         HcJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736547774; x=1737152574;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1736780902; x=1737385702;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=i6OzpDVBE/oTziLOEY90bENxIQahEu1eY3v7o/A/Q5U=;
-        b=mDIUMNLJh7dCeKaaM2gBQOfhyo5OX4xh640HCCsaBij+q8a9NHBlvFNZN0vQBYKKrF
-         cXXIP30P8rb7xD3/Kcej67KJIp+o1j3QtOfiMtVJzbBmfXZvHq1EIinKiDOFmcaj3gtI
-         i63yUXOCMcAUs5GFODsw4pBfaj4LAEgMlpFjUamGeUfFCorBh7OY6Wyt8lIQ0Roh5oT4
-         5L7rjIaqSX2pags3hrMUDr96AKP7BtibhR1NLiy+tkTL9Wd8K7KqpZNEq7AqaMwIjmwi
-         G9CsP8/DOEgkCW8eO1++l11Pas00sjT2dYu5XwnRnBRNQmC5ud6O6QTWK27ihjc0Yaet
-         OWLg==
-X-Gm-Message-State: AOJu0YxOgiXxtxOjJzMIMYoLn9dOw6KMTtQByAjaSsRBREmrvGLe1RLW
-	ZuZF+qmkdMYqy/bpOGmR+UESNKH4WWrTUC77tikAVD3X/fup3JRJEyFQ2SURU32IPclLVEw7t30
-	=
-X-Gm-Gg: ASbGncvxFPWqmC5m5DPHactVH6AQiyWR4ZkLkssPAWf01Hfn7aPenOmNOot3CjdnI2w
-	DA8V/XvWPcqL9mkxEQG9R3MG5Be1sphkx3yxxRGVyLN91wm04nT5WBUZeG7j9nYaA3lmxIA5lYj
-	8YfMIlC2GwRHpfJC5EyD13F38rE7PHqlSIGQlu2eocx0i2+/vZbgNj78K9d/ew1siGpCc2joSKA
-	3jtMFa+76XVrNp7MhXCubv1X4Y3AkkL3Im8EXsQi1NgClXk
-X-Google-Smtp-Source: AGHT+IHrKjkjW4t3aAR8JZF7IjmYjlLndUypvDDn4+PP8bUimfuHEb4ZnGveniooxuR7m/lybv6Zrg==
-X-Received: by 2002:ac8:5d53:0:b0:467:737f:d5ac with SMTP id d75a77b69052e-46c710aa93bmr180588811cf.25.1736547773680;
-        Fri, 10 Jan 2025 14:22:53 -0800 (PST)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46c87324982sm13874251cf.6.2025.01.10.14.22.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2025 14:22:53 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH 1/3] arm/trusted-firmware-a: update 2.10 LTS to the latest versions
-Date: Fri, 10 Jan 2025 17:22:16 -0500
-Message-Id: <173654773644.57277.9936183791083300428.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250110152635.99735-1-jon.mason@arm.com>
-References: <20250110152635.99735-1-jon.mason@arm.com>
+        bh=NOkY0n+DOCH9Le9nYEKYKYuBL5HrrVjdwr3woOsVwiU=;
+        b=CsQVgt4yFvfqwqbBKan7UGSDskwabhBRHjEr6ZaM4GA965NFg0G0TOMbsYTZ3Rk+dP
+         pWp838nNjUht14ZPIXQUzQ3h1eR7cAlGC1SKAL0PGzHIZUejxKmvM815+8AG6ZwPJkNr
+         Q87nYQ9lrZNThF2mVAo9pasuq/65uH8WKTlcbeqE9CYy+m1nBAmIIlf44iJB8rbFFqIR
+         7RU3Ape2i16R94TtVIgw5ewaoL8LRjhZhIueBxwLk2sg6xy8C3AE4EzSHlBT+iwvJrpY
+         ofg4BVDks8K7ptu9INO8Lh6aGYbKsuOnsez/uMlvBrTaV+IzfLPQr2PBaqwp/qvxkNuU
+         TZ5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXfHW2z24RBd6etWM+1Dv5TJshJ6K1gheQuNy7E7kwmXrhCPU97CcaRCAxfPNLBXczf2+1VNI1gjA==@lists.yoctoproject.org
+X-Gm-Message-State: AOJu0Yy4kMKV5SqURphCgrsDb4f6nzquNqMoj4LNj9dvhVppJtEEg4V1
+	MItMJPwDPZsBS37ou8KmoRsXAl6F10+RZFkYlI/yfLsRWAbiZ97k6HsGSZfEt6zOWrWvcqGxbKH
+	jbWt6dZyMDFpkLyX7IrH3imKz271z90MgmOya
+X-Gm-Gg: ASbGncsEd83ainrUVtE/WJA35IKIspnML6HYn/Fku6qEnl3tgGBS/XrhgCib+DnwAp8
+	5sCL3Vf8KCk+AZYnLAG/pdJJMKKHx5G3keAqVTg==
+X-Google-Smtp-Source: AGHT+IEG2vGhaxq0Cxeq5gT7TOnzcxnONTr3I8KBKRvrDCXgu5Q5OW1X0RarrAryypO/abmXslZBvRAHXGytG69tEIU=
+X-Received: by 2002:a05:6871:80c5:b0:29d:c832:840d with SMTP id
+ 586e51a60fabf-2aa0699a7dbmr13337016fac.35.1736780900630; Mon, 13 Jan 2025
+ 07:08:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20241217-tf-a-2-12-v1-1-cca762965260@cherry.de>
+ <CAPoiz9wjKi+tD98g0BHPY_dezg9Us72VwfdAVPU_WsQmHmjVDw@mail.gmail.com> <a59de097-d14c-4e84-afdc-cceb4d3baa9e@cherry.de>
+In-Reply-To: <a59de097-d14c-4e84-afdc-cceb4d3baa9e@cherry.de>
+From: Jon Mason <jdmason@kudzu.us>
+Date: Mon, 13 Jan 2025 10:08:10 -0500
+X-Gm-Features: AbW1kvb57iE9ulENwxhy8E-SWD1ANLCHDQom4jg_RAZWyGMx7nYqkSGpilrE17o
+Message-ID: <CAPoiz9zaU28vetfAmr8ukuUoCEupKK3fddV=HC3iSc29QWjwTw@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH] arm/trusted-firmware-a: add support for 2.12.0
+To: Quentin Schulz <quentin.schulz@cherry.de>
+Cc: foss@0leil.net, meta-arm@lists.yoctoproject.org, 
+	Trevor Woerner <twoerner@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 10 Jan 2025 22:23:02 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6317
+ <meta-arm@lists.yoctoproject.org>; Mon, 13 Jan 2025 15:08:27 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6318
 
+On Mon, Jan 13, 2025 at 9:51=E2=80=AFAM Quentin Schulz <quentin.schulz@cher=
+ry.de> wrote:
+>
+> Hi Jon,
+>
+> On 12/21/24 2:20 PM, Jon Mason wrote:
+> > On Tue, Dec 17, 2024 at 10:06=E2=80=AFAM Quentin Schulz via
+> > lists.yoctoproject.org <foss=3D0leil.net@lists.yoctoproject.org> wrote:
+> >>
+> >> From: Quentin Schulz <quentin.schulz@cherry.de>
+> >>
+> >> Add support for TF-A version v2.12.0 and mbedtls 3.6.1.
+> >>
+> >> GCC-compiled boot tested on RK3588 Tiger, RK3399 Puma and PX30 Ringnec=
+k.
+> >>
+> >> 0001-fix-zynqmp-handle-secure-SGI-at-EL1-for-OP-TEE.patch is merged in
+> >> 2.12.0 so no need to have it in SRC_URI as for 2.11.0 and earlier
+> >> recipes.
+> >>
+> >> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> >
+> > Unfortunately, this isn't a simple upgrade.  There is now a hard
+> > dependency on poetry.  See
+> > https://gitlab.com/jonmason00/meta-arm/-/jobs/8666827497/viewer#L9246
+> >
+> > I was seeing it on all my builds when I did the recipe bump a couple
+> > weeks ago (but I did a replacement of the 2.11 recipe, not an
+> > additional one).  So, this is going to need a poetry recipe to get
+> > working, which is where I left my attempt :)
+> >
+>
+> I see this got merged without changes? Is there something to be done
+> still here?
 
-On Fri, 10 Jan 2025 10:26:33 -0500, Jon Mason wrote:
-> Update TF-A LTS to 2.10.9 (which includes an mbedtls bump to 3.6.1, per
-> docs).  Also, bump the TF-A tests to the latest version.
-> 
-> 
+There is nothing for you to do here and thank you for the patch.  I'm
+in the process of addressing the poetry/CoT issue, which I should have
+done today or tomorrow.
 
-Applied, thanks!
+Technically there were minor changes to your patch that I probably
+should've pointed out in the commit (pinning everything that needed
+poetry to 2.11).
 
-[1/3] arm/trusted-firmware-a: update 2.10 LTS to the latest versions
-      commit: 772947ef0149220c6408012043b673f36ba9d6d9
-[2/3] arm/trusted-firmware-a: add support for 2.12.0
-      commit: 104f03c34730e0750d37a75e4c139a31ac9030e9
-[3/3] arm/trusted-firmware-a: bump fip and tests to 2.12
-      commit: 3032ed613d3c02f98b074be1dae0619be2be20a3
+Thanks,
+Jon
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+> Cheers,
+> Quentin
 
