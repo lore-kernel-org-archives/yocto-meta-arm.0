@@ -1,129 +1,95 @@
-Return-Path: <mikko.rapeli@linaro.org>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F3EC02183
-	for <webhook@archiver.kernel.org>; Fri, 17 Jan 2025 10:37:28 +0000 (UTC)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
- by mx.groups.io with SMTP id smtpd.web11.7844.1737110246531194333
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972C0C02185
+	for <webhook@archiver.kernel.org>; Mon, 20 Jan 2025 03:42:29 +0000 (UTC)
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+ by mx.groups.io with SMTP id smtpd.web10.29935.1737344547837524717
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 17 Jan 2025 02:37:26 -0800
+ Sun, 19 Jan 2025 19:42:28 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=P76BkAnt;
- spf=pass (domain: linaro.org, ip: 209.85.208.179, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30034ad2ca3so15129131fa.1
-        for <meta-arm@lists.yoctoproject.org>; Fri, 17 Jan 2025 02:37:26 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=15L2P++D;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.172, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7b8618be68bso324475885a.3
+        for <meta-arm@lists.yoctoproject.org>; Sun, 19 Jan 2025 19:42:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1737110244; x=1737715044; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tv03v8GxV6Sm7UE9DGbSQqWVexxcInsQC6Q1IRIl6So=;
-        b=P76BkAntXLZp0+ifVGlx+C0vssWMueAW8DpcsRHuShVbU3pNCBd/DiW6rOUaapKpJB
-         FYu14ifnTFQpM2yY/OVwX4FUIM02ZRCXpYs7RifbYLWtdOo1pOEoKnCzor4OoV8mNkzp
-         4z7P0J2BjckTzGSnHjAmq51lsGlgKYPJQetXYHlSdtF+UniTsy8lfveIJs6z2ZzE6awh
-         bKCYsjz0O6qhRpVf/XpO5RzyEM+lRykE0+E55QOXaZuXCye2RDR3/0Si7B8kE9ffm/bg
-         3M95rdASRDSR9+JU4iBMx24t9yGAtATk+15JXWSlTF9mHbjNlNRPcUcwJbn5AwsepO25
-         r7JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737110244; x=1737715044;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1737344546; x=1737949346; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Tv03v8GxV6Sm7UE9DGbSQqWVexxcInsQC6Q1IRIl6So=;
-        b=EIPPbvxDP6XAQbAEAnlmFDgrm8GAFcNsKDVT5AhQ2K0CE5VZ20duujzpHhXUYSIu3X
-         F2CceJM3wQSQ+Ez1N8IpNlN4kcn3cRDhIyKx+qon86vROs2genQrueNXMO7q5pLl0L11
-         FbHF19GsYLG1TobjIUz0ZC0F3FNhwguXNfWcrT060qxaKP7ROTjzESzttzbsoh1lxIL7
-         dIiQYxi+rdYQbasHHEI2XRpRCL5X7bFwzSsxSOoeS7gNcGTIFivWcSf/6W5BUKWPlmKi
-         oW+ngE5W8wg4pewL8T0VZpj7SJGQ+533J6QxKePf0slZToEpuqG/dIohAD9pwi+793H0
-         J3ww==
-X-Gm-Message-State: AOJu0YxAAiLYlNR9eGz1fZ+pCOKeuE3elMB57cPfh8oBeSr7KSOSnIJM
-	omjEAoznbdu+oy2mAML5YxGyJEFbHllcdQwI2R5mkuoJ+/w7c+2mxHnCd468huR/F9XSSLs0ApN
-	q
-X-Gm-Gg: ASbGnctaBV9voDyASSrq6VcnQh+jAuwLR/AlkbLzJ5ceQoNgILgULb0GrY2SQghEF2E
-	k2HiH9EVhlGBBZblXQOldnUCyxO/GajGujPqkqLc/2V7bEAZhgUOXvCyaMew5bh/skqiehzsRl7
-	FXoWOs3iA3PKRFekUUrf5qbUyimJyKIvLCVhc1DGGXL2w/IDZlWx+REvmanFfU4iuOAPr4syRnF
-	up93wlRxd/sZhpHBYeC9C2roOlp02IEe3FatqEr4RDsjNzbGQla3Ip4u+Ws9gyQHHRNbReOTPNZ
-	Mwy2mzIC8pHT4vORiv7kifJi6g==
-X-Google-Smtp-Source: AGHT+IGUQtsQMWeL+Cw5VWWwB7tLfROHn+crDQsThNa4JbiEtngLOHIUEAJZuFBkwf021ae7vNXFpQ==
-X-Received: by 2002:a2e:8e71:0:b0:302:5308:ba48 with SMTP id 38308e7fff4ca-3072ca7508dmr5869361fa.12.1737110244285;
-        Fri, 17 Jan 2025 02:37:24 -0800 (PST)
-Received: from localhost.localdomain (78-27-76-97.bb.dnainternet.fi. [78.27.76.97])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3072a35a919sm3697731fa.54.2025.01.17.02.37.20
+        bh=1nmc5C9FXKG+FVWheQ4NtcOpUMBWANNXVq8FbJzf5ds=;
+        b=15L2P++DKWYO2m3L5919XQhtEwZl7TNV2kvrB/yfX6VaXV8XltWLR8dPD0+Qdfx4Xl
+         KMMUM3+mBDAUlCXTPv2KJZ+AURSXFO1M123PZdbY+FShDzC8yG2vOnF+u2qAVzFx4HGg
+         AwKXwAu8sjhb/g/PTlTlEMXSvo8rYXcX593gilIXFU215/THTkK1WP0zR/Ugx283UszR
+         6TobzTys87xCGDlq02ydnTdp22sk2WjxuSXh7WHtLgSTD9MuqNuGXhPEkYQ6kGHO0Z2u
+         jv+XLW83ShBXMRk+9Zju7Bnn9y2i1nA6DYzx0wE9BTJwVfRNgKDhzaXcF3b1tgOJWacI
+         8wng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737344546; x=1737949346;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1nmc5C9FXKG+FVWheQ4NtcOpUMBWANNXVq8FbJzf5ds=;
+        b=BPHjQmhESLjZqyJOw8M6LApBn4Xm4EaxcfX5BLOempeXGMFEhgbJ16tzoYD+uN28+A
+         0ZdX1MbhQUEQYQFHA1adSjaEISezv/0qR7hPMG54QkjPZdzkSCmUx+5TQVfe6h4sbwYm
+         H7cTskcaeRUSf6D/czWjs4VhhzVg7rY60YO/n65B59Qo4hjBq5Ez69iX7zhCzBU4ZkdY
+         LMmyY/1dSR1FTqdwu2bp0i/vst0DBRwm8Fl8uXeQn+XOr24Nc+riUvp8Pxjptid6GF3R
+         5mEIKOZlNNAHqnqCYCVrRmNe7L2LTPd/HGV8i+y51lAoTlKcV7PP9+o4Bot4Vizp06Zh
+         7g2g==
+X-Gm-Message-State: AOJu0YyO8FyjZnHnR1S+G+E+jUKJ5HVPpgN//qZs7LRSeKJ0cZmwQ+eH
+	ml2/LX4KgFfvxDiYxry7TJ+fKR/Uv0xYeQes6Ahh471Hf3fO05bq1mxNuixBtgR86TaE7K5aMGE
+	=
+X-Gm-Gg: ASbGncspjEYwpEGPHtTIVvF7FTQ3rtJ1PXYb5KiyZWQQuGsybqDbiSyzanwOzrZnVxa
+	uVV3ee2d8GzsReXheEYEV7Pchdt0Hs9T8SB0QDnBJatjMU1VFMJz0aXBl5iKl6PqU3hqABfq4/q
+	brgywIj+GtkHj2KY8COSfGreQ9mzIXYssj74Z7/JXHXX237pgid8nIuzv8js4jtYpUtQqv4Vit+
+	ciDux52g28uxktztDE15GPZvmws/eORKEh13TTvP5Qw/mrzaYkUpos3Y27Gzw==
+X-Google-Smtp-Source: AGHT+IHOFp6Zy0wpaZwJQ2ykK4pdTaPjaDzNs3bUTBYushlPvINJTpBJykFOxv9OrH+EhACTggQuAQ==
+X-Received: by 2002:a05:6214:570b:b0:6d4:25c4:e772 with SMTP id 6a1803df08f44-6e1b2251083mr234817066d6.36.1737344546534;
+        Sun, 19 Jan 2025 19:42:26 -0800 (PST)
+Received: from localhost ([136.56.27.188])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e1bd25003csm25409306d6.84.2025.01.19.19.42.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2025 02:37:22 -0800 (PST)
-From: Mikko Rapeli <mikko.rapeli@linaro.org>
-To: meta-arm@lists.yoctoproject.org
-Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
-Subject: [PATCH] trusted-firmware-a: fix mbedtls license checksum
-Date: Fri, 17 Jan 2025 12:36:47 +0200
-Message-ID: <20250117103647.490244-1-mikko.rapeli@linaro.org>
-X-Mailer: git-send-email 2.47.1
+        Sun, 19 Jan 2025 19:42:26 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Mikko Rapeli <mikko.rapeli@linaro.org>
+Subject: Re: [PATCH] edk2-firmware: fix PlatformStandaloneMmRpmb.dsc build
+Date: Sun, 19 Jan 2025 22:42:16 -0500
+Message-Id: <173734453845.344589.11743679047914975009.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250114094154.304900-1-mikko.rapeli@linaro.org>
+References: <20250114094154.304900-1-mikko.rapeli@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 17 Jan 2025 10:37:28 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6336
+ <meta-arm@lists.yoctoproject.org>; Mon, 20 Jan 2025 03:42:29 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6337
 
-tf-a 2.10.9 uses mbedtls 3.6.1 from 3.6 branch which
-has the same checksum as in tf-a 2.11 recipe. Found when
-downgrading tf-a from 2.12 to 2.10 to debug hangs on zcu102
-board:
 
-ERROR: trusted-firmware-a-2.10.9-r0 do_populate_lic: QA Issue: trusted-firmware-a: The LIC_FILES_CHKSUM does not match for file://mbedtls/LICENSE;
-md5=3b83ef96387f14655fc854ddc3c6bd57
-trusted-firmware-a: The new md5 checksum is 379d5819937a6c2f1ef1630d341e026d
-trusted-firmware-a: Here is the selected license text:
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-Mbed TLS files are provided under a dual [Apache-2.0](https://spdx.org/licenses/Apache-2.0.html)
-OR [GPL-2.0-or-later](https://spdx.org/licenses/GPL-2.0-or-later.html) license.
-This means that users may choose which of these licenses they take the code
-under.
+On Tue, 14 Jan 2025 11:41:54 +0200, Mikko Rapeli wrote:
+> With backported patch from upstream. Error was:
+> 
+> | build.py...
+> | /home/builder/src/base/repo/build/tmp_rockpi4b/work/rockpi4b-poky-linux/edk2-firmware/202408/edk2/edk2-platforms/Platform/StandaloneMm/PlatformS
+> tandaloneMmPkg/PlatformStandaloneMmRpmb.dsc(...): error 4000: Instance of library class [HobPrintLib] is not found
+> |       in [/home/builder/src/base/repo/build/tmp_rockpi4b/work/rockpi4b-poky-linux/edk2-firmware/202408/edk2/StandaloneMmPkg/Core/StandaloneMmCor
+> e.inf] [AARCH64]
+> |       consumed by module [/home/builder/src/base/repo/build/tmp_rockpi4b/work/rockpi4b-poky-linux/edk2-firmware/202408/edk2/StandaloneMmPkg/Core
+> /StandaloneMmCore.inf]
+> 
+> [...]
 
-The full text of each of these licenses is given below.
+Applied, thanks!
 
-                                 Apache License
-                           Version 2.0, January 2004
-...
-  `Gnomovision' (which makes passes at compilers) written by James Hacker.
+[1/1] edk2-firmware: fix PlatformStandaloneMmRpmb.dsc build
+      commit: eb9a1ec43baaa076f7e02b0bd8879b683dffc75b
 
-  <signature of Ty Coon>, 1 April 1989
-  Ty Coon, President of Vice
-
-This General Public License does not permit incorporating your program into
-proprietary programs.  If your program is a subroutine library, you may
-consider it more useful to permit linking proprietary applications with the
-library.  If this is what you want to do, use the GNU Lesser General
-Public License instead of this License.
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-trusted-firmware-a: Check if the license information has changed in /home/builder/src/base/repo/build/tmp_zynqmp-zcu102/work/zynqmp_zcu102-poky-linux/trusted-firmware-a/2.10.9/git/mbedtls/LICENSE to verify that the LICENSE value "BSD-2-Clause & BSD-3-Clause & MIT & Apache-2.0 & Apache-2.0" r
-emains valid [license-checksum]
-ERROR: trusted-firmware-a-2.10.9-r0 do_populate_lic: Fatal QA errors were found, failing task.
-ERROR: Logfile of failure stored in: /home/builder/src/base/repo/build/tmp_zynqmp-zcu102/work/zynqmp_zcu102-poky-linux/trusted-firmware-a/2.10.9/temp/log.do_populate_lic.4070974
-NOTE: recipe trusted-firmware-a-2.10.9-r0: task do_populate_lic: Failed
-ERROR: Task (/home/builder/src/base/repo/build/../meta-arm/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.9.bb:do_populate_lic) f
-ailed with exit code '1'
-
-Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
----
- .../recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.9.bb | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.9.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.9.bb
-index aab78477..febdcb4b 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.9.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.9.bb
-@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM += "file://docs/license.rst;md5=b2c740efedc159745b9b31f88ff03dd
- SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls;branch=mbedtls-3.6"
- SRCREV_mbedtls = "71c569d44bf3a8bd53d874c81ee8ac644dd6e9e3"
- 
--LIC_FILES_CHKSUM_MBEDTLS = "file://mbedtls/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
-+LIC_FILES_CHKSUM_MBEDTLS = "file://mbedtls/LICENSE;md5=379d5819937a6c2f1ef1630d341e026d"
- 
- # continue to boot also without TPM
- SRC_URI += "\
+Best regards,
 -- 
-2.43.0
-
+Jon Mason <jon.mason@arm.com>
 
