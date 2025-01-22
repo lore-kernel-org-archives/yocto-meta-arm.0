@@ -1,92 +1,129 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74469C02185
-	for <webhook@archiver.kernel.org>; Mon, 20 Jan 2025 03:42:39 +0000 (UTC)
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
- by mx.groups.io with SMTP id smtpd.web10.29940.1737344554533557468
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5701C0218C
+	for <webhook@archiver.kernel.org>; Wed, 22 Jan 2025 15:45:11 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.46812.1737560706054335982
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 19 Jan 2025 19:42:34 -0800
+ Wed, 22 Jan 2025 07:45:06 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=xuoAzP/T;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.52, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6d8e773ad77so34560816d6.2
-        for <meta-arm@lists.yoctoproject.org>; Sun, 19 Jan 2025 19:42:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1737344553; x=1737949353; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=y55mBK4sCIorq5LAz3M87RfGepPBoMYrZ7NGlXwGHOU=;
-        b=xuoAzP/TG4AHgeKTSwDhlA6EfEm1/ghLaXjCR4oaAeddI6JG9/GdFpOd0Rh/L4HUMe
-         O3pvhunJ2diqbDLWprGfWE0UJAlBggJ0IP7dnLG+nISIfBgCRFmDTuN7E2qwtVb1ioXt
-         yexTqez9Mmv/1hsqsh8dFwXc11omDr9jtd10hZz80K/hrjDSgZ6K8OjHsolECr9YkF/U
-         4PYVwQdGjDja17/hNJDu0hSSLY+Gcl6weLzaTxtRBO6t2BJSG7T9PlIbAQ+dF+sgemNy
-         PtXGe8wD75FNrEQNQmRFqXpemu2SBVqeFpXWg6PmZ8IJYY1V1VP48Uiqo9us9juvneJF
-         UrRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737344553; x=1737949353;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y55mBK4sCIorq5LAz3M87RfGepPBoMYrZ7NGlXwGHOU=;
-        b=FWFpeu9ZLdB9tav2oYBOKq3sOmyGNzMXt1ZcK8eh5B30eIZNxyJ2mh4cQrQATd9xR3
-         Jzj1OGg7A8cnVC7prweCCPgH8YSj+mOSXr0XDqDvaZoxSZV3wMJoDPMDT9ZyZmbhaCa+
-         2gbJPVpePAtKDdE6Wl51XaHa29HyPifAR0y9fIPq2xin2FE9NM0LI3qqnDywMXBCaOQG
-         xRUnzrBLpD4A/wBUm01lrtKbCouw0nJK2EiUazVhVV5KEGEuwyiZIKgTEU4+bPyf1yuP
-         jq5GdVOSVoB6I43M4U0n09Bychy1RRks/n3smTusLgla21ifMbcvKmk/xz3qXiuSo68i
-         7lSg==
-X-Gm-Message-State: AOJu0YxMqiLuKCQcmzBSYaIXojs3L6xpnA9nlp8YBsnFhj0dFUAGt5qd
-	tlREoF9r7joy36MwMN19j6mGWpCwpU98AAktdMkfHcg3gqgOKNj91OpTlc5HMgeCl6knwBgs/jw
-	=
-X-Gm-Gg: ASbGncuHA29W7O6bqqu4NUEGC8hATMMMKeVg6wkvi17ncFWX+xbAJt3ZwQbP7F4QEmj
-	jBJPNVcY4uthsEhQCTZ+0LII6/ip2CaUqhtU9YEyTypVSlAFZBQ7NlM6bs4mV1EoEiB/p9GazdT
-	KTyotGTGcA+hDIMPvs0mNHZxDzRmeCy5Z4BvAtIo2tItRXHscCkpes9t3occxGnqxz76qMdxg/r
-	lTuPDwte78UpLAUHtaWcz0VizNoh9KpYGMwTjwAliQHO7F39TOFeZV+HOK2Zw==
-X-Google-Smtp-Source: AGHT+IFxDUr8hiSHvOcnOkWZj9DKRr1ZYZYbqQrpN7V9Xs6UgjtSkuUA3PdjZXnqGNLRr7LVVukrqg==
-X-Received: by 2002:a05:6214:c64:b0:6d8:a70d:5e43 with SMTP id 6a1803df08f44-6e1b220d49dmr201945286d6.35.1737344553352;
-        Sun, 19 Jan 2025 19:42:33 -0800 (PST)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e1afc11035sm37088826d6.42.2025.01.19.19.42.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Jan 2025 19:42:32 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	philip.puk@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/recipes-security: Add protobuf interface to crypto-sp in corstone1000
-Date: Sun, 19 Jan 2025 22:42:18 -0500
-Message-Id: <173734453845.344589.18094830019092870730.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250113163427.564404-1-philip.puk@arm.com>
-References: <20250113163427.564404-1-philip.puk@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3952A1063
+	for <meta-arm@lists.yoctoproject.org>; Wed, 22 Jan 2025 07:45:34 -0800 (PST)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9550A3F66E
+	for <meta-arm@lists.yoctoproject.org>; Wed, 22 Jan 2025 07:45:05 -0800 (PST)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 2/2] arm/trusted-firmware-a: Move 2.11 to meta-arm-bsp
+Date: Wed, 22 Jan 2025 10:45:04 -0500
+Message-Id: <20250122154504.42280-2-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250122154504.42280-1-jon.mason@arm.com>
+References: <20250122154504.42280-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 20 Jan 2025 03:42:39 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6339
+ <meta-arm@lists.yoctoproject.org>; Wed, 22 Jan 2025 15:45:11 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6341
 
+Move v2.11 to meta-arm-bsp so that corstone1000 can still use it (though
+2.12 does appear to work).  Move all the other platforms in meta-arm-bsp
+to use 2.12.
 
-On Mon, 13 Jan 2025 16:34:26 +0000, philip.puk@arm.com wrote:
-> From: Philip Puk <philip.puk@arm.com>
-> 
-> Adds protobuf interface to se-proxy-sp as the main crypto-sp uses it and
-> parsec service 1.4 also switch using protobuf interface.
-> 
-> Signed-off-by: Philip Puk philip.puk@arm.com
-> 
-> [...]
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ meta-arm-bsp/conf/machine/fvp-base.conf                     | 2 --
+ meta-arm-bsp/conf/machine/sgi575.conf                       | 2 --
+ .../trusted-firmware-a/trusted-firmware-a-fvp-base.inc      | 6 ++++++
+ .../trusted-firmware-a/trusted-firmware-a-sgi575.inc        | 6 ++++++
+ .../trusted-firmware-a/trusted-firmware-a_2.11.0.bb         | 0
+ 5 files changed, 12 insertions(+), 4 deletions(-)
+ rename {meta-arm =3D> meta-arm-bsp}/recipes-bsp/trusted-firmware-a/trust=
+ed-firmware-a_2.11.0.bb (100%)
 
-Applied, thanks!
+diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/=
+machine/fvp-base.conf
+index b69995256008..03896a347184 100644
+--- a/meta-arm-bsp/conf/machine/fvp-base.conf
++++ b/meta-arm-bsp/conf/machine/fvp-base.conf
+@@ -20,8 +20,6 @@ SERIAL_CONSOLES =3D "115200;ttyAMA0"
+ # FIXME -  This is being upstreamed.  Remove once that has occurred.
+ KERNEL_CONSOLE ?=3D "${@','.join(d.getVar('SERIAL_CONSOLES').split(' ')[=
+0].split(';')[::-1]) or 'ttyS0'}"
+=20
+-PREFERRED_VERSION_trusted-firmware-a ?=3D "2.11.%"
+-
+ PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-yocto"
+ KERNEL_DTB_NAME =3D "fvp-base-revc.dtb"
+ KERNEL_DEVICETREE =3D "arm/${KERNEL_DTB_NAME}"
+diff --git a/meta-arm-bsp/conf/machine/sgi575.conf b/meta-arm-bsp/conf/ma=
+chine/sgi575.conf
+index e905c4293792..3c2c94b6dcbf 100644
+--- a/meta-arm-bsp/conf/machine/sgi575.conf
++++ b/meta-arm-bsp/conf/machine/sgi575.conf
+@@ -6,8 +6,6 @@
+=20
+ require conf/machine/include/arm/armv8-2a/tune-cortexa75.inc
+=20
+-PREFERRED_VERSION_trusted-firmware-a ?=3D "2.11.%"
+-
+ EXTRA_IMAGEDEPENDS +=3D "virtual/control-processor-firmware"
+=20
+ EXTRA_IMAGEDEPENDS +=3D "trusted-firmware-a"
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
+-a-fvp-base.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
+mware-a-fvp-base.inc
+index a5d1ee53515b..4f0d34ea09b5 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-=
+base.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-=
+base.inc
+@@ -62,3 +62,9 @@ EXTRA_OEMAKE +=3D "FVP_DT_PREFIX=3Dfvp-base-gicv3-psci-=
+1t FVP_USE_GIC_DRIVER=3DFVP_GIC
+=20
+ # Our fvp-base machine explicitly has v8.4 cores
+ EXTRA_OEMAKE +=3D "ARM_ARCH_MAJOR=3D8 ARM_ARCH_MINOR=3D4"
++
++# If GENERATE_COT is set, then tf-a will try to use local poetry install
++# to run the python cot-dt2c command.  Disable the local poetry and use
++# the provided cot-dt2c.
++EXTRA_OEMAKE +=3D "POETRY=3D''"
++DEPENDS +=3D "cot-dt2c-native"
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
+-a-sgi575.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmw=
+are-a-sgi575.inc
+index 20904b34cb78..01cc67bb32e3 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-sgi5=
+75.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-sgi5=
+75.inc
+@@ -11,3 +11,9 @@ TFA_UEFI           =3D "1"
+=20
+ EXTRA_OEMAKE +=3D "TRUSTED_BOARD_BOOT=3D1 GENERATE_COT=3D1 ARM_ROTPK_LOC=
+ATION=3Ddevel_rsa \
+                      ROT_KEY=3Dplat/arm/board/common/rotpk/arm_rotprivk_=
+rsa.pem"
++
++# If GENERATE_COT is set, then tf-a will try to use local poetry install
++# to run the python cot-dt2c command.  Disable the local poetry and use
++# the provided cot-dt2c.
++EXTRA_OEMAKE +=3D "POETRY=3D''"
++DEPENDS +=3D "cot-dt2c-native"
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
+.11.0.bb b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a=
+_2.11.0.bb
+similarity index 100%
+rename from meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.=
+11.0.bb
+rename to meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_=
+2.11.0.bb
+--=20
+2.39.5 (Apple Git-154)
 
-[1/1] arm-bsp/recipes-security: Add protobuf interface to crypto-sp in corstone1000
-      commit: 90123a287fb040a2086e6948230a95979b5755e2
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
