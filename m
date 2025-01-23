@@ -1,143 +1,207 @@
-Return-Path: <afd@ti.com>
+Return-Path: <denis@denix.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C472BC02182
-	for <webhook@archiver.kernel.org>; Thu, 23 Jan 2025 18:38:52 +0000 (UTC)
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
- by mx.groups.io with SMTP id smtpd.web11.19158.1737657528249582197
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51202C02182
+	for <webhook@archiver.kernel.org>; Thu, 23 Jan 2025 20:00:33 +0000 (UTC)
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web10.20745.1737662428886044370
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 23 Jan 2025 10:38:48 -0800
+ Thu, 23 Jan 2025 12:00:29 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@ti.com header.s=ti-com-17Q1 header.b=A28ZpKw/;
- spf=pass (domain: ti.com, ip: 198.47.23.234, mailfrom: afd@ti.com)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 50NIcgHN1246355
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 Jan 2025 12:38:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1737657522;
-	bh=SrxSNDz8zZMEUrBjyhqZRripJ5HJXqqnx4EmofGRR04=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=A28ZpKw/s1GDAdJyFTzMuuyT0uMpeMGutsP7pXzU08ZIVs6E6GI6Ojp0kWkeNEccV
-	 BoXJFhY6RojlQgPzJEOfw1hBNSafHrKC53GJfX5mP3rN/awMiNa0hvJILyVAvRSLdl
-	 fHOXxCunbF1cUdYsqbhPpylLdc0mT2eUqwTiKMhc=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 50NIcgLM040831
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 23 Jan 2025 12:38:42 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 23
- Jan 2025 12:38:42 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 23 Jan 2025 12:38:42 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 50NIcgpx044367;
-	Thu, 23 Jan 2025 12:38:42 -0600
-Message-ID: <c476d07d-b5bd-4025-8b44-1dd67b2644d4@ti.com>
-Date: Thu, 23 Jan 2025 12:38:42 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+ dkim=none (message not signed); spf=pass (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 0424140C86;
+	Thu, 23 Jan 2025 20:00:28 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id v4F_P2L5iE5Z; Thu, 23 Jan 2025 20:00:27 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-87-159.washdc.fios.verizon.net [100.15.87.159])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id D866E40ACD;
+	Thu, 23 Jan 2025 20:00:26 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 4207016418F; Thu, 23 Jan 2025 15:00:26 -0500 (EST)
+Date: Thu, 23 Jan 2025 15:00:26 -0500
+From: Denys Dmytriyenko <denis@denix.org>
+To: ross.burton@arm.com
+Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
 Subject: Re: [meta-arm] Removal of external-arm-toolchain?
-To: <ross.burton@arm.com>,
-        "meta-arm@lists.yoctoproject.org"
-	<meta-arm@lists.yoctoproject.org>,
-        Denys Dmytriyenko <denis@denix.org>
+Message-ID: <20250123200026.GW21836@denix.org>
 References: <31F864D4-FAF7-4B00-BFAE-B00CB237EBE0@arm.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 In-Reply-To: <31F864D4-FAF7-4B00-BFAE-B00CB237EBE0@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mutt/1.5.20 (2009-06-14)
 Content-Transfer-Encoding: quoted-printable
-X-MIME-Autoconverted: from 8bit to quoted-printable by lelvem-ot01.ext.ti.com id 50NIcgHN1246355
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 23 Jan 2025 18:38:52 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6343
+ <meta-arm@lists.yoctoproject.org>; Thu, 23 Jan 2025 20:00:33 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6344
 
-On 1/22/25 11:32 AM, Ross Burton via lists.yoctoproject.org wrote:
+On Wed, Jan 22, 2025 at 05:32:52PM +0000, Ross Burton via lists.yoctoproj=
+ect.org wrote:
 > Hi,
 >=20
 > It=E2=80=99s that time of the year where I grumble about external-arm-t=
-oolchain.  This is the recipe that lets you unpack the Arm binary GCC rel=
-eases, and tell yocto to use that directory as the cross compiler.
+oolchain. =20
+
+Heh, we've had this discussion a few times in the past - I see we are com=
+ing=20
+back to it again... :)
+
+
+> This is the recipe that lets you unpack the Arm binary GCC releases, an=
+d=20
+> tell yocto to use that directory as the cross compiler.
 >=20
 > This time:
 >=20
 > 1) systemd fails to compile as the kernel headers it has don=E2=80=99t =
-include SIOCGSTAMP_OLD (added in linux 5.2)
+include=20
+> SIOCGSTAMP_OLD (added in linux 5.2)
 >=20
 > 2) There is no real support for locales. It ships locale files but they=
-=E2=80=99re generated by a separate recipe in core and those packages don=
-=E2=80=99t get generated by e-a-t.  This means many of oe-core=E2=80=99s =
-ptest recipes fail because of unexpected dependencies on eg locale-base-e=
-n-gb.
+=E2=80=99re=20
+> generated by a separate recipe in core and those packages don=E2=80=99t=
+ get=20
+> generated by e-a-t.  This means many of oe-core=E2=80=99s ptest recipes=
+ fail because=20
+> of unexpected dependencies on eg locale-base-en-gb.
 >=20
 > 3) The virtual namespace changes that landed yesterday in core meant it=
- needs updating.
+=20
+> needs updating.
 >=20
 > I=E2=80=99ve started work on (3) but discovered (1) and (2) whilst tryi=
-ng to do a test build.
+ng to do a=20
+> test build.
 >=20
 > So I=E2=80=99m again thinking we should remove external-arm-toolchain f=
-rom meta-arm. My argument for removing it:
+rom meta-arm.=20
+> My argument for removing it:
 >=20
 > 1) Whilst it=E2=80=99s a binary release of GCC from Arm, it=E2=80=99s a=
-ctually almost identical to upstream. Yocto can already build a newer ver=
-sion of upstream, which can be patched rapidly to fix bugs.
+ctually almost=20
+> identical to upstream. Yocto can already build a newer version of upstr=
+eam,=20
+> which can be patched rapidly to fix bugs.
 >=20
 > 2) Some pieces of the binary release can be very old: the kernel header=
-s in the 13.2 build were from linux 4.19.
+s in=20
+> the 13.2 build were from linux 4.19.
 >=20
 > 3) The binary release has limited platforms: you can only target 32-bit=
- arm on x86-64 or aarch64 hosts, and 64-bit arm on x86-64 hosts.
+ arm=20
+> on x86-64 or aarch64 hosts, and 64-bit arm on x86-64 hosts.
 >=20
 > 4) Trying to force a round peg (binary toolchain) into a square hole (t=
-he implicit interface exposed by yocto=E2=80=99s gcc recipes) is going to=
- be a constant battle.
+he=20
+> implicit interface exposed by yocto=E2=80=99s gcc recipes) is going to =
+be a constant=20
+> battle.
 >=20
 > 5) Given the problems I found it appears out CI is the main user of it,=
- and that CI coverage is explicitly minimal (disables ptest because we ca=
-n=E2=80=99t build a target gcc either).
+ and=20
+> that CI coverage is explicitly minimal (disables ptest because we can=E2=
+=80=99t=20
+> build a target gcc either).
 >=20
 > My understanding is that TI were active users of the binary toolchain f=
-or customers who appreciated the speed improvement by not having to compi=
-le a cross compiler, but I don=E2=80=99t believe the latest releases of t=
-heir product support this.  Also this is a prime use case for sstate, in =
-particular the public yocto state server which can be used to fetch all t=
-he native tools, not just the compiler.
->=20
+or=20
+> customers who appreciated the speed improvement by not having to compil=
+e a=20
+> cross compiler
 
-That is correct, we have moved away from external/binary toolchains.
-+Denys had some comments on it you can find here[0] on why we (TI)
-used it previously and why we do not anymore.
+Yes, TI used binary toolchains since the OpenEmbedded Classic days, inclu=
+ding=20
+but not limited to CodeSourcery, Linaro, and lately Arm. While support fo=
+r=20
+normal OE-built toolchain was always an option, the default preference fo=
+r TI=20
+products was to use a pre-built binary toolchain.
 
-Andrew
+Though, the build speed was not the reason, at least not the main reason.=
+=20
+It was due to the technical support requirements. OE-built cross toolchai=
+n=20
+was not trusted back in the day and OE is not in the business of providin=
+g=20
+commercial compiler support, like CodeSourcery would, for example.
 
-[0] https://lists.yoctoproject.org/g/meta-arago/message/14443
 
-> So, would anyone seriously object if I sent a patch to remove the exter=
-nal-arm-toolchain recipe? This would only be for master, we wouldn=E2=80=99=
-t retroactively remove it from the stable branches.
->=20
-> Cheers,
-> Ross
->=20
->=20
->=20
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#6342): https://lists.yoctoproject.org/g/meta-arm/me=
-ssage/6342
-> Mute This Topic: https://lists.yoctoproject.org/mt/110756921/3619733
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [afd@ti.co=
-m]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->=20
+>, but I don=E2=80=99t believe the latest releases of their product=20
+> support this.
+
+True, the maintenance and migration from one release to another was a rea=
+l=20
+nightmare, pretty much like you are describing above - always needing to =
+fix=20
+something. All the remaining extra TI customizations (e.g. supporting bot=
+h=20
+64-bit and 32-bit external toolchains at the same time, SDK packaging, et=
+c.)=20
+were finally removed 1.5 years ago:
+https://git.yoctoproject.org/meta-arago/commit/?id=3D6000a07a51053b768555=
+6246f9f5df7ef7714463
+
+
+That said, it appears there are some other users of external toolchain - =
+there=20
+was a person from Smile recently fixing some issues with usrmerge support=
+. And=20
+I just received a personal email from one of our customers inquiring abou=
+t it=20
+as well. In other words - there are other interested parties out there...
+
+
+>  Also this is a prime use case for sstate, in particular the=20
+> public yocto state server which can be used to fetch all the native too=
+ls,=20
+> not just the compiler.
+
+This is probably a topic for another thread, but there are some issues wi=
+th=20
+using sstate like that - public yocto sstate server is very slow and just=
+=20
+checking what is available takes a very long time, plus cross toolchain i=
+s not=20
+a native package and from my experience re-use is quite low in other dist=
+ros.
+
+
+> So, would anyone seriously object if I sent a patch to remove the=20
+> external-arm-toolchain recipe? This would only be for master, we wouldn=
+=E2=80=99t=20
+> retroactively remove it from the stable branches.
+
+As one of the meta-arm-toolchain co-maintainers[1], I would not object to=
+=20
+removing external-arm-toolchain support (the Linux side) from the layer.
+
+[1] https://git.yoctoproject.org/meta-arm/tree/meta-arm-toolchain/README.=
+md#n99
+
+
+But, besides external-arm-toolchain, there are also recipes in the layer =
+for=20
+baremetal compilers, which are not proper cross- recipes, but they preten=
+d=20
+to be native- ones. That's very hacky and there are some drawbacks, while=
+ the=20
+only benefit is speed, as those are also binary pre-builds. I was previou=
+sly=20
+suggesting replacing them with a proper baremetal multiconfig usage, like=
+ I=20
+did in meta-ti for K3 platforms. And as I recall, you were interested in =
+that=20
+solution as well. If that's still the case, please let me know if you nee=
+d any=20
+help with that...
+
+Thanks and regards,
+Denys
 
