@@ -1,113 +1,92 @@
-Return-Path: <denis@denix.org>
+Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C14C02181
-	for <webhook@archiver.kernel.org>; Fri, 24 Jan 2025 21:52:50 +0000 (UTC)
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web10.4509.1737755563424366001
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5258C0218C
+	for <webhook@archiver.kernel.org>; Mon, 27 Jan 2025 07:24:28 +0000 (UTC)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+ by mx.groups.io with SMTP id smtpd.web11.46551.1737962662222048102
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 24 Jan 2025 13:52:44 -0800
+ Sun, 26 Jan 2025 23:24:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 8237C40C6B;
-	Fri, 24 Jan 2025 21:52:42 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id FER1uTAVeiwh; Fri, 24 Jan 2025 21:52:42 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-87-159.washdc.fios.verizon.net [100.15.87.159])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 5A60940A22;
-	Fri, 24 Jan 2025 21:52:40 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id BCEAC1641A9; Fri, 24 Jan 2025 16:52:39 -0500 (EST)
-Date: Fri, 24 Jan 2025 16:52:39 -0500
-From: Denys Dmytriyenko <denis@denix.org>
-To: willhowe235@gmail.com
-Cc: meta-arm@lists.yoctoproject.org, meta-ti@lists.yoctoproject.org
-Subject: Re: [meta-arm] Failing to fetch beaglebone kernel from github
-Message-ID: <20250124215239.GB21836@denix.org>
-References: <lrnS.1737746847989365062.hDBY@lists.yoctoproject.org>
+ dkim=pass header.i=@linaro.org header.s=google header.b=WHtiyPbx;
+ spf=pass (domain: linaro.org, ip: 209.85.208.173, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3003c0c43c0so42974241fa.1
+        for <meta-arm@lists.yoctoproject.org>; Sun, 26 Jan 2025 23:24:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1737962660; x=1738567460; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uMSfkl+MiR4pvhWp19Iom+S29XuudSHF0nnvrul3ctc=;
+        b=WHtiyPbxqOO1dtdDUiqn9CpfdTc1o6QiuX8jVv4GEfe9nJA+SHbBSJHG5B+khgrgHl
+         emg0SZrxFif6UpTjjIhTX8HDSr2K++6jrP6TFlS51yvBIgoBmltlbWi1GcNpjzmVOkAs
+         Ul+u+vlgyptj21cj5fYlvCDhuwG0DjZYCgJRghySPfLYPfHdSUJIldS99/plXy+/mNlr
+         AU4lJymfHAgVjeL7pNwmQb7d6aso7yW2fZeVj+Yj6VY/kXGpPrYxbXdSNv3yUMIOF/CU
+         27rP5v34kbUuSO+fCTfiR4jtR4C5l1uDFSK772oLxhybneg7Grq27NFB7elqZ5aJXGXP
+         QkzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737962660; x=1738567460;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uMSfkl+MiR4pvhWp19Iom+S29XuudSHF0nnvrul3ctc=;
+        b=plni/I/1fTOdu05TH+bgRUrFIDYBdNupjw1ENzIeZwtJpt/oSK/YpF56VRQ6cWYrVo
+         nZqoiQXhuVo+X9AOUv+sHjawKfi9ehGtIIXk5qRMG7ID+/BNvdIghG1HczBWTNm0DNTC
+         qkfO2tCxz78OG9bDLIOHpDQFvT7qNV1mifdyG871PWWuoq5n3yiNYVN6B8Kw716ZrsCy
+         v5VvpH1HV2WVF01CP2KUCQM7KAXktKTDF0avBsuECEuWtIQ+1LVa04kZpecoYpNnhzc/
+         X8JFbPbNeFynngTdI/hXim8xYmpg5PT+KteRK7y3o7SmOc6Sf3bOgrz/d35sjCfeJ6ep
+         A+/g==
+X-Gm-Message-State: AOJu0YyCr2ZWp1PhLHrA+cSkYfZIjlc8MrAZ1fTYPriv9EjWJGNvVupF
+	09OM9/0yS9OZvrlrl7bkCjYgklbCxDyLd9u733Vfl45SjuNygZfVpKF6FNH20moE+e2fFdNL1VR
+	bLAQ=
+X-Gm-Gg: ASbGncsOPYQhgr4YFqgeKzXkjH9hQkD9Ax/cQzzRXnL1fPyJZUsLVaATbpScKdfTCe6
+	9IK12ikhk+GJqxDaWvkdhVVGfapRO60ZQKL8aIorUn8ZOAPZYgCWQlfOAMYqtThvKnInLVsSARj
+	quPL2MVOTFBTnnmPv1GJCO9mFsfcRqiBD36VSS2a26UT5PgzCj6LZiVQSwcBg4KmzcTwq5+bHWz
+	2SjJj7xAp9q9f9vxR+DnNcKvvrLkzKSehUkFllj1ue2gV+8yushM6PK+Ef4p8Z3hKZI/EZ/nC7H
+	bUa1yc17E4agPEM8ITmsRR5JtmQMVmwCCOrPiQsU5K8Hjmc37ZFP6Q==
+X-Google-Smtp-Source: AGHT+IHj+/8/A5YgA+aOVKl81LU750QNb1k44SGsBGGrdMaQ6R5jnqaEUiEsmBCLBxothOLo+LhBbg==
+X-Received: by 2002:a2e:bc83:0:b0:300:2a48:fb65 with SMTP id 38308e7fff4ca-3072ca99e81mr184361351fa.18.1737962660248;
+        Sun, 26 Jan 2025 23:24:20 -0800 (PST)
+Received: from localhost.localdomain (2001-14ba-4aa-fa00--193.rev.dnainternet.fi. [2001:14ba:4aa:fa00::193])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3076bc51792sm13348341fa.109.2025.01.26.23.24.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jan 2025 23:24:18 -0800 (PST)
+From: Mikko Rapeli <mikko.rapeli@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
+Subject: [PATCH] systemd-boot: update systemd-bootaarch64.efi path
+Date: Mon, 27 Jan 2025 09:23:56 +0200
+Message-ID: <20250127072356.852345-1-mikko.rapeli@linaro.org>
+X-Mailer: git-send-email 2.47.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <lrnS.1737746847989365062.hDBY@lists.yoctoproject.org>
-User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 24 Jan 2025 21:52:50 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6349
+ <meta-arm@lists.yoctoproject.org>; Mon, 27 Jan 2025 07:24:28 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6350
 
-On Fri, Jan 24, 2025 at 11:27:27AM -0800, willhowe235 via lists.yoctoprojec=
-t.org wrote:
-> Hello all,
->=20
-> I'm new to the yocto project and I'm a first time poster.
+poky updated systemd from 256 to 257 which changed
+the build time path.
 
-This question is more appropriate for the meta-ti mailing list (copied).
+Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
+---
+ meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Since the recipe you are having problems with resides in meta-beagle layer,=
-=20
-which is part of the meta-ti repository. And Yocto Project layers are requi=
-red=20
-to have a README file that explains where to send questions to:
-https://git.yoctoproject.org/meta-ti/tree/meta-beagle/README?h=3Dscarthgap
+diff --git a/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc b/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
+index 84196a68..9d72dac5 100644
+--- a/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
++++ b/meta-arm/recipes-core/systemd/systemd-boot-uefi-secureboot.inc
+@@ -1,6 +1,6 @@
+ inherit sbsign
+ 
+-SBSIGN_TARGET_BINARY = "${B}/src/boot/efi/systemd-boot${EFI_ARCH}.efi"
++SBSIGN_TARGET_BINARY = "${B}/src/boot/systemd-boot${EFI_ARCH}.efi"
+ 
+ do_compile:append() {
+     do_sbsign
+-- 
+2.43.0
 
-
-> NOTE: Executing Tasks
-> WARNING: linux-bb.org-6.6.32+git-r0 do_fetch: Failed to fetch URL git://g=
-ithub.com/beagleboard/linux.git;protocol=3Dhttps;branch=3Dv6.6.32-ti-arm32-=
-r7, attempting MIRRORS if available
-> ERROR: linux-bb.org-6.6.32+git-r0 do_fetch: Fetcher failure: Fetch comman=
-d export PSEUDO_DISABLED=3D1; export DBUS_SESSION_BUS_ADDRESS=3D"unix:path=
-=3D/run/user/1000/bus"; export PATH=3D"/home/whowe1/tmp/sysroots-uninative/=
-x86_64-linux/usr/bin:/home/whowe1/yocto_live_coding_project/poky/scripts:/h=
-ome/whowe1/tmp/work/beaglebone-poky-linux-gnueabi/linux-bb.org/6.6.32+git/r=
-ecipe-sysroot-native/usr/bin/arm-poky-linux-gnueabi:/home/whowe1/tmp/work/b=
-eaglebone-poky-linux-gnueabi/linux-bb.org/6.6.32+git/recipe-sysroot/usr/bin=
-/crossscripts:/home/whowe1/tmp/work/beaglebone-poky-linux-gnueabi/linux-bb.=
-org/6.6.32+git/recipe-sysroot-native/usr/sbin:/home/whowe1/tmp/work/beagleb=
-one-poky-linux-gnueabi/linux-bb.org/6.6.32+git/recipe-sysroot-native/usr/bi=
-n:/home/whowe1/tmp/work/beaglebone-poky-linux-gnueabi/linux-bb.org/6.6.32+g=
-it/recipe-sysroot-native/sbin:/home/whowe1/tmp/work/beaglebone-poky-linux-g=
-nueabi/linux-bb.org/6.6.32+git/recipe-sysroot-native/bin:/home/whowe1/yocto=
-_live_coding_project/poky/bitbake/bin:/home/whowe1/tmp/host
-> tools"; export HOME=3D"/home/whowe1"; LANG=3DC git -c gc.autoDetach=3Dfal=
-se -c core.pager=3Dcat -c safe.bareRepository=3Dall fetch -f --progress htt=
-ps://github.com/beagleboard/linux.git refs/heads/*:refs/heads/* refs/tags/*=
-:refs/tags/* failed with exit code 128, see logfile for output
-> ERROR: linux-bb.org-6.6.32+git-r0 do_fetch: Bitbake Fetcher Error: FetchE=
-rror('Unable to fetch URL from any source.', 'git://github.com/beagleboard/=
-linux.git;protocol=3Dhttps;branch=3Dv6.6.32-ti-arm32-r7')
-> ERROR: Logfile of failure stored in: /home/whowe1/tmp/work/beaglebone-pok=
-y-linux-gnueabi/linux-bb.org/6.6.32+git/temp/log.do_fetch.1038389
-
-Could you check the corresponding log file referred here ^^^
-
-I just tried it locally and it worked as expected:
-
-$ git clone https://github.com/beagleboard/linux.git -b v6.6.32-ti-arm32-r7
-=2E..
-$ git checkout 525684d28fadc2bdae5424f28b219377bd5d4639
-=2E..
-
-Please try these steps manually and see if that works. I wonder if it's som=
-e=20
-kind of a local issue (e.g. caused by WSL) or a temporarily connection issu=
-e=20
-with github...
-
-FWIW, we used to fetch directly from git.beagleboard.org, but had to switch=
- to=20
-github.com as it was more reliable:
-
-https://git.yoctoproject.org/meta-ti/commit/?id=3D26665b1fea17ac6010121fff5=
-93759de55bb6120
-
---=20
-Denys
 
