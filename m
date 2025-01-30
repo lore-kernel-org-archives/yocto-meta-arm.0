@@ -1,85 +1,111 @@
-Return-Path: <sumit.garg@linaro.org>
+Return-Path: <romain.naour@smile.fr>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25D0C0218A
-	for <webhook@archiver.kernel.org>; Thu, 30 Jan 2025 06:47:57 +0000 (UTC)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
- by mx.groups.io with SMTP id smtpd.web10.10427.1738219673176365370
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94156C0218A
+	for <webhook@archiver.kernel.org>; Thu, 30 Jan 2025 10:50:39 +0000 (UTC)
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+ by mx.groups.io with SMTP id smtpd.web11.12812.1738234234932990413
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 29 Jan 2025 22:47:53 -0800
+ Thu, 30 Jan 2025 02:50:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=NpHe32Ww;
- spf=pass (domain: linaro.org, ip: 209.85.217.47, mailfrom: sumit.garg@linaro.org)
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4aff620b232so173544137.0
-        for <meta-arm@lists.yoctoproject.org>; Wed, 29 Jan 2025 22:47:53 -0800 (PST)
+ dkim=pass header.i=@smile.fr header.s=google header.b=akn8Fexp;
+ spf=pass (domain: smile.fr, ip: 209.85.221.47, mailfrom: romain.naour@smile.fr)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-385f07cd1a4so595782f8f.1
+        for <meta-arm@lists.yoctoproject.org>; Thu, 30 Jan 2025 02:50:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738219672; x=1738824472; darn=lists.yoctoproject.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6du24R2xWrDxD6PGVWFSPr1ub8g635ZPxh6t2Qn8C0Y=;
-        b=NpHe32WwG3kllg/gO+Tbmog+ze4FF+NToDqjtegswAE4h8p3fYeNzt0zG8/ZcHIm/a
-         hpb+7y5RLd61S30q035znC5GMmjfTsCl5PvQtUtOAIWUfYa9iURtXbmeMCyG6/n1JmIl
-         +Z77a9DGRm7m7rM4ISjPUcnHM2A06V2apLecKdDitNMH1siQiz4cX9Viptjh1ZbVkQ5o
-         zZf9QhpcyfxaB/8gIEIqWlkUQJ7BBQMD/CMFgcTNi+95qA3xz5HbruLfkTSivmfsFo7F
-         MXKUYYYDERR6dA3/sFpJbtg1msizu21jGkl3pl4sYKFeS4m5wLWEE5CRyxuTnANufZpl
-         GNNA==
+        d=smile.fr; s=google; t=1738234233; x=1738839033; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=3fZdOy0r3FpoVbFxxV5EeZRHUrMyIiItjySkXtJUhtw=;
+        b=akn8FexpMTbl+I2l6tUmeHOX+PCcX9iA8Puz8dWnfNKxXq8yfhuh9+oyg4Zf+NfBu4
+         4CojGhzOQzJ0fQK8fsbf3j5fV94HW7aae6n7GDgjsmqfoJ2SRRQGHVUzMpfu3S4M8vQe
+         g3H1da29Hp8l0S0lWSwdbQlHPHqy6Zi08PPYQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738219672; x=1738824472;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6du24R2xWrDxD6PGVWFSPr1ub8g635ZPxh6t2Qn8C0Y=;
-        b=oeg1gIBGblyx8BuGoUTfqTMKuu88NHIObOLaaPn8kwGKZbMQbKKqLpvxslMdpc/b6G
-         x1qQ7UklSQzEA6xgZIhmAEP/hVXYPJ7ogswpvURLkxHl6ZA+sQefwaBoc22NvKdh4PFJ
-         nqCyCMWKJi06YFuVz9ev6qYxleOwZynyHSNDa8sjMrpkA7XpT2BnRQIWKRBveLn7ie2j
-         XVv+bBjz8UWH6eDiPZlMtrrT+vXqOBA5rr+K0l6bMxfL8Xv89EIntA6nqQLNITFCy03K
-         1Qnqu73jwfsVG99ZI5u2qGvNrbTzYgl+D6MnREK5Zrw5hX0tBYO4TnHE4239LKd4M82s
-         uNhw==
-X-Gm-Message-State: AOJu0Ywnkan2y9bDMuAvfLa0VHi2QcPeXRg4s3Z6pL11t/JfU75dIX5O
-	SfztLdytQIH03vAOEcCrgvaOsQBbRkckqN7cBIGLC0EJXPMpxNqmzf1q+mZOQdKiUcqpjiOdexq
-	jxL+pXCQAsjNqe/gVDG5ytyNrMrCZF7fYWwSjq/HqIOXXehs21Jw=
-X-Gm-Gg: ASbGncvHDYZ9pfbKB7U2r24ydKiOfIoQhUJENCgBqRUpnv0iuUcd32pj+7BSRr8sGj9
-	04oAO7Oztt1niQdTHwQEUaZm1gWWezXPO8SAbRaI2p4uMn0zkGCVxqVAJmZjg84U8qVbzELhWIA
-	==
-X-Google-Smtp-Source: AGHT+IGb8FNPgbfmOo/R1UkKzJi1XmdhHocyEf1jqG2jZpjXy6PBGFBdcT+hQQhyspFHRIkLNmUa97bcn4OXT7kThuU=
-X-Received: by 2002:a05:6102:5f85:b0:4b9:bd30:34c6 with SMTP id
- ada2fe7eead31-4b9bd30382emr184574137.15.1738219671640; Wed, 29 Jan 2025
- 22:47:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1738234233; x=1738839033;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3fZdOy0r3FpoVbFxxV5EeZRHUrMyIiItjySkXtJUhtw=;
+        b=oDxZcUtkjk5UUcz6VwBCF4M1h+bbTZ7kT9gQhjgrtZgzSIgsW8clpSqYu4uYPTqwNw
+         lxaEt2BaS0gUPzaJc85XslU0x22oDAlAKVNgG5tUz+ZiiFc6VTReaDCONvlw3hrhRmOG
+         /b3hY0XFq588oQ/bVT36ollaGjoeRwcVzYL60xmvh5engo/uRQlvK9/4eIoCY4uP0H3X
+         zqkH+IQNCGzW6/3wtr581mZBWV5ySe+ueX+YO5oaY5y2JR19XQCR7yIKP7s60H3SdAcd
+         p1CeuLUb+0J4X54P9V6BuwrQYaziZpH+Wruz5jDKaByHVVvX6VViZNeysl762562LNxr
+         WgOg==
+X-Forwarded-Encrypted: i=1; AJvYcCWvsmEXPRjqEmo/f+eNdyFwG5biXenMMLUlimRXqURqrGa1/TG/Ko7lrfN0ZKAe/QWYUhym+QQoRg==@lists.yoctoproject.org
+X-Gm-Message-State: AOJu0YxJjEmNr5HRkVNGGsBRDPY6Q4cZQ91crXWzzZ6wEhBKw8wEZu0x
+	wfubAr7i6maNQcvYq1uHsNP1FUc7ew+iIRB9COWosHV5nm4H3/iMnTP9tIu3Nazew1Rl8ntaqCv
+	o
+X-Gm-Gg: ASbGnctg9AkyiRof3aJgXgh3+WfVF3XMKcwbTt7jZ3ZMXA49CIlNAniRw0ZgmrXpgTY
+	8Oz4FtOk3T2uT4R4b8M7Pky1mxwo97lriB0kMQoEK+mekjBtV9fGoX+UsY119SzBJATzP3Y6FXd
+	IVVRGVM7WjRjJyiusOHpP8Nb4OV4cAz4PYxpc3zvFlrJI5lbpLw5VIxF0iiU9leOtUUzEeVDroQ
+	I2HKu4f3VY+A3PcaedtDbh2h1lFuMhgHdRYw/MZ8vk72NUceb9Py+wk85qAafCtBAprozf8kn38
+	xgSsVplaRAHHkMHHbbpHX6I7NRxtb5Lxc/rZ3xJfcuwGW2UTWZIY2BPtHWlkPH9wfy4HNGgJjnK
+	78Cty2l03RJesqp00ViqOj+FWXOPQZ4zCxuhpJDJsdFlBVbLABR8=
+X-Google-Smtp-Source: AGHT+IFPwrmiX81ZXmMu3WGjz2m3cpBz9I8mEV5HDSAeYjo7MOFye6a3rtfb9xmPJ8HLHK6Lde/spQ==
+X-Received: by 2002:a05:6000:184b:b0:38a:8ec6:f46f with SMTP id ffacd0b85a97d-38c52095f4emr6115762f8f.53.1738234232796;
+        Thu, 30 Jan 2025 02:50:32 -0800 (PST)
+Received: from ?IPV6:2a01:cb05:949d:5800:e3ef:2d7a:4131:71f? (2a01cb05949d5800e3ef2d7a4131071f.ipv6.abo.wanadoo.fr. [2a01:cb05:949d:5800:e3ef:2d7a:4131:71f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-438e245f5a5sm19237715e9.40.2025.01.30.02.50.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jan 2025 02:50:32 -0800 (PST)
+Message-ID: <30d04d21-2ae8-44ff-b603-7e355b908946@smile.fr>
+Date: Thu, 30 Jan 2025 11:50:31 +0100
 MIME-Version: 1.0
-References: <20250128115500.3921264-1-ross.burton@arm.com> <20250128115500.3921264-2-ross.burton@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [meta-arm] [PATCH 2/2] arm-toolchain: remove
+ external-arm-toolchain
+To: ross.burton@arm.com, meta-arm@lists.yoctoproject.org
+References: <20250128115500.3921264-1-ross.burton@arm.com>
+ <20250128115500.3921264-2-ross.burton@arm.com>
+Content-Language: fr
+From: Romain Naour <romain.naour@smile.fr>
 In-Reply-To: <20250128115500.3921264-2-ross.burton@arm.com>
-From: Sumit Garg <sumit.garg@linaro.org>
-Date: Thu, 30 Jan 2025 12:17:40 +0530
-X-Gm-Features: AWEUYZnbDqQ6SuZllrrViPyT3TnWbrxbDmCWAi3XbTiWne09hCuxkF6e_8sByoQ
-Message-ID: <CAFA6WYOvj=b1FB3GoF_qB2z2F8cR3mGCuurGygzmisb5Kc--2g@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH 2/2] arm-toolchain: remove external-arm-toolchain
-To: ross.burton@arm.com
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 30 Jan 2025 06:47:57 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6357
+ <meta-arm@lists.yoctoproject.org>; Thu, 30 Jan 2025 10:50:39 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6358
 
-On Tue, 28 Jan 2025 at 17:25, Ross Burton via lists.yoctoproject.org
-<ross.burton=arm.com@lists.yoctoproject.org> wrote:
->
+Hello,
+
+Le 28/01/2025 à 12:55, Ross Burton via lists.yoctoproject.org a écrit :
 > Integrating the binary Arm GCC toolchain into OE is quite complicated
 > because the binary release and oe-core's toolchain are arranged slightly
 > differently, which makes it quite fragile.
->
+> 
 > As it's obviously a binary release we cannot patch it to fix issues.
->
+> 
 > Also it has some fairly sizable limitations: for example the kernel
 > headers are old (from linux 4.19) and the locale packaging is different
 > so locale package dependencies don't work.
->
+> 
 > The main historic users of the external toolchain no longer use it, so
 > remove it.  The recipes will remain in the LTS branches for users who
 > are using it currently, but will not be part of the next release.
->
+
+With this patch merged, we can remove any reference to meta-sourcery and
+meta-arm-toolchain usage as external toolchain from the poky manual and config
+template:
+
+"Another example of external toolchain layer is :yocto_git:`meta-arm-toolchain
+</meta-arm/tree/meta-arm-toolchain/>` supporting GNU toolchains released by ARM."
+
+https://github.com/yoctoproject/poky/blob/2e2b3f69f2f5405ba823d3203edd113c002ad75b/documentation/dev-manual/external-toolchain.rst
+
+https://github.com/yoctoproject/poky/blob/2e2b3f69f2f5405ba823d3203edd113c002ad75b/meta-poky/conf/templates/default/local.conf.sample.extended#L106
+
+Acked-by: Romain Naour <romain.naour@smile.fr>
+
+Best regards,
+Romain
+
+
+> 
 > Signed-off-by: Ross Burton <ross.burton@arm.com>
 > ---
 >  .gitlab-ci.yml                                |   5 +-
@@ -107,12 +133,7 @@ On Tue, 28 Jan 2025 at 17:25, Ross Burton via lists.yoctoproject.org
 >  delete mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
 >  delete mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/files/SUPPORTED
 >  delete mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
->
-
-Acked-by: Sumit Garg <sumit.garg@linaro.org>
-
--Sumit
-
+> 
 > diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
 > index 9dad9662..3e84d8b8 100644
 > --- a/.gitlab-ci.yml
@@ -123,7 +144,7 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 >      - mkdir --verbose --parents $KAS_WORK_DIR $KAS_REPO_REF_DIR $SSTATE_DIR $DL_DIR $TOOLCHAIN_DIR $TOOLCHAIN_LINK_DIR
 > -    # Must do this here, as it's the only way to make sure the toolchain is installed on the same builder
 > -    - ./ci/get-binary-toolchains $DL_DIR $TOOLCHAIN_DIR $TOOLCHAIN_LINK_DIR
->
+>  
 >  # Generalised fragment to do a Kas build
 >  .build:
 > @@ -118,7 +116,7 @@ update-repos:
@@ -184,40 +205,40 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > -mkdir -p $DOWNLOAD_DIR $TOOLCHAIN_DIR $TOOLCHAIN_LINK_DIR
 > -
 > -download() {
-> -       TRIPLE=$1
-> -       URL=https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/$BASENAME-$VER-$HOST_ARCH-$TRIPLE.tar.xz
-> -       wget -P $DOWNLOAD_DIR -nc $URL
+> -	TRIPLE=$1
+> -	URL=https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/$BASENAME-$VER-$HOST_ARCH-$TRIPLE.tar.xz
+> -	wget -P $DOWNLOAD_DIR -nc $URL
 > -}
 > -
 > -if [ $HOST_ARCH = "aarch64" ]; then
-> -       # AArch64 Linux hosted cross compilers
+> -	# AArch64 Linux hosted cross compilers
 > -
-> -       # AArch32 target with hard float
-> -       download arm-none-linux-gnueabihf
+> -	# AArch32 target with hard float
+> -	download arm-none-linux-gnueabihf
 > -elif [ $HOST_ARCH = "x86_64" ]; then
-> -       # x86_64 Linux hosted cross compilers
+> -	# x86_64 Linux hosted cross compilers
 > -
-> -       # AArch32 target with hard float
-> -       download arm-none-linux-gnueabihf
+> -	# AArch32 target with hard float
+> -	download arm-none-linux-gnueabihf
 > -
-> -       # AArch64 GNU/Linux target
-> -       download aarch64-none-linux-gnu
+> -	# AArch64 GNU/Linux target
+> -	download aarch64-none-linux-gnu
 > -else
-> -       echo "ERROR - Unknown build arch of $HOST_ARCH"
-> -       exit 1
+> -	echo "ERROR - Unknown build arch of $HOST_ARCH"
+> -	exit 1
 > -fi
 > -
 > -for i in arm aarch64; do
-> -       if [ ! -d $TOOLCHAIN_DIR/$BASENAME-$VER-$HOST_ARCH-$i-none-linux-gnu*/ ]; then
-> -               if [ ! -f $DOWNLOAD_DIR/$BASENAME-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz ]; then
-> -                       continue
-> -               fi
+> -	if [ ! -d $TOOLCHAIN_DIR/$BASENAME-$VER-$HOST_ARCH-$i-none-linux-gnu*/ ]; then
+> -		if [ ! -f $DOWNLOAD_DIR/$BASENAME-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz ]; then
+> -			continue
+> -		fi
 > -
-> -               tar -C $TOOLCHAIN_DIR -axvf $DOWNLOAD_DIR/$BASENAME-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz
-> -       fi
+> -		tar -C $TOOLCHAIN_DIR -axvf $DOWNLOAD_DIR/$BASENAME-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz
+> -	fi
 > -
-> -       # Setup a link for the toolchain to use local to the building machine (e.g., not in a shared location)
-> -       ln -s $TOOLCHAIN_DIR/$BASENAME-$VER-$HOST_ARCH-$i-none-linux-gnu* $TOOLCHAIN_LINK_DIR/$i
+> -	# Setup a link for the toolchain to use local to the building machine (e.g., not in a shared location)
+> -	ln -s $TOOLCHAIN_DIR/$BASENAME-$VER-$HOST_ARCH-$i-none-linux-gnu* $TOOLCHAIN_LINK_DIR/$i
 > -done
 > diff --git a/meta-arm-toolchain/README.md b/meta-arm-toolchain/README.md
 > index 9830b95a..3263429c 100644
@@ -226,7 +247,7 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > @@ -6,70 +6,6 @@ This layer contains recipes for the prebuilt GNU Arm toolchains.
 >  Information regarding contributing, reporting bugs, etc can be found in the
 >  top-level meta-arm readme file.
->
+>  
 > -Recipes for pre-built GNU Arm toolchain for Linux development are provided under
 > -``recipes-devtools/external-arm-toolchain/``.
 > -
@@ -293,7 +314,7 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > -
 >  Pre-built Arm toolchain for bare-metal development
 >  --------------------------------------------------
->
+>  
 > diff --git a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc b/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
 > deleted file mode 100644
 > index 675457d1..00000000
@@ -508,12 +529,12 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > -TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
 > -
 > -DISTRO_FEATURES_LIBC = "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-cxx-tests libc-catgets libc-crypt \
-> -                       libc-crypt-ufc libc-db-aliases libc-envz libc-fcvt libc-fmtmsg libc-fstab libc-ftraverse \
-> -                       libc-getlogin libc-idn libc-inet-anl libc-libm libc-libm-big \
-> -                       libc-locales libc-locale-code libc-charsets \
-> -                       libc-memusage libc-nis libc-nsswitch libc-rcmd libc-rtld-debug libc-spawn libc-streams libc-sunrpc \
-> -                       libc-utmp libc-utmpx libc-wordexp libc-posix-clang-wchar libc-posix-regexp libc-posix-regexp-glibc \
-> -                       libc-posix-wchar-io"
+> -			libc-crypt-ufc libc-db-aliases libc-envz libc-fcvt libc-fmtmsg libc-fstab libc-ftraverse \
+> -			libc-getlogin libc-idn libc-inet-anl libc-libm libc-libm-big \
+> -			libc-locales libc-locale-code libc-charsets \
+> -			libc-memusage libc-nis libc-nsswitch libc-rcmd libc-rtld-debug libc-spawn libc-streams libc-sunrpc \
+> -			libc-utmp libc-utmpx libc-wordexp libc-posix-clang-wchar libc-posix-regexp libc-posix-regexp-glibc \
+> -			libc-posix-wchar-io"
 > -
 > -ENABLE_BINARY_LOCALE_GENERATION = "0"
 > -GLIBC_INTERNAL_USE_BINARY_LOCALE = "precompiled"
@@ -629,15 +650,15 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > -SKIP_FILEDEPS = "1"
 > -
 > -PROVIDES = "\
-> -       gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> -       gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> -       binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+> -	gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+> -	gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+> -	binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
 > -"
 > -
 > -PACKAGES = "\
-> -       gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> -       gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> -       binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+> -	gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+> -	gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+> -	binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
 > -"
 > -
 > -# Adjust defaults in line with external toolchain
@@ -648,47 +669,47 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > -gcclibdir = "${libdir}/gcc"
 > -
 > -FILES:gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-> -       ${prefix}/${EAT_TARGET_SYS}/lib/libstdc++.* \
-> -       ${prefix}/${EAT_TARGET_SYS}/lib/libgcc_s.* \
-> -       ${prefix}/${EAT_TARGET_SYS}/lib/libsupc++.* \
-> -       ${prefix}/${EAT_TARGET_SYS}/include \
-> -       ${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* \
-> -       ${bindir}/${TARGET_PREFIX}gcov \
-> -       ${bindir}/${TARGET_PREFIX}gcc* \
-> -       ${bindir}/${TARGET_PREFIX}g++ \
-> -       ${bindir}/${TARGET_PREFIX}cpp \
-> -       ${libexecdir}/* \
+> -	${prefix}/${EAT_TARGET_SYS}/lib/libstdc++.* \
+> -	${prefix}/${EAT_TARGET_SYS}/lib/libgcc_s.* \
+> -	${prefix}/${EAT_TARGET_SYS}/lib/libsupc++.* \
+> -	${prefix}/${EAT_TARGET_SYS}/include \
+> -	${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* \
+> -	${bindir}/${TARGET_PREFIX}gcov \
+> -	${bindir}/${TARGET_PREFIX}gcc* \
+> -	${bindir}/${TARGET_PREFIX}g++ \
+> -	${bindir}/${TARGET_PREFIX}cpp \
+> -	${libexecdir}/* \
 > -"
 > -
 > -FILES:gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-> -       ${bindir}/${TARGET_PREFIX}gdb* \
-> -       ${datadir}/gdb/* \
+> -	${bindir}/${TARGET_PREFIX}gdb* \
+> -	${datadir}/gdb/* \
 > -"
 > -
 > -FILES:binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-> -       ${prefix}/${EAT_TARGET_SYS}/bin/ld* \
-> -       ${prefix}/${EAT_TARGET_SYS}/bin/objcopy \
-> -       ${prefix}/${EAT_TARGET_SYS}/bin/strip \
-> -       ${prefix}/${EAT_TARGET_SYS}/bin/nm \
-> -       ${prefix}/${EAT_TARGET_SYS}/bin/ranlib \
-> -       ${prefix}/${EAT_TARGET_SYS}/bin/as \
-> -       ${prefix}/${EAT_TARGET_SYS}/bin/ar \
-> -       ${prefix}/${EAT_TARGET_SYS}/bin/objdump \
-> -       ${prefix}/${EAT_TARGET_SYS}/lib/ldscripts/* \
-> -       ${bindir}/${TARGET_PREFIX}ld* \
-> -       ${bindir}/${TARGET_PREFIX}addr2line \
-> -       ${bindir}/${TARGET_PREFIX}objcopy \
-> -       ${bindir}/${TARGET_PREFIX}readelf \
-> -       ${bindir}/${TARGET_PREFIX}strip \
-> -       ${bindir}/${TARGET_PREFIX}nm \
-> -       ${bindir}/${TARGET_PREFIX}ranlib \
-> -       ${bindir}/${TARGET_PREFIX}gprof \
-> -       ${bindir}/${TARGET_PREFIX}as \
-> -       ${bindir}/${TARGET_PREFIX}c++filt \
-> -       ${bindir}/${TARGET_PREFIX}ar \
-> -       ${bindir}/${TARGET_PREFIX}strings \
-> -       ${bindir}/${TARGET_PREFIX}objdump \
-> -       ${bindir}/${TARGET_PREFIX}size \
+> -	${prefix}/${EAT_TARGET_SYS}/bin/ld* \
+> -	${prefix}/${EAT_TARGET_SYS}/bin/objcopy \
+> -	${prefix}/${EAT_TARGET_SYS}/bin/strip \
+> -	${prefix}/${EAT_TARGET_SYS}/bin/nm \
+> -	${prefix}/${EAT_TARGET_SYS}/bin/ranlib \
+> -	${prefix}/${EAT_TARGET_SYS}/bin/as \
+> -	${prefix}/${EAT_TARGET_SYS}/bin/ar \
+> -	${prefix}/${EAT_TARGET_SYS}/bin/objdump \
+> -	${prefix}/${EAT_TARGET_SYS}/lib/ldscripts/* \
+> -	${bindir}/${TARGET_PREFIX}ld* \
+> -	${bindir}/${TARGET_PREFIX}addr2line \
+> -	${bindir}/${TARGET_PREFIX}objcopy \
+> -	${bindir}/${TARGET_PREFIX}readelf \
+> -	${bindir}/${TARGET_PREFIX}strip \
+> -	${bindir}/${TARGET_PREFIX}nm \
+> -	${bindir}/${TARGET_PREFIX}ranlib \
+> -	${bindir}/${TARGET_PREFIX}gprof \
+> -	${bindir}/${TARGET_PREFIX}as \
+> -	${bindir}/${TARGET_PREFIX}c++filt \
+> -	${bindir}/${TARGET_PREFIX}ar \
+> -	${bindir}/${TARGET_PREFIX}strings \
+> -	${bindir}/${TARGET_PREFIX}objdump \
+> -	${bindir}/${TARGET_PREFIX}size \
 > -"
 > -
 > -DESCRIPTION:gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "The GNU cc and gcc C compilers"
@@ -704,41 +725,41 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > -PKGV:binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_BFD}"
 > -
 > -do_install() {
-> -       install -d ${D}${prefix}/${EAT_TARGET_SYS}/bin
-> -       install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib
-> -       install -d ${D}${prefix}/${EAT_TARGET_SYS}/include
-> -       install -d ${D}${bindir}
-> -       install -d ${D}${libdir}
-> -       install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
-> -       install -d ${D}${libexecdir}
-> -       install -d ${D}${datadir}/gdb
-> -       install -d ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include
+> -	install -d ${D}${prefix}/${EAT_TARGET_SYS}/bin
+> -	install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib
+> -	install -d ${D}${prefix}/${EAT_TARGET_SYS}/include
+> -	install -d ${D}${bindir}
+> -	install -d ${D}${libdir}
+> -	install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
+> -	install -d ${D}${libexecdir}
+> -	install -d ${D}${datadir}/gdb
+> -	install -d ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include
 > -
-> -       CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
+> -	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
 > -
-> -       # gcc
-> -       for i in libstdc++.* libgcc_s.* libsupc++.*; do
-> -               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/$i ${D}${prefix}/${EAT_TARGET_SYS}/lib
-> -       done
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${prefix}/${EAT_TARGET_SYS}/include
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
-> -       for i in gcov gcc* g++ cpp; do
-> -               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
-> -       done
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/libexec/* ${D}${libexecdir}
+> -	# gcc
+> -	for i in libstdc++.* libgcc_s.* libsupc++.*; do
+> -		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/$i ${D}${prefix}/${EAT_TARGET_SYS}/lib
+> -	done
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${prefix}/${EAT_TARGET_SYS}/include
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
+> -	for i in gcov gcc* g++ cpp; do
+> -		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
+> -	done
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/libexec/* ${D}${libexecdir}
 > -
-> -       # gdb
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}gdb* ${D}${bindir}
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/share/gdb/* ${D}${datadir}/gdb/
+> -	# gdb
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}gdb* ${D}${bindir}
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/share/gdb/* ${D}${datadir}/gdb/
 > -
-> -       # binutils
-> -       for i in ld* objcopy strip nm ranlib as ar objdump; do
-> -               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/bin/$i ${D}${prefix}/${EAT_TARGET_SYS}/bin
-> -       done
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib/ldscripts/* ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
-> -       for i in ld* addr2line objcopy readelf strip nm ranlib gprof as c++filt ar strings objdump size; do
-> -               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
-> -       done
+> -	# binutils
+> -	for i in ld* objcopy strip nm ranlib as ar objdump; do
+> -		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/bin/$i ${D}${prefix}/${EAT_TARGET_SYS}/bin
+> -	done
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib/ldscripts/* ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
+> -	for i in ld* addr2line objcopy readelf strip nm ranlib gprof as c++filt ar strings objdump size; do
+> -		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
+> -	done
 > -}
 > -
 > -python () {
@@ -760,48 +781,48 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > -INHIBIT_DEFAULT_DEPS = "1"
 > -
 > -LIC_FILES_CHKSUM = "\
-> -       file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302 \
-> -       file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420 \
+> -	file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302 \
+> -	file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420 \
 > -"
 > -
 > -PROVIDES += "\
-> -       linux-libc-headers \
-> -       virtual/cross-cc \
-> -       virtual/cross-c++ \
-> -       virtual/binutils \
-> -       virtual/compilerlibs \
-> -       virtual/libc \
-> -       virtual/libintl \
-> -       virtual/libiconv \
-> -       virtual/crypt \
-> -       glibc-mtrace \
-> -       glibc-thread-db \
-> -       glibc \
-> -       libc-mtrace \
-> -       gcc-runtime \
-> -       libgcc \
-> -       libg2c \
-> -       libg2c-dev \
-> -       libssp \
-> -       libssp-dev \
-> -       libssp-staticdev \
-> -       libgfortran \
-> -       libgfortran-dev \
-> -       libgfortran-staticdev \
-> -       libmudflap \
-> -       libmudflap-dev \
-> -       libgomp \
-> -       libgomp-dev \
-> -       libgomp-staticdev \
-> -       libitm \
-> -       libitm-dev \
-> -       libitm-staticdev \
-> -       libquadmath \
-> -       libquadmath-dev \
-> -       libquadmath-staticdev \
-> -       virtual/linux-libc-headers \
-> -       libgcov-staticdev \
-> -       virtual/libc-locale \
+> -	linux-libc-headers \
+> -	virtual/cross-cc \
+> -	virtual/cross-c++ \
+> -	virtual/binutils \
+> -	virtual/compilerlibs \
+> -	virtual/libc \
+> -	virtual/libintl \
+> -	virtual/libiconv \
+> -	virtual/crypt \
+> -	glibc-mtrace \
+> -	glibc-thread-db \
+> -	glibc \
+> -	libc-mtrace \
+> -	gcc-runtime \
+> -	libgcc \
+> -	libg2c \
+> -	libg2c-dev \
+> -	libssp \
+> -	libssp-dev \
+> -	libssp-staticdev \
+> -	libgfortran \
+> -	libgfortran-dev \
+> -	libgfortran-staticdev \
+> -	libmudflap \
+> -	libmudflap-dev \
+> -	libgomp \
+> -	libgomp-dev \
+> -	libgomp-staticdev \
+> -	libitm \
+> -	libitm-dev \
+> -	libitm-staticdev \
+> -	libquadmath \
+> -	libquadmath-dev \
+> -	libquadmath-staticdev \
+> -	virtual/linux-libc-headers \
+> -	libgcov-staticdev \
+> -	virtual/libc-locale \
 > -"
 > -
 > -PV = "${EAT_VER_MAIN}"
@@ -819,205 +840,205 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > -        # copy manually here
 > -        install -m 0644 ${UNPACKDIR}/SUPPORTED ${WORKDIR}/SUPPORTED
 > -
-> -       # Add stubs for files OE-core expects
-> -       install -d ${S}/nscd/
-> -       touch  ${S}/nscd/nscd.init
-> -       touch  ${S}/nscd/nscd.conf
-> -       touch  ${S}/nscd/nscd.service
-> -       touch  ${S}/../makedbs.sh
+> -	# Add stubs for files OE-core expects
+> -	install -d ${S}/nscd/
+> -	touch  ${S}/nscd/nscd.init
+> -	touch  ${S}/nscd/nscd.conf
+> -	touch  ${S}/nscd/nscd.service
+> -	touch  ${S}/../makedbs.sh
 > -
-> -       install -d ${D}${base_libdir}
-> -       install -d ${D}${base_sbindir}
-> -       install -d ${D}${bindir}
-> -       install -d ${D}${sbindir}
-> -       install -d ${D}${libdir}
-> -       install -d ${D}${libexecdir}
-> -       install -d ${D}${datadir}
-> -       install -d ${D}${includedir}
-> -       install -d ${D}/include
-> -       install -d ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}
-> -       install -d ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include
+> -	install -d ${D}${base_libdir}
+> -	install -d ${D}${base_sbindir}
+> -	install -d ${D}${bindir}
+> -	install -d ${D}${sbindir}
+> -	install -d ${D}${libdir}
+> -	install -d ${D}${libexecdir}
+> -	install -d ${D}${datadir}
+> -	install -d ${D}${includedir}
+> -	install -d ${D}/include
+> -	install -d ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}
+> -	install -d ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include
 > -
-> -       CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/*  ${D}${base_libdir}
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/${EAT_LIBDIR}/*  ${D}${base_libdir}
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/${EAT_LIBDIR}/*  ${D}${libdir}
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/share/*  ${D}${datadir}
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/include/*  ${D}${includedir}
+> -	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/*  ${D}${base_libdir}
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/${EAT_LIBDIR}/*  ${D}${base_libdir}
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/${EAT_LIBDIR}/*  ${D}${libdir}
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/share/*  ${D}${datadir}
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/include/*  ${D}${includedir}
 > -
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${includedir}
-> -       if [ -d ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ]; then
-> -               mv ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ${D}${includedir}/c++/${EAT_VER_GCC}/${TARGET_SYS}
-> -       fi
-> -       ln -sf ../usr/include/c++ ${D}/include/c++
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${includedir}
+> -	if [ -d ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ]; then
+> -		mv ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ${D}${includedir}/c++/${EAT_VER_GCC}/${TARGET_SYS}
+> -	fi
+> -	ln -sf ../usr/include/c++ ${D}/include/c++
 > -
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/bin/* ${D}${bindir}
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/sbin/* ${D}${sbindir}
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/sbin/* ${D}${base_sbindir}
-> -       rm -rf ${D}${bindir}/gdbserver
-> -       sed -i -e 's#/arm/tools/gnu/bash/4.2/rhe6-x86_64##' ${D}${bindir}/tzselect
-> -       sed -i -e 's#/arm/tools/gnu/bash/4.2/rhe6-x86_64##' ${D}${bindir}/ldd
-> -       sed -i -e 's#/usr/bin/bash#/bin/sh#' ${D}${bindir}/tzselect
-> -       sed -i -e 's#/usr/bin/bash#/bin/sh#' ${D}${bindir}/ldd
-> -       sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/tzselect
-> -       sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/ldd
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/bin/* ${D}${bindir}
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/sbin/* ${D}${sbindir}
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/sbin/* ${D}${base_sbindir}
+> -	rm -rf ${D}${bindir}/gdbserver
+> -	sed -i -e 's#/arm/tools/gnu/bash/4.2/rhe6-x86_64##' ${D}${bindir}/tzselect
+> -	sed -i -e 's#/arm/tools/gnu/bash/4.2/rhe6-x86_64##' ${D}${bindir}/ldd
+> -	sed -i -e 's#/usr/bin/bash#/bin/sh#' ${D}${bindir}/tzselect
+> -	sed -i -e 's#/usr/bin/bash#/bin/sh#' ${D}${bindir}/ldd
+> -	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/tzselect
+> -	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/ldd
 > -
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/ssp ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/sanitizers ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/quadmath* ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/omp.h ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/openacc.h ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
-> -       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/ssp ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/sanitizers ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/quadmath* ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/omp.h ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/openacc.h ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
 > -
-> -       # fix up the copied symlinks (they are still pointing to the multiarch directory)
-> -       linker_name="${@bb.utils.contains("TUNE_FEATURES", "aarch64", "ld-linux-aarch64.so.1", bb.utils.contains("TUNE_FEATURES", "callconvention-hard", "ld-linux-armhf.so.3", "ld-linux.so.3",d), d)}"
-> -       if [ -f ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/${EAT_LIBDIR}/ld-${EAT_VER_LIBC}.so ]; then
-> -               ln -sf ld-${EAT_VER_LIBC}.so ${D}${base_libdir}/${linker_name}
-> -       else
-> -               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/lib/${linker_name} ${D}${base_libdir}/
-> -       fi
+> -	# fix up the copied symlinks (they are still pointing to the multiarch directory)
+> -	linker_name="${@bb.utils.contains("TUNE_FEATURES", "aarch64", "ld-linux-aarch64.so.1", bb.utils.contains("TUNE_FEATURES", "callconvention-hard", "ld-linux-armhf.so.3", "ld-linux.so.3",d), d)}"
+> -	if [ -f ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/${EAT_LIBDIR}/ld-${EAT_VER_LIBC}.so ]; then
+> -		ln -sf ld-${EAT_VER_LIBC}.so ${D}${base_libdir}/${linker_name}
+> -	else
+> -		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/lib/${linker_name} ${D}${base_libdir}/
+> -	fi
 > -
-> -       if ${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', 'false', 'true', d)}; then
-> -               ln -sf ../../lib/librt.so.1 ${D}${libdir}/librt.so
-> -               ln -sf ../../lib/libcrypt.so.1 ${D}${libdir}/libcrypt.so
-> -               ln -sf ../../lib/libresolv.so.2 ${D}${libdir}/libresolv.so
-> -               ln -sf ../../lib/libnss_hesiod.so.2 ${D}${libdir}/libnss_hesiod.so
-> -               ln -sf ../../lib/libutil.so.1 ${D}${libdir}/libutil.so
-> -               ln -sf ../../lib/libBrokenLocale.so.1 ${D}${libdir}/libBrokenLocale.so
-> -               ln -sf ../../lib/libpthread.so.0 ${D}${libdir}/libpthread.so
-> -               ln -sf ../../lib/libthread_db.so.1 ${D}${libdir}/libthread_db.so
-> -               ln -sf ../../lib/libanl.so.1 ${D}${libdir}/libanl.so
-> -               ln -sf ../../lib/libdl.so.2 ${D}${libdir}/libdl.so
-> -               ln -sf ../../lib/libnss_db.so.2 ${D}${libdir}/libnss_db.so
-> -               ln -sf ../../lib/libnss_dns.so.2 ${D}${libdir}/libnss_dns.so
-> -               ln -sf ../../lib/libnss_files.so.2 ${D}${libdir}/libnss_files.so
-> -               ln -sf ../../lib/libnss_compat.so.2 ${D}${libdir}/libnss_compat.so
-> -               ln -sf ../../lib/libm.so.6 ${D}${libdir}/libm.so
-> -               ln -sf ../../lib/libc_malloc_debug.so.0 ${D}${libdir}/libc_malloc_debug.so
-> -               if [ -f ${D}${base_libdir}/libmvec.so.1 ]; then
-> -                       ln -sf ../../lib/libmvec.so.1 ${D}${libdir}/libmvec.so
-> -               fi
+> -	if ${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', 'false', 'true', d)}; then
+> -		ln -sf ../../lib/librt.so.1 ${D}${libdir}/librt.so
+> -		ln -sf ../../lib/libcrypt.so.1 ${D}${libdir}/libcrypt.so
+> -		ln -sf ../../lib/libresolv.so.2 ${D}${libdir}/libresolv.so
+> -		ln -sf ../../lib/libnss_hesiod.so.2 ${D}${libdir}/libnss_hesiod.so
+> -		ln -sf ../../lib/libutil.so.1 ${D}${libdir}/libutil.so
+> -		ln -sf ../../lib/libBrokenLocale.so.1 ${D}${libdir}/libBrokenLocale.so
+> -		ln -sf ../../lib/libpthread.so.0 ${D}${libdir}/libpthread.so
+> -		ln -sf ../../lib/libthread_db.so.1 ${D}${libdir}/libthread_db.so
+> -		ln -sf ../../lib/libanl.so.1 ${D}${libdir}/libanl.so
+> -		ln -sf ../../lib/libdl.so.2 ${D}${libdir}/libdl.so
+> -		ln -sf ../../lib/libnss_db.so.2 ${D}${libdir}/libnss_db.so
+> -		ln -sf ../../lib/libnss_dns.so.2 ${D}${libdir}/libnss_dns.so
+> -		ln -sf ../../lib/libnss_files.so.2 ${D}${libdir}/libnss_files.so
+> -		ln -sf ../../lib/libnss_compat.so.2 ${D}${libdir}/libnss_compat.so
+> -		ln -sf ../../lib/libm.so.6 ${D}${libdir}/libm.so
+> -		ln -sf ../../lib/libc_malloc_debug.so.0 ${D}${libdir}/libc_malloc_debug.so
+> -		if [ -f ${D}${base_libdir}/libmvec.so.1 ]; then
+> -			ln -sf ../../lib/libmvec.so.1 ${D}${libdir}/libmvec.so
+> -		fi
 > -
-> -               # remove potential .so duplicates from base_libdir
-> -               # for all symlinks created above in libdir
-> -               rm -f ${D}${base_libdir}/librt.so
-> -               rm -f ${D}${base_libdir}/libcrypt.so
-> -               rm -f ${D}${base_libdir}/libresolv.so
-> -               rm -f ${D}${base_libdir}/libnss_hesiod.so
-> -               rm -f ${D}${base_libdir}/libutil.so
-> -               rm -f ${D}${base_libdir}/libBrokenLocale.so
-> -               rm -f ${D}${base_libdir}/libpthread.so
-> -               rm -f ${D}${base_libdir}/libthread_db.so
-> -               rm -f ${D}${base_libdir}/libanl.so
-> -               rm -f ${D}${base_libdir}/libdl.so
-> -               rm -f ${D}${base_libdir}/libnss_db.so
-> -               rm -f ${D}${base_libdir}/libnss_dns.so
-> -               rm -f ${D}${base_libdir}/libnss_files.so
-> -               rm -f ${D}${base_libdir}/libnss_compat.so
-> -               rm -f ${D}${base_libdir}/libm.so
-> -               rm -f ${D}${base_libdir}/libmvec.so
+> -		# remove potential .so duplicates from base_libdir
+> -		# for all symlinks created above in libdir
+> -		rm -f ${D}${base_libdir}/librt.so
+> -		rm -f ${D}${base_libdir}/libcrypt.so
+> -		rm -f ${D}${base_libdir}/libresolv.so
+> -		rm -f ${D}${base_libdir}/libnss_hesiod.so
+> -		rm -f ${D}${base_libdir}/libutil.so
+> -		rm -f ${D}${base_libdir}/libBrokenLocale.so
+> -		rm -f ${D}${base_libdir}/libpthread.so
+> -		rm -f ${D}${base_libdir}/libthread_db.so
+> -		rm -f ${D}${base_libdir}/libanl.so
+> -		rm -f ${D}${base_libdir}/libdl.so
+> -		rm -f ${D}${base_libdir}/libnss_db.so
+> -		rm -f ${D}${base_libdir}/libnss_dns.so
+> -		rm -f ${D}${base_libdir}/libnss_files.so
+> -		rm -f ${D}${base_libdir}/libnss_compat.so
+> -		rm -f ${D}${base_libdir}/libm.so
+> -		rm -f ${D}${base_libdir}/libmvec.so
 > -
-> -               # Move these completely to ${libdir} and delete duplicates in ${base_libdir}
-> -               for lib in asan hwasan atomic gfortran gomp itm lsan sanitizer stdc++ tsan ubsan; do
-> -                       if [ -e ${D}${base_libdir}/lib${lib}.spec ] ; then
-> -                               mv ${D}${base_libdir}/lib${lib}.spec ${D}${libdir}
-> -                       fi
-> -                       if [ -e ${D}${base_libdir}/lib${lib}.a ] ; then
-> -                               mv ${D}${base_libdir}/lib${lib}.a ${D}${libdir}
-> -                       fi
-> -                       rm -f ${D}${base_libdir}/lib${lib}*
-> -               done
+> -		# Move these completely to ${libdir} and delete duplicates in ${base_libdir}
+> -		for lib in asan hwasan atomic gfortran gomp itm lsan sanitizer stdc++ tsan ubsan; do
+> -			if [ -e ${D}${base_libdir}/lib${lib}.spec ] ; then
+> -				mv ${D}${base_libdir}/lib${lib}.spec ${D}${libdir}
+> -			fi
+> -			if [ -e ${D}${base_libdir}/lib${lib}.a ] ; then
+> -				mv ${D}${base_libdir}/lib${lib}.a ${D}${libdir}
+> -			fi
+> -			rm -f ${D}${base_libdir}/lib${lib}*
+> -		done
 > -
-> -               # Clean up duplicate libs that are both in base_libdir and libdir
-> -               rm -f ${D}${libdir}/libgcc*
-> -       else
-> -               ln -sf libcrypt.so.1 ${D}${libdir}/libcrypt.so
-> -               ln -sf libresolv.so.2 ${D}${libdir}/libresolv.so
-> -               ln -sf libnss_hesiod.so.2 ${D}${libdir}/libnss_hesiod.so
-> -               ln -sf libutil.so.1 ${D}${libdir}/libutil.so
-> -               ln -sf libBrokenLocale.so.1 ${D}${libdir}/libBrokenLocale.so
-> -               ln -sf libpthread.so.0 ${D}${libdir}/libpthread.so
-> -               ln -sf libthread_db.so.1 ${D}${libdir}/libthread_db.so
-> -               ln -sf libanl.so.1 ${D}${libdir}/libanl.so
-> -               ln -sf libdl.so.2 ${D}${libdir}/libdl.so
-> -               ln -sf libnss_db.so.2 ${D}${libdir}/libnss_db.so
-> -               ln -sf libnss_dns.so.2 ${D}${libdir}/libnss_dns.so
-> -               ln -sf libnss_files.so.2 ${D}${libdir}/libnss_files.so
-> -               ln -sf libnss_compat.so.2 ${D}${libdir}/libnss_compat.so
-> -               ln -sf libm.so.6 ${D}${libdir}/libm.so
-> -               ln -sf libc_malloc_debug.so.0 ${D}${libdir}/libc_malloc_debug.so
-> -               if [ -f ${D}${libdir}/libmvec.so.1 ]; then
-> -                       ln -sf libmvec.so.1 ${D}${libdir}/libmvec.so
-> -               fi
-> -       fi
+> -		# Clean up duplicate libs that are both in base_libdir and libdir
+> -		rm -f ${D}${libdir}/libgcc*
+> -	else
+> -		ln -sf libcrypt.so.1 ${D}${libdir}/libcrypt.so
+> -		ln -sf libresolv.so.2 ${D}${libdir}/libresolv.so
+> -		ln -sf libnss_hesiod.so.2 ${D}${libdir}/libnss_hesiod.so
+> -		ln -sf libutil.so.1 ${D}${libdir}/libutil.so
+> -		ln -sf libBrokenLocale.so.1 ${D}${libdir}/libBrokenLocale.so
+> -		ln -sf libpthread.so.0 ${D}${libdir}/libpthread.so
+> -		ln -sf libthread_db.so.1 ${D}${libdir}/libthread_db.so
+> -		ln -sf libanl.so.1 ${D}${libdir}/libanl.so
+> -		ln -sf libdl.so.2 ${D}${libdir}/libdl.so
+> -		ln -sf libnss_db.so.2 ${D}${libdir}/libnss_db.so
+> -		ln -sf libnss_dns.so.2 ${D}${libdir}/libnss_dns.so
+> -		ln -sf libnss_files.so.2 ${D}${libdir}/libnss_files.so
+> -		ln -sf libnss_compat.so.2 ${D}${libdir}/libnss_compat.so
+> -		ln -sf libm.so.6 ${D}${libdir}/libm.so
+> -		ln -sf libc_malloc_debug.so.0 ${D}${libdir}/libc_malloc_debug.so
+> -		if [ -f ${D}${libdir}/libmvec.so.1 ]; then
+> -			ln -sf libmvec.so.1 ${D}${libdir}/libmvec.so
+> -		fi
+> -	fi
 > -
-> -       # Besides ld-${EAT_VER_LIBC}.so, other libs can have duplicates like lib*-${EAT_VER_LIBC}.so
-> -       # Only remove them if both are regular files and are identical
-> -       for i in ${D}${base_libdir}/lib*-${EAT_VER_LIBC}.so; do
-> -               if [ ! -e $i ] ; then
-> -                       continue
-> -               fi
+> -	# Besides ld-${EAT_VER_LIBC}.so, other libs can have duplicates like lib*-${EAT_VER_LIBC}.so
+> -	# Only remove them if both are regular files and are identical
+> -	for i in ${D}${base_libdir}/lib*-${EAT_VER_LIBC}.so; do
+> -		if [ ! -e $i ] ; then
+> -			continue
+> -		fi
 > -
-> -               f=$(echo $i | sed 's/-${EAT_VER_LIBC}//')
-> -               l=$(ls $f.*)
-> -               if [ $(readlink -f $i ) = $l ]; then
-> -                       echo "$i is a symlink of $l, keep it"
-> -               elif [ $(readlink -f $l ) = $i ]; then
-> -                       echo "$l is a symlink of $i, keep it"
-> -               else
-> -                       cmp -s $i $l
-> -                       if [ $? -eq 0 ]; then
-> -                               echo "$i is a duplicate of $l, remove it"
-> -                               rm $i
-> -                       else
-> -                               echo "$i and $l are different files, keep them both"
-> -                       fi
-> -               fi
-> -       done
+> -		f=$(echo $i | sed 's/-${EAT_VER_LIBC}//')
+> -		l=$(ls $f.*)
+> -		if [ $(readlink -f $i ) = $l ]; then
+> -			echo "$i is a symlink of $l, keep it"
+> -		elif [ $(readlink -f $l ) = $i ]; then
+> -			echo "$l is a symlink of $i, keep it"
+> -		else
+> -			cmp -s $i $l
+> -			if [ $? -eq 0 ]; then
+> -				echo "$i is a duplicate of $l, remove it"
+> -				rm $i
+> -			else
+> -				echo "$i and $l are different files, keep them both"
+> -			fi
+> -		fi
+> -	done
 > -
-> -       if [ -d ${D}${base_libdir}/arm-linux-gnueabi ]; then
-> -          rm -rf ${D}${base_libdir}/arm-linux-gnueabi
-> -       fi
+> -	if [ -d ${D}${base_libdir}/arm-linux-gnueabi ]; then
+> -	   rm -rf ${D}${base_libdir}/arm-linux-gnueabi
+> -	fi
 > -
-> -       if [ -d ${D}${base_libdir}/ldscripts ]; then
-> -          rm -rf ${D}${base_libdir}/ldscripts
-> -       fi
+> -	if [ -d ${D}${base_libdir}/ldscripts ]; then
+> -	   rm -rf ${D}${base_libdir}/ldscripts
+> -	fi
 > -
-> -       # Provided by libnsl2
-> -       rm -rf ${D}${includedir}/rpcsvc/yppasswd.*
-> -       # Provided by quota
-> -       rm -rf ${D}${includedir}/rpcsvc/rquota.*
+> -	# Provided by libnsl2
+> -	rm -rf ${D}${includedir}/rpcsvc/yppasswd.*
+> -	# Provided by quota
+> -	rm -rf ${D}${includedir}/rpcsvc/rquota.*
 > -
-> -       if [ -f ${D}${libdir}/libc.so ];then
-> -               sed -i -e "s# /usr/${EAT_LIBDIR}/# /usr/lib/#g" -e "s# /${EAT_LIBDIR}/ld-linux# ../../${base_libdir}/ld-linux#g" ${D}${libdir}/libc.so
-> -               sed -i -e "s# /${EAT_LIBDIR}/libc.so.6# /lib/libc.so.6#g" ${D}${libdir}/libc.so
-> -               sed -i -e "s# /lib# ../../${base_libdir}#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libc.so
-> -       fi
+> -	if [ -f ${D}${libdir}/libc.so ];then
+> -		sed -i -e "s# /usr/${EAT_LIBDIR}/# /usr/lib/#g" -e "s# /${EAT_LIBDIR}/ld-linux# ../../${base_libdir}/ld-linux#g" ${D}${libdir}/libc.so
+> -		sed -i -e "s# /${EAT_LIBDIR}/libc.so.6# /lib/libc.so.6#g" ${D}${libdir}/libc.so
+> -		sed -i -e "s# /lib# ../../${base_libdir}#g" -e "s# /usr/lib# .#g" ${D}${libdir}/libc.so
+> -	fi
 > -
-> -       if [ -f ${D}${base_libdir}/libc.so ];then
-> -               sed -i -e "s# /${EAT_LIBDIR}/# /lib/#g" ${D}${base_libdir}/libc.so
-> -               if [ -f ${D}${base_libdir}/libc.so.6 ]; then
-> -                       sed -i -e "s# /usr/${EAT_LIBDIR}/libc.so.6# /lib/libc.so.6#g" -e "s# /${EAT_LIBDIR}/libc.so.6# /lib/libc.so.6#g" ${D}${base_libdir}/libc.so.6
-> -               fi
-> -       fi
+> -	if [ -f ${D}${base_libdir}/libc.so ];then
+> -		sed -i -e "s# /${EAT_LIBDIR}/# /lib/#g" ${D}${base_libdir}/libc.so
+> -		if [ -f ${D}${base_libdir}/libc.so.6 ]; then
+> -			sed -i -e "s# /usr/${EAT_LIBDIR}/libc.so.6# /lib/libc.so.6#g" -e "s# /${EAT_LIBDIR}/libc.so.6# /lib/libc.so.6#g" ${D}${base_libdir}/libc.so.6
+> -		fi
+> -	fi
 > -
-> -       # Remove if empty
-> -       rmdir ${D}${bindir} || true
-> -       rmdir ${D}${sbindir} || true
-> -       rmdir ${D}${base_sbindir} || true
-> -       rmdir ${D}${libexecdir} || true
+> -	# Remove if empty
+> -	rmdir ${D}${bindir} || true
+> -	rmdir ${D}${sbindir} || true
+> -	rmdir ${D}${base_sbindir} || true
+> -	rmdir ${D}${libexecdir} || true
 > -
-> -       # Remove unused /usr/share/info/dir
-> -       rm -f ${D}${infodir}/dir
+> -	# Remove unused /usr/share/info/dir
+> -	rm -f ${D}${infodir}/dir
 > -}
 > -
 > -# External toolchain doesn't provide multilib support so make corresponding
 > -# install API as an empty API to avoid an unnecessary errors.
 > -oe_multilib_header () {
-> -       return
+> -	return
 > -}
 > -
 > -PACKAGES_DYNAMIC = "^locale-base-.* \
@@ -1085,9 +1106,9 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > -
 > -PACKAGES =+ "\
 > -        ${PN}-mtrace \
-> -       libgcov-staticdev \
-> -       linux-libc-headers \
-> -       linux-libc-headers-dev \
+> -	libgcov-staticdev \
+> -	linux-libc-headers \
+> -	linux-libc-headers-dev \
 > -"
 > -
 > -# Re-order PACKAGES list in order to shift ${PN}-dev towards the end as
@@ -1099,8 +1120,8 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > -PACKAGES := "${@oe.utils.str_filter_out('${PN}-dev', '${PACKAGES}', d)}"
 > -PACKAGES := "${@oe.utils.str_filter_out('${PN}-staticdev', '${PACKAGES}', d)}"
 > -PACKAGES += "\
-> -       ${PN}-dev \
-> -       ${PN}-staticdev \
+> -	${PN}-dev \
+> -	${PN}-staticdev \
 > -"
 > -
 > -INSANE_SKIP += " 32bit-time"
@@ -1291,59 +1312,59 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > -
 > -FILES:linux-libc-headers = ""
 > -FILES:linux-libc-headers-dev = "\
-> -       ${includedir}/asm* \
-> -       ${includedir}/linux \
-> -       ${includedir}/mtd \
-> -       ${includedir}/rdma \
-> -       ${includedir}/scsi \
-> -       ${includedir}/sound \
-> -       ${includedir}/video \
+> -	${includedir}/asm* \
+> -	${includedir}/linux \
+> -	${includedir}/mtd \
+> -	${includedir}/rdma \
+> -	${includedir}/scsi \
+> -	${includedir}/sound \
+> -	${includedir}/video \
 > -"
 > -FILES:${PN} += "\
-> -       ${libdir}/bin \
-> -       ${libdir}/locale \
-> -       ${libdir}/gconv/gconv-modules \
-> -       ${datadir}/zoneinfo \
-> -       ${base_libdir}/libcrypt*.so.* \
-> -       ${base_libdir}/libcrypt-*.so \
-> -       ${base_libdir}/libc.so.* \
-> -       ${base_libdir}/libc-*.so \
-> -       ${base_libdir}/libm.so.* \
-> -       ${base_libdir}/libmemusage.so \
-> -       ${base_libdir}/libm-*.so \
-> -       ${base_libdir}/ld*.so.* \
-> -       ${base_libdir}/ld-*.so \
-> -       ${base_libdir}/libpthread*.so.* \
-> -       ${base_libdir}/libpthread-*.so \
-> -       ${base_libdir}/libresolv*.so.* \
-> -       ${base_libdir}/libresolv-*.so \
-> -       ${base_libdir}/librt*.so.* \
-> -       ${base_libdir}/librt-*.so \
-> -       ${base_libdir}/libutil*.so.* \
-> -       ${base_libdir}/libutil-*.so \
-> -       ${base_libdir}/libnss_files*.so.* \
-> -       ${base_libdir}/libnss_files-*.so \
-> -       ${base_libdir}/libnss_compat*.so.* \
-> -       ${base_libdir}/libnss_compat-*.so \
-> -       ${base_libdir}/libnss_dns*.so.* \
-> -       ${base_libdir}/libnss_dns-*.so \
-> -       ${base_libdir}/libnss_nis*.so.* \
-> -       ${base_libdir}/libnss_nisplus-*.so \
-> -       ${base_libdir}/libnss_nisplus*.so.* \
-> -       ${base_libdir}/libnss_nis-*.so \
-> -       ${base_libdir}/libnss_hesiod*.so.* \
-> -       ${base_libdir}/libnss_hesiod-*.so \
-> -       ${base_libdir}/libdl*.so.* \
-> -       ${base_libdir}/libdl-*.so \
-> -       ${base_libdir}/libanl*.so.* \
-> -       ${base_libdir}/libanl-*.so \
-> -       ${base_libdir}/libBrokenLocale*.so.* \
-> -       ${base_libdir}/libBrokenLocale-*.so \
-> -       ${base_libdir}/libthread_db*.so.* \
-> -       ${base_libdir}/libthread_db-*.so \
-> -       ${base_libdir}/libmemusage.so \
-> -       ${base_libdir}/libSegFault.so \
-> -       ${base_libdir}/libpcprofile.so \
+> -	${libdir}/bin \
+> -	${libdir}/locale \
+> -	${libdir}/gconv/gconv-modules \
+> -	${datadir}/zoneinfo \
+> -	${base_libdir}/libcrypt*.so.* \
+> -	${base_libdir}/libcrypt-*.so \
+> -	${base_libdir}/libc.so.* \
+> -	${base_libdir}/libc-*.so \
+> -	${base_libdir}/libm.so.* \
+> -	${base_libdir}/libmemusage.so \
+> -	${base_libdir}/libm-*.so \
+> -	${base_libdir}/ld*.so.* \
+> -	${base_libdir}/ld-*.so \
+> -	${base_libdir}/libpthread*.so.* \
+> -	${base_libdir}/libpthread-*.so \
+> -	${base_libdir}/libresolv*.so.* \
+> -	${base_libdir}/libresolv-*.so \
+> -	${base_libdir}/librt*.so.* \
+> -	${base_libdir}/librt-*.so \
+> -	${base_libdir}/libutil*.so.* \
+> -	${base_libdir}/libutil-*.so \
+> -	${base_libdir}/libnss_files*.so.* \
+> -	${base_libdir}/libnss_files-*.so \
+> -	${base_libdir}/libnss_compat*.so.* \
+> -	${base_libdir}/libnss_compat-*.so \
+> -	${base_libdir}/libnss_dns*.so.* \
+> -	${base_libdir}/libnss_dns-*.so \
+> -	${base_libdir}/libnss_nis*.so.* \
+> -	${base_libdir}/libnss_nisplus-*.so \
+> -	${base_libdir}/libnss_nisplus*.so.* \
+> -	${base_libdir}/libnss_nis-*.so \
+> -	${base_libdir}/libnss_hesiod*.so.* \
+> -	${base_libdir}/libnss_hesiod-*.so \
+> -	${base_libdir}/libdl*.so.* \
+> -	${base_libdir}/libdl-*.so \
+> -	${base_libdir}/libanl*.so.* \
+> -	${base_libdir}/libanl-*.so \
+> -	${base_libdir}/libBrokenLocale*.so.* \
+> -	${base_libdir}/libBrokenLocale-*.so \
+> -	${base_libdir}/libthread_db*.so.* \
+> -	${base_libdir}/libthread_db-*.so \
+> -	${base_libdir}/libmemusage.so \
+> -	${base_libdir}/libSegFault.so \
+> -	${base_libdir}/libpcprofile.so \
 > -    "
 > -
 > -FILES:${PN}-dbg += "${base_libdir}/debug"
@@ -1553,16 +1574,16 @@ Acked-by: Sumit Garg <sumit.garg@linaro.org>
 > -LICENSE:linux-libc-headers = "GPL-2.0-only"
 > -
 > -LICENSE:gdbserver = "GPL-2.0-only & GPL-3.0-only & LGPL-2.0-only & LGPL-3.0-only"
-> --
-> 2.43.0
->
->
+> 
+> 
+> 
 > -=-=-=-=-=-=-=-=-=-=-=-
 > Links: You receive all messages sent to this group.
 > View/Reply Online (#6352): https://lists.yoctoproject.org/g/meta-arm/message/6352
-> Mute This Topic: https://lists.yoctoproject.org/mt/110857395/1777089
+> Mute This Topic: https://lists.yoctoproject.org/mt/110857395/4417264
 > Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [sumit.garg@linaro.org]
+> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [romain.naour@smile.fr]
 > -=-=-=-=-=-=-=-=-=-=-=-
->
+> 
+
 
