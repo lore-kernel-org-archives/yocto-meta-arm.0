@@ -2,74 +2,75 @@ Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247D4C02198
-	for <webhook@archiver.kernel.org>; Tue,  4 Feb 2025 13:55:18 +0000 (UTC)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
- by mx.groups.io with SMTP id smtpd.web10.116795.1738677316928270157
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38399C02194
+	for <webhook@archiver.kernel.org>; Tue,  4 Feb 2025 14:17:38 +0000 (UTC)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+ by mx.groups.io with SMTP id smtpd.web11.117007.1738678653826570064
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 04 Feb 2025 05:55:17 -0800
+ Tue, 04 Feb 2025 06:17:34 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=f91Cd1EF;
- spf=pass (domain: linaro.org, ip: 209.85.167.44, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5401d3ea5a1so4858738e87.3
-        for <meta-arm@lists.yoctoproject.org>; Tue, 04 Feb 2025 05:55:16 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=RMd7UWs9;
+ spf=pass (domain: linaro.org, ip: 209.85.167.52, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-53e3778bffdso5632029e87.0
+        for <meta-arm@lists.yoctoproject.org>; Tue, 04 Feb 2025 06:17:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1738677315; x=1739282115; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1738678652; x=1739283452; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VIqmf4Vh/vUjx4bkq5bh7BF3FJk6rv3fTJ0xDTtNUSM=;
-        b=f91Cd1EFSkKGK1tDTHtumbskqBWwibshHhRej1cmDKqIfEem3H0cACDMwzjD6PoCz/
-         Q4j6Vxr9v0YckVFBnRV4sptqCKZ+S8fc5ofk752TA0KmJKgD7WroUrkGasFWVnhnfuc9
-         Np4shGpHV2KaeBnLkFMa5V/dGd1aDXFiJEKa4wEinfJ/SqG+1uON5NToAZerj688SVDw
-         d+8HfzvlwAdduFZKm04VshvDFlbipMAQ3jqyyLhN1Dac7tYzoA1j6WCd+C2+bVNG3cdo
-         HEQnmVMq1JPVRgVA/Y2f34eO94dg16xHPWAYGF6uwTvw7b0FAtYpzcP1c05IQEeMfcCf
-         bVfQ==
+        bh=I4QbAcUJ+q5e/VOrgGXaOh499mh605gDl7BKqNAjjbs=;
+        b=RMd7UWs9tPRkyywWjLAH9V8B4fk+K3iursM8UKDbMHw1sYilUUJkaFM9yYa0PxOAXN
+         Ep27y1HAROAiECtZa8NmhlK0BGyFReza3mT2Wu4Zcp/cS+kwgYGjdyxJ+80/RGTc7c+V
+         58usvZn9D29n1SfsPy0W+s3yj+QnBDMHR8CI6dOn59v6KKkLetIHRHZA8CxDU/aBLFeP
+         yzZu/BpTvSo7mN6MT4IhHT55DNzBjO14yYhXlCYq3jUYnXtgkdomijSMG5tyZLPZFdA8
+         vUaCkC8a2++Xope6m49Edwhf0b72t21TzLHLVPveqfvZf4cn149U2P8XnDWOCpoNUtGp
+         gt5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738677315; x=1739282115;
+        d=1e100.net; s=20230601; t=1738678652; x=1739283452;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VIqmf4Vh/vUjx4bkq5bh7BF3FJk6rv3fTJ0xDTtNUSM=;
-        b=VCrM7ri7NOJr6pPiQZVsFgp82c/ecls1Iz0IZZvXDTsArO4ynjZr3UPRvF71qoS4O8
-         cEbGiISgv6bd8LAyUSYIpZmXN1PiXYvyRozLhOEBdZFiXXzk/YJB5iJTtn6PaPCyHVUj
-         QqL850L1sab3shBuIztCLjHVKzDA0co1bfb+V3NJ+EPMiIn84Fr0aGlpQNl6KqOP2tIC
-         5lVwUdl4HyQVb45ZvJSjcWpKzXpPb9/OezxUqyjARfdFIm2yWmSK0B10pnc03BKBF7nt
-         n8cyNtmyx6FuMx82jxbnmHrQQfZZFcM5DblFQHjx5bhfZKT71sGd1m08DOWO2N0Ed/8e
-         55DA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNGuX+5GzT64A1l+dvfHh3XofyEee+2+xpAKPrzLyQZ2l1Wh9G/IA2yZkAnjfnSj6TXDqVH/lc4Q==@lists.yoctoproject.org
-X-Gm-Message-State: AOJu0Yy4Sw7lT0kftthoM9aH5TlPIXCu6CnDFJN4AlYKxprmOfoL/+OY
-	Jza306dR7p70/MJ0uP0hZ3xIXnxQvJA7ray0QPMhIwbOMgzZBL/yiHrgspQLKac=
-X-Gm-Gg: ASbGncvv82zee0a6/975EHHLDM523EXl8HyD+g4+Vbn8so0pMKGZJgvN3cOGJBwVxJI
-	fbZQtCLYkpRcVUjLtsvKI6GrQMFzWRPa9DQqVeQiKm9oHtIuiO1bayZlbTezjIKxag7Yyv81grv
-	tfYfHn/VOyJ1z0cujxXd9lg/1Yj8nREbtkOUpBjtsLTr1K7/QQIUa8ClfdWd2svgUdl//R1gRZK
-	YSGr1Lz1oA5kbQJCW/OI6uUyB4crAmewILc/ad3xLoRONwiXVQ5pM5ddHIIt0R9fXkMgVLSxQSd
-	WJT5YBcBb1FTCB4aKq0ViRZlCK8tZfTb+HcpqToS9BzdEU0OBi6uP2utfPsu
-X-Google-Smtp-Source: AGHT+IHXcSVJvS8gz7HNx/oJILDE16sKBluvUH3CsqpG4WV+sRp4i6W+uIjlnrBS18SHKUXi878hFg==
-X-Received: by 2002:a05:6512:6cd:b0:543:e4ac:1df4 with SMTP id 2adb3069b0e04-543e4bdff35mr8177417e87.7.1738677314842;
-        Tue, 04 Feb 2025 05:55:14 -0800 (PST)
+        bh=I4QbAcUJ+q5e/VOrgGXaOh499mh605gDl7BKqNAjjbs=;
+        b=MBTv5SPsey/0ylc6fH3EmYYrruWCcNsRar6FTLX+uoXi5wwA1cDjTln0mGzC4m2Qmr
+         UbJ3VYDYcvcJPRxNa58kBog6wM8SsgqrZq2Jq7/Mq71OeMk+lwj2k4X0DY0d68BedZLw
+         snvqBGa0tvEboqrOwU4ymhvOzleHqzTeXDF2FqFqj53ynti/PiEENoGb96LIuv6SzTjC
+         IJ0cq6KbEAkyNiuUcRErWnJukRvdXvfWMendAqwOpDB+qqazRMA/l/u72P2Cmox1Func
+         Ew2zg9I9E9tohiglJ7bSnLD4NS11BmjETzXd9civ8k/AtR1Es+Ju944e8klnxup8Fwea
+         YzMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXXquFXew2EC6RbzlU7kVbmYnlcpHfh9qrLWWB+dB22k4UaJALxl3fMPlqdlD6MKv51mEjyrjeRSA==@lists.yoctoproject.org
+X-Gm-Message-State: AOJu0YwMlfIRON/WG33uEURDIDdVWmhW0BkYyHUTLL6IW7j7iscm1YUl
+	1PyhVBjdqqb6+zGFuqeLNpr+ReJc5MInWJRAcVlW3EWM6mi7SDwCoPmTZXtUIkLuXqg6szMm1Tr
+	E0KI=
+X-Gm-Gg: ASbGncvhMPCFuPzo1QJrZgLrVFvqukAVUKBGVUypWSNR4qF6YVNUQxO75bObLWAv/HJ
+	4LUjpxM3cYQuyd/qrRiU1fqr6OtKJNIjlk5FBCJvqXnWETEFX6opXrGoIudFxi00vZ/SRCGW1DG
+	Ir5pz+YNlsfYZkDJ2n08jRgVwaFgSKFVugBB8nPmLaEtItBSgL5420kygCpjxvBWOQhahT7A5Ep
+	jvEaywiR1LO06YCgCe2kaITY/HbyaSMaYhpkMBZVVxHrXlH941jY85QMmG20oXQfb8Q7X7chJFr
+	kTz1/qV6RlYn2RHx5zmCvSKy+eXGLA/oLHm5JOFlwIYss7KNGS6c3+nTTRbs
+X-Google-Smtp-Source: AGHT+IGISgDRcL2O0kWciZKjqxLTHlzpTklcGFutBdDps3Aklb8Sb6wLulYjZJcXUV6yltZQT2/WHQ==
+X-Received: by 2002:ac2:4c56:0:b0:542:213f:7901 with SMTP id 2adb3069b0e04-543e4c3b982mr8471584e87.44.1738678651893;
+        Tue, 04 Feb 2025 06:17:31 -0800 (PST)
 Received: from localhost.localdomain (78-27-76-97.bb.dnainternet.fi. [78.27.76.97])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebeb07a0sm1578017e87.123.2025.02.04.05.55.11
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-543ebebeda2sm1603211e87.247.2025.02.04.06.17.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Feb 2025 05:55:13 -0800 (PST)
+        Tue, 04 Feb 2025 06:17:31 -0800 (PST)
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
 To: openembedded-core@lists.openembedded.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
 	Jon Mason <jdmason@kudzu.us>,
 	meta-arm@lists.yoctoproject.org
-Subject: [PATCH v2 3/3] systemd-boot-native: fix kernel signature for secureboot
-Date: Tue,  4 Feb 2025 15:54:57 +0200
-Message-ID: <20250204135457.1219477-3-mikko.rapeli@linaro.org>
+Subject: [PATCH v3 3/3] systemd-boot-native: fix kernel signature for secureboot
+Date: Tue,  4 Feb 2025 16:17:04 +0200
+Message-ID: <20250204141705.1222153-3-mikko.rapeli@linaro.org>
 X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250204135457.1219477-1-mikko.rapeli@linaro.org>
-References: <20250204135457.1219477-1-mikko.rapeli@linaro.org>
+In-Reply-To: <20250204141705.1222153-1-mikko.rapeli@linaro.org>
+References: <20250204141705.1222153-1-mikko.rapeli@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 04 Feb 2025 13:55:18 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6364
+ <meta-arm@lists.yoctoproject.org>; Tue, 04 Feb 2025 14:17:38 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6365
 
 systemd update from 256 to 257 broke kernel secureboot signatures
 inside signed UKI files with u-boot based UEFI firmware, e.g.
@@ -102,8 +103,8 @@ Cc: meta-arm@lists.yoctoproject.org
 Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 ---
  .../systemd/systemd-boot-native_257.1.bb      |   3 +
- ...vert-changes-to-use-SizeOfImage-from.patch | 120 ++++++++++++++++++
- 2 files changed, 123 insertions(+)
+ ...vert-changes-to-use-SizeOfImage-from.patch | 122 ++++++++++++++++++
+ 2 files changed, 125 insertions(+)
  create mode 100644 meta/recipes-core/systemd/systemd/0001-ukify-measure-Revert-changes-to-use-SizeOfImage-from.patch
 
 diff --git a/meta/recipes-core/systemd/systemd-boot-native_257.1.bb b/meta/recipes-core/systemd/systemd-boot-native_257.1.bb
@@ -120,10 +121,10 @@ index 5b4b63c294..967ac57fc5 100644
  
 diff --git a/meta/recipes-core/systemd/systemd/0001-ukify-measure-Revert-changes-to-use-SizeOfImage-from.patch b/meta/recipes-core/systemd/systemd/0001-ukify-measure-Revert-changes-to-use-SizeOfImage-from.patch
 new file mode 100644
-index 0000000000..3db8be2288
+index 0000000000..3be56cb9c0
 --- /dev/null
 +++ b/meta/recipes-core/systemd/systemd/0001-ukify-measure-Revert-changes-to-use-SizeOfImage-from.patch
-@@ -0,0 +1,120 @@
+@@ -0,0 +1,122 @@
 +From 60d76dce7b013406412bc9720dbf05fb558ea099 Mon Sep 17 00:00:00 2001
 +From: Daan De Meyer <daan.j.demeyer@gmail.com>
 +Date: Tue, 4 Feb 2025 09:24:26 +0100
@@ -147,6 +148,8 @@ index 0000000000..3db8be2288
 + src/measure/measure.c | 32 --------------------------------
 + src/ukify/ukify.py    | 16 ++--------------
 + 2 files changed, 2 insertions(+), 46 deletions(-)
++
++Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 +
 +Upstream-Status: Backport [https://github.com/systemd/systemd/commit/38801c91292fde004bec0974ed5602984701e03b]
 +
