@@ -1,123 +1,75 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355C7C021B5
-	for <webhook@archiver.kernel.org>; Fri, 21 Feb 2025 15:06:45 +0000 (UTC)
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
- by mx.groups.io with SMTP id smtpd.web10.24996.1740150402212037119
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5710AC021A4
+	for <webhook@archiver.kernel.org>; Mon, 24 Feb 2025 14:51:17 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.91015.1740408673415443492
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 21 Feb 2025 07:06:42 -0800
+ Mon, 24 Feb 2025 06:51:13 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=xUDoac36;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.167.176, mailfrom: jdmason@kudzu.us)
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3f408052bdcso769349b6e.2
-        for <meta-arm@lists.yoctoproject.org>; Fri, 21 Feb 2025 07:06:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1740150401; x=1740755201; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PNSsjCtTDsOsh7VRvYVtgjhrR78vDiIPnuAknj8JaiI=;
-        b=xUDoac36yRxPizJRke3xY69QEk7xevP58/aljuXwvHb9y7irUenO/RUnFDO438vTsJ
-         1ZCezudKm+l1K8Ly8e4VCZ0+83vUFrb3UK7HobQ/idS0ERmh0qICx3wwAQ0+N5LyHDcM
-         zhTrH2ui1Voyztj6PyN0pozci1C6WtjDCbxA+z4AXvM8zlLyWNuTmypviQbTCJ+ep5rs
-         tbiNfeGmz1/WRY9/9qHCj+/wyefyf4L1hmIPs/o5zY25hgdKR3HyDIZElrmkKlA2l0pe
-         RsMLrEz9GFHxdGcidYO4FSQ2VGLGvg/nLUz/uINWV+4H2Su09jpa5Whz0uz4zGag/Rox
-         99Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740150401; x=1740755201;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PNSsjCtTDsOsh7VRvYVtgjhrR78vDiIPnuAknj8JaiI=;
-        b=P9C3ccEjeN1mqLQjZ+VVgoM8qBxqscpVRPR/6utZr21+S4apEEM0rMCdBi/69aKEV6
-         ZCVKH0CGKGqDtTJbs2ankLUJhCB4KGcGwpp1bVJXOZ4gGxdm8pavCNlwmnTw6Q9M6R8x
-         Xk7egofYBEJg90zoHC784kS7GgOpZ3q2sHK2aPdWLd613DlJbb51Q2hID6wuzg6dzRJ6
-         kIWemayRi4wDhNss5BwUmXPyMdYI2MgDT5dCEtygt6VI2/MwpX2Ngpo9uokpLj895Hrc
-         PwVZ4uB7XOC/mOZ7N29okbAWFUtECk7IsF7y6PU05FpS4i1ZSbcoiRGvD/UINYFZ4Lj9
-         Y0uQ==
-X-Gm-Message-State: AOJu0YxY6shV3eymzEUL+g5igGPg0+CjMK2zNa9Z2WYazC94fdDKDACA
-	UHwP2QT01jjFrKcBNVdy5JGOBHS1AV5sMgCP/rjzAsuZYoibPCyK233w2mYP6fXxXWYAaVKqEBa
-	2gGsVFgIXEb/bVHEoYRZAuLV2ng7ZGz/IQols
-X-Gm-Gg: ASbGncucMb4ZPsdRAkjrnqxz4jLlpfPH+MzS5Y0Mq+rFtcFkvUtBZufZxp9NS18vkCF
-	VffPDfLE7OWIYVhMkM23dDLxC1knW6xYVMcmuc2kAsk8lP+M26lA+Mjg/bomMyxUW40FPLXlcD6
-	V660TeMEQ=
-X-Google-Smtp-Source: AGHT+IHJ6cBcPOSHWGsAgFRa8RssSV/JYjolyFRuhcJhNseELMkaqRfEJYy0pP0TTXaiU/rMutLaReyC4ukfvzjs2uY=
-X-Received: by 2002:a05:6808:15a8:b0:3f4:ed9:d4c1 with SMTP id
- 5614622812f47-3f4246e1bfbmr3045084b6e.22.1740150401308; Fri, 21 Feb 2025
- 07:06:41 -0800 (PST)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA6651756
+	for <meta-arm@lists.yoctoproject.org>; Mon, 24 Feb 2025 06:51:29 -0800 (PST)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 021D33F6A8
+	for <meta-arm@lists.yoctoproject.org>; Mon, 24 Feb 2025 06:51:12 -0800 (PST)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 2/3] arm/trusted-firmware-a: update git recipe
+Date: Mon, 24 Feb 2025 09:51:11 -0500
+Message-Id: <20250224145112.71746-2-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250224145112.71746-1-jon.mason@arm.com>
+References: <20250224145112.71746-1-jon.mason@arm.com>
 MIME-Version: 1.0
-References: <20250221013348.2622293-1-haixiao.yan.cn@eng.windriver.com>
-In-Reply-To: <20250221013348.2622293-1-haixiao.yan.cn@eng.windriver.com>
-From: Jon Mason <jdmason@kudzu.us>
-Date: Fri, 21 Feb 2025 10:06:30 -0500
-X-Gm-Features: AWEUYZkwqnSooik80QOOix1Q0Lw5slDSz3uArSzRqYonRToDF1Azb8NH1zLlF4w
-Message-ID: <CAPoiz9xmFk9zq_aCYBfRD7UfWLDXrUbZe4jJK2TGqGGwevqR1w@mail.gmail.com>
-Subject: Re: [meta-arm][PATCH 1/1] optee-client: disable build on qemux86-64
-To: Haixiao.Yan.CN@windriver.com
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 21 Feb 2025 15:06:45 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6378
+ <meta-arm@lists.yoctoproject.org>; Mon, 24 Feb 2025 14:51:17 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6379
 
-On Thu, Feb 20, 2025 at 8:34=E2=80=AFPM Yan, Haixiao (CN) via
-lists.yoctoproject.org
-<Haixiao.Yan.CN=3Dwindriver.com@lists.yoctoproject.org> wrote:
->
-> From: Haixiao Yan <haixiao.yan.cn@windriver.com>
->
-> optee-client will be built on qemux86-64, there is no OP-TEE supplicant
-> device on this platform.
+Update the TF-A git recipe to the latest commit (as it was older than
+the 2.12 release previously).  Also, update mbedtls to 3.6.2 (per the
+tf-a docs in the master branch).
 
-I don't think I understand what you mean.  More verbosity in the
-commit message might help in the future.
-I was able to add optee-client to qemux86-64 and it compiled without issue.
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ .../trusted-firmware-a/trusted-firmware-a_git.bb            | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Either way, this patch breaks corstone1000 and fvp-base (with
-fvp-base-ts).  You can see it in
-https://gitlab.com/jonmason00/meta-arm/-/jobs/9203534679
-https://gitlab.com/jonmason00/meta-arm/-/jobs/9203534694
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_g=
+it.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_git.bb
+index 91e0f86d2d38..62a5927e8fb4 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_git.bb
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_git.bb
+@@ -1,15 +1,15 @@
+ require recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+=20
+ # TF-A master
+-SRCREV_tfa =3D "bcce173da397f776fc0ec14e9dac03c13ddeb722"
++SRCREV_tfa =3D "0035ab76e580b59f88ad5a6be76b7f2bebbac654"
+ SRCBRANCH =3D "master"
+=20
+ LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3D83b7626b8c7a37263c6=
+a58af8d19bee1"
+=20
+ # in TF-A src, docs/getting_started/prerequisites.rst lists the expected=
+ version mbedtls
+-# mbedtls-3.6.1
++# mbedtls-3.6.2
+ SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls=
+;protocol=3Dhttps;destsuffix=3Dgit/mbedtls;branch=3Dmbedtls-3.6"
+-SRCREV_mbedtls =3D "71c569d44bf3a8bd53d874c81ee8ac644dd6e9e3"
++SRCREV_mbedtls =3D "107ea89daaefb9867ea9121002fbbdf926780e98"
+=20
+ LIC_FILES_CHKSUM_MBEDTLS =3D "file://mbedtls/LICENSE;md5=3D379d5819937a6=
+c2f1ef1630d341e026d"
+=20
+--=20
+2.39.5 (Apple Git-154)
 
-Thanks,
-Jon
-
-> Signed-off-by: Haixiao Yan <haixiao.yan.cn@windriver.com>
-> ---
->  meta-arm/recipes-security/optee/optee-client.inc | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/=
-recipes-security/optee/optee-client.inc
-> index f387c80574b0..aafb1efcf726 100644
-> --- a/meta-arm/recipes-security/optee/optee-client.inc
-> +++ b/meta-arm/recipes-security/optee/optee-client.inc
-> @@ -6,6 +6,7 @@ LICENSE =3D "BSD-2-Clause"
->  LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D69663ab153298557a59c67a60a743=
-e5b"
->
->  inherit systemd update-rc.d cmake useradd
-> +require optee.inc
->
->  SRC_URI =3D " \
->      git://github.com/OP-TEE/optee_client.git;branch=3Dmaster;protocol=3D=
-https \
-> --
-> 2.34.1
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#6376): https://lists.yoctoproject.org/g/meta-arm/mess=
-age/6376
-> Mute This Topic: https://lists.yoctoproject.org/mt/111301214/3616920
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [jdmason@kud=
-zu.us]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
 
