@@ -1,195 +1,303 @@
-Return-Path: <mikko.rapeli@linaro.org>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DA8C021B8
-	for <webhook@archiver.kernel.org>; Tue, 25 Feb 2025 07:57:30 +0000 (UTC)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
- by mx.groups.io with SMTP id smtpd.web11.3467.1740470246246415763
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA33C021B2
+	for <webhook@archiver.kernel.org>; Tue, 25 Feb 2025 15:18:22 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.10383.1740496699278427671
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 24 Feb 2025 23:57:26 -0800
+ Tue, 25 Feb 2025 07:18:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=ThSjPN/Q;
- spf=pass (domain: linaro.org, ip: 209.85.167.48, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5484fa1401cso1091696e87.1
-        for <meta-arm@lists.yoctoproject.org>; Mon, 24 Feb 2025 23:57:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740470244; x=1741075044; darn=lists.yoctoproject.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xhXsWOB4hcg/GZb5cxGGWdexDPVbcG2T9O+GcwuA8nk=;
-        b=ThSjPN/Q2j2PJxujYxi90NCgsxJ6zeKVOwLLVTsUcm+LUJuRGfnMQewCA9cYpon6GE
-         C3gx0w5y8T4bVqpDiD7szd3jwVTmXK4Om6rDT0NHcm900N9SVRWuahpu3s/qDBZt2uAP
-         s0TZ224qRSjhlvpGXzpayE11VJgZOmfAKn3NUS82q+iUsbx1JrpBHKJHo8ASFutkHPMt
-         MBWh64GbNvzis/tKKTtpA/sy94hmlfO/h0wgeKtgflm9EfIfE8Kq8xIpU5rY/4DLGgOL
-         Q99+r8JnBxj2nCCNnp5wZ1ClvmzwJmrp90eLAK2aIOGsLXg39MzKvuEGL3asS9zNEdmM
-         E2LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740470244; x=1741075044;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xhXsWOB4hcg/GZb5cxGGWdexDPVbcG2T9O+GcwuA8nk=;
-        b=fOHEtokPqR46nBvB0mrmTaYvVoTO0m6LuDlreK6VMleZL+lFljMHtlmYYHQ3EaEJHG
-         3hbcoAznLzFJmLVaMsVkPCvLC2KfG9KbuF29L4p2Gpe8mrU6gRPalWJy048fBZHaeQcg
-         wH1rMQMtUFM8P2ExwrTRebCdtYNfYPKhFqgb8Nyk0eIjPaAtYTReA9WfnPA742rM6RXQ
-         WdvOtvuAyg1/Xg2yoHi1kx2AhTP+VYSP/aOVvckAuVubGgShAs7K6E9FoemEMZQnR342
-         iHuk/WdXNRTpCToNEhYX9D1MY0U0xq+vmDq8VdijSpquN9FyifS25HAqBsrw1y058gHy
-         VuEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSGNGyUNNp7778iXK0Ae67ygZCncT9sHFubCwBHGihHiAPYlKUQz/i8b+O0Q4SeUl0r5kWFKjhQg==@lists.yoctoproject.org
-X-Gm-Message-State: AOJu0YywgL/XvUkS8d+5uVFX8fBHYxLfQ/ICMS2ahh86xduTCAtnYNpi
-	Z/e0OBnREnAflNlzmgjLT+CanVFfvoywVtQnZNqkeDINXRclFvbvb5VpAJi4YkE=
-X-Gm-Gg: ASbGnctfr0F+NIeKob3rwGlnrDdTT95tf2zYSHlNBUwzAVqEmL2VxDMyuuUT3yaRIS/
-	Lvoji0X/jNkCZKdREvSyiuA6+HdUo6bCnqhy6BwkyN/7N1Vz0NUBuEKeW9xEQwtMedV3+2QPo0U
-	bCvMy+TDye8omWqAFrVToAQt0cIiRBh/+pzQUa60PQOxRLl6c1Zbl3EVWTdg9PZNFx9AUOwJyaj
-	3ABEGfoMh0HNFVwW+Z32O6OWeupAP/3Eo/BjPlfb5VH/0PcAn3hl4wf98GlhGfezJRACV3UbCG2
-	cMmyFCUfauoc8+Ih6ft229xRbvwJ7xBZdXju81RtVFOsM3IGn+A=
-X-Google-Smtp-Source: AGHT+IFfJg6cX+DYqgL+RvMOzy5J+0Jf91eUsLtMD2z+MCq4X0KmF9ItU9y5vBpTcsagv7/CWD7fgw==
-X-Received: by 2002:a05:6512:ea7:b0:545:2f0c:a29c with SMTP id 2adb3069b0e04-54838f4e483mr6582435e87.36.1740470243926;
-        Mon, 24 Feb 2025 23:57:23 -0800 (PST)
-Received: from nuoska (78-27-76-97.bb.dnainternet.fi. [78.27.76.97])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514efd8esm107570e87.158.2025.02.24.23.57.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 23:57:22 -0800 (PST)
-Date: Tue, 25 Feb 2025 09:57:19 +0200
-From: Mikko Rapeli <mikko.rapeli@linaro.org>
-To: Haixiao.Yan.CN@windriver.com
-Cc: Jon Mason <jdmason@kudzu.us>, meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm][PATCH 1/1] optee-client: disable build on qemux86-64
-Message-ID: <Z7133_PThNHpWi4I@nuoska>
-References: <20250221013348.2622293-1-haixiao.yan.cn@eng.windriver.com>
- <CAPoiz9xmFk9zq_aCYBfRD7UfWLDXrUbZe4jJK2TGqGGwevqR1w@mail.gmail.com>
- <152e3bb6-2a81-4754-9d3c-9476082475e2@windriver.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47CE528C7
+	for <meta-arm@lists.yoctoproject.org>; Tue, 25 Feb 2025 07:18:35 -0800 (PST)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DDCEE3F5A1
+	for <meta-arm@lists.yoctoproject.org>; Tue, 25 Feb 2025 07:18:18 -0800 (PST)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 5/7] arm/trusted-firmware-m: update to v2.1.1
+Date: Tue, 25 Feb 2025 10:18:15 -0500
+Message-Id: <20250225151817.11875-5-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250225151817.11875-1-jon.mason@arm.com>
+References: <20250225151817.11875-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <152e3bb6-2a81-4754-9d3c-9476082475e2@windriver.com>
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 25 Feb 2025 07:57:30 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6384
+ <meta-arm@lists.yoctoproject.org>; Tue, 25 Feb 2025 15:18:22 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6388
 
-Hi,
+Update trusted-firmware-m to the latest LTS (TF-Mv2.1.1)
+Changes between 0c4c99ba33b3e66deea070e149279278dc7647f4 and 02bf27991343=
+9a07082dd581df033f370a8fbb92
+	02bf27991343 docs: Release notes for v2.1.1
+	7264a32e84a0 docs: rp2350: Minor docs & script improvements
+	4bad159af017 Docs: Release dates update
+	a5e02ec0c6a2 Align .gitignore contents to main branch
+	8fe944a652f5 Platform: RP2350: Fix NV counters in ITS
+	66bc1fa8eed9 Build: Fix patch formatting for 0001-iar-Add-missing-v8.1m-=
+check.patch
+	895d44a4eb52 Platform: RP2350: Add NV counters to ITS
+	e81b741aa6cc tf-m-tests: Step version for rp2350 psa-arch-tests
+	2be65a027c86 Platform: rp2350: Add rwx linker flag conditionally for GNU=
+ARM
+	a85425417696 Platform: RP2350: Add RP2350 porting
+	9ed2e7c7f52b Platform/TFM/ITS/Config: Commits required for new platform =
+porting
+	f12db7c872d5 cc3xx/low-level/pka: SRAM size depends on CC3XX version
+	c7e0192fab6f cc3xx/low-level/hash: wait for hash engine to be idle
+	42a4041bdff4 Crypto: Update to Mbed TLS 3.6.2
+	471c127e7755 Crypto: Add option to enforce ABI compatibility
+	7da71fd05445 tfm_spe_mailbox: Fix NULL pointer checks
+	974bc101e0b2 cc3xx/low-level/pka: wait for sw reset to be done before pr=
+oceeding
+	89b9c4889c60 Crypto: Enforce MBEDTLS_PSA_ASSUME_EXCLUSIVE_BUFFERS on Mbe=
+d TLS config
+	62b1300557c5 Crypto: Additional checks for writes to avoid out-of-bound =
+access
+	a2cead6a9ef4 tfm_spe_mailbox: Use local vars for local_copy_vects
+	15afe61d1194 TFMV-8: Fix unchecked user-supplied pointer via mailbox mes=
+sage
+	22e8e89c8f56 tfm_spe_mailbox: Do not write-back on input vectors checks =
+failure
+	12a4c5342965 tfm_spe_mailbox: Validate vectors from NSPE
+	75bbe3fc0240 CC3XX: Relax assert condition in aead_crypt for input
+	0db7ebf32ba3 Crypto: Protect writes to avoid out-of-bound access
+	2ecea430fbb4 Crypto: Prevent the scratch allocator from overflowing
+	fbcdc69b794d SPM: mailbox_agent_api: Free connection if params associati=
+on fails
+	2a59580b5809 Crypto: Update to Mbed TLS 3.6.1
+	6a54ec89f22f Platform: STM32: script all_stm_platfrom
+	66596b4dae57 Platform: corstone1000: Fix isolation L2 memory protection
+	7045675209ca stm : fix error on b_u585i_iot02a with TF-Mv2.1.0
 
-On Tue, Feb 25, 2025 at 08:41:04AM +0800, Yan, Haixiao (CN) via lists.yoctoproject.org wrote:
-> My local branch is mickledore. tee-supplicant.service start failed on
-> qemux86-64.
-> 
-> https://git.yoctoproject.org/meta-arm/commit/meta-arm/recipes-security/optee/optee-client.inc?id=1bff41eee67d6dafc7c58b0c88923a3c6f7a2a7c
-> 
-> 
-> this commit can resolve my issue.
-> 
-> My question is could we add the COMPATIBLE_MACHINE for optee-client?  So for
-> qemux86-64, if there is no OP-TEE supplicant device, optee-client build
-> 
-> can skip.
-> 
-> 
-> root@qemux86-64:~#  systemctl status tee-supplicant.service
-> 
-> x tee-supplicant.service - TEE Supplicant
-> 
->      Loaded: loaded (/lib/systemd/system/tee-supplicant.service; enabled;
-> preset: enabled)
-> 
->      Active: failed (Result: exit-code) since Sun 2025-02-23 22:41:08 UTC;
-> 32s ago
-> 
->    Duration: 191ms
-> 
->     Process: 468 ExecStart=/usr/sbin/tee-supplicant $OPTARGS (code=exited,
-> status=1/FAILURE)
-> 
->    Main PID: 468 (code=exited, status=1/FAILURE)
-> 
-> Feb 23 22:41:08 qemux86-64 systemd[1]: Started TEE Supplicant.
-> 
-> Feb 23 22:41:08 qemux86-64 tee-supplicant[468]: ERR [468] TSUP:main:884:
-> failed to find an OP-TEE suppli>
-> 
-> Feb 23 22:41:08 qemux86-64 systemd[1]: tee-supplicant.service: Main process
-> exited, code=exited, status=>
-> 
-> Feb 23 22:41:08 qemux86-64 systemd[1]: tee-supplicant.service: Failed with
-> result 'exit-code'.
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ ...0-Fix-isolation-L2-memory-protection.patch | 88 -------------------
+ .../trusted-firmware-m-corstone1000.inc       |  1 -
+ ...c.inc =3D> trusted-firmware-m-2.1.1-src.inc} | 24 ++---
+ ...rusted-firmware-m-scripts-native_2.1.1.bb} |  0
+ ...m_2.1.0.bb =3D> trusted-firmware-m_2.1.1.bb} |  0
+ 5 files changed, 12 insertions(+), 101 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0016-Platform-corstone1000-Fix-isolation-L2-memory-protection.p=
+atch
+ rename meta-arm/recipes-bsp/trusted-firmware-m/{trusted-firmware-m-2.1.0=
+-src.inc =3D> trusted-firmware-m-2.1.1-src.inc} (84%)
+ rename meta-arm/recipes-bsp/trusted-firmware-m/{trusted-firmware-m-scrip=
+ts-native_2.1.0.bb =3D> trusted-firmware-m-scripts-native_2.1.1.bb} (100%=
+)
+ rename meta-arm/recipes-bsp/trusted-firmware-m/{trusted-firmware-m_2.1.0=
+.bb =3D> trusted-firmware-m_2.1.1.bb} (100%)
 
-One way to fix this is to change tee-supplicante.service to be started by udev
-when optee kernel drivers get loaded and optee is found from firmware.
-
-Patches were sent but caused regressions and fixing those are on my todo list, sadly
-way back there.
-
-https://lists.yoctoproject.org/g/meta-arm/message/6203
-
-sysvinit scripts are a different story.
-
-Cheers,
-
--Mikko
-
-> Thanks,
-> Haixiao
-> 
-> 
-> On 2/21/2025 11:06 PM, Jon Mason wrote:
-> > CAUTION: This email comes from a non Wind River email account!
-> > Do not click links or open attachments unless you recognize the sender and know the content is safe.
-> > 
-> > On Thu, Feb 20, 2025 at 8:34 PM Yan, Haixiao (CN) via
-> > lists.yoctoproject.org
-> > <Haixiao.Yan.CN=windriver.com@lists.yoctoproject.org> wrote:
-> > > From: Haixiao Yan <haixiao.yan.cn@windriver.com>
-> > > 
-> > > optee-client will be built on qemux86-64, there is no OP-TEE supplicant
-> > > device on this platform.
-> > I don't think I understand what you mean.  More verbosity in the
-> > commit message might help in the future.
-> > I was able to add optee-client to qemux86-64 and it compiled without issue.
-> > 
-> > Either way, this patch breaks corstone1000 and fvp-base (with
-> > fvp-base-ts).  You can see it in
-> > https://gitlab.com/jonmason00/meta-arm/-/jobs/9203534679
-> > https://gitlab.com/jonmason00/meta-arm/-/jobs/9203534694
-> > 
-> > Thanks,
-> > Jon
-> > 
-> > > Signed-off-by: Haixiao Yan <haixiao.yan.cn@windriver.com>
-> > > ---
-> > >   meta-arm/recipes-security/optee/optee-client.inc | 1 +
-> > >   1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/recipes-security/optee/optee-client.inc
-> > > index f387c80574b0..aafb1efcf726 100644
-> > > --- a/meta-arm/recipes-security/optee/optee-client.inc
-> > > +++ b/meta-arm/recipes-security/optee/optee-client.inc
-> > > @@ -6,6 +6,7 @@ LICENSE = "BSD-2-Clause"
-> > >   LIC_FILES_CHKSUM = "file://LICENSE;md5=69663ab153298557a59c67a60a743e5b"
-> > > 
-> > >   inherit systemd update-rc.d cmake useradd
-> > > +require optee.inc
-> > > 
-> > >   SRC_URI = " \
-> > >       git://github.com/OP-TEE/optee_client.git;branch=master;protocol=https \
-> > > --
-> > > 2.34.1
-> > > 
-> > > 
-> > > 
-> > > 
-
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#6383): https://lists.yoctoproject.org/g/meta-arm/message/6383
-> Mute This Topic: https://lists.yoctoproject.org/mt/111301214/7159507
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [mikko.rapeli@linaro.org]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0016-Platform-corstone1000-Fix-isolation-L2-memory-protection.patch b/=
+meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0016-Platf=
+orm-corstone1000-Fix-isolation-L2-memory-protection.patch
+deleted file mode 100644
+index 267254c4c604..000000000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0016=
+-Platform-corstone1000-Fix-isolation-L2-memory-protection.patch
++++ /dev/null
+@@ -1,88 +0,0 @@
+-From 4d3ebb03b89b122af490824ca73287954a35bd07 Mon Sep 17 00:00:00 2001
+-From: Jamie Fox <jamie.fox@arm.com>
+-Date: Thu, 22 Aug 2024 16:54:45 +0100
+-Subject: [PATCH] Platform: corstone1000: Fix isolation L2 memory protect=
+ion
+-
+-The whole of the SRAM was configured unprivileged on this platform, so
+-the memory protection required for isolation level 2 was not present.
+-
+-This patch changes the S_DATA_START to S_DATA_LIMIT MPU region to be
+-configured for privileged access only. It also reorders the MPU regions
+-so that the App RoT sub-region overlapping S_DATA has a higher region
+-number and so takes priority in the operation of the Armv6-M MPU.
+-
+-Signed-off-by: Jamie Fox <jamie.fox@arm.com>
+-Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TF-M/tr=
+usted-firmware-m/+/30951]
+----
+- .../arm/corstone1000/tfm_hal_isolation.c      | 43 +++++++++----------
+- 1 file changed, 21 insertions(+), 22 deletions(-)
+-
+-diff --git a/platform/ext/target/arm/corstone1000/tfm_hal_isolation.c b/=
+platform/ext/target/arm/corstone1000/tfm_hal_isolation.c
+-index 39b19c535..498f14ed2 100644
+---- a/platform/ext/target/arm/corstone1000/tfm_hal_isolation.c
+-+++ b/platform/ext/target/arm/corstone1000/tfm_hal_isolation.c
+-@@ -1,5 +1,5 @@
+- /*
+-- * Copyright (c) 2020-2023, Arm Limited. All rights reserved.
+-+ * Copyright (c) 2020-2024, Arm Limited. All rights reserved.
+-  * Copyright (c) 2022 Cypress Semiconductor Corporation (an Infineon
+-  * company) or an affiliate of Cypress Semiconductor Corporation. All r=
+ights
+-  * reserved.
+-@@ -99,6 +99,26 @@ enum tfm_hal_status_t tfm_hal_set_up_static_boundarie=
+s(
+-         return ret;
+-     }
+-=20
+-+    /* Set the RAM attributes. It is needed because the first region ov=
+erlaps the whole
+-+     * SRAM and it has to be overridden.
+-+     * The RAM_MPU_REGION_BLOCK_1_SIZE and RAM_MPU_REGION_BLOCK_2_SIZE =
+are calculated manually
+-+     * and added to the platform_region_defs compile definitions.
+-+     */
+-+    base =3D S_DATA_START;
+-+    limit =3D S_DATA_START + RAM_MPU_REGION_BLOCK_1_SIZE;
+-+    ret =3D configure_mpu(rnr++, base, limit,
+-+                            XN_EXEC_NOT_OK, AP_RW_PRIV_ONLY);
+-+    if (ret !=3D TFM_HAL_SUCCESS) {
+-+        return ret;
+-+    }
+-+
+-+    base =3D S_DATA_START + RAM_MPU_REGION_BLOCK_1_SIZE;
+-+    limit =3D S_DATA_START + RAM_MPU_REGION_BLOCK_1_SIZE + RAM_MPU_REGI=
+ON_BLOCK_2_SIZE;
+-+    ret =3D configure_mpu(rnr++, base, limit,
+-+                            XN_EXEC_NOT_OK, AP_RW_PRIV_ONLY);
+-+    if (ret !=3D TFM_HAL_SUCCESS) {
+-+        return ret;
+-+    }
+-=20
+-     /* RW, ZI and stack as one region */
+-     base =3D (uint32_t)&REGION_NAME(Image$$, TFM_APP_RW_STACK_START, $$=
+Base);
+-@@ -133,27 +153,6 @@ enum tfm_hal_status_t tfm_hal_set_up_static_boundar=
+ies(
+-=20
+- #endif
+-=20
+--    /* Set the RAM attributes. It is needed because the first region ov=
+erlaps the whole
+--     * SRAM and it has to be overridden.
+--     * The RAM_MPU_REGION_BLOCK_1_SIZE and RAM_MPU_REGION_BLOCK_2_SIZE =
+are calculated manually
+--     * and added to the platform_region_defs compile definitions.
+--     */
+--    base =3D S_DATA_START;
+--    limit =3D S_DATA_START + RAM_MPU_REGION_BLOCK_1_SIZE;
+--    ret =3D configure_mpu(rnr++, base, limit,
+--                            XN_EXEC_NOT_OK, AP_RW_PRIV_UNPRIV);
+--    if (ret !=3D TFM_HAL_SUCCESS) {
+--        return ret;
+--    }
+--
+--    base =3D S_DATA_START + RAM_MPU_REGION_BLOCK_1_SIZE;
+--    limit =3D S_DATA_START + RAM_MPU_REGION_BLOCK_1_SIZE + RAM_MPU_REGI=
+ON_BLOCK_2_SIZE;
+--    ret =3D configure_mpu(rnr++, base, limit,
+--                            XN_EXEC_NOT_OK, AP_RW_PRIV_UNPRIV);
+--    if (ret !=3D TFM_HAL_SUCCESS) {
+--        return ret;
+--    }
+--
+-     arm_mpu_enable();
+-=20
+- #endif /* CONFIG_TFM_ENABLE_MEMORY_PROTECT */
+---=20
+-2.25.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware=
+-m-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted=
+-firmware-m-corstone1000.inc
+index 9c38d1ad5dfe..c79ac2e3d896 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
+tone1000.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
+tone1000.inc
+@@ -35,7 +35,6 @@ SRC_URI:append:corstone1000 =3D " \
+     file://0013-CC312-ADAC-Add-PSA_WANT_ALG_SHA_256-definition.patch \
+     file://0014-Platform-CS1000-Add-crypto-configs-for-ADAC.patch \
+     file://0015-Platform-CS1000-Fix-platform-name-in-logs.patch \
+-    file://0016-Platform-corstone1000-Fix-isolation-L2-memory-protection=
+.patch \
+     file://0017-Platform-CS1000-Remove-unused-BL1-files.patch \
+     file://0018-Platform-CS1000-Remove-duplicated-metadata-write.patch \
+     file://0019-Platform-CS1000-Fix-compiler-switch-in-BL1.patch \
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2=
+.1.0-src.inc b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m=
+-2.1.1-src.inc
+similarity index 84%
+rename from meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2.=
+1.0-src.inc
+rename to meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2.1.=
+1-src.inc
+index fb4ddcb673e3..6b483995f82d 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2.1.0-sr=
+c.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2.1.1-sr=
+c.inc
+@@ -27,28 +27,28 @@ SRC_URI  =3D "${SRC_URI_TRUSTED_FIRMWARE_M};branch=3D=
+${SRCBRANCH_tfm};name=3Dtfm;dests
+             "
+=20
+ # The required dependencies are documented in tf-m/config/config_base.cm=
+ake
+-# TF-Mv2.1.0
++# TF-Mv2.1.1
+ SRCBRANCH_tfm ?=3D "release/2.1.x"
+-SRCREV_tfm =3D "0c4c99ba33b3e66deea070e149279278dc7647f4"
+-# TF-Mv2.1.0
++SRCREV_tfm =3D "02bf279913439a07082dd581df033f370a8fbb92"
++# TF-Mv2.1.1
+ SRCBRANCH_tfm-extras ?=3D "release/2.1.x"
+ SRCREV_tfm-extras =3D "95add8abb15879f48f1069a0952dd9abdffbc1f8"
+-# TF-Mv2.1.0
++# TF-Mv2.1.1
+ SRCBRANCH_tfm-tests ?=3D "release/2.1.x"
+-SRCREV_tfm-tests =3D "73100d90d8871435eaffa668eb04ce5b746ecece"
+-# CMSIS v6.0.0+ (intermediate SHA)
++SRCREV_tfm-tests =3D "6f642014a8c255e163ae0bc4d21e327de694d6a2"
++# CMSIS v6.0.0+ (intermediate SHA), CMSIS_TAG from lib/ext/cmsis/CMakeLi=
+sts.txt
+ SRCBRANCH_cmsis ?=3D "main"
+ SRCREV_cmsis =3D "d0c460c1697d210b49a4b90998195831c0cd325c"
+-# mbedtls-3.6.0
+-SRCBRANCH_mbedtls ?=3D "master"
+-SRCREV_mbedtls =3D "2ca6c285a0dd3f33982dd57299012dacab1ff206"
+-# mcuboot v2.1.0
++# mbedtls-3.6.2, value from MBEDCRYPTO_VERSION
++SRCBRANCH_mbedtls ?=3D "mbedtls-3.6"
++SRCREV_mbedtls =3D "107ea89daaefb9867ea9121002fbbdf926780e98"
++# mcuboot v2.1.0, value from MCUBOOT_VERSION
+ SRCBRANCH_mcuboot ?=3D "main"
+ SRCREV_mcuboot =3D "9c99326b9756dbcc35b524636d99ed5f3e6cb29b"
+-# QCBOR v1.2
++# QCBOR v1.2, value from QCBOR_VERSION in lib/ext/qcbor/CMakeLists.txt
+ SRCBRANCH_qcbor ?=3D "master"
+ SRCREV_qcbor =3D "b0e7033268e88c9f27146fa9a1415ef4c19ebaff"
+-# PSA-ADAC (intermediate SHA, default value for PLATFORM_PSA_ADAC_VERSIO=
+N in TF-M)
++# PSA-ADAC (intermediate SHA), value from PLATFORM_PSA_ADAC_VERSION
+ SRCBRANCH_tfm-psa-adac =3D "master"
+ SRCREV_tfm-psa-adac =3D "5f5490cebe66ae997f316f83c3fbf1f97deef625"
+=20
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-s=
+cripts-native_2.1.0.bb b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-=
+firmware-m-scripts-native_2.1.1.bb
+similarity index 100%
+rename from meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-sc=
+ripts-native_2.1.0.bb
+rename to meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-scri=
+pts-native_2.1.1.bb
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_2=
+.1.0.bb b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_2.1.=
+1.bb
+similarity index 100%
+rename from meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_2.=
+1.0.bb
+rename to meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_2.1.=
+1.bb
+--=20
+2.39.5 (Apple Git-154)
 
 
