@@ -2,25 +2,25 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11665C19777
-	for <webhook@archiver.kernel.org>; Tue, 25 Feb 2025 15:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38A6C021BB
+	for <webhook@archiver.kernel.org>; Tue, 25 Feb 2025 15:18:22 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.10381.1740496698838303408
+ by mx.groups.io with SMTP id smtpd.web10.10382.1740496699008660403
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 25 Feb 2025 07:18:18 -0800
+ Tue, 25 Feb 2025 07:18:19 -0800
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABA1D28C7
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7CB22923
 	for <meta-arm@lists.yoctoproject.org>; Tue, 25 Feb 2025 07:18:34 -0800 (PST)
 Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 46EA03F5A1
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7C75D3F5A1
 	for <meta-arm@lists.yoctoproject.org>; Tue, 25 Feb 2025 07:18:18 -0800 (PST)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/7] arm/opencsd: update to 1.5.5
-Date: Tue, 25 Feb 2025 10:18:12 -0500
-Message-Id: <20250225151817.11875-2-jon.mason@arm.com>
+Subject: [PATCH 3/7] arm/gn: update to latest commit
+Date: Tue, 25 Feb 2025 10:18:13 -0500
+Message-Id: <20250225151817.11875-3-jon.mason@arm.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250225151817.11875-1-jon.mason@arm.com>
 References: <20250225151817.11875-1-jon.mason@arm.com>
@@ -29,50 +29,45 @@ Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 25 Feb 2025 15:18:23 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6386
+ <meta-arm@lists.yoctoproject.org>; Tue, 25 Feb 2025 15:18:22 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6387
 
-Update to the latest stable version (1.5.5), comprised of the following
-commits:
-	742d60ed7dc7 opencsd: Update version info and README for 1.5.5
-	7ca491c516b8 build: Update docs for MacOS support
-	cac83e59666e build: Add MacOS development makefile
-	e56eff270ca2 build: Use .dylib shared library suffix for MacOS
-	35f957d2a97a build: Create initial MacOS makefile
-	44dff5b22a26 build: Restore Linux build support
-	a0e13010e1d6 build: Rename build folders as 'unix_common' for upcoming M=
-acOS support
-	ecdde9f69307 tests: Add option to suppress elapsed processing time in te=
-st program.
-	821632be920c tests: update mem_buff_demo test to add options.
-	70e472c9387f opencsd: Memacc object cleanup fix
+Update to the latest gn commit.
+Changes in gn between 95b0f8fe31a992a33c040bbe3867901335c12762 and ab638b=
+d7cbb9ac8468bf2fbe60c74ed4706a14a7
+	ab638bd7cbb9 Revert "Speed-up GN with custom OutputStream interface."
+	2dd9331a7041 Speed-up GN with custom OutputStream interface.
+	ed1abc107815 Add `exec_script_allowlist` to replace `exec_script_whiteli=
+st`.
+	c97a86a72105 Retry ReplaceFile in case of failure
+	7296b601ea80 Fix crash when NinjaBuildWriter::RunAndWriteFile fails
+	468c6128db7f fix include for escape.h
+	5a47a93b9426 fix exit code for gn gen failure
+	24e92acb8472 misc: Use html.escape instead of cgi.escape
+	feafd1012a32 Do not copy parent build_dependency_files_ in Scope constru=
+ctors.
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../opencsd/{opencsd_1.5.4.bb =3D> opencsd_1.5.5.bb}              | 2 +-
+ meta-arm/recipes-devtools/gn/gn_git.bb | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
- rename meta-arm/recipes-devtools/opencsd/{opencsd_1.5.4.bb =3D> opencsd_=
-1.5.5.bb} (95%)
 
-diff --git a/meta-arm/recipes-devtools/opencsd/opencsd_1.5.4.bb b/meta-ar=
-m/recipes-devtools/opencsd/opencsd_1.5.5.bb
-similarity index 95%
-rename from meta-arm/recipes-devtools/opencsd/opencsd_1.5.4.bb
-rename to meta-arm/recipes-devtools/opencsd/opencsd_1.5.5.bb
-index b07f5c7fee9c..a2ca8c62cf95 100644
---- a/meta-arm/recipes-devtools/opencsd/opencsd_1.5.4.bb
-+++ b/meta-arm/recipes-devtools/opencsd/opencsd_1.5.5.bb
-@@ -4,7 +4,7 @@ LICENSE =3D "BSD-3-Clause"
- LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3Dad8cb685eb324d2fa2530b985a43f=
-3e5"
+diff --git a/meta-arm/recipes-devtools/gn/gn_git.bb b/meta-arm/recipes-de=
+vtools/gn/gn_git.bb
+index 053cbdd1efcb..cc25b73f77e6 100644
+--- a/meta-arm/recipes-devtools/gn/gn_git.bb
++++ b/meta-arm/recipes-devtools/gn/gn_git.bb
+@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D0fca02217a5d49=
+a14dfe2d11837bb34d"
+ UPSTREAM_CHECK_COMMITS =3D "1"
 =20
- SRC_URI =3D "git://github.com/Linaro/OpenCSD;protocol=3Dhttps;branch=3Dm=
-aster"
--SRCREV =3D "7323ae88d16be4f9972b0ad60198963c64d70070"
-+SRCREV =3D "742d60ed7dc762d8d2e7f07037fac0eb17654e2f"
+ SRC_URI =3D "git://gn.googlesource.com/gn;protocol=3Dhttps;branch=3Dmain=
+"
+-SRCREV =3D "95b0f8fe31a992a33c040bbe3867901335c12762"
++SRCREV =3D "ab638bd7cbb9ac8468bf2fbe60c74ed4706a14a7"
+ PV =3D "0+git"
 =20
  S =3D "${WORKDIR}/git"
-=20
 --=20
 2.39.5 (Apple Git-154)
 
