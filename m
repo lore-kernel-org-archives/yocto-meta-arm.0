@@ -2,66 +2,66 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C041C28B25
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1C8C28B24
 	for <webhook@archiver.kernel.org>; Thu,  6 Mar 2025 15:41:23 +0000 (UTC)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
- by mx.groups.io with SMTP id smtpd.web10.16699.1741275679116875478
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+ by mx.groups.io with SMTP id smtpd.web11.16687.1741275675470727415
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 06 Mar 2025 07:41:19 -0800
+ Thu, 06 Mar 2025 07:41:15 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=VoamG9xv;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.172, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c3b4c4b409so126532385a.3
-        for <meta-arm@lists.yoctoproject.org>; Thu, 06 Mar 2025 07:41:18 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=eHc3Kc6A;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.181, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-471fe5e0a80so6247771cf.1
+        for <meta-arm@lists.yoctoproject.org>; Thu, 06 Mar 2025 07:41:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1741275678; x=1741880478; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1741275674; x=1741880474; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ubDlp1yf5TurW2Rw9jkXrBTcCmlnFbida7Lh3Pjw0UE=;
-        b=VoamG9xv2YZeaC+XXt4mtMrVA9F+BpQd1TnqT7+JI8M2lB85m2rSZLrqGF732sjxCb
-         qQe0PVzJWzcz9UEZRrG/G6uboycF132j0Bunv3fHLufKEo6meZH8hmvx8/AJO1uhA9FJ
-         bqVWD9/FDY2Zf8lRwayarP76NNUAT3Y29khul+60eyrzFaVykVz4Ipi4gErxCwq4IUt6
-         GOfqCfQgOVWDiK0jcqtaEuivND/FwXMRQuzeyALlk6o/BH0DOhB5wUcCDJ2aQEaSyFTe
-         N7Om9ip31PhKyQxwMiAVrppUO3mQw3JHrT47aTRZuJLjU2EUHyTDt3P5bFdZEwMzK2gl
-         o5dQ==
+        bh=t5VrOSacg6XKA6bsoOwlTkUolvvFwikr8HeU0e/atC8=;
+        b=eHc3Kc6A4UjEkkVkHiuGBXHfr7o4vXb+D0Ta7ijbYEbbJDH3flSi0qIlZ/Vecj1DBL
+         fWQ9WA5/M+rk69fyBMyqCVYmKLvYzm9Ir0FdFbamlKJpofbjLFdheXuKv4+sZfmaLA2j
+         OF2VX7suP0k5CTF6iVFgJmp0ZzPwLflnWaqj+rSlRLPzT3deYx43eqIEZ3ZnWwfL72no
+         hA1GO3joRvkxNtwXL4Z50M+Usn0iDxTz+S9LUk+oAtOxXRweOBbrGoOSmA3JVIj11856
+         Y61+ouoxeAmPJByBX4+pYx83E0/ZsrCuKTzIt5YtrjdBMP2t2V/hiqy7YlwQ+eKlOuMt
+         DDZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741275678; x=1741880478;
+        d=1e100.net; s=20230601; t=1741275674; x=1741880474;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ubDlp1yf5TurW2Rw9jkXrBTcCmlnFbida7Lh3Pjw0UE=;
-        b=tJneoHYNS0rqqDs5viFm71DG0pt8uwfJ7ke9f4h7S9YHPY4m0FSSa76vnieb37hmRQ
-         L/JsP+dOzDhiyCjRFGp3vjy2Vr3d2KMa5QMxA+lu3Ik4ClPZ8L4XTeUShYVnUyN32oKQ
-         SC4Vllv30W7bohIBjiYuRZwldtZZu2QhhJVzy8oXWgLy8ffy701jc8x5hTzdLyMhp3qi
-         RmXVAVlTu/ykt9jP1lCI75V2ODBU7oBxwLyv5gCCofbJz9aKosk1FmqofubWenSJq7OQ
-         xFnDeHPjaV7oyASi4SvjCx8nEIN0Fs6yPi8rkLpstxvOKJG2GsDIo8J8KI90CPLBwzJk
-         SRvA==
-X-Gm-Message-State: AOJu0YyU8qY/WsQm15zik9OKOGCrmZUAWWT86KcJJWNV0TKQxlJOjPgH
-	w/i31k6ketE8m/4wbwoXg8+IGrSsskefgbhV0HyqmBZKsxYMG3GIvZMr3AIWwBUizfTkEg7yV/s
+        bh=t5VrOSacg6XKA6bsoOwlTkUolvvFwikr8HeU0e/atC8=;
+        b=twvDPTZiAqWIrTfCc+KZuMewj+4taqiAyiAmiDHtMkwt0vnGbbsHJZbY5NfgriKQT4
+         9GHXWTkgTxAp68Gr6qgt4o9HKgy2vRKuJ9/vD1+3ugGpv6AAJ175aHFFdnhJX58OKFId
+         aW0a8fSYbP57jskKfHL4/7KLUjUDORztWv7K193Xu5hZGVeG3UBK+6J5A29pRGKECfMf
+         6cpeaXYEWPjA0aut0Q70z7OC+VWDVs6O3AHDwRFrtYTJ6bDNO3O+giOBhll8UGtd9uu/
+         4aINk5SzbnIimZQ93rJU0xob58Mdwn80oW4z1DjOd36JU0m66bQEQws042YhLneyiSkF
+         oP4g==
+X-Gm-Message-State: AOJu0YyryYaCC1mKdfXfKHtGJQu0M8SfhctWyzXnNewPxoO3liPAyGfZ
+	dDFxC83CjzikX2wUp1qiCMmSkhbb8OAACytYhoxJJu+4rAHldB3pu4TuaevOwdB33Mhsp+vJh7I
 	=
-X-Gm-Gg: ASbGncthcsram3ao3+F2cZbGqOdDiL2XM1FLB7Jiw8fFOS5M+5i5PjYAaALr+nIdHSK
-	Io/F1qEXSG9J61CB329jam4bBRUsw+fkD055QgqXe+iNqj/cn7ENNRbC27MkzxCoeJJkHHGJ5RA
-	4cuTi8R1hv0A4a4fvSpIwGP2pa0t8PSOHvxf02K0BLbiVWVVNdr2mg8Xyx04kRKJzlUrM7Kv8qS
-	K8Gh3Ov+WqDcqAz8Jc0q+IxiUMEjE282knrf/T7AWQ+QhpArHuwQGcWvxV52IT4RoftNb5rjJNw
-	B3QJhCUd2YxvAUIPXIdpOAqmEKUM9TUCU6eq
-X-Google-Smtp-Source: AGHT+IHDfBX/J/XIeWmxP5mVpi0x/ezeD3tOuBCHLB2Vja44R9ATrIipUwAWUUgjTxSpRtMkyqKeEg==
-X-Received: by 2002:a05:620a:4899:b0:7c3:c814:5943 with SMTP id af79cd13be357-7c3d8e1f77bmr1188487785a.9.1741275677916;
-        Thu, 06 Mar 2025 07:41:17 -0800 (PST)
+X-Gm-Gg: ASbGncvHpa/Yr5bOmbiekjVCn7TGesQGWJg3e3ghvHS6z52mZS8Cjqzooz2FuhpGFb1
+	lFsT559Z2KHYZJjquOOTXnylr4fPkH7S4ltnV7fL6Kthc+sev76h8E7HEIWwe2QCD+/sCIx9dQH
+	+0YvZVrABTVBXjZi0/guEzfWD99IJ3h0XgxT2fkJWKE2ov/OV9PPIIxlfvcghKn4Fn6MtfoxB1o
+	pcaUMMPJDQzaGQ1FEZcM0OWWh+gOkBU5oQv7AlkXC+Nl6PUzPzvGSQclTlaTRF+EI9blLj89CaO
+	63rR/Ad4KWYySCPC0NL7kFhjLw7dj/H895YS
+X-Google-Smtp-Source: AGHT+IGQqzsiO2WfuRoBNysTO+rU2L+dCU/E37ii9WvYkRXSk9jl+gFmMaHP6XiwZ3PLBbbXjHSPyw==
+X-Received: by 2002:ad4:5cc1:0:b0:6e8:f945:ec5 with SMTP id 6a1803df08f44-6e8f9451055mr23051646d6.24.1741275674016;
+        Thu, 06 Mar 2025 07:41:14 -0800 (PST)
 Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3e538b41fsm104277285a.65.2025.03.06.07.41.17
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8f7170958sm8300036d6.108.2025.03.06.07.41.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 07:41:17 -0800 (PST)
+        Thu, 06 Mar 2025 07:41:13 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH] arm-bsp/fvp-base: bump cores to to v8.5
-Date: Thu,  6 Mar 2025 10:41:09 -0500
-Message-Id: <174127566895.1840683.17838531885827595967.b4-ty@arm.com>
+	Andrew Jeffery <andrew@codeconstruct.com.au>
+Subject: Re: [PATCH] arm/trusted-services: ts-sp-fw: Replace v2.7.0 tag with commit ID
+Date: Thu,  6 Mar 2025 10:41:08 -0500
+Message-Id: <174127566894.1840683.2086921537290795213.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250303203158.1235128-1-ross.burton@arm.com>
-References: <20250303203158.1235128-1-ross.burton@arm.com>
+In-Reply-To: <20250228054834.3224744-1-andrew@codeconstruct.com.au>
+References: <20250228054834.3224744-1-andrew@codeconstruct.com.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -69,23 +69,20 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 06 Mar 2025 15:41:23 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6398
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6397
 
 
-On Mon, 03 Mar 2025 20:31:58 +0000, Ross Burton wrote:
-> The Pointer Authentication (PAC) instructions are part of v8.3, and BTI
-> (Branch Target Indentification) instructions are mandatory in v8.5.
-> 
-> As we want to use PAC/BTI everywhere in this BSP, bump the cores to
-> v8.5.
+On Fri, 28 Feb 2025 16:18:34 +1030, Andrew Jeffery wrote:
+> Do so for the usual reason of avoiding network access during recipe
+> parsing. Occasionally parsing will stall for me as it seems connectivity
+> to trustedfirmware.org can be flaky.
 > 
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] arm-bsp/fvp-base: bump cores to to v8.5
-      commit: b6227e29625c2509b083092e5e10975c3b2d037b
+[1/1] arm/trusted-services: ts-sp-fw: Replace v2.7.0 tag with commit ID
+      commit: f9f47ec15a1f9d36f25d9e49ea1d1a2e9903eeab
 
 Best regards,
 -- 
