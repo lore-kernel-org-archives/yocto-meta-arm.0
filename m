@@ -2,107 +2,98 @@ Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05A4C28B30
-	for <webhook@archiver.kernel.org>; Tue, 11 Mar 2025 10:30:09 +0000 (UTC)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
- by mx.groups.io with SMTP id smtpd.web10.5470.1741689005459861685
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE91EC282EC
+	for <webhook@archiver.kernel.org>; Tue, 11 Mar 2025 10:30:19 +0000 (UTC)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+ by mx.groups.io with SMTP id smtpd.web10.5475.1741689011043100787
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 11 Mar 2025 03:30:05 -0700
+ Tue, 11 Mar 2025 03:30:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=WNoo3Bkv;
- spf=pass (domain: linaro.org, ip: 209.85.167.48, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-549946c5346so4023518e87.2
-        for <meta-arm@lists.yoctoproject.org>; Tue, 11 Mar 2025 03:30:05 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=jnNqLtcI;
+ spf=pass (domain: linaro.org, ip: 209.85.167.49, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54991d85f99so4240754e87.1
+        for <meta-arm@lists.yoctoproject.org>; Tue, 11 Mar 2025 03:30:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741689003; x=1742293803; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TeEe43acjHcuvL9e4S8VpqXgcd4eamh8e9PcUKdtmRc=;
-        b=WNoo3BkvwUTkTNudzm88ZVF13axgrT/LamAFDQ2rCeN7zp9b9An9CBystzGvSTDT2C
-         9zL+jjjw5PsmUar66rtLce77Eajkzenyt7WkMTGJAHqiAuV5MuU/abSMkottjRT7TYel
-         SyEbzJm8+HYmbvqmdX8Yn0Wt3JNhNCCofXM5yPU2kuZUJdD/R9bPUSpmHqHTjnRQODiF
-         gZPnm6olD29FsLDzwYz4gq5iNIft/oeIjga1qxiV458TJI9ktsK3Dv2VnOnJ4E7oRe3b
-         3QM0E/loDGW/Aur/yJ8K9x1Ovi0f68QpXdRACjF9Tr/ZIQmg4gybttzD9ArdFT0hvShP
-         DnEg==
+        d=linaro.org; s=google; t=1741689009; x=1742293809; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FPPnCvQ0FGDJ307JoBWbXnycW7YKnxTAil4cywgOjx0=;
+        b=jnNqLtcIHWUIiQ1UDm7xlLrIvXuJg7rYcJTpnzYqZPzGCUihMhhJJ3CQB9nuHyXQzJ
+         coWhr8qYcFCXxVstK9RwqNwQrFiIgmwgbbbkH/Cg4z9V1xG0NkKrNkZ3s0E0VNkVv9Ol
+         9TqkrSTsITL47mXKw4jtRVAuD6BqQDze8XCFrp/Nqdx7RE5UJ3/OJc9612qWz+7HefSp
+         EZmWH1p9ol94CdgqXNwHXBz1VyRTnqk2b3TpsJsAISFKoThQw5j3pJbBcmElfgW1pmE6
+         r0ZcZYcXP0+CrCL6EYrZ2UD7kE2rz4PcHHSZWWO+++QoWrKxHDLpKv+NcpYNknj5tld/
+         CGdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741689003; x=1742293803;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TeEe43acjHcuvL9e4S8VpqXgcd4eamh8e9PcUKdtmRc=;
-        b=F8dsfL/Tq6KeQ7ftvBYjiG80LNS4D1IFqD6ZRys1RkfBmWGWUPHGxsD7rSSG7VPtXI
-         dKTl7LxDlgn/XnVgQ+w1LghvA6leRYwb6qPxyxX2o3hI3jW4aH/BUN5l3uDma9uTQ6aU
-         Z67yPnem1srdc8DWe28nVYmfpCZQ0AuRJH0ROMA6rBtco2rfQzUW+1UmhIgnnrgPVZZ6
-         LTiaktX7oCv7rbXjPzRfOv5+YaxAyfzPrngNqZS0Gdo1TFNPWhEOao7fbGPqSn/b8zYY
-         kaeCQiSO7jJ8Q+gyhpigko1YiSRr+0WMsoj42QwkUaF9gx26jC/7rAHFgOX6JDwY2cav
-         nVvw==
-X-Gm-Message-State: AOJu0YwN8l4V2ebDIY0iEEY121xYR0yzInX+S1tT0e2GuGv8d9PDfDg5
-	76FGkwEenndOTTsoEOrn/RlkWjqzDVlKe/Kh9kmFHgp4VUPkwzjqrRO4ydHEuNGcepCCZdnmtcf
-	qKbA=
-X-Gm-Gg: ASbGnctLOGoEnASaJ2YWHAtB4TdiR493qBxTUGFHZE3hWCmxciTo6BsYPiP3+x7rELw
-	LKZStR0db5RC2JcBmQ967KrhkdO6ALkNKfGBt04kEH/C8szQzLDIaOjZZ9TYHZ8Nm8Vg6bOvDmD
-	9C1vQWzc3GVEo2sYAn8XGsYEfZDKQjZ3ECUfaffxRby7zcROm8bPBuzO/BrKBNn4CdUuE2d2u8c
-	5E63xpyvT98kO7vzrOD1t/xQTEECyJwwa36KyAvR2+EJkUqC9rm9mEAmVS2vclBAeXYf9Cg6V9Z
-	pBQ6icfOQoNFJa1UPsEpAfRyl3VN1msJ3bRDr69Q2rhu372bjgVb8Em980qznzFKqCz5LQGtIHc
-	7LD1LAwk+Bgokjg==
-X-Google-Smtp-Source: AGHT+IE4NwepX+7yY88RVYJfRweIs4ge29vfap2bRVJVFMcbnriWGjgWwxXNo/rXAEvqKx0jlglNVw==
-X-Received: by 2002:a05:6512:39d4:b0:549:39d8:51ef with SMTP id 2adb3069b0e04-54990e29b80mr6153657e87.6.1741689003400;
-        Tue, 11 Mar 2025 03:30:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1741689009; x=1742293809;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FPPnCvQ0FGDJ307JoBWbXnycW7YKnxTAil4cywgOjx0=;
+        b=Cy5SIb1QltBcegrqxzLlpt+jMrVxf82jJxALC5ox1j9knPuNscb/UHJKE0YuyZmjZM
+         KbPRGFiCtB2nI6AEKwuwXlaBFO/yqllLQCgh8AxnXTqPgMjeNDECz+gwohoue3e+3I4j
+         Lh1k1QkQGhyOEhT2mhBfw1PXyN/ca7lUFE8MLmWtM7MLItqm4oCT3UbcfBwJ0d3k3Pnh
+         SoWli0lZ1uFJlh+97i9YZKqonB6tQVGcq6xCaKyrzbXqOEgkhkAdqH2cuadCdlzeWJ7r
+         IOyhClTFExtpMcnuVqMgmJZIQEbVdQrQUqxXEP4ZIKRrnAMTkT62Ds2+GIpxVnEVKzdb
+         3+Aw==
+X-Gm-Message-State: AOJu0YxDTIONVE42Si4giXjE+9serm6exQ6DP1TAz44dyGti69Jvgtvx
+	8msbiBLz8sc5MCBFuAGhPHWo13sqHolmNbTcHg0TEYYdpwJIFo8jmJ+6AbY141LM9SCUCP8sBPw
+	QJe0=
+X-Gm-Gg: ASbGnctIU9hWrPgp77lWjaBS8TnwcQiuaIHxQrr24l5LmqHR2zM1ubZWZ1mGkmkTqtU
+	ZJVk21Ip9t92Ppj0VH81T6AaisAwUsAF1TBiY8N51Nz8/6JGnGXCyZ65v6ViV+qh1xpCBviLRFY
+	aKRngWSfAMxDyw9ybGeV2JTnOVozUKyFFCiNUgCjQQ0vouZszuR2Sx3jaQ6qS7zH+6MVAhB++m2
+	NWOMUJjEbVgNAcUDcCMgjb9NCi27q4cXj1ZJdkxE4nRD4vYxDtqXOFdNtXwPPYNuwdmiPfD0htf
+	YwQ6NbLzumQAHJFYVyBcq5hWUY4yEaH+vyCCkk6Rs1+19HKIqv/OpBjsd2mYqy6xvl63sWw3EDi
+	OP2MyONZ0FVXXSw==
+X-Google-Smtp-Source: AGHT+IExKmjYYiEvTp9C1b0MOhGWg/HCOyT1V+YVKdMEspclkXHc9cFlCoo5ASqI5g1pVs1dT/JLvA==
+X-Received: by 2002:a05:6512:b1d:b0:545:6a2:e59 with SMTP id 2adb3069b0e04-549abd30efdmr1133710e87.18.1741689008856;
+        Tue, 11 Mar 2025 03:30:08 -0700 (PDT)
 Received: from localhost.localdomain (78-27-76-97.bb.dnainternet.fi. [78.27.76.97])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498b0bd5b5sm1734685e87.158.2025.03.11.03.30.01
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5498b0bd5b5sm1734685e87.158.2025.03.11.03.30.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 03:30:02 -0700 (PDT)
+        Tue, 11 Mar 2025 03:30:07 -0700 (PDT)
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: ilias.apalodimas@linaro.org,
 	javier.tia@linaro.org,
 	Mikko Rapeli <mikko.rapeli@linaro.org>
-Subject: [PATCH 1/2] optee: support genericarm64
-Date: Tue, 11 Mar 2025 12:29:33 +0200
-Message-ID: <20250311102934.63753-1-mikko.rapeli@linaro.org>
+Subject: [PATCH 2/2] optee-ftpm: support genericarm64
+Date: Tue, 11 Mar 2025 12:29:34 +0200
+Message-ID: <20250311102934.63753-2-mikko.rapeli@linaro.org>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250311102934.63753-1-mikko.rapeli@linaro.org>
+References: <20250311102934.63753-1-mikko.rapeli@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 11 Mar 2025 10:30:09 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6401
+ <meta-arm@lists.yoctoproject.org>; Tue, 11 Mar 2025 10:30:19 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6402
 
-optee-client/tee-supplicant, optee-os-tadevkit and optee-test can be
-compiled for genericarm64 and these detect firmware optee support at
-runtime. Using qemuarm64 compatible config for them.
-optee-os itself may need HW specific config for different boards
-and SoCs but these components work with same config on multiple boards.
-Tested on qemu and AMD kv260 with Linaro Trusted Substrate firmware
-(https://gitlab.com/Linaro/trustedsubstrate/meta-ts).
-
-Note: optee-test version in userspace and optee-os version in firmware
-must match for tests to pass.
+genericarm64 machines may have firmware with optee support
+and thus also optee-ftpm may be compiled and used there.
+tee-supplicant will load TAs at runtime if support is
+detected.
 
 Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 ---
- meta-arm/recipes-security/optee/optee.inc | 2 ++
- 1 file changed, 2 insertions(+)
+ meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/meta-arm/recipes-security/optee/optee.inc b/meta-arm/recipes-security/optee/optee.inc
-index c5514f56..cd25d0e5 100644
---- a/meta-arm/recipes-security/optee/optee.inc
-+++ b/meta-arm/recipes-security/optee/optee.inc
-@@ -1,11 +1,13 @@
- UPSTREAM_CHECK_GITTAGREGEX = "^(?P<pver>\d+(\.\d+)+)$"
+diff --git a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb
+index 9546215a..de68d91c 100644
+--- a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb
++++ b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb
+@@ -3,6 +3,7 @@ DESCRIPTION = "TCG reference implementation of the TPM 2.0 Specification."
+ HOMEPAGE = "https://github.com/microsoft/ms-tpm-20-ref/"
  
  COMPATIBLE_MACHINE ?= "invalid"
-+COMPATIBLE_MACHINE:genericarm64 ?= "genericarm64"
- COMPATIBLE_MACHINE:qemuarm64 ?= "qemuarm64"
- COMPATIBLE_MACHINE:qemuarm ?= "qemuarm"
- # Please add supported machines below or set it in .bbappend or .conf
- 
- OPTEEMACHINE ?= "${MACHINE}"
-+OPTEEMACHINE:genericarm64 ?= "vexpress-qemu_armv8a"
- OPTEEMACHINE:aarch64:qemuall ?= "vexpress-qemu_armv8a"
- OPTEEMACHINE:arm:qemuall ?= "vexpress-qemu_virt"
- 
++COMPATIBLE_MACHINE:genericarm64 = "genericarm64"
+ COMPATIBLE_MACHINE:qemuarm64 = "qemuarm64"
+ COMPATIBLE_MACHINE:qemuarm64-secureboot = "qemuarm64"
+ COMPATIBLE_MACHINE:qemuarm-secureboot = "qemuarm"
 -- 
 2.43.0
 
