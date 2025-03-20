@@ -2,174 +2,248 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A622EC28B30
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B38C35FFF
 	for <webhook@archiver.kernel.org>; Thu, 20 Mar 2025 15:14:09 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.10422.1742483642051597641
+ by mx.groups.io with SMTP id smtpd.web11.10421.1742483641962987616
  for <meta-arm@lists.yoctoproject.org>;
  Thu, 20 Mar 2025 08:14:02 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 812C520E3
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 18A94106F
 	for <meta-arm@lists.yoctoproject.org>; Thu, 20 Mar 2025 08:14:09 -0700 (PDT)
 Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9CD793F673
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 324B13F673
 	for <meta-arm@lists.yoctoproject.org>; Thu, 20 Mar 2025 08:14:01 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 3/3] arm/trusted-firmware-a: update 2.12.0 recipe to 2.12.1
-Date: Thu, 20 Mar 2025 11:14:00 -0400
-Message-Id: <20250320151400.19610-3-jon.mason@arm.com>
+Subject: [PATCH 1/3] arm/edk2-firmware: update to edk2-stable202411
+Date: Thu, 20 Mar 2025 11:13:58 -0400
+Message-Id: <20250320151400.19610-1-jon.mason@arm.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250320151400.19610-1-jon.mason@arm.com>
-References: <20250320151400.19610-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 20 Mar 2025 15:14:09 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6408
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6407
 
-Update to the lts-v2.12.1 tag.  Changes include a number of CVE fixes
-and mbedtls minor version bump:
-	8cf9edba5cc3 docs(changelog): changelog for lts-v2.12.1 release
-	f5d048108bf3 Merge changes from topic "for-lts-v2.12.1" into lts-v2.12
-	56472775f96d docs(maintainers): update LTS maintainers
-	baab55315c7f docs: updates to LTS
-	f00f71efc410 docs: add inital lts doc
-	1a8ee82c6d77 Merge changes from topic "for-lts-v2.12.1" into lts-v2.12
-	b19ce90a908c fix(rd1ae): fix rd1-ae device tree
-	34f10e7d9fc7 feat(rd1ae): add Generic Timer in device tree
-	551dc4c09f57 docs(rd1ae): update documentation to include BL32
-	8e4240779867 feat(rd1ae): add support for OP-TEE SPMC
-	8e4bb69c747e feat(mbedtls): mbedtls config update for v3.6.2
-	a46d6a1320d7 docs(prerequisites): update mbedtls to version 3.6.2
-	2ffe181a3982 refactor(mbedtls): rename default mbedtls confs
-	3809359e2124 fix(cpus): workaround for Neoverse-V3 erratum 3701767
-	4a9ff092c9b4 fix(cpus): workaround for Neoverse-N3 erratum 3699563
-	7e41b706e97c fix(cpus): workaround for Neoverse-N2 erratum 3701773
-	15300ac30c55 fix(cpus): workaround for Cortex-X925 erratum 3701747
-	6e0efc7fe739 fix(cpus): workaround for Cortex-X4 erratum 3701758
-	8299c1274617 fix(cpus): workaround for Cortex-X3 erratum 3701769
-	fa6c9874485b fix(cpus): workaround for Cortex-X2 erratum 3701772
-	4e78288fd2bc fix(cpus): workaround for Cortex-A725 erratum 3699564
-	ae6edfd5b543 fix(cpus): workaround for Cortex-A720-AE erratum 3699562
-	24526273fc50 fix(cpus): workaround for Cortex-A720 erratum 3699561
-	a7b322706435 fix(cpus): workaround for Cortex-A715 erratum 3699560
-	d4826882210b fix(cpus): workaround for Cortex-A710 erratum 3701772
-	9d6143ec8ffb fix(cpus): workaround for accessing ICH_VMCR_EL2
-	7e4bf042a0dd chore(cpus): fix incorrect header macro
-	9427c061eb8d fix(security): apply SMCCC_ARCH_WORKAROUND_4 to affected cp=
-us
-	bea64fd5272d fix(security): add support in cpu_ops for CVE-2024-7881
-	16b87247ed03 fix(security): add CVE-2024-7881 mitigation to Cortex-X3
-	427c33bc0c0b fix(security): add CVE-2024-7881 mitigation to Neoverse-V3
-	192a152448ae fix(security): add CVE-2024-7881 mitigation to Neoverse-V2
-	3e4d94c43b64 fix(security): add CVE-2024-7881 mitigation to Cortex-X925
-	41a52efd6f38 fix(security): add CVE-2024-7881 mitigation to Cortex-X4
-	2f09b9f3c2af fix(security): enable WORKAROUND_CVE_2024_7881 build option
-	70a7d3f2d030 fix(cpus): workaround for CVE-2024-5660 for Cortex-X925
-	41b64fe36f42 fix(cpus): workaround for CVE-2024-5660 for Cortex-X2
-	0b2d22097c96 fix(cpus): workaround for CVE-2024-5660 for Cortex-A77
-	193370e1c6a2 fix(cpus): workaround for CVE-2024-5660 for Neoverse-V1
-	d52c52a5fa8c fix(cpus): workaround for CVE-2024-5660 for Cortex-A78_AE
-	3bd6531a55a4 fix(cpus): workaround for CVE-2024-5660 for Cortex-A78C
-	eda09acd1b22 fix(cpus): workaround for CVE-2024-5660 for Cortex-A78
-	b9766da96365 fix(cpus): workaround for CVE-2024-5660 for Cortex-X1
-	6324220805b1 fix(cpus): workaround for CVE-2024-5660 for Neoverse-N2
-	6041f0723994 fix(cpus): workaround for CVE-2024-5660 for Cortex-A710
-	b23f5da614e6 fix(cpus): workaround for CVE-2024-5660 for Neoverse-V2
-	ef378713fa4b fix(cpus): workaround for CVE-2024-5660 for Cortex-X3
-	2898088f8ba6 fix(cpus): workaround for CVE-2024-5660 for Neoverse-V3
-	b8e111c72619 fix(cpus): workaround for CVE-2024-5660 for Cortex-X4
-	a6f6396313ea fix(cpus): workaround for Cortex-X4 erratum 2923985
-	d1c3a5d8b9d8 fix(build): do not force PLAT in plat_helpers.mk
-	ea1b816b1763 chore(deps): update pytest for cot-dt2c
-	65762d7b4cfc chore(deps): bump jinja2
-	87f3125a0e45 chore(deps): bump jinja2 in the pip group across 1 director=
-y
-	b4530565c030 chore(deps): bump the pip group across 2 directories with 1=
- update
-	11e5f92d3d43 build(deps): bump setuptools in the pip group across 1 dire=
-ctory
-	850389f4acfe chore(deps): bump micromatch
+Update to the latest version of edk2.  Unfortunately, sbsa-ref has a
+kernel warning due to the CPU topology that was added.  So, hold this
+platform back to 202408 and move those recipes to meta-arm-bsp.
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- ...ptool-native_2.12.0.bb =3D> fiptool-native_2.12.1.bb} |  6 +++---
- ...rmware-a_2.12.0.bb =3D> trusted-firmware-a_2.12.1.bb} | 10 +++++-----
- 2 files changed, 8 insertions(+), 8 deletions(-)
- rename meta-arm/recipes-bsp/trusted-firmware-a/{fiptool-native_2.12.0.bb=
- =3D> fiptool-native_2.12.1.bb} (90%)
- rename meta-arm/recipes-bsp/trusted-firmware-a/{trusted-firmware-a_2.12.=
-0.bb =3D> trusted-firmware-a_2.12.1.bb} (77%)
+ meta-arm-bsp/conf/machine/sbsa-ref.conf       |  4 +++
+ .../uefi/edk2-basetools-native_202408.bb      |  0
+ .../recipes-bsp/uefi/edk2-firmware_202408.bb  |  2 ++
+ .../0001-Platform-StMmRpmb-Fix-build.patch    |  0
+ .../uefi/edk2-basetools-native_202411.bb      | 26 +++++++++++++++++++
+ meta-arm/recipes-bsp/uefi/edk2-firmware.inc   |  1 -
+ .../recipes-bsp/uefi/edk2-firmware_202411.bb  |  7 +++++
+ ...-in-the-paths-to-the-SBSA-test-suite.patch |  4 +--
+ ...02-Enforce-using-good-old-BFD-linker.patch |  6 ++---
+ meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.4.bb   |  2 +-
+ 10 files changed, 45 insertions(+), 7 deletions(-)
+ rename {meta-arm =3D> meta-arm-bsp}/recipes-bsp/uefi/edk2-basetools-native=
+_202408.bb (100%)
+ rename {meta-arm =3D> meta-arm-bsp}/recipes-bsp/uefi/edk2-firmware_202408.=
+bb (74%)
+ rename {meta-arm =3D> meta-arm-bsp}/recipes-bsp/uefi/files/0001-Platform-S=
+tMmRpmb-Fix-build.patch (100%)
+ create mode 100644 meta-arm/recipes-bsp/uefi/edk2-basetools-native_202411.=
+bb
+ create mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware_202411.bb
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.12.=
-0.bb b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.12.1.bb
-similarity index 90%
-rename from meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.12.0=
-.bb
-rename to meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.12.1.b=
-b
-index e7fbb8b499ef..98c8edda730c 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.12.0.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.12.1.bb
-@@ -9,9 +9,9 @@ SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://git.trustedfirmwar=
-e.org/TF-A/trusted-firmwa
- SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A};destsuffix=3Dfiptool-${PV};br=
-anch=3D${SRCBRANCH}"
- LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3D83b7626b8c7a37263c6a=
-58af8d19bee1"
+diff --git a/meta-arm-bsp/conf/machine/sbsa-ref.conf b/meta-arm-bsp/conf/ma=
+chine/sbsa-ref.conf
+index ccfc45a8e296..116b4276319d 100644
+--- a/meta-arm-bsp/conf/machine/sbsa-ref.conf
++++ b/meta-arm-bsp/conf/machine/sbsa-ref.conf
+@@ -26,6 +26,10 @@ EFI_PROVIDER ?=3D "${@bb.utils.contains("DISTRO_FEATURES=
+", "systemd", "systemd-boo
+ SERIAL_CONSOLES ?=3D "115200;ttyAMA0 115200;hvc0"
 =20
--# Use fiptool from TF-A v2.12.0
--SRCREV =3D "4ec2948fe3f65dba2f19e691e702f7de2949179c"
--SRCBRANCH =3D "master"
-+# Use fiptool from TF-A v2.12.1
-+SRCREV =3D "8cf9edba5cc3ec11ed5463f206aa5819f7fdbade"
-+SRCBRANCH =3D "lts-v2.12"
+ EXTRA_IMAGEDEPENDS +=3D "edk2-firmware"
++# FIXME - Currently seeing a kernel warning for the CPU topology when bump=
+ing
++# the version past this.  The issue is being tracked in
++# https://github.com/tianocore/edk2-platforms/issues/752
++PREFERRED_VERSION_edk2-firmware ?=3D "202408%"
 =20
- DEPENDS +=3D "openssl-native"
+ QB_SYSTEM_NAME =3D "qemu-system-aarch64"
+ QB_MACHINE =3D "-machine sbsa-ref"
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202408.bb b/me=
+ta-arm-bsp/recipes-bsp/uefi/edk2-basetools-native_202408.bb
+similarity index 100%
+rename from meta-arm/recipes-bsp/uefi/edk2-basetools-native_202408.bb
+rename to meta-arm-bsp/recipes-bsp/uefi/edk2-basetools-native_202408.bb
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_202408.bb b/meta-arm-b=
+sp/recipes-bsp/uefi/edk2-firmware_202408.bb
+similarity index 74%
+rename from meta-arm/recipes-bsp/uefi/edk2-firmware_202408.bb
+rename to meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_202408.bb
+index 81bfc0002396..ea03d47ba1ea 100644
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware_202408.bb
++++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_202408.bb
+@@ -1,6 +1,8 @@
+ SRCREV_edk2           ?=3D "b158dad150bf02879668f72ce306445250838201"
+ SRCREV_edk2-platforms ?=3D "a3c898956a4d48dc5980336fa6ce6eeb23c4f72b"
 =20
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
-.12.0.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1=
-2.1.bb
-similarity index 77%
-rename from meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.=
-12.0.bb
-rename to meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.12=
-.1.bb
-index ceaac263fc75..57c30b581797 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.12.0.b=
-b
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.12.1.b=
-b
-@@ -1,15 +1,15 @@
- require recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
++SRC_URI +=3D "file://0001-Platform-StMmRpmb-Fix-build.patch;patchdir=3Dedk=
+2-platforms"
++
+ # FIXME - clang is having issues with antlr
+ TOOLCHAIN:aarch64 =3D "gcc"
 =20
--# TF-A v2.12.0
--SRCREV_tfa =3D "4ec2948fe3f65dba2f19e691e702f7de2949179c"
--SRCBRANCH =3D "master"
-+# TF-A v2.12.1
-+SRCREV_tfa =3D "8cf9edba5cc3ec11ed5463f206aa5819f7fdbade"
-+SRCBRANCH =3D "lts-v2.12"
+diff --git a/meta-arm/recipes-bsp/uefi/files/0001-Platform-StMmRpmb-Fix-bui=
+ld.patch b/meta-arm-bsp/recipes-bsp/uefi/files/0001-Platform-StMmRpmb-Fix-b=
+uild.patch
+similarity index 100%
+rename from meta-arm/recipes-bsp/uefi/files/0001-Platform-StMmRpmb-Fix-buil=
+d.patch
+rename to meta-arm-bsp/recipes-bsp/uefi/files/0001-Platform-StMmRpmb-Fix-bu=
+ild.patch
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202411.bb b/me=
+ta-arm/recipes-bsp/uefi/edk2-basetools-native_202411.bb
+new file mode 100644
+index 000000000000..d89a79015a83
+--- /dev/null
++++ b/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202411.bb
+@@ -0,0 +1,26 @@
++# Install EDK2 Base Tools in native sysroot. Currently the BaseTools are n=
+ot
++# built, they are just copied to native sysroot. This is sufficient for
++# generating UEFI capsules as it only depends on some python scripts. Other
++# tools need to be built first before adding to sysroot.
++
++SUMMARY =3D "EDK2 Base Tools"
++LICENSE =3D "BSD-2-Clause-Patent"
++
++# EDK2
++SRC_URI =3D "git://github.com/tianocore/edk2.git;branch=3Dmaster;protocol=
+=3Dhttps"
++LIC_FILES_CHKSUM =3D "file://License.txt;md5=3D2b415520383f7964e96700ae12b=
+4570a"
++
++SRCREV =3D "b158dad150bf02879668f72ce306445250838201"
++
++UPSTREAM_CHECK_GITTAGREGEX =3D "^edk2-stable(?P<pver>\d+)$"
++
++S =3D "${WORKDIR}/git"
++
++inherit native
++
++RDEPENDS:${PN} +=3D "python3-core"
++
++do_install () {
++    mkdir -p ${D}${bindir}/edk2-BaseTools
++    cp -r ${WORKDIR}/git/BaseTools/* ${D}${bindir}/edk2-BaseTools/
++}
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes=
+-bsp/uefi/edk2-firmware.inc
+index c10154aae09a..42668d9d9cd6 100644
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+@@ -20,7 +20,6 @@ SRCBRANCH_edk2_platforms =3D "master"
+ SRC_URI =3D "\
+     ${SRC_URI_EDK2};branch=3D${SRCBRANCH_edk2_platforms};name=3Dedk2;dests=
+uffix=3Dedk2 \
+     ${SRC_URI_EDK2_PLATFORMS};branch=3D${SRCBRANCH_edk2};name=3Dedk2-platf=
+orms;destsuffix=3Dedk2/edk2-platforms \
+-    file://0001-Platform-StMmRpmb-Fix-build.patch;patchdir=3Dedk2-platform=
+s \
+ "
 =20
- LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3D83b7626b8c7a37263c6=
-a58af8d19bee1"
+ SRCREV_FORMAT         =3D "edk2_edk2-platforms"
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_202411.bb b/meta-arm/r=
+ecipes-bsp/uefi/edk2-firmware_202411.bb
+new file mode 100644
+index 000000000000..5892a485ec1b
+--- /dev/null
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_202411.bb
+@@ -0,0 +1,7 @@
++SRCREV_edk2           ?=3D "0f3867fa6ef0553e26c42f7d71ff6bdb98429742"
++SRCREV_edk2-platforms ?=3D "2d66a9e048285af8ba4bfe4bdaab37a8e98288b3"
++
++# FIXME - clang is having issues with antlr
++TOOLCHAIN:aarch64 =3D "gcc"
++
++require recipes-bsp/uefi/edk2-firmware.inc
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Patch-in-the-paths-to-=
+the-SBSA-test-suite.patch b/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Patch-i=
+n-the-paths-to-the-SBSA-test-suite.patch
+index 6d626be5b8d3..e9f8c4173677 100644
+--- a/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Patch-in-the-paths-to-the-SBS=
+A-test-suite.patch
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Patch-in-the-paths-to-the-SBS=
+A-test-suite.patch
+@@ -10,7 +10,7 @@ Signed-off-by: Ross Burton <ross.burton@arm.com>
+  1 file changed, 3 insertions(+)
 =20
- # in TF-A src, docs/getting_started/prerequisites.rst lists the expected=
- version mbedtls
--# mbedtls-3.6.1
-+# mbedtls-3.6.2
- SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls=
-;protocol=3Dhttps;destsuffix=3Dgit/mbedtls;branch=3Dmbedtls-3.6"
--SRCREV_mbedtls =3D "71c569d44bf3a8bd53d874c81ee8ac644dd6e9e3"
-+SRCREV_mbedtls =3D "107ea89daaefb9867ea9121002fbbdf926780e98"
+ diff --git a/ShellPkg/ShellPkg.dsc b/ShellPkg/ShellPkg.dsc
+-index 557b0ec0f3d6..85b3f4fc65d0 100644
++index 7e985f8280a7..ca7a716fadc7 100644
+ --- a/ShellPkg/ShellPkg.dsc
+ +++ b/ShellPkg/ShellPkg.dsc
+ @@ -23,6 +23,8 @@
+@@ -22,7 +22,7 @@ index 557b0ec0f3d6..85b3f4fc65d0 100644
+    UefiApplicationEntryPoint|MdePkg/Library/UefiApplicationEntryPoint/Uefi=
+ApplicationEntryPoint.inf=0D
+    UefiDriverEntryPoint|MdePkg/Library/UefiDriverEntryPoint/UefiDriverEntr=
+yPoint.inf=0D
+    UefiBootServicesTableLib|MdePkg/Library/UefiBootServicesTableLib/UefiBo=
+otServicesTableLib.inf=0D
+-@@ -88,6 +90,7 @@
++@@ -79,6 +81,7 @@
+    # Build all the libraries when building this package.=0D
+    # This helps developers test changes and how they affect the package.=0D
+    #=0D
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Enforce-using-good-old=
+-BFD-linker.patch b/meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Enforce-using-g=
+ood-old-BFD-linker.patch
+index 68a25c71c1d1..2d8a33f4a9da 100644
+--- a/meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Enforce-using-good-old-BFD-li=
+nker.patch
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Enforce-using-good-old-BFD-li=
+nker.patch
+@@ -1,4 +1,4 @@
+-From 365fb8ebbefaa3c642e18e3c3a16eeccfa0dcc82 Mon Sep 17 00:00:00 2001
++From a91273485735b89e67050bb39a09b60a16055dbd Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Wed, 7 Apr 2021 00:16:07 -0700
+ Subject: [PATCH] Enforce using good old BFD linker
+@@ -17,10 +17,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  1 file changed, 1 insertion(+), 1 deletion(-)
 =20
- LIC_FILES_CHKSUM_MBEDTLS =3D "file://mbedtls/LICENSE;md5=3D379d5819937a6=
-c2f1ef1630d341e026d"
+ diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.=
+template
+-index c34ecfd557c5..153d097a2688 100755
++index 14f3b643c43d..ce3d969625de 100755
+ --- a/BaseTools/Conf/tools_def.template
+ +++ b/BaseTools/Conf/tools_def.template
+-@@ -747,7 +747,7 @@ DEFINE GCC_AARCH64_CC_FLAGS        =3D DEF(GCC_ALL_CC_=
+FLAGS) -mlittle-endian -fno-
++@@ -905,7 +905,7 @@ DEFINE GCC_AARCH64_CC_FLAGS        =3D DEF(GCC_ALL_CC_=
+FLAGS) -mlittle-endian -fno-
+  DEFINE GCC_AARCH64_CC_XIPFLAGS     =3D -mstrict-align -mgeneral-regs-only=
+=0D
+  DEFINE GCC_RISCV64_CC_XIPFLAGS     =3D -mstrict-align -mgeneral-regs-only=
+=0D
+  DEFINE GCC_DLINK_FLAGS_COMMON      =3D -nostdlib --pie=0D
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.4.bb b/meta-arm/recipes=
+-bsp/uefi/sbsa-acs_7.1.4.bb
+index b6361346c5b4..bb668bb48717 100644
+--- a/meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.4.bb
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.4.bb
+@@ -1,4 +1,4 @@
+-require recipes-bsp/uefi/edk2-firmware_202408.bb
++require recipes-bsp/uefi/edk2-firmware_202411.bb
+ PROVIDES:remove =3D "virtual/bootloader"
 =20
+ LICENSE +=3D "& Apache-2.0"
 --=20
 2.39.5 (Apple Git-154)
 
