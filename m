@@ -2,25 +2,25 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0413C36011
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19F0C36014
 	for <webhook@archiver.kernel.org>; Fri, 28 Mar 2025 13:29:06 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.11138.1743168544713675609
+ by mx.groups.io with SMTP id smtpd.web10.11149.1743168544801260022
  for <meta-arm@lists.yoctoproject.org>;
  Fri, 28 Mar 2025 06:29:04 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2346C169C
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58429169E
 	for <meta-arm@lists.yoctoproject.org>; Fri, 28 Mar 2025 06:29:09 -0700 (PDT)
 Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2D47F3F63F
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 697223F63F
 	for <meta-arm@lists.yoctoproject.org>; Fri, 28 Mar 2025 06:29:04 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/3] arm/fvp: add TC3 and Neoverse v3, remove n1 edge
-Date: Fri, 28 Mar 2025 09:29:02 -0400
-Message-Id: <20250328132903.66472-2-jon.mason@arm.com>
+Subject: [PATCH 3/3] arm-bsp/sgi575: add FVP support
+Date: Fri, 28 Mar 2025 09:29:03 -0400
+Message-Id: <20250328132903.66472-3-jon.mason@arm.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250328132903.66472-1-jon.mason@arm.com>
 References: <20250328132903.66472-1-jon.mason@arm.com>
@@ -30,165 +30,166 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 28 Mar 2025 13:29:06 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6422
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6423
 
-Add Total Compute 2023, Neoverse V3 R1, and Reference Design-1 AE FVPs.
-Also, remove Neoverse N1 Edge.
+Add FVP support to sgi575 and run a boot test as part of CI.  Networking
+is not currently working and seems to require an older version of edk2
+to boot the kernel.  Also, the unique files for grub and wks do not seem
+to be necessary.
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- ci/fvps.yml                                        |  7 ++++++-
- .../fvp/fvp-base-a-aem_11.28.23.bb                 |  1 -
- meta-arm/recipes-devtools/fvp/fvp-n1-edge.bb       | 11 -----------
- meta-arm/recipes-devtools/fvp/fvp-rd1-ae.bb        | 14 ++++++++++++++
- meta-arm/recipes-devtools/fvp/fvp-tc3.bb           | 11 +++++++++++
- meta-arm/recipes-devtools/fvp/fvp-v3-r1.bb         | 14 ++++++++++++++
- 6 files changed, 45 insertions(+), 13 deletions(-)
- delete mode 100644 meta-arm/recipes-devtools/fvp/fvp-n1-edge.bb
- create mode 100644 meta-arm/recipes-devtools/fvp/fvp-rd1-ae.bb
- create mode 100644 meta-arm/recipes-devtools/fvp/fvp-tc3.bb
- create mode 100644 meta-arm/recipes-devtools/fvp/fvp-v3-r1.bb
+ .gitlab-ci.yml                        |  6 ++++
+ ci/sgi575.yml                         |  6 ++++
+ meta-arm-bsp/conf/machine/sgi575.conf | 49 ++++++++++++++++++++++++---
+ meta-arm-bsp/wic/sgi575-efidisk.wks   | 11 ------
+ meta-arm-bsp/wic/sgi575-grub.cfg      |  9 -----
+ 5 files changed, 57 insertions(+), 24 deletions(-)
+ delete mode 100644 meta-arm-bsp/wic/sgi575-efidisk.wks
+ delete mode 100644 meta-arm-bsp/wic/sgi575-grub.cfg
 
-diff --git a/ci/fvps.yml b/ci/fvps.yml
-index 8f1de177848b..e736c519c03d 100644
---- a/ci/fvps.yml
-+++ b/ci/fvps.yml
-@@ -19,8 +19,13 @@ target:
-   # Target packages to test aarch64
-   - fvp-base-a-aem
-   - fvp-corstone1000
-+  - fvp-rd1-ae
-+  - fvp-v3-r1
-   # Nativesdk to test x86-64
-   - nativesdk-fvp-base-a-aem
-   - nativesdk-fvp-corstone1000
--  - nativesdk-fvp-n1-edge
-+  - nativesdk-fvp-rd1-ae
-+  - nativesdk-fvp-v3-r1
-+  # These are x86 only... :(
-   - nativesdk-fvp-sgi575
-+  - nativesdk-fvp-tc3
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.28.23.bb b/m=
-eta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.28.23.bb
-index 8c7e4dc668eb..f411276bd4bd 100644
---- a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.28.23.bb
-+++ b/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.28.23.bb
-@@ -7,7 +7,6 @@ LIC_FILES_CHKSUM =3D "file://license_terms/license_agreem=
-ent.txt;md5=3D1a33828e132ba
-                     file://license_terms/third_party_licenses/third_part=
-y_licenses.txt;md5=3Dc51b57b6a4731881849eb0e2e2b6d799 \
-                     file://license_terms/third_party_licenses/arm_licens=
-e_management_utilities/third_party_licenses.txt;md5=3Dabcaafefc7b7a0cdf66=
-64c51f9075c5b"
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index f4b3262ca437..e655d1e62189 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -339,6 +339,12 @@ selftest:
 =20
+ sgi575:
+   extends: .build
++  parallel:
++    matrix:
++      - TESTING: testimage
++  # FVP binary is x86-only
++  tags:
++    - x86_64
+=20
+ toolchains:
+   extends: .build
+diff --git a/ci/sgi575.yml b/ci/sgi575.yml
+index e43138207166..d6e33894e890 100644
+--- a/ci/sgi575.yml
++++ b/ci/sgi575.yml
+@@ -4,5 +4,11 @@ header:
+   version: 14
+   includes:
+     - ci/base.yml
++    - ci/fvp.yml
++
++local_conf_header:
++  sshpregen: |
++    # Allow the use of the pregen keys as this is CI so safe
++    COMPATIBLE_MACHINE:pn-ssh-pregen-hostkeys:sgi575 =3D "sgi575"
+=20
+ machine: sgi575
+diff --git a/meta-arm-bsp/conf/machine/sgi575.conf b/meta-arm-bsp/conf/ma=
+chine/sgi575.conf
+index 3c2c94b6dcbf..dea764e8cdb6 100644
+--- a/meta-arm-bsp/conf/machine/sgi575.conf
++++ b/meta-arm-bsp/conf/machine/sgi575.conf
+@@ -7,18 +7,59 @@
+ require conf/machine/include/arm/armv8-2a/tune-cortexa75.inc
+=20
+ EXTRA_IMAGEDEPENDS +=3D "virtual/control-processor-firmware"
 -
- SRC_URI =3D "https://developer.arm.com/-/cdn-downloads/permalink/FVPs-Ar=
-chitecture/${PV_URL_SHORT}/${MODEL_CODE}_${PV_URL}_${FVP_ARCH}.tgz;subdir=
-=3D${BP};name=3Dfvp-${HOST_ARCH}"
- SRC_URI[fvp-aarch64.sha256sum] =3D "a380e271f14ce7cf99158018368ac86fe8c3=
-05f82c7d332a93eb08bf7a172571"
- SRC_URI[fvp-x86_64.sha256sum] =3D "0f6d67d834a8ed5dff3c863e0e3545ef39c73=
-6405ea8227577ac004cffd66e93"
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-n1-edge.bb b/meta-arm/reci=
-pes-devtools/fvp/fvp-n1-edge.bb
+ EXTRA_IMAGEDEPENDS +=3D "trusted-firmware-a"
+=20
+ KERNEL_IMAGETYPE ?=3D "Image"
+ PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-yocto"
+ SERIAL_CONSOLES =3D "115200;ttyAMA0"
+=20
+-#grub-efi
+-EFI_PROVIDER ?=3D "grub-efi"
++#FIXME - for some reason newer EDK2 refuses to boot the kernel
++PREFERRED_VERSION_edk2-firmware ?=3D "202408%"
++
++EFI_PROVIDER ?=3D "${@bb.utils.contains("DISTRO_FEATURES", "systemd", "s=
+ystemd-boot", "grub-efi", d)}"
+ MACHINE_FEATURES +=3D "efi"
+=20
+ IMAGE_FSTYPES +=3D "cpio.gz wic"
++IMAGE_NAME_SUFFIX =3D ""
++IMAGE_CLASSES +=3D "fvpboot"
+=20
+-WKS_FILE ?=3D "sgi575-efidisk.wks"
++WKS_FILE ?=3D "efi-disk.wks.in"
+ WKS_FILE_DEPENDS:append =3D " ${EXTRA_IMAGEDEPENDS}"
++
++# testimage config
++TEST_TARGET =3D "OEFVPTarget"
++#TEST_TARGET_IP =3D "127.0.0.1:222"
++TEST_SUITES =3D "fvp_boot"
++
++# FVP Config
++FVP_PROVIDER ?=3D "fvp-sgi575-native"
++FVP_EXE ?=3D "FVP_CSS_SGI-575"
++
++# Virtio-Net configuration
++FVP_CONFIG[board.virtio_net.enabled] ?=3D "1"
++FVP_CONFIG[board.virtio_net.hostbridge.userNetworking] ?=3D "1"
++FVP_CONFIG[board.virtio_net.hostbridge.userNetPorts] =3D "2222=3D22"
++FVP_CONFIG[board.virtioblockdevice.image_path] ?=3D "${IMAGE_NAME}.wic"
++
++#FVP_CONFIG[cache_state_modelled] ?=3D "0"
++FVP_CONFIG[css.cmn600.mesh_config_file] =3D "SGI-575_cmn600.yml"
++FVP_CONFIG[css.cmn600.force_rnsam_internal] ?=3D "false"
++FVP_CONFIG[css.gic_distributor.ITS-device-bits] ?=3D "20"
++
++FVP_DATA ?=3D "css.scp.armcortexm7ct=3Dscp_ramfw.bin@0x0BD80000"
++FVP_CONFIG[css.mcp.ROMloader.fname] ?=3D "mcp_romfw.bin"
++FVP_CONFIG[css.scp.ROMloader.fname] ?=3D "scp_romfw.bin"
++FVP_CONFIG[css.trustedBootROMloader.fname] ?=3D "bl1-sgi575.bin"
++FVP_CONFIG[board.flashloader0.fname] ?=3D "fip-sgi575.bin"
++
++FVP_CONSOLES[default] =3D "terminal_uart_ap"
++FVP_TERMINALS[css.scp.terminal_uart_aon] ?=3D "SCP Console"
++FVP_TERMINALS[css.mcp.terminal_uart0] ?=3D ""
++FVP_TERMINALS[css.mcp.terminal_uart1] ?=3D ""
++FVP_TERMINALS[css.terminal_uart_ap] ?=3D "Console"
++FVP_TERMINALS[css.terminal_uart1_ap] ?=3D ""
++FVP_TERMINALS[soc.terminal_s0] ?=3D ""
++FVP_TERMINALS[soc.terminal_s1] ?=3D ""
++FVP_TERMINALS[soc.terminal_mcp] ?=3D ""
++FVP_TERMINALS[board.terminal_0] ?=3D ""
++FVP_TERMINALS[board.terminal_1] ?=3D ""
+diff --git a/meta-arm-bsp/wic/sgi575-efidisk.wks b/meta-arm-bsp/wic/sgi57=
+5-efidisk.wks
 deleted file mode 100644
-index 7fc3949b880b..000000000000
---- a/meta-arm/recipes-devtools/fvp/fvp-n1-edge.bb
+index d4c79d337bcb..000000000000
+--- a/meta-arm-bsp/wic/sgi575-efidisk.wks
 +++ /dev/null
 @@ -1,11 +0,0 @@
--require fvp-ecosystem.inc
+-# short-description: Create an EFI disk image
+-# long-description: Creates a partitioned EFI disk image that the user
+-# can directly dd to boot media. Uses a custom grub.cfg file to configur=
+e the boot.
 -
--MODEL =3D "Neoverse-N1"
--MODEL_CODE =3D "FVP_RD_N1_edge"
--PV =3D "11.17.29"
+-part /boot --source bootimg-efi --sourceparams=3D"loader=3Dgrub-efi" --o=
+ndisk sda --label msdos --active --align 1024
 -
--SRC_URI =3D "https://developer.arm.com/-/media/Arm%20Developer%20Communi=
-ty/Downloads/OSS/FVP/${MODEL}/${MODEL_CODE}_${PV_URL}_Linux64.tgz;subdir=3D=
-${BP}"
--SRC_URI[sha256sum] =3D "76f5d6ec50b64fad6d8d901101d9ae2c62805f50fcfd0edb=
-125bc2c68de8c8f2"
+-part / --source rootfs --ondisk sda --fstype=3Dext4 --label root --align=
+ 1024 --uuid=3D9c53a91b-e182-4ff1-aeac-6ee2c432ae94
 -
--LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
-a33828e132ba71861c11688dbb0bd16 \
--                    file://license_terms/third_party_licenses.txt;md5=3D=
-41029e71051b1c786bae3112a29905a7"
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-rd1-ae.bb b/meta-arm/recip=
-es-devtools/fvp/fvp-rd1-ae.bb
-new file mode 100644
-index 000000000000..56558f83486d
---- /dev/null
-+++ b/meta-arm/recipes-devtools/fvp/fvp-rd1-ae.bb
-@@ -0,0 +1,14 @@
-+require fvp-ecosystem.inc
-+
-+MODEL =3D "RD-1_AE"
-+MODEL_CODE =3D "FVP_RD_1_AE"
-+PV =3D "11.27.20"
-+
-+SRC_URI =3D "https://developer.arm.com/-/cdn-downloads/permalink/FVPs-Au=
-tomotive/${MODEL}/${MODEL_CODE}_${PV_URL}_${FVP_ARCH}.tgz;subdir=3D${BP};=
-name=3Dfvp-${HOST_ARCH}"
-+SRC_URI[fvp-aarch64.sha256sum] =3D "297ded55d025772c9ad8497c6a97e0619fc1=
-762dd1236e3ddec14da449f51ca4"
-+SRC_URI[fvp-x86_64.sha256sum] =3D "e2b01fafac9cd560ed7a42f155241971d0cef=
-086404c56bbb44dc6c9bf672e7d"
-+
-+LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
-a33828e132ba71861c11688dbb0bd16 \
-+                    file://license_terms/third_party_licenses/third_part=
-y_licenses.txt;md5=3Da3ce84371977a6b9c624408238309a90"
-+
-+COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-tc3.bb b/meta-arm/recipes-=
-devtools/fvp/fvp-tc3.bb
-new file mode 100644
-index 000000000000..e63a848a57e8
---- /dev/null
-+++ b/meta-arm/recipes-devtools/fvp/fvp-tc3.bb
-@@ -0,0 +1,11 @@
-+require fvp-ecosystem.inc
-+
-+MODEL =3D "TC3"
-+MODEL_CODE =3D "FVP_TC3"
-+PV =3D "11.26.16"
-+
-+SRC_URI =3D "https://developer.arm.com/-/cdn-downloads/permalink/FVPs-To=
-tal-Compute/Total-Compute-TC3/${MODEL_CODE}_${PV_URL}_${FVP_ARCH}.tgz;sub=
-dir=3D${BP}"
-+SRC_URI[sha256sum] =3D "1d72b508e5d8b50de0e389140b4930e5de53c48ba0d3e086=
-5ed4d15898610069"
-+
-+LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
-a33828e132ba71861c11688dbb0bd16 \
-+                    file://license_terms/third_party_licenses/third_part=
-y_licenses.txt;md5=3D58b552b918d097a8ba802168312d76b2"
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-v3-r1.bb b/meta-arm/recipe=
-s-devtools/fvp/fvp-v3-r1.bb
-new file mode 100644
-index 000000000000..5a451effafb6
---- /dev/null
-+++ b/meta-arm/recipes-devtools/fvp/fvp-v3-r1.bb
-@@ -0,0 +1,14 @@
-+require fvp-ecosystem.inc
-+
-+MODEL =3D "RD-V3-r1"
-+MODEL_CODE =3D "FVP_RD_V3_R1"
-+PV =3D "11.27.51"
-+
-+SRC_URI =3D "https://developer.arm.com/-/cdn-downloads/permalink/FVPs-Ne=
-overse-Infrastructure/${MODEL}/${MODEL_CODE}_${PV_URL}_${FVP_ARCH}.tgz;su=
-bdir=3D${BP};name=3Dfvp-${HOST_ARCH}"
-+SRC_URI[fvp-aarch64.sha256sum] =3D "6b25961a7dcac99ff5d2c63f297e1598b05e=
-67938d71353b37c82e3d58d7ac3c"
-+SRC_URI[fvp-x86_64.sha256sum] =3D "72f659ee3554ab0330984f35b2d640ea6553b=
-bcbbf77cc485555be14277e4bc3"
-+
-+LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
-a33828e132ba71861c11688dbb0bd16 \
-+                    file://license_terms/third_party_licenses/third_part=
-y_licenses.txt;md5=3D9ddd501715f7e1fed82c57b260b020ba"
-+
-+COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
+-part swap --ondisk sda --size 44 --label swap1 --fstype=3Dswap
+-
+-bootloader --ptable gpt --configfile=3D"sgi575-grub.cfg" --timeout=3D5
+diff --git a/meta-arm-bsp/wic/sgi575-grub.cfg b/meta-arm-bsp/wic/sgi575-g=
+rub.cfg
+deleted file mode 100644
+index a176389746c1..000000000000
+--- a/meta-arm-bsp/wic/sgi575-grub.cfg
++++ /dev/null
+@@ -1,9 +0,0 @@
+-set debug=3D"loader,mm"
+-set term=3D"vt100"
+-set default=3D"0"
+-set timeout=3D"1"
+-
+-menuentry 'Arm reference image boot on sgi575' {
+-        linux /Image acpi=3Dforce console=3DttyAMA0,115200 ip=3Ddhcp roo=
+t=3DPARTUUID=3D9c53a91b-e182-4ff1-aeac-6ee2c432ae94 rootwait verbose debu=
+g
+-}
+-
 --=20
 2.39.5 (Apple Git-154)
 
