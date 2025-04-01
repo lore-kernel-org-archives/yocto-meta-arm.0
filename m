@@ -2,75 +2,78 @@ Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AC2C3600B
-	for <webhook@archiver.kernel.org>; Mon, 31 Mar 2025 11:05:11 +0000 (UTC)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
- by mx.groups.io with SMTP id smtpd.web10.49374.1743419104502470191
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E767FC36014
+	for <webhook@archiver.kernel.org>; Tue,  1 Apr 2025 08:25:50 +0000 (UTC)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+ by mx.groups.io with SMTP id smtpd.web10.14114.1743495948241907807
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 31 Mar 2025 04:05:04 -0700
+ Tue, 01 Apr 2025 01:25:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=qjGcvQD6;
- spf=pass (domain: linaro.org, ip: 209.85.167.50, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so5123094e87.1
-        for <meta-arm@lists.yoctoproject.org>; Mon, 31 Mar 2025 04:05:04 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=ZdzjklgG;
+ spf=pass (domain: linaro.org, ip: 209.85.167.42, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5499c5d9691so5579062e87.2
+        for <meta-arm@lists.yoctoproject.org>; Tue, 01 Apr 2025 01:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1743419103; x=1744023903; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1743495946; x=1744100746; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EPzOUTfGedtR0lVrGfaYqvuaahnPIYuyDAeVosL1KMI=;
-        b=qjGcvQD6SfT+FH+QeSpWpqp5B+CzBaoJdUlsVpHD9REZW/OcTyugTQ5GmxplpsvfOK
-         BnsT7QZmv5CylKKKBo/aLpoOkXLVfg/BMnZtmpHmg9Fgj2N/mlNlJ1+hqvj6g5nSdMnS
-         RlPZnd2pYy9IelCpsAU35xEEmupcwAY+DyM4+nnha1Q5BdqvwjMI0A9lRc3+IlLtT6OC
-         2FjTBmVMDsR7/pSX9hD852LHoWOoQZqUTe9S2EUNXO/Q8VpY2L44e0PgsYuyBDQtCrvW
-         KPbrZwIGGggZBMcacoYDPgyCN/29f3H+f6u+paY2ANmD3vT3Wjn+YZS+zjuMWzjpjHvK
-         BpoA==
+        bh=k3sfsUNDzK9hbKsgFW4A2OEe0snd99/GtqU4zbUO1GQ=;
+        b=ZdzjklgGHAyJ1LVakOniOQs+hqRUxtR/E/uYnV7WMFP4aEzFJjfk6p8MkEiDIfCPF6
+         fucBhAE7RK1mz2RMGHt2SMTW7kroEoOqHokvQBcSDTG5v1BIrPucdTmCmpHM6dBgzd9z
+         CP8U48T058+VhlccUQeYj7NbYFuzb/nimx8Vbpy9v/1lyPxfazIT6zhrPg2gTw6oT1SU
+         eVmt/1uOXNVy9l2aRYggtwuIhCEVMeWh/r9JHnwsdAstVreMoCWVyqglPz1xWjyCVQ5/
+         1fPCfEY/ux9QyVvEXJ72YmTT74fvbuwfDkdWC2JQITZRNGQk1rWT+NyXx03sv01xf8/0
+         DDvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743419103; x=1744023903;
+        d=1e100.net; s=20230601; t=1743495946; x=1744100746;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EPzOUTfGedtR0lVrGfaYqvuaahnPIYuyDAeVosL1KMI=;
-        b=K9rgQ2POhETVq8B8zScGDTGwr8b+j4YaNApwlrjhDksOYcW0FEeQQdOD6dszzcD80u
-         aKNtQBs+Tmooirud84XLRrKg7BB9UAVvDAXGqgBCNnTLh7bKPpCOuqzLrGlYIGltinP5
-         LYRNfCEN+OIcv3nxmmJBhHoEC7RZiycrzOAxzHz70AKM3Fgp54aSHU2jCVhpBEK7zA6r
-         BI2OmjTMB2sO2jSWFkKgD+1Ws0TrSj0+PWqMtJ2syKT79uZb0thl4ViFAuhvncAsdjAk
-         1XGAnCXHRed/TEUhRA6MOSCg+CHJu4m8r4VMXaPgUCR9sJsk5U6moZxnvqEiw2/EUSnb
-         TueA==
-X-Gm-Message-State: AOJu0YyqaHP33jhz1Mte2OLG4C62Z4WQmLk16RkVKV2h2DbJMDBxCLgY
-	6JldPIRq1IJsh4yTS340BDnh7reJnCksScqCLP6N9mF+FuNCtb6lvgJULCpuXYEQ8GVbA0ZmkO7
-	U5R0=
-X-Gm-Gg: ASbGncu91vNR4PjEQSBlngotvZ4vg5aK7u+Q2t0PVLFLrfZsyCD2bl9hNuwlu7UzjP2
-	6cnR3Vxj3wSH7PHFIJHzyKd42WxMcsNsaPxAVIFRzir37rbHHn20Rt0diT3ZF1zET9XQMQZyiZZ
-	MNL0C1mmklcE+k5z2m9kfi0HcFc7QmOd2dV1MiIPJdLA0DMIwmr8GnPFwBUKZKYK/OUCbvePt9A
-	6rb8+7a5z+Rg0n3aXdnFr9XVgz/vdm0EfAsQpqswWYxKHgnHwxm7CXCNv3GiQmBM0AIAK4tq20g
-	NhH0KDvW0uzvjVxX3atd2DQjAiza/3mH3yX/erLOAJJNcX3IeBP4RzoVATMhn/67AaC3oslsbXR
-	uI9gb4FbXveRGuQthTPt5mg==
-X-Google-Smtp-Source: AGHT+IGVLrJatBCirXcGMsgykKLLv+XW9FjqkcgVSa+qYFvBEvO3DKTct+umiwlHUc0EcTwyT9+2mQ==
-X-Received: by 2002:a05:6512:12cb:b0:54b:117b:dbef with SMTP id 2adb3069b0e04-54b117bdc79mr2415001e87.54.1743419102535;
-        Mon, 31 Mar 2025 04:05:02 -0700 (PDT)
+        bh=k3sfsUNDzK9hbKsgFW4A2OEe0snd99/GtqU4zbUO1GQ=;
+        b=mEBlPD/95OJrS4sB5TTZgGhfrDG7K8UAfhRYnuU4RBjp19xfF7qiVRMoxTAmJFCvcG
+         /c6VhNA+4p0yFmlFoSlChan+bMDFWDr9DTq8B5wfmoXPZatuzwtp04+EZ7y3UDlKqzef
+         k7i0lJNh6KvV6Ds2MWV7z+0YFSNVl88MqcOVc9FBFO01HBnpVTICmL2DyRaZ9cMPaHR9
+         CHRexK9bsFR/nMj2CqaA9/hDPhfgkHhdHeaT7F7CH1MBmh20aFtsImT68qj0YDHwLWpl
+         KctoUlHirErAybweG+H1mvHYDNzOj5iiFNPWYs7ZOWhBr1CFm4A7EPCqsYaEc6Y1vYdD
+         PEzA==
+X-Gm-Message-State: AOJu0YyQ6PJujoTz1pf+qzl8EdN7PvOdzFtMdRQdM7VpDniaOTIaDcmB
+	po1Lzw8lYB2XeFHba+/6YPgoQTDnBh+H8gk13UM8GloSGbSIG2klvJlYFkmGjb+6Pg2hAHS4e8b
+	0dgw=
+X-Gm-Gg: ASbGncuKmq8hn0G1tMGrdtDkN3iJQp65ZfClYy1YUgynPBCeAJy3wKPwZn0nicJD1Bl
+	9636hhrTlVsRMBYCS9coIcuXkmVHNGoucViaF1zPnK9/mCGfA8ZnhgAb/KZTryA6qRgFILb11Xt
+	Q/KqEB8HcTQMAuub0Oj6cFZ6fPpHjSRwuSSkGtQn84C2K9BccGC8ZHtsf9n6H028RzNYkR7af6J
+	HEeKSyCfWVO8ujeHOTgS/HfOtSmmomf8Bpo/n4fjxqknz/NgqAmLCfVxMO/yujWMk150rtdJ7RS
+	rcr2O/AgTAJG7YZ/h2tKawm2RMGChGMJXWXWQNhpjGW/3VVjYWcjfysXmw+aU2rDaabIqNhRX5v
+	v+X9JZVBvKYA8m+QRrCdAcg==
+X-Google-Smtp-Source: AGHT+IH/5vWqLchKtRe29+kd3ij+e36ICsxXsn6H4778+oDdVzevfOyD6o62lPEC/0R1Mz8J4fuvsw==
+X-Received: by 2002:a05:6512:2c8e:b0:54b:117b:dbf2 with SMTP id 2adb3069b0e04-54b117bdc84mr3176214e87.57.1743495946039;
+        Tue, 01 Apr 2025 01:25:46 -0700 (PDT)
 Received: from localhost.localdomain (87-100-218-141.bb.dnainternet.fi. [87.100.218.141])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b095a034esm1100018e87.216.2025.03.31.04.05.02
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b0957fbc8sm1316013e87.123.2025.04.01.01.25.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 04:05:02 -0700 (PDT)
+        Tue, 01 Apr 2025 01:25:45 -0700 (PDT)
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
-Subject: [PATCH] edk2-firmware: fix SOURCE_DATE_EPOCH
-Date: Mon, 31 Mar 2025 14:04:46 +0300
-Message-ID: <20250331110446.33082-1-mikko.rapeli@linaro.org>
+Subject: [PATCH v2] edk2-firmware: fix SOURCE_DATE_EPOCH
+Date: Tue,  1 Apr 2025 11:25:25 +0300
+Message-ID: <20250401082525.94287-1-mikko.rapeli@linaro.org>
 X-Mailer: git-send-email 2.49.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 31 Mar 2025 11:05:11 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6424
+ <meta-arm@lists.yoctoproject.org>; Tue, 01 Apr 2025 08:25:50 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6425
 
 edk2-firmware build scripts use printenv to print SOURCE_DATE_EPOCH
-but that is not in HOSTTOOLS and thus fails. Change to using
+but that is not in HOSTTOOLS and thus fails with configurations
+which use VirtualRealTimeClockLib. Change to using SOURCE_DATE_EPOCH
 environment variable directly to fix builds. I think this is OE
-specific build config change and thus not submitted to upstream.
+specific build config change but filed a bug report upstream
+https://github.com/tianocore/edk2/issues/10910
+since the fallback mechanism is not working.
 
 Applying patch in 202411 recipe and not .inc since 202408 recipe
 from meta-arm-bsp does not find the patch file from meta-arm
@@ -100,7 +103,7 @@ index 5892a485..22e72434 100644
 diff --git a/meta-arm/recipes-bsp/uefi/files/edk2_fix_epoch.patch b/meta-ar=
 m/recipes-bsp/uefi/files/edk2_fix_epoch.patch
 new file mode 100644
-index 00000000..278de593
+index 00000000..4b4e04ae
 --- /dev/null
 +++ b/meta-arm/recipes-bsp/uefi/files/edk2_fix_epoch.patch
 @@ -0,0 +1,27 @@
@@ -125,7 +128,8 @@ rtualRealTimeClockLib.c:89:20: note: in expansion of macro 'BUILD_EPOCH'
 +
 +Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 +
-+Upstream-Status: Inappropriate [OE specific build config fix]
++Upstream-Status: Inappropriate [OE specific build config fix, though filed=
+ as https://github.com/tianocore/edk2/issues/10910]
 +
 +diff --git a/EmbeddedPkg/Library/VirtualRealTimeClockLib/VirtualRealTimeCl=
 ockLib.inf b/EmbeddedPkg/Library/VirtualRealTimeClockLib/VirtualRealTimeClo=
