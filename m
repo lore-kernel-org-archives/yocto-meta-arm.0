@@ -2,318 +2,431 @@ Return-Path: <gyorgy.szing@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D29DC3601E
-	for <webhook@archiver.kernel.org>; Wed,  2 Apr 2025 14:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0C1C3601A
+	for <webhook@archiver.kernel.org>; Wed,  2 Apr 2025 14:17:10 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.9650.1743603425631481904
+ by mx.groups.io with SMTP id smtpd.web10.9659.1743603424663220994
  for <meta-arm@lists.yoctoproject.org>;
  Wed, 02 Apr 2025 07:17:05 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gyorgy.szing@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BA881007;
-	Wed,  2 Apr 2025 07:17:08 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E14A91007;
+	Wed,  2 Apr 2025 07:17:06 -0700 (PDT)
 Received: from gyoszi01-yocto.budapest.arm.com (ubul2.budapest.arm.com [10.45.25.74])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4584B3F63F;
-	Wed,  2 Apr 2025 07:17:04 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D29E63F63F;
+	Wed,  2 Apr 2025 07:17:02 -0700 (PDT)
 From: Gyorgy Szing <gyorgy.szing@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Gyorgy Szing <gyorgy.szing@arm.com>,
-	Bence Balogh <bence.balogh@arm.com>,
+Cc: Mikko Rapeli <mikko.rapeli@linaro.org>,
+	tom.hochstein@nxp.com,
+	sahil.malhotra@nxp.com,
 	Ross Burton <ross.burton@arm.com>
-Subject: [PATCH 2/6] optee-os: add v4.4
-Date: Wed,  2 Apr 2025 16:16:48 +0200
-Message-ID: <20250402141652.380180-2-gyorgy.szing@arm.com>
+Subject: [PATCH 1/6] optee-client: use udev rule and systemd service from upstream
+Date: Wed,  2 Apr 2025 16:16:47 +0200
+Message-ID: <20250402141652.380180-1-gyorgy.szing@arm.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250402141652.380180-1-gyorgy.szing@arm.com>
-References: <20250402141652.380180-1-gyorgy.szing@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 02 Apr 2025 14:17:11 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6436
+ <meta-arm@lists.yoctoproject.org>; Wed, 02 Apr 2025 14:17:10 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6435
 
-Add recipes to allow building OP-TEE v4.4. This is the first version
-carrying an SPMC implementation which supports branch protection.
+From: Mikko Rapeli <mikko.rapeli@linaro.org>
 
-Update corstone1000:
-  - to use the new op-tee version
-  - `CFG_TZDRAM_SIZE` is increased further from `0x340000` to `0x360000`
-     as version 4.4.0 of OP-TEE OS requires more memory
+Use backported upstream patch for udev rule and systemd service file.
+sysvinit script is still used from meta-arm. Don't install systemd
+service without systemd distro feature, other way round for
+sysvinit script.
 
-Signed-off-by: Gyorgy Szing <gyorgy.szing@arm.com>
-Signed-off-by: Bence Balogh <bence.balogh@arm.com>
+tee-supplicant started by systemd service runs as non-root teesuppl
+user with teepriv group. sysvinit still runs as root since busybox
+start-stop-daemon doesn't support -g group parameter and -u teesuppl
+doesn't seem to change the effective user.
+
+udev rules allow non-root /dev/tee* access from tee and
+/dev/teepriv* access from teepriv groups.
+
+Tested sysvinit changes with:
+
+$ kas build ci/qemuarm64-secureboot.yml:ci/poky.yml:ci/testimage.yml
+
+and systemd changes with:
+
+$ kas build ci/qemuarm64-secureboot.yml:ci/poky.yml:ci/testimage.yml:ci/u=
+efi-secureboot.yml
+
+Cc: tom.hochstein@nxp.com
+Cc: sahil.malhotra@nxp.com
+Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 Signed-off-by: Ross Burton <ross.burton@arm.com>
-
-optee-os: corestone1000: udpate to op-tee v4.4
-
-Update OP-TEE version and add a patch to increase TZDRAM size to add
-more memory to OP-TEE.
-
-Signed-off-by: Gyorgy Szing <gyorgy.szing@arm.com>
 ---
- .../conf/machine/include/corstone1000.inc     |  3 +-
- .../0002-increase-tzdram-size.patch           | 28 -----------------
- ...orstone1000-increase-CFG_TZDRAM_SIZE.patch | 30 +++++++++++++++++++
- .../optee/optee-os-corstone1000-common.inc    |  2 +-
- .../optee/optee-client_4.4.0.bb               |  8 +++++
- .../optee/optee-examples_4.4.0.bb             |  4 +++
- .../optee/optee-os-tadevkit_4.4.0.bb          | 29 ++++++++++++++++++
- .../recipes-security/optee/optee-os_4.4.0.bb  | 11 +++++++
- .../recipes-security/optee/optee-test.inc     |  1 -
- .../optee/optee-test_4.4.0.bb                 | 15 ++++++++++
- 10 files changed, 100 insertions(+), 31 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/co=
-rstone1000/0002-increase-tzdram-size.patch
- create mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/co=
-rstone1000/0002-plat-corstone1000-increase-CFG_TZDRAM_SIZE.patch
- create mode 100644 meta-arm/recipes-security/optee/optee-client_4.4.0.bb
- create mode 100644 meta-arm/recipes-security/optee/optee-examples_4.4.0.=
-bb
- create mode 100644 meta-arm/recipes-security/optee/optee-os-tadevkit_4.4=
-.0.bb
- create mode 100644 meta-arm/recipes-security/optee/optee-os_4.4.0.bb
- create mode 100644 meta-arm/recipes-security/optee/optee-test_4.4.0.bb
+ .../recipes-security/optee/optee-client.inc   |  30 +--
+ ...dd-udev-rule-and-systemd-service-fil.patch | 186 ++++++++++++++++++
+ .../optee/optee-client/optee-udev.rules       |   6 -
+ .../optee-client/tee-supplicant@.service      |  13 --
+ .../optee/optee-client_4.3.0.bb               |   2 +
+ 5 files changed, 205 insertions(+), 32 deletions(-)
+ create mode 100644 meta-arm/recipes-security/optee/optee-client/0001-tee=
+-supplicant-add-udev-rule-and-systemd-service-fil.patch
+ delete mode 100644 meta-arm/recipes-security/optee/optee-client/optee-ud=
+ev.rules
+ delete mode 100644 meta-arm/recipes-security/optee/optee-client/tee-supp=
+licant@.service
 
-diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-ar=
-m-bsp/conf/machine/include/corstone1000.inc
-index df2a6044..57207499 100644
---- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
-+++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
-@@ -14,7 +14,8 @@ TFA_BL2_BINARY =3D "bl2-corstone1000.bin"
- TFA_FIP_BINARY =3D "fip-corstone1000.bin"
+diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/=
+recipes-security/optee/optee-client.inc
+index f387c805..fc48c302 100644
+--- a/meta-arm/recipes-security/optee/optee-client.inc
++++ b/meta-arm/recipes-security/optee/optee-client.inc
+@@ -9,9 +9,7 @@ inherit systemd update-rc.d cmake useradd
 =20
- # optee
--PREFERRED_VERSION_optee-os ?=3D "4.3.%"
-+PREFERRED_VERSION_optee-os ?=3D "4.4.%"
-+PREFERRED_VERSION_optee-client ?=3D "4.4.%"
+ SRC_URI =3D " \
+     git://github.com/OP-TEE/optee_client.git;branch=3Dmaster;protocol=3D=
+https \
+-    file://tee-supplicant@.service \
+     file://tee-supplicant.sh \
+-    file://optee-udev.rules \
+ "
 =20
- # Trusted Services
- TS_PLATFORM =3D "arm/corstone1000"
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1=
-000/0002-increase-tzdram-size.patch b/meta-arm-bsp/recipes-security/optee=
-/files/optee-os/corstone1000/0002-increase-tzdram-size.patch
-deleted file mode 100644
-index 0c89bd0e..00000000
---- a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/000=
-2-increase-tzdram-size.patch
-+++ /dev/null
-@@ -1,28 +0,0 @@
--From 1410d9e9c3e73b1319b98be67ad00c7630c4cb2e Mon Sep 17 00:00:00 2001
--From: Emekcan Aras <Emekcan.Aras@arm.com>
--Date: Wed, 3 Apr 2024 16:05:07 +0100
--Subject: [PATCH] increase tzdram size
+ UPSTREAM_CHECK_GITTAGREGEX =3D "^(?P<pver>\d+(\.\d+)+)$"
+@@ -20,20 +18,21 @@ S =3D "${WORKDIR}/git"
+=20
+ EXTRA_OECMAKE =3D " \
+     -DBUILD_SHARED_LIBS=3DON \
+-    -DCFG_TEE_FS_PARENT_PATH=3D'${localstatedir}/lib/tee' \
+ "
+ EXTRA_OECMAKE:append:toolchain-clang =3D " -DCFG_WERROR=3D0"
+=20
+ do_install:append() {
+-    install -D -p -m0644 ${UNPACKDIR}/tee-supplicant@.service ${D}${syst=
+emd_system_unitdir}/tee-supplicant@.service
+-    install -D -p -m0755 ${UNPACKDIR}/tee-supplicant.sh ${D}${sysconfdir=
+}/init.d/tee-supplicant
+-    install -d ${D}${sysconfdir}/udev/rules.d
+-    install -m 0644 ${UNPACKDIR}/optee-udev.rules ${D}${sysconfdir}/udev=
+/rules.d/optee.rules
 -
--Upstream-Status: Backport [https://github.com/OP-TEE/optee_os/commit/258=
-b72d242cd1a8ae56c87f9572a0624084785c7]
--Signed-off-by: Emekcan Aras <Emekcan.Aras@arm.com>
--Signed-off-by: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-----
-- core/arch/arm/plat-corstone1000/conf.mk | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
--
--diff --git a/core/arch/arm/plat-corstone1000/conf.mk b/core/arch/arm/pla=
-t-corstone1000/conf.mk
--index 98347b143..c2dd71f05 100644
----- a/core/arch/arm/plat-corstone1000/conf.mk
--+++ b/core/arch/arm/plat-corstone1000/conf.mk
--@@ -34,7 +34,7 @@ CFG_TEE_CORE_NB_CORE ?=3D 1
-- CFG_TZDRAM_START ?=3D 0x02002000
--=20
-- # TEE_RAM (OPTEE kernel + DATA) + TA_RAM =3D 3MB
---CFG_TZDRAM_SIZE  ?=3D 0x300000
--+CFG_TZDRAM_SIZE  ?=3D 0x340000
-- CFG_SHMEM_START  ?=3D 0x86000000
-- CFG_SHMEM_SIZE   ?=3D 0x00200000
--=20
----=20
--2.25.1
--
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1=
-000/0002-plat-corstone1000-increase-CFG_TZDRAM_SIZE.patch b/meta-arm-bsp/=
-recipes-security/optee/files/optee-os/corstone1000/0002-plat-corstone1000=
--increase-CFG_TZDRAM_SIZE.patch
+-    sed -i -e s:@sysconfdir@:${sysconfdir}:g \
+-           -e s:@sbindir@:${sbindir}:g \
+-              ${D}${systemd_system_unitdir}/tee-supplicant@.service \
+-              ${D}${sysconfdir}/init.d/tee-supplicant
++    # installed by default
++    if ! ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'fal=
+se', d)}; then
++        rm -rf ${D}${libdir}/systemd
++    fi
++    if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'fals=
+e', d)}; then
++        install -D -p -m0755 ${UNPACKDIR}/tee-supplicant.sh ${D}${syscon=
+fdir}/init.d/tee-supplicant
++        sed -i -e s:@sysconfdir@:${sysconfdir}:g \
++               -e s:@sbindir@:${sbindir}:g \
++                  ${D}${sysconfdir}/init.d/tee-supplicant
++    fi
++    install -o teesuppl -g teesuppl -m 0700 -d ${D}${localstatedir}/lib/=
+tee
+ }
+=20
+ SYSTEMD_SERVICE:${PN} =3D "tee-supplicant@.service"
+@@ -42,5 +41,10 @@ INITSCRIPT_PACKAGES =3D "${PN}"
+ INITSCRIPT_NAME:${PN} =3D "tee-supplicant"
+ INITSCRIPT_PARAMS:${PN} =3D "start 10 1 2 3 4 5 . stop 90 0 6 ."
+=20
++# Users and groups:
++# tee group to access /dev/tee*
++# teepriv group to acess /dev/teepriv*, only tee-supplicant
++# teesuppl user and group teesuppl to run tee-supplicant
+ USERADD_PACKAGES =3D "${PN}"
+-GROUPADD_PARAM:${PN} =3D "--system teeclnt"
++GROUPADD_PARAM:${PN} =3D "--system tee; --system teepriv; --system teesu=
+ppl"
++USERADD_PARAM:${PN} =3D "--system -g teesuppl --groups teepriv --home-di=
+r ${localstatedir}/lib/tee -M --shell /sbin/nologin teesuppl;"
+diff --git a/meta-arm/recipes-security/optee/optee-client/0001-tee-suppli=
+cant-add-udev-rule-and-systemd-service-fil.patch b/meta-arm/recipes-secur=
+ity/optee/optee-client/0001-tee-supplicant-add-udev-rule-and-systemd-serv=
+ice-fil.patch
 new file mode 100644
-index 00000000..851e2cd2
+index 00000000..18c0d950
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/000=
-2-plat-corstone1000-increase-CFG_TZDRAM_SIZE.patch
-@@ -0,0 +1,30 @@
-+From ce58e4d78dc7a4f3c3b08ee425461eb190d70543 Mon Sep 17 00:00:00 2001
-+From: Bence Balogh <bence.balogh@arm.com>
-+Date: Fri, 1 Nov 2024 00:45:53 +0100
-+Subject: [PATCH] plat-corstone1000: increase CFG_TZDRAM_SIZE
++++ b/meta-arm/recipes-security/optee/optee-client/0001-tee-supplicant-ad=
+d-udev-rule-and-systemd-service-fil.patch
+@@ -0,0 +1,186 @@
++From bf0d02758696ee7a9f7af9e95f85f5c238d0e109 Mon Sep 17 00:00:00 2001
++From: Mikko Rapeli <mikko.rapeli@linaro.org>
++Date: Wed, 2 Oct 2024 15:24:21 +0100
++Subject: [PATCH] tee-supplicant: add udev rule and systemd service file
 +
-+TZDRAM is a 4MB SRAM in Corstone-1000. Its start address is `0x0200_0000=
-`
-+but the first 0x2000 bytes are reserved for future use. `CFG_TZDRAM_SIZE=
-`
-+can be increased to `0x360000` so OP-TEE has more RAM.
++tee-supplicant startup with systemd init based
++is non-trivial. Add sample udev rule and systemd
++service files here so that distros can co-operate maintaining
++them.
 +
-+Signed-off-by: Bence Balogh <bence.balogh@arm.com>
-+Upstream-Status: Pending
++Files are from meta-arm https://git.yoctoproject.org/meta-arm
++at commit 7cce43e632daa8650f683ac726f9124681b302a4 with license
++MIT and authors:
++
++Peter Griffin <peter.griffin@linaro.org>
++Joshua Watt <JPEWhacker@gmail.com>
++Javier Tia <javier.tia@linaro.org>
++Mikko Rapeli <mikko.rapeli@linaro.org>
++
++With permission from the authors, files can be relicensed to
++BSD-2-Clause like rest of optee client repo.
++
++The config files expect to find tee and teepriv system groups
++and teesuppl user and group (part of teepriv group) for running
++tee-supplicant. Additionally state directory /var/lib/tee
++must be owned by teesuppl user and group with no rights
++to other users. The groups and user can be changed via
++CMake variables:
++
++CFG_TEE_GROUP
++CFG_TEEPRIV_GROUP
++CFG_TEE_SUPPL_USER
++CFG_TEE_SUPPL_GROUP
++
++Change storage path from /data to /var/lib and
++use standard CMake variables also for constructing install
++paths which can be override to change the defaults:
++
++CMAKE_INSTALL_PREFIX, e.g. /
++CMAKE_INSTALL_LIBDIR, e.g. /usr/lib
++CMAKE_INSTALL_LOCALSTATEDIR /var
++
++Once these are setup, udev will start tee-supplicant in initramfs
++or rootfs with teesuppl user and group when /dev/teepriv
++device appears. The systemd service starts before tpm2.target
++(new in systemd 256) which starts early in initramfs and in main rootfs.
++This covers firmware TPM TA usecases for main rootfs encryption. When
++stopping tee-supplicant, the ftpm kernel modules are removed and only
++then the main process stopped to avoid fTPM breakage. These workarounds
++may be removed once RPMB kernel and optee patches without tee-supplicant
++are merged (Linux kernel >=3D 6.12-rc1, optee_os latest master or >=3D 4=
+.4).
++
++Tested on yocto meta-arm setup which runs fTPM and optee-test/xtest
++under qemuarm64:
++
++$ git clone https://git.yoctoproject.org/meta-arm
++$ cd meta-arm
++$ SSTATE_DIR=3D$HOME/sstate DL_DIR=3D$HOME/download kas build \
++ci/qemuarm64-secureboot.yml:ci/poky-altcfg.yml:ci/testimage.yml
++
++Compiled image can be manually started to qemu serial console with:
++
++$ SSTATE_DIR=3D$HOME/sstate DL_DIR=3D$HOME/download kas shell \
++ci/qemuarm64-secureboot.yml:ci/poky-altcfg.yml:ci/testimage.yml
++$ runqemu slirp nographic
++
++meta-arm maintainers run these tests as part of their CI.
++
++Note that if the tee-supplicant state directory /var/lib/tee
++can not be accessed due permissions or other problems, then
++tee-supplicant startup with systemd still works. Only optee-test/xtest
++will be failing and fTPM kernel drivers fail to load with error
++messages.
++
++Cc: Peter Griffin <peter.griffin@linaro.org>
++Cc: Joshua Watt <JPEWhacker@gmail.com>
++Cc: Javier Tia <javier.tia@linaro.org>
++Acked-by: Jerome Forissier <jerome.forissier@linaro.org>
++Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 +---
-+ core/arch/arm/plat-corstone1000/conf.mk | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
++ config.mk                                 |  2 +-
++ libteec/CMakeLists.txt                    |  2 +-
++ tee-supplicant/CMakeLists.txt             | 13 +++++++++++--
++ tee-supplicant/optee-udev.rules.in        |  7 +++++++
++ tee-supplicant/tee-supplicant@.service.in | 17 +++++++++++++++++
++ 5 files changed, 37 insertions(+), 4 deletions(-)
++ create mode 100644 tee-supplicant/optee-udev.rules.in
++ create mode 100644 tee-supplicant/tee-supplicant@.service.in
 +
-+diff --git a/core/arch/arm/plat-corstone1000/conf.mk b/core/arch/arm/pla=
-t-corstone1000/conf.mk
-+index 9fa0729d5..745dc958a 100644
-+--- a/core/arch/arm/plat-corstone1000/conf.mk
-++++ b/core/arch/arm/plat-corstone1000/conf.mk
-+@@ -34,7 +34,7 @@ CFG_TEE_CORE_NB_CORE ?=3D 1
-+ CFG_TZDRAM_START ?=3D 0x02002000
++Upstream-Status: Backport
++
++diff --git a/config.mk b/config.mk
++index eae481f..3def087 100644
++--- a/config.mk
+++++ b/config.mk
++@@ -23,7 +23,7 @@ CFG_TEE_SUPP_LOG_LEVEL?=3D1
++ #   This folder can be created with the required permission in an init
++ #   script during boot, else it will be created by the tee-supplicant o=
+n
++ #   first REE FS access.
++-CFG_TEE_FS_PARENT_PATH ?=3D /data/tee
+++CFG_TEE_FS_PARENT_PATH ?=3D /var/lib/tee
 +=20
-+ # TEE_RAM (OP-TEE kernel + DATA) + TA_RAM
-+-CFG_TZDRAM_SIZE  ?=3D 0x340000
-++CFG_TZDRAM_SIZE  ?=3D 0x360000
-+ CFG_SHMEM_START  ?=3D 0x86000000
-+ CFG_SHMEM_SIZE   ?=3D 0x00200000
++ # CFG_TEE_CLIENT_LOG_FILE
++ #   The location of the client log file when logging to file is enabled=
+.
++diff --git a/libteec/CMakeLists.txt b/libteec/CMakeLists.txt
++index c742d31..c857369 100644
++--- a/libteec/CMakeLists.txt
+++++ b/libteec/CMakeLists.txt
++@@ -14,7 +14,7 @@ endif()
++ # Configuration flags always included
++ #######################################################################=
+#########
++ set(CFG_TEE_CLIENT_LOG_LEVEL "1" CACHE STRING "libteec log level")
++-set(CFG_TEE_CLIENT_LOG_FILE "/data/tee/teec.log" CACHE STRING "Location=
+ of libteec log")
+++set(CFG_TEE_CLIENT_LOG_FILE "${CMAKE_INSTALL_LOCALSTATEDIR}/lib/tee/tee=
+c.log" CACHE STRING "Location of libteec log")
 +=20
++ #######################################################################=
+#########
++ # Source files
++diff --git a/tee-supplicant/CMakeLists.txt b/tee-supplicant/CMakeLists.t=
+xt
++index 54a34c7..8df9bef 100644
++--- a/tee-supplicant/CMakeLists.txt
+++++ b/tee-supplicant/CMakeLists.txt
++@@ -11,10 +11,15 @@ option(CFG_TEE_SUPP_PLUGINS "Enable tee-supplicant p=
+lugin support" ON)
++ set(CFG_TEE_SUPP_LOG_LEVEL "1" CACHE STRING "tee-supplicant log level")
++ # FIXME: Question is, is this really needed? Should just use defaults f=
+rom # GNUInstallDirs?
++ set(CFG_TEE_CLIENT_LOAD_PATH "/lib" CACHE STRING "Colon-separated list =
+of paths where to look for TAs (see also --ta-dir)")
++-set(CFG_TEE_FS_PARENT_PATH "/data/tee" CACHE STRING "Location of TEE fi=
+lesystem (secure storage)")
+++set(CFG_TEE_FS_PARENT_PATH "${CMAKE_INSTALL_LOCALSTATEDIR}/lib/tee" CAC=
+HE STRING "Location of TEE filesystem (secure storage)")
++ # FIXME: Why do we have if defined(CFG_GP_SOCKETS) && CFG_GP_SOCKETS =3D=
+=3D 1 in the c-file?
++ set(CFG_GP_SOCKETS "1" CACHE STRING "Enable GlobalPlatform Socket API s=
+upport")
++-set(CFG_TEE_PLUGIN_LOAD_PATH "/usr/lib/tee-supplicant/plugins/" CACHE S=
+TRING "tee-supplicant's plugins path")
+++set(CFG_TEE_PLUGIN_LOAD_PATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_L=
+IBDIR}/${PROJECT_NAME}/plugins/" CACHE STRING "tee-supplicant's plugins p=
+ath")
+++
+++set(CFG_TEE_GROUP "tee" CACHE STRING "Group which has access to /dev/te=
+e* devices")
+++set(CFG_TEEPRIV_GROUP "teepriv" CACHE STRING "Group which has access to=
+ /dev/teepriv* devices")
+++set(CFG_TEE_SUPPL_USER "teesuppl" CACHE STRING "User account which tee-=
+supplicant is started with")
+++set(CFG_TEE_SUPPL_GROUP "teesuppl" CACHE STRING "Group account which te=
+e-supplicant is started with")
++=20
++ if(CFG_TEE_SUPP_PLUGINS)
++ 	set(CMAKE_INSTALL_RPATH "${CFG_TEE_PLUGIN_LOAD_PATH}")
++@@ -113,3 +118,7 @@ endif()
++ # Install targets
++ #######################################################################=
+#########
++ install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_SBI=
+NDIR})
+++configure_file(tee-supplicant@.service.in tee-supplicant@.service @ONLY=
+)
+++install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/tee-supplicant@.servi=
+ce DESTINATION ${CMAKE_INSTALL_LIBDIR}/systemd/system)
+++configure_file(optee-udev.rules.in optee-udev.rules @ONLY)
+++install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/optee-udev.rules DEST=
+INATION ${CMAKE_INSTALL_SYSCONFDIR}/udev/rules.d)
++diff --git a/tee-supplicant/optee-udev.rules.in b/tee-supplicant/optee-u=
+dev.rules.in
++new file mode 100644
++index 0000000..275e833
++--- /dev/null
+++++ b/tee-supplicant/optee-udev.rules.in
++@@ -0,0 +1,7 @@
+++# SPDX-License-Identifier: BSD-2-Clause
+++KERNEL=3D=3D"tee[0-9]*", MODE=3D"0660", OWNER=3D"root", GROUP=3D"@CFG_T=
+EE_GROUP@", TAG+=3D"systemd"
+++
+++# If a /dev/teepriv[0-9]* device is detected, start an instance of
+++# tee-supplicant.service with the device name as parameter
+++KERNEL=3D=3D"teepriv[0-9]*", MODE=3D"0660", OWNER=3D"root", GROUP=3D"@C=
+FG_TEEPRIV_GROUP@", \
+++    TAG+=3D"systemd", ENV{SYSTEMD_WANTS}+=3D"tee-supplicant@%k.service"
++diff --git a/tee-supplicant/tee-supplicant@.service.in b/tee-supplicant/=
+tee-supplicant@.service.in
++new file mode 100644
++index 0000000..e53a935
++--- /dev/null
+++++ b/tee-supplicant/tee-supplicant@.service.in
++@@ -0,0 +1,17 @@
+++# SPDX-License-Identifier: BSD-2-Clause
+++[Unit]
+++Description=3DTEE Supplicant on %i
+++DefaultDependencies=3Dno
+++After=3Ddev-%i.device
+++Wants=3Ddev-%i.device
+++Conflicts=3Dshutdown.target
+++Before=3Dtpm2.target sysinit.target shutdown.target
+++
+++[Service]
+++Type=3Dnotify
+++User=3D@CFG_TEE_SUPPL_USER@
+++Group=3D@CFG_TEE_SUPPL_GROUP@
+++EnvironmentFile=3D-@CMAKE_INSTALL_SYSCONFDIR@/default/tee-supplicant
+++ExecStart=3D@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_SBINDIR@/tee-supplica=
+nt $OPTARGS
+++# Workaround for fTPM TA: stop kernel module before tee-supplicant
+++ExecStop=3D-/bin/sh -c "/sbin/modprobe -v -r tpm_ftpm_tee ; /bin/kill $=
+MAINPID"
 +--=20
-+2.25.1
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-co=
-mmon.inc b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-comm=
-on.inc
-index 482aab77..3f6452dc 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.in=
-c
-+++ b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.in=
-c
-@@ -1,7 +1,7 @@
- FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/optee-os/corstone1000:"
- SRC_URI:append =3D " \
-                   file://0001-Handle-logging-syscall.patch \
--                  file://0002-increase-tzdram-size.patch \
-+                  file://0002-plat-corstone1000-increase-CFG_TZDRAM_SIZE=
-.patch \
- 		  "
++2.34.1
++
+diff --git a/meta-arm/recipes-security/optee/optee-client/optee-udev.rule=
+s b/meta-arm/recipes-security/optee/optee-client/optee-udev.rules
+deleted file mode 100644
+index 075f469c..00000000
+--- a/meta-arm/recipes-security/optee/optee-client/optee-udev.rules
++++ /dev/null
+@@ -1,6 +0,0 @@
+-KERNEL=3D=3D"tee[0-9]*", MODE=3D"0660", OWNER=3D"root", GROUP=3D"teeclnt=
+", TAG+=3D"systemd"
+-
+-# If a /dev/teepriv[0-9]* device is detected, start an instance of
+-# tee-supplicant.service with the device name as parameter
+-KERNEL=3D=3D"teepriv[0-9]*", MODE=3D"0660", OWNER=3D"root", GROUP=3D"tee=
+clnt", \
+-    TAG+=3D"systemd", ENV{SYSTEMD_WANTS}+=3D"tee-supplicant@%k.service"
+diff --git a/meta-arm/recipes-security/optee/optee-client/tee-supplicant@=
+.service b/meta-arm/recipes-security/optee/optee-client/tee-supplicant@.s=
+ervice
+deleted file mode 100644
+index e3039fde..00000000
+--- a/meta-arm/recipes-security/optee/optee-client/tee-supplicant@.servic=
+e
++++ /dev/null
+@@ -1,13 +0,0 @@
+-[Unit]
+-Description=3DTEE Supplicant on %i
+-DefaultDependencies=3Dno
+-After=3Ddev-%i.device
+-Wants=3Ddev-%i.device
+-Conflicts=3Dshutdown.target
+-Before=3Dtpm2.target sysinit.target shutdown.target
+-
+-[Service]
+-Type=3Dnotify
+-EnvironmentFile=3D-@sysconfdir@/default/tee-supplicant
+-ExecStart=3D@sbindir@/tee-supplicant $OPTARGS
+-ExecStop=3D-/bin/sh -c "/sbin/modprobe -v -r tpm_ftpm_tee ; /bin/kill $M=
+AINPID"
+diff --git a/meta-arm/recipes-security/optee/optee-client_4.3.0.bb b/meta=
+-arm/recipes-security/optee/optee-client_4.3.0.bb
+index 4a088004..edab4583 100644
+--- a/meta-arm/recipes-security/optee/optee-client_4.3.0.bb
++++ b/meta-arm/recipes-security/optee/optee-client_4.3.0.bb
+@@ -2,6 +2,8 @@ require recipes-security/optee/optee-client.inc
 =20
- COMPATIBLE_MACHINE =3D "corstone1000"
-diff --git a/meta-arm/recipes-security/optee/optee-client_4.4.0.bb b/meta=
--arm/recipes-security/optee/optee-client_4.4.0.bb
-new file mode 100644
-index 00000000..fa7b9564
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-client_4.4.0.bb
-@@ -0,0 +1,8 @@
-+require recipes-security/optee/optee-client.inc
-+
-+# v4.4.0
-+SRCREV =3D "d221676a58b305bddbf97db00395205b3038de8e"
-+
-+inherit pkgconfig
-+DEPENDS +=3D "util-linux"
-+EXTRA_OEMAKE +=3D "PKG_CONFIG=3Dpkg-config"
-diff --git a/meta-arm/recipes-security/optee/optee-examples_4.4.0.bb b/me=
-ta-arm/recipes-security/optee/optee-examples_4.4.0.bb
-new file mode 100644
-index 00000000..46f08384
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-examples_4.4.0.bb
-@@ -0,0 +1,4 @@
-+require recipes-security/optee/optee-examples.inc
-+
-+# v4.4.0
-+SRCREV =3D "378dc0db2d5dd279f58a3b6cb3f78ffd6b165035"
-diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_4.4.0.bb b=
-/meta-arm/recipes-security/optee/optee-os-tadevkit_4.4.0.bb
-new file mode 100644
-index 00000000..961d5251
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_4.4.0.bb
-@@ -0,0 +1,29 @@
-+require recipes-security/optee/optee-os_${PV}.bb
-+
-+SUMMARY =3D "OP-TEE Trusted OS TA devkit"
-+DESCRIPTION =3D "OP-TEE TA devkit for build TAs"
-+HOMEPAGE =3D "https://www.op-tee.org/"
-+
-+DEPENDS +=3D "python3-pycryptodome-native"
-+
-+do_install() {
-+    #install TA devkit
-+    install -d ${D}${includedir}/optee/export-user_ta/
-+    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
-+        cp -aR $f ${D}${includedir}/optee/export-user_ta/
-+    done
-+}
-+
-+do_deploy() {
-+	echo "Do not inherit do_deploy from optee-os."
-+}
-+
-+FILES:${PN} =3D "${includedir}/optee/"
-+
-+# Build paths are currently embedded
-+INSANE_SKIP:${PN}-dev +=3D "buildpaths"
-+
-+# Include extra headers needed by SPMC tests to TA DEVKIT.
-+# Supported after op-tee v3.20
-+EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
--spmc-test', \
-+                                        ' CFG_SPMC_TESTS=3Dy', '' , d)}"
-diff --git a/meta-arm/recipes-security/optee/optee-os_4.4.0.bb b/meta-arm=
-/recipes-security/optee/optee-os_4.4.0.bb
-new file mode 100644
-index 00000000..bd031ef7
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os_4.4.0.bb
-@@ -0,0 +1,11 @@
-+require recipes-security/optee/optee-os.inc
-+
-+DEPENDS +=3D "dtc-native"
-+
-+FILESEXTRAPATHS:prepend :=3D "${THISDIR}/${PN}:"
-+
-+# v4.4.0
-+SRCREV =3D "8f645256efc0dc66bd5c118778b0b50c44469ae1"
-+SRC_URI +=3D " \
-+    file://0003-optee-enable-clang-support.patch \
-+   "
-diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/re=
-cipes-security/optee/optee-test.inc
-index 58f10139..5f35ad9e 100644
---- a/meta-arm/recipes-security/optee/optee-test.inc
-+++ b/meta-arm/recipes-security/optee/optee-test.inc
-@@ -3,7 +3,6 @@ DESCRIPTION =3D "Open Portable Trusted Execution Environm=
-ent - Test suite"
- HOMEPAGE =3D "https://www.op-tee.org/"
+ SRCREV =3D "a5b1ffcd26e328af0bbf18ab448a38ecd558e05c"
 =20
- LICENSE =3D "BSD-2-Clause & GPL-2.0-only"
--LIC_FILES_CHKSUM =3D "file://LICENSE.md;md5=3Ddaa2bcccc666345ab8940aab13=
-15a4fa"
-=20
- inherit python3native ptest
- inherit deploy
-diff --git a/meta-arm/recipes-security/optee/optee-test_4.4.0.bb b/meta-a=
-rm/recipes-security/optee/optee-test_4.4.0.bb
-new file mode 100644
-index 00000000..d514c82c
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-test_4.4.0.bb
-@@ -0,0 +1,15 @@
-+require recipes-security/optee/optee-test.inc
++SRC_URI +=3D "file://0001-tee-supplicant-add-udev-rule-and-systemd-servi=
+ce-fil.patch"
 +
-+# v4.4.0
-+SRCREV =3D "695231ef8987866663a9ed5afd8f77d1bae3dc08"
-+
-+LIC_FILES_CHKSUM =3D "file://LICENSE.md;md5=3Da8fa504109e4cd7ea575bc49ea=
-4be560"
-+
-+
-+# Include ffa_spmc test group if the SPMC test is enabled.
-+# Supported after op-tee v3.20
-+EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
--spmc-test', \
-+                                        ' CFG_SPMC_TESTS=3Dy CFG_SECURE_=
-PARTITION=3Dy', '' , d)}"
-+
-+RDEPENDS:${PN} +=3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee-spm=
-c-test', \
-+                                              ' arm-ffa-user', '' , d)}"
+ inherit pkgconfig
+ DEPENDS +=3D "util-linux"
+ EXTRA_OEMAKE +=3D "PKG_CONFIG=3Dpkg-config"
 --=20
 2.43.0
 
