@@ -1,92 +1,74 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <gergely.kovacs2@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0B8C36010
-	for <webhook@archiver.kernel.org>; Mon,  7 Apr 2025 13:46:41 +0000 (UTC)
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
- by mx.groups.io with SMTP id smtpd.web11.47419.1744033600583636524
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F3AC3600C
+	for <webhook@archiver.kernel.org>; Tue,  8 Apr 2025 09:00:38 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.70798.1744102832228530597
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 07 Apr 2025 06:46:40 -0700
+ Tue, 08 Apr 2025 02:00:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=gbfgoIKR;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.171, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c5e39d1e0eso423076185a.1
-        for <meta-arm@lists.yoctoproject.org>; Mon, 07 Apr 2025 06:46:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1744033599; x=1744638399; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lNIaG/GgyNyzD+8GDWoBNBlYHSBfJAArLasEMzqT8Zk=;
-        b=gbfgoIKRR+mY4uJ6qKQKargMDUQBTGJ04aR446QQLCeW4ht4TbodFIbtsNfUpREQFA
-         IcgQncta6kcHqyhdJ5zdlSSEeIKeqfXHsskmJt8F8GS8/WWZRUM9WDgbTFFCOPrTrNo0
-         KDkpICqmJxMPmVkbfdemve+/i79MZ2IXCvuPQ+WSBIqaNXRpPdOhO2CifBw9Q44jfPwM
-         KPupARqNrUlVapeoQsPbR46eHzkDB0acPFjbvEvEYrCf13GOPOSdEMiW/4DpjNQwDfwh
-         dKTkRrbt24H17EWlcuhSTIP4J3s5eKXluMywuiOPw26dqMENiEngj6Nie0dM37H8BECu
-         D8fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744033599; x=1744638399;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lNIaG/GgyNyzD+8GDWoBNBlYHSBfJAArLasEMzqT8Zk=;
-        b=tQ+U0WHmKthQFv6tiXKZdxd91FveVYZIhhzto5R0CtiAOktNd0spBY+jxp2O7FZVKH
-         XQBfgmw17RQ5iABKQ3KNMl8PW9JAu+2EehENxmB47D4eVfmCBp3dhYDfgM1p16IPOJZ2
-         hvHKXFppnK9PbOtw2rkvORxS6NsoMc6OAHYdGGrUi43dm11DunmCc51oOdV2azza8aLK
-         aFduRR9+BVRnc68bEzeKApzU1QED7dNXWxfBZze80lE7wF2PM4T6PgMJvt76/uylriVJ
-         UuAUH+/A/3wnaD4jF7+AKtMhCIRSAqw/z7hr2khB3di5akGVaZ+L/LOgklpWwyVSHio4
-         z7oA==
-X-Gm-Message-State: AOJu0Yxuiel0qcUPC+thN39UNMYNlnBbxOOFa7UhyRj9GWOCocSfagU4
-	nllvKsgMNz32RLZpYHgLv8msEzJd8dmJddpP24OTq/7Bm+fVGg9A2mpzMTmm29/3Q05ZUNc6n8Q
-	4UQ==
-X-Gm-Gg: ASbGncu4Fdfn75fxke6HWfv4p0QiVFy83/slZ24+zrrIEvFGJkJb07Zii/SMVU+Y43G
-	YT5CqI1baQi2mk1bygT/Jeyzl0oHwWhv/+FSEvvVetWKETLTZx8MNXE9SAUzb+fPG1n+86OWI3h
-	RHkBun6HW9deMfpmmxYVuxBYnL6fsKOU0El2nMrAMGQkWXubdVyomTRtFnlOfXy2c9jMIjBXgZ3
-	ddNDrSewjOkuFDtKFALBf6R/tYvagrtx44mzKoUNJNasOoRogoBiMBnvo4qE1auO2/9wjY9xeSb
-	36UTNybX+G4Daxm9h3c0Udem7z88XLIbfhr1
-X-Google-Smtp-Source: AGHT+IF2NsR4BtoOdVx7bncyz8ipmqxTqrgqSWBstnQ/nKAsgvaIEYwjTLRyHXiAKKAueyos+jaq4g==
-X-Received: by 2002:a05:620a:4306:b0:7c5:99a6:a1ae with SMTP id af79cd13be357-7c774bf81b7mr1869414185a.0.1744033598489;
-        Mon, 07 Apr 2025 06:46:38 -0700 (PDT)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4791b121decsm59931621cf.62.2025.04.07.06.46.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 06:46:38 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH 1/2] arm/execstack-native: add new recipe
-Date: Mon,  7 Apr 2025 09:46:32 -0400
-Message-Id: <174403359206.2954312.2284608041058859273.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250404173445.3901440-1-ross.burton@arm.com>
-References: <20250404173445.3901440-1-ross.burton@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gergely.kovacs2@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BD601688;
+	Tue,  8 Apr 2025 02:00:32 -0700 (PDT)
+Received: from ger-kv.budapest.arm.com (ubul2.budapest.arm.com [10.45.25.74])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B91CD3F694;
+	Tue,  8 Apr 2025 02:00:30 -0700 (PDT)
+From: Gergely Kovacs <gergely.kovacs2@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Gergely Kovacs <Gergely.Kovacs2@arm.com>
+Subject: [PATCH 1/1] arm/trusted-firmware-a: remove optee-os dependency from tests
+Date: Tue,  8 Apr 2025 08:59:37 +0000
+Message-Id: <20250408085937.2068053-1-gergely.kovacs2@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 07 Apr 2025 13:46:41 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6452
+ <meta-arm@lists.yoctoproject.org>; Tue, 08 Apr 2025 09:00:38 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6453
 
+From: Gergely Kovacs <Gergely.Kovacs2@arm.com>
 
-On Fri, 04 Apr 2025 18:34:44 +0100, Ross Burton wrote:
-> Add a recipe for the execstack binary from prelink-cross. This tool is
-> used to manipulate the GNU_STACK segment in ELF binaries, specifically
-> to control whether the binary requests an executable stack or not.
-> 
-> 
+The TF-A tests should not depend on OPTEE-OS
 
-Applied, thanks!
+Signed-off-by: Gergely Kovacs <Gergely.Kovacs2@arm.com>
+---
+ meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.3.bb | 2 --
+ meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.12.0.bb | 2 --
+ 2 files changed, 4 deletions(-)
 
-[1/2] arm/execstack-native: add new recipe
-      commit: b19f24bd0ad6c153ea76f4a5b0a8e5fa0b916d72
-[2/2] arm/fvp-base-a-aem: remove spurious executable stack from one library
-      commit: 1d119f24f9eb4c65d944fbdb0ab2d737f3eaa001
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.3.bb=
+ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.3.bb
+index 9e505d7a..39fddd9b 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.3.bb
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.3.bb
+@@ -12,8 +12,6 @@ SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A_TESTS};nobran=
+ch=3D1"
+ SRCBRANCH =3D "master"
+ SRCREV =3D "8917cf8b5eeb409b63256076d0dc35c60930ce18"
+=20
+-DEPENDS +=3D "optee-os"
+-
+ EXTRA_OEMAKE +=3D "USE_NVM=3D0"
+ EXTRA_OEMAKE +=3D "SHELL_COLOR=3D1"
+ EXTRA_OEMAKE +=3D "DEBUG=3D1"
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.12.0.bb=
+ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.12.0.bb
+index 77c36a47..31b0964b 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.12.0.bb
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.12.0.bb
+@@ -13,8 +13,6 @@ SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A_TESTS};branch=
+=3D${SRCBRANCH} \
+ SRCBRANCH =3D "master"
+ SRCREV =3D "6a113621a9efdc143e9270b1789046cd7d9cdfb1"
+=20
+-DEPENDS +=3D "optee-os"
+-
+ EXTRA_OEMAKE +=3D "USE_NVM=3D0"
+ EXTRA_OEMAKE +=3D "SHELL_COLOR=3D1"
+ EXTRA_OEMAKE +=3D "DEBUG=3D1"
 
