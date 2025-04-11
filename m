@@ -2,66 +2,66 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EC2C369A2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F07C369AB
 	for <webhook@archiver.kernel.org>; Fri, 11 Apr 2025 19:13:53 +0000 (UTC)
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
- by mx.groups.io with SMTP id smtpd.web10.35029.1744398824749155717
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+ by mx.groups.io with SMTP id smtpd.web10.35031.1744398827381074466
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 11 Apr 2025 12:13:44 -0700
+ Fri, 11 Apr 2025 12:13:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=UteedSvn;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.175, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-477282401b3so23086771cf.1
-        for <meta-arm@lists.yoctoproject.org>; Fri, 11 Apr 2025 12:13:44 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=t5wyDy2z;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.178, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-476ab588f32so31925171cf.2
+        for <meta-arm@lists.yoctoproject.org>; Fri, 11 Apr 2025 12:13:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1744398823; x=1745003623; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1744398826; x=1745003626; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KrLSqkmruFYBDPSl6USFItazigbdF6YOlw+jnew+EvE=;
-        b=UteedSvn0tSq4HbYhYXqwpCUbewSsGUYiplqhOllovjiYVpLQcJCMB09NfnmOpxHDn
-         mrRX9mWw+dWcVQsc0JDBHbmaSa4yMcs2rr7UxcigoKEpZn3ukNH0DOwbEHBFuAesboto
-         clxeQ8NB4EcvaEyEt7I5JYy76nxxxahyt0EBDctbRAH/nsIudI79m49BFCUOgVRliucz
-         vT4txmEY6s+/UB1J/X252tYoz62kiV+06l3/tQeH4NU+RvXY+LMNbDwBgNf9J/OxPTss
-         Do7FUOmAmqGAXX9aGw4Ei7EjTO7REY8ymi2a0sHuFpGwVq5ETQbDUi7tgxZLRlQL9Ckv
-         pDGg==
+        bh=i6ovOuol7vg2f2a0DtZbPI96c6/w6w6zoCUAI2/4TBA=;
+        b=t5wyDy2z5K+YhR4XpMh5bOFaVFNl1f6HStYbfRIHZB9vMfVe8cxxHilORu5cpYhxhy
+         JK4ZP6TI58PP34Tm1f/jtr2aWIj4UbO5DeO1jw5aikULZufmEJYQDxDmrhJ9DcJH+Q2j
+         7rE0qRLkFaDKadNhNhKv/PPm/atAFRZLm9YVwCHBCnQUmyNLGf7LX8dLceSyCFxFgTn7
+         ePy/O9tQfBrJM1MYOHg/o3D9m/lN5tZhM9K4qwOaDmT7gcR5AGnGQMoAaVFGwOnAn2Av
+         Cwo/R9jzk0XVaZI3IAwtePt5l5KifT8Th4tjiP8xboKf43s4zE/V8SvIcEzCnBKQdIjG
+         9eRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744398823; x=1745003623;
+        d=1e100.net; s=20230601; t=1744398826; x=1745003626;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KrLSqkmruFYBDPSl6USFItazigbdF6YOlw+jnew+EvE=;
-        b=frIXFzVrKUbuwmJG5C8Beaab0LS14fLBNppmalJJ/rBncu3frhB7ksl8SSb4VcD7cT
-         l172n8kygzuVdie1xRqvtS6vxxv4vNgU4KNxWKyNIxc1eoFVWNn72ufqJEWuLRaPm5c2
-         z8M2UX/Ef9EvPpdLY6QrzXlWOAMVKZoPAQ+CKvJ6NcooLF5HvnRf8NNB2+L8z+WwsCZt
-         PlhzY0YbByouLvAS8mXK0NxQkitm1bSmrKrhUNN+KZuoI9Zi7+aqyER2wFUDyspomje+
-         iqLrByTj6JyTDXzzklCWMcDWkXofat3orCzeoMeqTmqe1RIWLq8xgv3tagV9fT9RYQsu
-         5d4w==
-X-Gm-Message-State: AOJu0YyhNroh7m4gZi43HHwN/r6Vn51yiNvMdOQ3OGoSbry+4DGofmgS
-	HwrWz+G3CGpCmoyVhvkOnC0/8WAIZz04T99NQILCr+6nEZF2f41zVaqTyA0JJavQAsADUpcJIO5
-	S7Q==
-X-Gm-Gg: ASbGncsRU+9K3j0yfaqCxAlkP2NNKfkv4EduNVB7SzsLAK39IZScYqv7UWcxZ4oKko4
-	HnUdMfbSsDbtT7RXg+5cZVAiAu7jIBI0dZETNO993HNkHaigSC0SdEhSyebs8NHpEQizz6YWs1p
-	n8Pi/QveOyS5d0hfloCHX88/HxQmG60vNe/iH1j9hXP0sY6lZFi6SINlNqgMZVpTF5c33t8v0Aq
-	TwW+UpWGc3M3OkjN5G5jsSv+mLK67LrRMKwaCZEowbxofEr3e2rzW9/clIorIG4hBYarIikLd8P
-	AtqNR2CIzku3a9VDEGYgREzfstx5E5EK
-X-Google-Smtp-Source: AGHT+IFFVJS4hw2skWTIkfbBZlquPUeYimfasP/efeyO5L2QL7lMs2J12oFuKMGgxW/5O8+jnQaDtw==
-X-Received: by 2002:ac8:5a05:0:b0:476:9296:80a4 with SMTP id d75a77b69052e-47977526becmr46367171cf.7.1744398823450;
-        Fri, 11 Apr 2025 12:13:43 -0700 (PDT)
+        bh=i6ovOuol7vg2f2a0DtZbPI96c6/w6w6zoCUAI2/4TBA=;
+        b=LsmrMaadyDfzet6mCVV0/+TPE4VbZEtsEXU4hMth0E12Ap2PoifrV8mSdzymxJRmQF
+         2l7h0Uf7/FGntxyMLOkdTdDJm8RnjzmKf7xk5yZad8vYQriPjgUW+F+OAqkKhdcFlcti
+         tLZQQhqjN0yriVqgOp1Xk5LVPlyTGRuKr28uqhkofQ+NRABp1669fZ4z+RKHuxTZehHN
+         5MWhIz2I8x4aTYyOPiWntoGpZ0QsL8sBcNLVxJQPe5P2nZywKfvFRBkmOJhKTeg60hr5
+         anPLXXaRCX4RaARQbQ7huM3ozvDRRjF2OPNZ2A3FGxwXI0ECQz3CjFmr9jv6LyQ/1P4a
+         RGKA==
+X-Gm-Message-State: AOJu0Yw+Wzyml7WVQI482UjfXujbL9zpDbR8iFgncMpQ4jTjEgWlFlle
+	YetZ1gIrUo488qqayxYq83jjBnP8LghU7czoaA1eTvsgikHf9XMu+Bx7d9BndFM846jJ3lmFNsl
+	E4g==
+X-Gm-Gg: ASbGncsSpsBIUoPj1JnvF/teB3GdPPli0700TZpWhDIOySUJCPs+rXMThuem//tteMy
+	R2tItP2sGaaf7lCNRUzj3F+lkThml7iDSJAcXdb85DMJ67A09W8/LcAPU6t50qFNBFT79Ba0Ak/
+	lY/Ipr27h80b4iSwuBKfsUuPkQ0wKFFIbPtJH7RzpguBYMsupkwUhKUvdx4Kau6BvUd0RA5LN08
+	6pPTLv5dHkxzkTOISZ3relDjOddZAthEZQqrPXmZfk5LLTLXe/GDMtDTgSHDPPfC3sTZ6PvpyJn
+	Qw/PSURrhoz20rF6cLMCispjD/Vu4Hxg
+X-Google-Smtp-Source: AGHT+IGRFnBv7eRns4NpGFTAGmsk4P/2GrKWR+hGX4MxwVlWhBuD3X0Ms8E36LZGMX5k4CB11xrGcw==
+X-Received: by 2002:a05:622a:15cf:b0:478:de12:14f6 with SMTP id d75a77b69052e-4797756e945mr56415411cf.31.1744398826023;
+        Fri, 11 Apr 2025 12:13:46 -0700 (PDT)
 Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796ed9cc14sm29612411cf.56.2025.04.11.12.13.42
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796eb2cbf1sm29838601cf.38.2025.04.11.12.13.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 12:13:43 -0700 (PDT)
+        Fri, 11 Apr 2025 12:13:45 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Richard Purdie <richard.purdie@linuxfoundation.org>
-Subject: Re: [PATCH] classes/tfm_sign_image: Fix assignment whitespace
-Date: Fri, 11 Apr 2025 15:13:32 -0400
-Message-Id: <174439881347.2238189.15181607937703868102.b4-ty@arm.com>
+	Yogesh Wani <yogesh.wani@arm.com>
+Subject: Re: [PATCH 1/1] arm-bsp/documentation: corstone1000: Fix typos in the documentation
+Date: Fri, 11 Apr 2025 15:13:33 -0400
+Message-Id: <174439881346.2238189.17719500298938570661.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250411093100.3753172-1-richard.purdie@linuxfoundation.org>
-References: <20250411093100.3753172-1-richard.purdie@linuxfoundation.org>
+In-Reply-To: <20250409085736.169671-1-yogesh.wani@arm.com>
+References: <20250409085736.169671-1-yogesh.wani@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -69,18 +69,24 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 11 Apr 2025 19:13:53 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6462
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6463
 
 
-On Fri, 11 Apr 2025 10:31:00 +0100, Richard Purdie wrote:
-> Fix whitespace to avoid a warning with newer bitbake.
+On Wed, 09 Apr 2025 09:57:35 +0100, Yogesh Wani wrote:
+> The Corstone-1000 read the docs had some small typos in the
+> Design Overview section. Commit addresses these.
 > 
+> Copyright information now updated.
 > 
+> Yogesh Wani (1):
+>   arm-bsp/documentation: corstone1000: Fix typos in the documentation
+> 
+> [...]
 
 Applied, thanks!
 
-[1/1] classes/tfm_sign_image: Fix assignment whitespace
-      commit: ca97d0fcec4f75cfbb1287041235c5c7be1c9b98
+[1/1] arm-bsp/documentation: corstone1000: Fix typos in the documentation
+      commit: 385450558e839da8b6b6483abd058b660ee7a136
 
 Best regards,
 -- 
