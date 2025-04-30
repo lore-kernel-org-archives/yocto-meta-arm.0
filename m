@@ -1,120 +1,92 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <bence.balogh@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A808C3ABA5
-	for <webhook@archiver.kernel.org>; Tue, 29 Apr 2025 14:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 788C0C369D9
+	for <webhook@archiver.kernel.org>; Wed, 30 Apr 2025 11:47:20 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.29.1745936001719973507
+ by mx.groups.io with SMTP id smtpd.web10.14942.1746013637555206055
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 29 Apr 2025 07:13:21 -0700
+ Wed, 30 Apr 2025 04:47:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: bence.balogh@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76D671516;
-	Tue, 29 Apr 2025 07:13:14 -0700 (PDT)
-Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3233F3F66E;
-	Tue, 29 Apr 2025 07:13:21 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7D1A106F;
+	Wed, 30 Apr 2025 04:47:09 -0700 (PDT)
+Received: from e126523.arm.com (unknown [10.57.74.97])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1ABCB3F5A1;
+	Wed, 30 Apr 2025 04:47:15 -0700 (PDT)
+From: bence.balogh@arm.com
 To: meta-arm@lists.yoctoproject.org
-Cc: Ross Burton <ross.burton@arm.com>
-Subject: [PATCH scarthgap 2/2] arm/fvp-base-a-aem: remove spurious executable stack from one library
-Date: Tue, 29 Apr 2025 10:13:20 -0400
-Message-Id: <20250429141320.2609-2-jon.mason@arm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250429141320.2609-1-jon.mason@arm.com>
-References: <20250429141320.2609-1-jon.mason@arm.com>
+Cc: Bence Balogh <bence.balogh@arm.com>
+Subject: [PATCH] arm/classes/tfm_sign_image: Update script so different keys can be used
+Date: Wed, 30 Apr 2025 13:47:04 +0200
+Message-Id: <20250430114704.320831-1-bence.balogh@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 29 Apr 2025 14:13:22 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6483
+ <meta-arm@lists.yoctoproject.org>; Wed, 30 Apr 2025 11:47:20 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6484
 
-From: Ross Burton <ross.burton@arm.com>
+From: Bence Balogh <bence.balogh@arm.com>
 
-There are some objects in the FVP binary that are assembler source and
-fail to declare what permissions the stack needs to have, so GCC falls
-back to assuming that the final binary needs an executable stack.
+The tfm_sign_image.bbclass was updated so now the used signing key is
+passed by the caller. This is needed because there can be cases where
+different images have to be signed with different keys.
 
-glibc 2.41 (as now used in uninative) introduces changes here[1]: whether
-to have an executable stack or not when the binary doesn't specify a
-need (defaults to executable, but this is a tunable), and any binaries
-that are dlopen()ed that require an executable stack will fail.
+If no key is passed to the script, then use a default one to keep the
+backward compatibility.
 
-Thus, some FVPs on some platforms (notable, fvp-base-a-aem on x86-64)
-now fail on startup:
-
-  libarmctmodel.so: cannot enable executable stack as shared object requi=
-res: Invalid argument
-
-Luckily the solution here is to simply clear the executable bit, as
-an executable stack is not actually needed.  Until a new release of the
-FVP is made we can fix the binary in our package using execstack.
-
-[1] https://lists.gnu.org/archive/html/info-gnu/2025-01/msg00014.html
-
-Signed-off-by: Ross Burton <ross.burton@arm.com>
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Signed-off-by: Bence Balogh <bence.balogh@arm.com>
 ---
- .../fvp/fvp-base-a-aem_11.25.15.bb            |  3 +++
- .../recipes-devtools/fvp/remove-execstack.inc | 26 +++++++++++++++++++
- 2 files changed, 29 insertions(+)
- create mode 100644 meta-arm/recipes-devtools/fvp/remove-execstack.inc
+ meta-arm/classes/tfm_sign_image.bbclass | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.25.15.bb b/m=
-eta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.25.15.bb
-index eab2255f6f3c..df1d698ab145 100644
---- a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.25.15.bb
-+++ b/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.25.15.bb
-@@ -14,3 +14,6 @@ UPSTREAM_VERSION_UNKNOWN =3D "1"
- MODEL_CODE =3D "FVP_Base_RevC-2xAEMvA"
+diff --git a/meta-arm/classes/tfm_sign_image.bbclass b/meta-arm/classes/t=
+fm_sign_image.bbclass
+index 44ef3318..3b662e66 100644
+--- a/meta-arm/classes/tfm_sign_image.bbclass
++++ b/meta-arm/classes/tfm_sign_image.bbclass
+@@ -40,7 +40,6 @@ export OPENSSL_MODULES =3D "${STAGING_LIBDIR_NATIVE}/os=
+sl-modules"
+ TFM_IMAGE_SIGN_ARGS ?=3D "\
+     -v ${RE_LAYOUT_WRAPPER_VERSION} \
+     --layout "${TFM_IMAGE_SIGN_DIR}/${host_binary_layout}" \
+-    -k  "${RECIPE_SYSROOT_NATIVE}/${TFM_SIGN_PRIVATE_KEY}" \
+     --public-key-format full \
+     --align 1 \
+     --pad \
+@@ -63,12 +62,15 @@ TFM_IMAGE_SIGN_ARGS ?=3D "\
+ # $1 ... path of binary to sign
+ # $2 ... load address of the given binary
+ # $3 ... signed binary size
++# $4 ... signing private key's path
+ #
+ # Note: The signed binary is copied to ${TFM_IMAGE_SIGN_DIR}
+ #
+ sign_host_image() {
+     host_binary_filename=3D"$(basename -s .bin "${1}")"
+     host_binary_layout=3D"${host_binary_filename}_ns"
++    # If no key was passed then use the ${RECIPE_SYSROOT_NATIVE}/${TFM_S=
+IGN_PRIVATE_KEY}
++    signing_key_path=3D"${4:-${RECIPE_SYSROOT_NATIVE}/${TFM_SIGN_PRIVATE=
+_KEY}}"
 =20
- COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
-+
-+require remove-execstack.inc
-+REMOVE_EXECSTACKS:x86-64 =3D "${FVPDIR}/models/${FVP_ARCH_DIR}*/libarmct=
-model.so"
-diff --git a/meta-arm/recipes-devtools/fvp/remove-execstack.inc b/meta-ar=
-m/recipes-devtools/fvp/remove-execstack.inc
-new file mode 100644
-index 000000000000..7f02b5027b27
---- /dev/null
-+++ b/meta-arm/recipes-devtools/fvp/remove-execstack.inc
-@@ -0,0 +1,26 @@
-+# Clear the executable stack flag on named shared libraries. This are ty=
-pically
-+# not needed, and glibc 2.41 will refuse to dlopen() a library that expe=
-cts
-+# an executable stack.
-+#
-+# The stack permissions can be checked with readelf -lW <.so> | grep GNU=
-_STACK.
-+# RW is read/write, RWE is read/write/execute.
-+
-+DEPENDS +=3D "execstack-native"
-+
-+REMOVE_EXECSTACKS ?=3D ""
-+
-+do_install:append() {
-+    for SO in ${REMOVE_EXECSTACKS}; do
-+        NAME=3D$(basename $SO)
-+        SO=3D${D}$SO
-+
-+        test -f $SO || bbfatal remove-execstack: cannot find $SO
-+
-+        if execstack --query $SO | grep -q ^X; then
-+            bbnote "Stripping executable stack bit on $NAME"
-+            execstack --clear-execstack $SO
-+        else
-+            bbwarn "Executable stack stripping no longer required for $N=
-AME, remove"
-+        fi
-+    done
-+}
+     cat << EOF > ${TFM_IMAGE_SIGN_DIR}/${host_binary_layout}
+ enum image_attributes {
+@@ -81,6 +83,7 @@ EOF
+=20
+     ${PYTHON} "${STAGING_LIBDIR_NATIVE}/tfm-scripts/wrapper/wrapper.py" =
+\
+             ${TFM_IMAGE_SIGN_ARGS} \
++            -k  "${signing_key_path}" \
+             "${1}" \
+             "${host_binary_signed}"
+ }
 --=20
-2.39.5 (Apple Git-154)
+2.25.1
 
 
