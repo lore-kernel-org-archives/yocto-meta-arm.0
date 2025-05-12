@@ -1,175 +1,218 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70817C3ABC3
-	for <webhook@archiver.kernel.org>; Fri,  9 May 2025 15:08:13 +0000 (UTC)
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
- by mx.groups.io with SMTP id smtpd.web11.1054.1746803288194285278
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8E8C3ABCC
+	for <webhook@archiver.kernel.org>; Mon, 12 May 2025 17:23:46 +0000 (UTC)
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.81])
+ by mx.groups.io with SMTP id smtpd.web11.56307.1747070621352279894
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 09 May 2025 08:08:08 -0700
+ Mon, 12 May 2025 10:23:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=DrKWjXy+;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.161.53, mailfrom: jdmason@kudzu.us)
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-6060200710bso1086432eaf.3
-        for <meta-arm@lists.yoctoproject.org>; Fri, 09 May 2025 08:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1746803287; x=1747408087; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YffPrx8mZT7f7dTab2Fbxo1bvwCj4K86YNZ/jK4hl/Y=;
-        b=DrKWjXy+WYMLggWuzhQvgOct2A1noPAo4bEgEcvnlxfQJf4XYh9UQB4WMUd485ibuO
-         r4MFnfjNpuEB8pEyoDTa58PHsGvxxYdcTP959FuRN24UivjpeULMJa4EECUPc2yokcGj
-         0EiKHVHrfA0M0fRYtX3lJl1EKjPboXqbAKYxIfaAJDAzEIJQcnMoSxwjBWvJUOFMIoaY
-         QGC3iJnStPC5AlWsZAynCl4PiSQWByZnbBRlBl2s4O5gmvwyuoD2fS4aQF5GrgMlhfFl
-         XufqRXDZvHcTascCLbddKCx9L8sWkKdooOTVxXIWdVcgskKJ/6m44QN5cU5hrbQuhkT1
-         /aFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746803287; x=1747408087;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YffPrx8mZT7f7dTab2Fbxo1bvwCj4K86YNZ/jK4hl/Y=;
-        b=wUbbGV/kAY5FbJGO4+RaMS+I5EU86o2W0hasWRGPnC/5NKQ+JTkAtD+mZQmHenZ6e+
-         YP0PbPRUi1RWw/DGQmvUz8fsXHJnVyNchDRYAWA5RwdNy1/53tJmhM5U919hPdZ3VXVB
-         Pnguci7qqMLDOTJMwARzn0htpQOxxphyE3reJ+7utyG6Rus3VF7lwviU0TefOSE1I+/9
-         PeDZy/4r7JNXT9dIiBnxWImqV8rkWDe7dp25bVVmqwp1PLiosECOOsd1kUwL/7QlBkRJ
-         wbeUSZX0+STzGSbJY5DhhnisPfyH+32FNPredtnChnS3vZ2TCMwjWfTBWDv0TCOgvLHq
-         9ksw==
-X-Gm-Message-State: AOJu0YxrFT6fDSeNEP1TOWgs5tOd7QpxMsCh4hlRlyUI6x9QOksRcoJT
-	0pMDH64hlsi99bs99jyk1g5nJJjqQYrqpxYCKQDqHE75pdA6Z6CngKfnZm0lvUYE72y/H3lxkz9
-	LNkTbCf/yFcadb/UlByhQY4L8bLor+YDg72lm
-X-Gm-Gg: ASbGncvII6m8/dldU8JFUiXJVXVP5D00QkHgoQ9LRek9BUPM911wtqsdLQiqxTxK7aJ
-	rrNoj9OLkd0eYpC//AvIYPoPuGLT8wiorWd/gFMW/vgo2qEDWm8nDlGgXydbiuLc/K3gppnAYvv
-	DCeBWod0U9Z9RopRMAZFBRCQ==
-X-Google-Smtp-Source: AGHT+IFU7wucc5pImkCR9udexf62cFOHRHktGI0yvVjZwpmjOpiRSZFn0h+/BZCpst4JIsVMUD1ZDJtQPIcSx6XW9Fc=
-X-Received: by 2002:a05:6820:4d06:b0:608:3f1d:bbdb with SMTP id
- 006d021491bc7-6084c1205b1mr2181015eaf.8.1746803287236; Fri, 09 May 2025
- 08:08:07 -0700 (PDT)
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=PczoeesO;
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=PczoeesO;
+ spf=pass (domain: arm.com, ip: 40.107.22.81, mailfrom: ross.burton@arm.com)
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=TfcfHdJIWBxa7Lra5ihIUevAyWATV0ml8E8EupxD8UvNAYbGwGNqT92ZTTzh/y2AJGmscvNmDypAue+4qhDdk7Yn6IDmAm7EKRpYZzImf97TrUin7k/fbwMoPY6KieeVj8oaRYIZP2Y6X3JYJY2NA5mT8a9MHs/XYQ3st1hS7CKb8r5L1ScBNqgXRX1X9yANCbQqhZbusMr9/30APQjxil1PsrAFWzECS7H4XqLD3+O1OjdA0LyI92+iuaDWPBMlxknBDIvzbTIVoIKj8FDnY6qzsdG3q2MD+dUjm4u2CJdZ7vXxlw1ULcAxdUSJ9nm+aIiHyscrKdyve3zk5bAM8g==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SdWVzt8EV0PJ9+LY0JZiNu3ZPITtoSWCalgOJZ8MATE=;
+ b=t5TYtzYfHD9W6301FWBI5PuinK4oB+7KsLy2OzVxQ4agE+UPiXWLr+ppvmpB+EmMmhn4UPregVt10Fk5Hn9wuyN2GgfuFrpB41L8UbN4CNV0LrsxxzzPRIieRGKhR7mNgchy3M+sP7vptKJg2hXOGX4v+IyMsKuVr+o7oQ/8Ftpqdub+HGlaPnksyLFUUqPgYTPyRC87ZEQnmw1O/ayvvseKVfd0rWYXUic+RHzFokfr+7weQ/3Wioknrr5g3YnNDDhChU+W5pJBaS/J6DaV8EsIEzkrtyX4977ipF/uAcgnLZFFYZMxZbwK5oA09ECEubSFT0OKAFGp1VqTAC+6Ig==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=lists.yoctoproject.org smtp.mailfrom=arm.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SdWVzt8EV0PJ9+LY0JZiNu3ZPITtoSWCalgOJZ8MATE=;
+ b=PczoeesOkubEJ3ncdsGY8LDAMN8Q2hz0MfHthATkOrFeifYpOtk5VcYilveQil1UuuSmAOgz7lhrBSJzcM2b1b0AGFpzWqqz5/nb6dlrwxZZvruPJPkF1jZfthYwvnKvopwpxZ8iSEbit/5mwd5rjpg2LX+SfgUAjaan5h19EOw=
+Received: from DBBPR09CA0021.eurprd09.prod.outlook.com (2603:10a6:10:c0::33)
+ by AS8PR08MB7371.eurprd08.prod.outlook.com (2603:10a6:20b:447::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Mon, 12 May
+ 2025 17:23:36 +0000
+Received: from DB1PEPF00050A01.eurprd03.prod.outlook.com
+ (2603:10a6:10:c0:cafe::d6) by DBBPR09CA0021.outlook.office365.com
+ (2603:10a6:10:c0::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.21 via Frontend Transport; Mon,
+ 12 May 2025 17:23:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DB1PEPF00050A01.mail.protection.outlook.com (10.167.242.43) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.18
+ via Frontend Transport; Mon, 12 May 2025 17:23:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nSn+r1i/vhj2/0TllGvF2VUZ//4xSmMBzxjxN6L0zu7GChyCUmv+3mURjh584bHrNVJojEEq5TF3nkrOAkRbiCqhnOOOdF2ZEXodUkLS55gJmQODmNi3dg7Aw307EBg1Yig5g0YxXm8VLW8eZcCzRfXTKIbMavqg7b9kbBrWrEqRCKrpEoewYsJpo9PZOyOXE/b7cu1l+//w6A8RFlq7J1SqslaB5RLlMHJIxewvVkSFL/+dmsct93DV979sRym+4Nc+260ZgVFhSYbySTkE7PL764BAbTc1cr1bUHXJRgT+87yWxaNiAT7RN9asoJ3++96aB0Iu7mR20vp9ES1OsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SdWVzt8EV0PJ9+LY0JZiNu3ZPITtoSWCalgOJZ8MATE=;
+ b=Y/f4pgrnO+81rljJyUxBAoD+vQvvahti3Uv/SDSH26EVkQbT4N3U7s2uvg8ZYwyo6bYKqln9dFa1jHMBvS89gwZ05b0uEaStom/tHM02ic+NqD55tdsjPey5DDcLFI8LWdoZmXflWXRiA6RvejVeG+udqGrt4Q1I4EEC84NdIa6Z5YILCI64dfCX7NAwhsZomOaV/vopZWZXsaVSlvoysT54vKAV4PMBqz06ptBaNIkwuEtDG00HUFxftq7EswOXxv5cGWhucXq7pte6kApirhgyhBe5Nvoe9x+jKCPVydKgL+KFqJShQrbCnXegLQBAuM0G8PeSmyabBB5ewrz8TQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SdWVzt8EV0PJ9+LY0JZiNu3ZPITtoSWCalgOJZ8MATE=;
+ b=PczoeesOkubEJ3ncdsGY8LDAMN8Q2hz0MfHthATkOrFeifYpOtk5VcYilveQil1UuuSmAOgz7lhrBSJzcM2b1b0AGFpzWqqz5/nb6dlrwxZZvruPJPkF1jZfthYwvnKvopwpxZ8iSEbit/5mwd5rjpg2LX+SfgUAjaan5h19EOw=
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com (2603:10a6:102:2a3::12)
+ by AM8PR08MB6321.eurprd08.prod.outlook.com (2603:10a6:20b:366::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Mon, 12 May
+ 2025 17:23:03 +0000
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::9206:40ba:ef7e:729e]) by PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::9206:40ba:ef7e:729e%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
+ 17:23:03 +0000
+From: Ross Burton <Ross.Burton@arm.com>
+To: Ali Ozaslan <Ali.Oezaslan@arm.com>
+CC: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+Subject: Re: [meta-arm] [PATCH] Align PSA Crypto structs with TF-Mv2.1.1
+Thread-Topic: [meta-arm] [PATCH] Align PSA Crypto structs with TF-Mv2.1.1
+Thread-Index: AQHbvqdJ7KZwcseCEkOEjoU0gsnFobPPR6wA
+Date: Mon, 12 May 2025 17:23:02 +0000
+Message-ID: <F73BDBCD-10C3-4B0A-A867-FCD7DC7BCF7F@arm.com>
+References: <20250506165045.509-1-ali.oezaslan@arm.com>
+ <20250506165045.509-2-ali.oezaslan@arm.com>
+In-Reply-To: <20250506165045.509-2-ali.oezaslan@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3826.500.181.1.5)
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic: 
+	PA4PR08MB7411:EE_|AM8PR08MB6321:EE_|DB1PEPF00050A01:EE_|AS8PR08MB7371:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0caafee-5f14-4e66-c9b2-08dd9179ba8c
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: 
+ BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+X-Microsoft-Antispam-Message-Info-Original: 
+ =?utf-8?B?K2NLZDJnZnIwVHJTMkduTzRBa1dnUXJnVGd1WFRsSGc0R0hsZjlyR3cvdkM0?=
+ =?utf-8?B?S3NFNUE0YUFhQlhzVnkwdmJQK3FOQXdsVXRJSnZXUVE0NGVhTTRqbjYxSGVt?=
+ =?utf-8?B?TmswQ0RlRFFlazRJUzRvaWIzdFVaQTVHUWw0RU9FQ0kyblZpbk1HV1Z1Zjll?=
+ =?utf-8?B?eHFBUlR1VFF1ejJtRmlSLzI1N1dJY29RWTlKK0V5UE9SOXpWdThZQ2FremFW?=
+ =?utf-8?B?dkFvZERVQTNpNHZuVmloZjVwdGZ4TDhZNmFNeWFPZnM5ZU9qTDQrZTQ0OHZO?=
+ =?utf-8?B?dzIzNnpNamdmVzVZT2diSWlyN3h3L3Y1SkhTR1VHZ0V0RG1rc2hCVWNjTXBp?=
+ =?utf-8?B?eEI5cjZSTFlKUElPVW5jK1JCQXpSNUFCVWQraXJmOVVtSHA5QU1oekZlak1s?=
+ =?utf-8?B?Z0VsR2E4d2VQOFVreTBIVngyMFkwSGdlaXl1T3BsV3dQcEordTQyV1o5SnBj?=
+ =?utf-8?B?cXFNeWRUYTd5NmpET2xWOXBISnc2dHdENTg5Y0xERFlvT28vN0FpcDlPUktB?=
+ =?utf-8?B?NndLMXBYcG5yazJlUXJXTHRVL3VZUXdUcUhvelZzdjgzd1pmRTNPYVloaWM5?=
+ =?utf-8?B?Nm0xbmRoM3pldWtqWTh6Yk5zYUZMV1gyRWNYTitORDkwdE9JemgxdkNLVk1C?=
+ =?utf-8?B?a1k1d0JqbXNjSHEyeDk0ZncrczlCNGc0Rk9SV3RXaE1XbGZ4T0JwT2lZUDFz?=
+ =?utf-8?B?NzU3YklKbVY4WHZ3VWtlVFowTDF6Q1R1K1pLdVBTVzk5Skd2RFJuSmNJMWlT?=
+ =?utf-8?B?ZkRzYWhCWkpycG9nc3ZUY25qUkdZYkFyNHlVV3QyajkyZXZrbTlFMlh0Zi9X?=
+ =?utf-8?B?U2NqUjMwcnRwL2piR2dQVkNZUEY2VHgycVVIbUE4QVkrTTRSQUtVRk5DOGVv?=
+ =?utf-8?B?ZnpybGc5dGZXZXUxeDMrSS9WN1Jsb2pXaVRRZ0c1emJKOW03RXN3bGJENmdC?=
+ =?utf-8?B?TTBNMUxLbDJjZ1RKNXA5WnFhdGowZW9SZldPOTNuZ3A1T1QyU0FhS01JVGM4?=
+ =?utf-8?B?NFpGOXQwMTkvTnlYdnpjVGhyck9GQS9qR2grRHZsdG5sVGwzZWs1bFdOc1VN?=
+ =?utf-8?B?Z0ViVlovb2VJTEl3dld5dW1LV2FTaVhORGp2UnRCaVNtNzdkRURoVGp6YXB1?=
+ =?utf-8?B?N1hvR1FpS0pLRllvbkdOSjgwei9YcU5mVHNrZXNpSHB0ZHZuVHNMblNOV3BF?=
+ =?utf-8?B?N0pMZHd4djRabFcxMytlZUV0Vjk1ajEvYmFib3hHRnJaL2gzV0NsckJ0b3hX?=
+ =?utf-8?B?L09Gd1A1QTFWbnh1NHlGeWZxYTFCSnpDYlNrZVFPOFBXQ2REK2ExS1I5V2pt?=
+ =?utf-8?B?L2piOU9XelgxOURFVEh5Q2N3TFZ1Z0pLdmVEUHBlOVB4OVRqMEExRTFISTNm?=
+ =?utf-8?B?ektLS0hpUzB1N0dGNCtxNGxDWC9Fc056MDF4NENYRGhpM3RLSEo2Ym5TT2dY?=
+ =?utf-8?B?Vm1FNDIzSFNvM0pNZ1FrcFNienhkT3F2ajdycmVlTGVWUVVlemdWMTRWd1l6?=
+ =?utf-8?B?eFcwTll6dUNOWFRGMzVoclRuTHJNVWpQSTV4bEhLaWl4Tm9MaEV4cTd6TTRp?=
+ =?utf-8?B?ZlN2TjlBTURiWU1WNytwUWRnTGRYRGN4ZGxOYlBkc3ZFOVhJMnpEc1dEV0Er?=
+ =?utf-8?B?eEpKZEQ2Rk1zTTBwaTU2MmtrRS9WMDZQREF0WXZaazU3c1ErNGJtTURzbDZW?=
+ =?utf-8?B?YlZROGdsK0Rkd1U5YWo0OVdtYnRnU3E5c1hXS3BzRlBWeElYWUtFNzBmSkRj?=
+ =?utf-8?B?WVI3MnBtTEZzdFFmUDhxem93eVlqUVVMODNqTWR0Zk1WM01iSEtwZXptcDdo?=
+ =?utf-8?B?ZEszSXN5MzhIczN1dzdJSzlZM3R2SzlMVGRCSVlQek1hcDFTZEtZSi9vdStx?=
+ =?utf-8?B?dzR5N01jVFdzQ21BNG1MUlZCaE9QY1BJeFp6UEpCQUlGT1VEeGlkYmFCWnlj?=
+ =?utf-8?B?b2J2R3Nmb1gyTnN6d08yQzd6L2xES0R3SExtYVB2ak8xMnhOMllNdlhzY0pt?=
+ =?utf-8?Q?JYRKDnLuFXVLJDYI99Bmp+sPlYTR/0=3D?=
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR08MB7411.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0ABD361EA4869B4CA64CB5959405F638@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20250507173921.754-1-ali.oezaslan@arm.com> <20250507173921.754-2-ali.oezaslan@arm.com>
-In-Reply-To: <20250507173921.754-2-ali.oezaslan@arm.com>
-From: Jon Mason <jdmason@kudzu.us>
-Date: Fri, 9 May 2025 11:07:55 -0400
-X-Gm-Features: ATxdqUHteIApKBsEOuOE_7unJ770_f3ERco3kbyjLTpQqKtRw1a8zGlNZw0LO0U
-Message-ID: <CAPoiz9yXvLiVOGFD55-k+jCvU3X1rKwDrvG8S50GxA2BzGX_Cg@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH walnascar 1/1] arm-bsp/trusted-services:
- corstone1000: Align PSA crypto structs with TF-M
-To: ali.oezaslan@arm.com
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB6321
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ DB1PEPF00050A01.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	b3b495e3-615b-4ffb-14c0-08dd9179a688
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|14060799003|82310400026|376014|35042699022|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?R2NZOUxtRk1hUDhiOW94c2JLdm9JYXZ2N2kxRitWdE54S3FoRHVpNHBCcVNi?=
+ =?utf-8?B?QmZOelRSdGZVcUtPZWFHZlhJL2RucFVjQmJBZXVGblFNQXQ2M3JURXA3Uy9N?=
+ =?utf-8?B?bGl4YnpZNE1YV0RtTUtjWjFqejBrQU1hWW4zVzZYT1dyMWJaSVFpak5xVkl2?=
+ =?utf-8?B?ME5QWTNDQkF4aDhJV0lFNjRWWVNKZi9YdGFray9CK0VMMEQrTFJjZnlWWHUw?=
+ =?utf-8?B?U2RRZ3ByRUQ3ZW1XRkhLTUMyQWViNkYxbGJMeHdrNWdIZ25vVE1NTXFYWFM2?=
+ =?utf-8?B?VHdqRzQxOGFBMkVReTdNVDFWbzIzaGVOcitPUEtJbjNFdHdvSUVsKzUzeC9V?=
+ =?utf-8?B?dXpMN3RJU0tWU0RxeWt1VDlWU0dLOUFDdFBLRzFoYkZNOS9FWVZFY1VRMlo1?=
+ =?utf-8?B?U2JETE9pakpRYTJ3eFkwYkVyTkQrSVBwN3dxNTlEY3FJV1FvTFFGdVo4RVBO?=
+ =?utf-8?B?Z0lEVDd0dFlpeE1EcWZLS3NhUk03bnNzZkw1OEVwZEhWVGNRRU54RGpGR2ln?=
+ =?utf-8?B?TzhzYS9OdUNHcEwySy8zOWtlWlJUeFQzZlE2Qll0anJKRS9vdVpZL0dPZWJo?=
+ =?utf-8?B?ZDFsZlRmWFQva2JEN1N2dURtUmtGbUNLOUc2Tmt3RU54VVRtQzNtTWNxVHBt?=
+ =?utf-8?B?QmFyU1NRcFpzVWNvblBLYXNqdlpMcmlqaklXZjJRMzRjUTczR2E2QmYwTnZT?=
+ =?utf-8?B?SXdISjkxMUZ5aW5LamdXekdQKzBpRTJtWm1aS29OUngrNU1pVlp0YTQyb0Y1?=
+ =?utf-8?B?bHltcUxOeGNteUZzcnlTR0h2NVI4WEV5SVhWcGZ6QzFUSFdrT2wzTXhjQlBP?=
+ =?utf-8?B?V2hNbStVZFRQNXVYNmdQS2dJWGdwRTlzTnRSNG11cWtpUnJpRDBobUE1SVhw?=
+ =?utf-8?B?ZVFMUFBkOEIwcmpoNXEyNWFPRktWV0hPWk8wWkkrSk5YRUxHZHRaYlVRVSt4?=
+ =?utf-8?B?cm14Y0lCME1BUWtnK21xemtaVzlIWENKQTlWYkdlNGVpc24rQzhUQi9Mb1Bw?=
+ =?utf-8?B?TDdGem4xam1Vak5ZQXp3WmJUb0Y1U1laSHFrd3BlR083ZVc2YnNvaEpZU1U5?=
+ =?utf-8?B?MXJhZjBkdFVDVXlWOFIvQmlvRkZBNlRSMWdrRUVSQ09xT0VUVHBTSEFvaW4w?=
+ =?utf-8?B?TjR5ZklEcEU1OVNHdE9LYmtaQUQvT0Q0TjJVVDZKdzBQRlhlb1QzbzZHaDFi?=
+ =?utf-8?B?elAzNENvckRXRHFTeE9tUi9yYmRxRXZqTmZLa0hac2thQkpMbk1kWmVzUy8x?=
+ =?utf-8?B?VDlxRm5ZRzh3V1AvdHhiVFBzNXh1WHpXdkZYK2Qra1dGZmFDS25tQUJPckl3?=
+ =?utf-8?B?Qm40NUpkZ0FRVGV6blREcm5taXlrcCsvbXhQTzFXL3Njb3NhaFRSbmxQQVJP?=
+ =?utf-8?B?OUtaWjhyRWdhVzRSbndDWCtaS3dkdjlZT0VENlJqdUpicVc2aU5vTTU4dkNn?=
+ =?utf-8?B?L0ZNd1RYRitHQzFtYnVvcE8vRCtWcWovSXNzdVlGWGVpT2d1RFNZZW1QYWJa?=
+ =?utf-8?B?V1FRVkF4RS9ZNkdFTE1HNEp5REtpQ3ZsQ3RhaGNIU2xLdGRydm4wY0k1QmEz?=
+ =?utf-8?B?cEdFNnBBdGZPSkNIcnBLQ3JIaVBMeHdUSzNLS3BFSlRQY0JDR0lrMkI4bEd4?=
+ =?utf-8?B?NVhoZk1weVhoYjFPL1lqdjNqSTd5a0Nmc1FORTBPSHlUekxHVytnbVJNOEpY?=
+ =?utf-8?B?aXhCZEtCQ3dTNVFyL0ZFV2RLUnY2OU95L0FwckZUNTlxQXhCdW5ZS0xveFJM?=
+ =?utf-8?B?WEVKbnJUVWZ2VFNGZ0U0SDhzako3UWw2Wi8wYU9Yd1FYcGFHWU1qdHYvRVN1?=
+ =?utf-8?B?UUwrcHljM3l3bjVpMWlJaDRjU3RDemlVSVFtR1lsRDN5dWJZZTV0UFdHWEl3?=
+ =?utf-8?B?S3lJOTU2c1ZIUkFZMkpaYUhkZnVSc2o1UUExM1lrRVVQNy9jNlBydDBzK2lO?=
+ =?utf-8?B?MU5EQmpyTFUvRURRZHdWZHROTVUrS2d1c1JFS1RsbmFXZXRVaWZHODQyQlZs?=
+ =?utf-8?B?c1paNzFkSXZ2YlRZZGwwY1A5bS9xQmVLVm8wZSthQUJDV0JVTmw3RzB2TTB2?=
+ =?utf-8?Q?rb4MG1?=
+X-Forefront-Antispam-Report: 
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(14060799003)(82310400026)(376014)(35042699022)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 17:23:36.2981
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0caafee-5f14-4e66-c9b2-08dd9179ba8c
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DB1PEPF00050A01.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB7371
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 09 May 2025 15:08:13 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6496
+ <meta-arm@lists.yoctoproject.org>; Mon, 12 May 2025 17:23:46 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6497
 
-Hello Ali,
-I have a couple of issues with this patch.  Firstly, this is for the
-walnascar branch, but it hasn't been pushed to master first.  It needs
-to be in master first.  See
-https://git.yoctoproject.org/meta-arm/tree/documentation/releases.md#n12
-
-Secondly, the patch status is "Pending", and there is no follow-on
-(e.g., no "[comment]" following the Pending).  Pending has been abused
-in the past and we're trying very hard to only allow Pending in
-extreme circumstances, and then it should include a pointer to an open
-issue on the relevant project's github/gitlab/mailing list.  See
-https://docs.yoctoproject.org/contributor-guide/recipe-style-guide.html#pat=
-ch-upstream-status
-for more information on the upstream status.
-
-Thanks,
-Jon
-
-
-On Wed, May 7, 2025 at 1:39=E2=80=AFPM ali.oezaslan via lists.yoctoproject.=
-org
-<ali.oezaslan=3Darm.com@lists.yoctoproject.org> wrote:
->
-> From: Ali Can Ozaslan <ali.oezaslan@arm.com>
->
-> The TF-M was upgraded to v2.1.1 for the Corstone-1000. The TS had to be
-> aligned with it, to keep the Secure Enclave Proxy Secure Partition
-> compatible with TF-M.
->
-> Signed-off-by: Ali Can Ozaslan <ali.oezaslan@arm.com>
-> ---
->  ...n-PSA-Crypto-structs-with-TF-Mv2.1.1.patch | 29 +++++++++++++++++++
->  .../trusted-services/ts-arm-platforms.inc     |  1 +
->  2 files changed, 30 insertions(+)
->  create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0021-Align-PSA-Crypto-structs-with-TF-Mv2.1.1.patch
->
-> diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0021-Align-PSA-Crypto-structs-with-TF-Mv2.1.1.patch b/meta-arm-bsp/recipes-=
-security/trusted-services/corstone1000/0021-Align-PSA-Crypto-structs-with-T=
-F-Mv2.1.1.patch
-> new file mode 100644
-> index 00000000..352fe9ea
-> --- /dev/null
-> +++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0021-Al=
-ign-PSA-Crypto-structs-with-TF-Mv2.1.1.patch
-> @@ -0,0 +1,29 @@
-> +From 71da6c0384fb241cadf052968e8dce9c357e4a33 Mon Sep 17 00:00:00 2001
-> +From: Ali Can Ozaslan <ali.oezaslan@arm.com>
-> +Date: Tue, 29 Apr 2025 07:52:14 +0000
-> +Subject: [PATCH] Align PSA Crypto structs with TF-Mv2.1.1
-> +
-> +The psa_client_key_attributes_s struct had to be aligned with the
-> +psa_key_attributes_s struct in TF-M.
-> +
-> +Signed-off-by: Ali Can Ozaslan <ali.oezaslan@arm.com>
-> +Upstream-Status: Pending
-> +---
-> + components/service/crypto/include/psa/crypto_client_struct.h | 1 -
-> + 1 file changed, 1 deletion(-)
-> +
-> +diff --git a/components/service/crypto/include/psa/crypto_client_struct.=
-h b/components/service/crypto/include/psa/crypto_client_struct.h
-> +index ebc4008..f0c8cad 100644
-> +--- a/components/service/crypto/include/psa/crypto_client_struct.h
-> ++++ b/components/service/crypto/include/psa/crypto_client_struct.h
-> +@@ -38,7 +38,6 @@ struct psa_client_key_attributes_s
-> +     uint32_t alg;
-> +     uint32_t alg2;
-> +     uint32_t id;
-> +-    int32_t owner_id;
-> + };
-> +
-> + #define PSA_CLIENT_KEY_ATTRIBUTES_INIT {0, 0, 0, 0, 0, 0}
-> +--
-> +2.34.1
-> +
-> diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platfo=
-rms.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms.i=
-nc
-> index 770c47ab..84f4c07f 100644
-> --- a/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms.inc
-> +++ b/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms.inc
-> @@ -22,6 +22,7 @@ SRC_URI:append:corstone1000  =3D " \
->      file://0018-Make-RSS-and-MHU-sizes-compile-time-definitions-user.pat=
-ch \
->      file://0019-Align-PSA-Crypto-with-TF-Mv2.1.patch \
->      file://0020-se-proxy-protobuf-change.patch \
-> +    file://0021-Align-PSA-Crypto-structs-with-TF-Mv2.1.1.patch \
->      "
->
->  # The patches above introduce errors with GCC 14.1, silence them for now
-> --
-> 2.34.1
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#6495): https://lists.yoctoproject.org/g/meta-arm/mess=
-age/6495
-> Mute This Topic: https://lists.yoctoproject.org/mt/112672802/3616920
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [jdmason@kud=
-zu.us]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+T24gNiBNYXkgMjAyNSwgYXQgMTc6NTAsIGFsaS5vZXphc2xhbiB2aWEgbGlzdHMueW9jdG9wcm9q
+ZWN0Lm9yZyA8YWxpLm9lemFzbGFuPWFybS5jb21AbGlzdHMueW9jdG9wcm9qZWN0Lm9yZz4gd3Jv
+dGU6DQo+IA0KPiBGcm9tOiBBbGkgQ2FuIE96YXNsYW4gPGFsaS5vZXphc2xhbkBhcm0uY29tPg0K
+PiANCj4gVGhlIHBzYV9jbGllbnRfa2V5X2F0dHJpYnV0ZXNfcyBzdHJ1Y3QgaGFkIHRvIGJlIGFs
+aWduZWQgd2l0aCB0aGUNCj4gcHNhX2tleV9hdHRyaWJ1dGVzX3Mgc3RydWN0IGluIFRGLU0uDQo+
+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbGkgQ2FuIE96YXNsYW4gPGFsaS5vZXphc2xhbkBhcm0uY29t
+Pg0KPiAtLS0NCj4gY29tcG9uZW50cy9zZXJ2aWNlL2NyeXB0by9pbmNsdWRlL3BzYS9jcnlwdG9f
+Y2xpZW50X3N0cnVjdC5oIHwgMSAtDQoNCknigJltIGd1ZXNzaW5nIHRoYXQgeW914oCZcmUgZG9p
+bmcgZ2l0LWZvcm1hdC1wYXRjaCBhbmQgdGhlbiBnaXQtc2VuZC1lbWFpbCBtYW51YWxseSwgYmVj
+YXVzZSB0aGUgY292ZXIgbGV0dGVyIGlzIGNvcnJlY3QgYnV0IHRoaXMgaXMgYSBwYXRjaCBmb3Ig
+VEYtTSwgbm90IG1ldGEtYXJtLg0KDQpDYW4geW91IHJlLXNlbmQ/DQoNClJvc3M=
 
