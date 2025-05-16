@@ -2,75 +2,68 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE40C3ABD8
-	for <webhook@archiver.kernel.org>; Fri, 16 May 2025 13:49:35 +0000 (UTC)
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
- by mx.groups.io with SMTP id smtpd.web11.13599.1747403368295407669
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95541C3ABD8
+	for <webhook@archiver.kernel.org>; Fri, 16 May 2025 13:51:35 +0000 (UTC)
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+ by mx.groups.io with SMTP id smtpd.web10.13750.1747403492082161229
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 16 May 2025 06:49:28 -0700
+ Fri, 16 May 2025 06:51:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=3BVg0tFA;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.54, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6f5373067b3so25456846d6.2
-        for <meta-arm@lists.yoctoproject.org>; Fri, 16 May 2025 06:49:28 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=JYYuhxa6;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.179, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4768f90bf36so23358251cf.0
+        for <meta-arm@lists.yoctoproject.org>; Fri, 16 May 2025 06:51:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1747403367; x=1748008167; darn=lists.yoctoproject.org;
-        h=content-disposition:mime-version:message-id:subject:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xhXZXM6a5Io6EQzguUHWwEwWcm1sNORlB0YM+XY9/p0=;
-        b=3BVg0tFAVsWXAb38Y1ryiOSOCa4nQ362v+OuClZZrtAbfcp356c9ePQ0gC5FAtA4ex
-         JZdI0LQ/3LNwEudn0+5QgwLm5mo4sPaCfTHVhmjiuoOjhRC4E7jL/Cw3ymnIGapcmwum
-         q9Awttz+RVEIkUzABpevGUSWE2mCl8bMkDsW87WTDnUhpFkh+dXQM4Q8TJwejP0k41pP
-         ibY1hpbiWljqsNE+X/Z4IQARkSNDLuyWVQiKnQSrVwvnUP4tmsx1u0C97tHkiLx8k9U0
-         sLonqsmdRiMUn6lfW+g0ogLZwtD/61k7aNz5xJVG66GsSiLp68dcXqa1gP/7TrId0e3X
-         /S5A==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1747403491; x=1748008291; darn=lists.yoctoproject.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tQ14sIZ/EDwWyjXEW6rvdA5c+7O/1c7y3kfmWr8YpsU=;
+        b=JYYuhxa6dv83GvQAwHgyLuwpQNxaUjZzA+y/B1LILqbBELyxedG4SOQqJXecgQJjca
+         +eBedI0IhP+/JUhleu2nJh3ZQDYvZ1cdb40iXFCTGgO9DvZqpNHhUjGhX4861Kr3F7hK
+         qdk2g/dtZcNSBlJvAkxrAhcpUmdMyWQYF+/v2ZxP9OQxxonv46kQN8Mqa4VDIUOB5qv/
+         lTGxiiBCEyR3yI8IgsvXmEv9merUMOnDwfGsblxq5iCsU59OKxYfVQqr8D2VY+KDsDUJ
+         ka9rnme0gyCr6BjEiZYu6n3gA1YgoYYXYPn04rwxL08JgLWjB26bC/5yN8qdwEfvlxp1
+         mbqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747403367; x=1748008167;
-        h=content-disposition:mime-version:message-id:subject:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xhXZXM6a5Io6EQzguUHWwEwWcm1sNORlB0YM+XY9/p0=;
-        b=I+JyAC0bO0i8dB4HnLbbfUh2mMlPKGZDe3N1bCNDWgLs6a0uwKvoTs6tqfXjqEIBRS
-         LClFwRt/IFqG6MS0wA4UqcU+cTm+QIa2b7bg3SWi/YXRxqAzKev4vQrHdyAn7q/CR1li
-         GQryTOGz2COeG0IHVkB/8+BpYrqrV3DwWhhEPkM9Ug7K07iSlm8lFBTlmgSddIAUtjRt
-         CQTiFQudX9RiY3efKbODJlO3OZEprkTv7Rx83ewLyLtWboimkW2bxkG036b38pEo/IwR
-         q4Plfk1q7t27tgJTtbeayxFTJQ+LLB9bjeSD2bBjOjFhi8L0VyOG1a2+P9suMx42rMkD
-         TDkg==
-X-Gm-Message-State: AOJu0YxTxvj6ol40kmH+MrLKn+qOYgk4bBYesDOhnjQqHc8IwiO+HeWD
-	J3YP1QPEeKx0AUHCKOOLCowFTOlJJCjbw6BbR6Qv9WHR1JHCvuopid8XFAdeJFUl/7pGBsTBjIb
-	4NC2lqA==
-X-Gm-Gg: ASbGncuPDytGjrQWvKxQXFuUDuAEjhQyafRYMzZKixeF5h10UNkiJlMvz9P+bC4xa1w
-	bQTuMo1oraM8yEMafHe/z3NFZyWI7NvCTOKFjBSwwogL5fmdjvXVzYSawt2Gc5xBZgiNGZSdhmz
-	RgZIayGp9wdIcD2TCNS+ZwxVSe4oHz16BtZeWwv/YpuHG5mjhWMJE9vWbC7hMDroew7XkQdTuNX
-	xq1prP+vzMDOXImOdS4z7ISJnUIFPAX2iyawPmR52fKZ01RlVb72gdiInAtlJceMeoSTh7rbS8q
-	/p+01SCHDZASCJM0f9kCqUfgTN97FawXD5+kIR/C5a4=
-X-Google-Smtp-Source: AGHT+IHDhipxoHQw/zBiV6CwJOPalJ22D4v3aI/mOUd9YMWUTiuUdHqfkXz3/tQte/xcHs9o4zhAZQ==
-X-Received: by 2002:a05:6214:f0c:b0:6eb:28e4:8519 with SMTP id 6a1803df08f44-6f8b2c7b1d5mr45924856d6.21.1747403355708;
-        Fri, 16 May 2025 06:49:15 -0700 (PDT)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b097a59fsm12153116d6.102.2025.05.16.06.49.15
-        for <meta-arm@lists.yoctoproject.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 06:49:15 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jdm@athena.kudzu.us>
-Date: Fri, 16 May 2025 09:49:15 -0400
-To: meta-arm@lists.yoctoproject.org
-Subject: meta-arm styhead update
-Message-ID: <aCdCW6OrojzqduYX@athena.kudzu.us>
+        d=1e100.net; s=20230601; t=1747403491; x=1748008291;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tQ14sIZ/EDwWyjXEW6rvdA5c+7O/1c7y3kfmWr8YpsU=;
+        b=Mz8BYcPvU1cjCA00ChTnRJL9XsTYV6ys9GAISTKWzCqwHRbG41xn6+ISumhh1G2eDX
+         lKKE5uKpCPAgKh4nguSA28AVMMoHLiGci/BJs/n1s0CnGQHOrdwtHJuZVV0BRjfrXPMd
+         JduM/QrNOYvZaJW+YHsiV5njy1y5BH3JLluUN9cofpoqyxAYHHQgg9I1MrJ0cX0kqNu/
+         CmBK0TDZnzkPS4B6lgkjMc+QGyrvFx1KkQDGDs31kPmaiNH42hrdeSZSLZPSMnXE4yyt
+         Ib6dOFhQRJ2YNteiyQ7dl//xJrYCU6lFRBRTrOX9ZM2X1ydx0mmOa4xrcDLo777ZgU+j
+         ylEQ==
+X-Gm-Message-State: AOJu0YxTxgdQR1ubQqqEh+W4NocmNFczZbN35TVXEyOHut4yI+NYvuV+
+	EKYORDJ+j4fSGjCQ+6muXPCRHj32CxyUXeGK/J/sW0m0diqpUz0YtTj5JO+R+WWGBzozjOSCfuB
+	6YXwX2KEycZ74nLNuOqj4NiMf+AGPFK/fJ18sHP+aPdOz1/d2TJ5eTJ3B
+X-Gm-Gg: ASbGnctQ8ZKDG/Ry2V77BIhCZk5iWEaR3WF2oUUAqq9AY1RQbx7FmH9wUhBHpU7olJL
+	jiuDUsDNYH4bBDtrtkV+/OSeuKuwgd3GqcP2Fv/rJIbE5uowtlKXqzxtVmPoqpNsOxc5RSD0iiu
+	7wJyF9QjFs3wMh/zTqOQNHfKrnK3mLKbeR
+X-Google-Smtp-Source: AGHT+IFYUjJxcW1Uk8t7K7JxXwzgQBeKWgMCVXQL+teaD45lg+YVzBzGCen/XduyjQ4n9dvxXmG3IQRPfwtNujhxUh8=
+X-Received: by 2002:a05:6808:1a28:b0:403:3192:383 with SMTP id
+ 5614622812f47-404da7be5c2mr1508567b6e.35.1747403480567; Fri, 16 May 2025
+ 06:51:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From: Jon Mason <jdmason@kudzu.us>
+Date: Fri, 16 May 2025 09:51:09 -0400
+X-Gm-Features: AX0GCFvgZEb1CDW1FEuLWJhZbyr2pMpbXn2gbnQo8lSFG8EdLg4Ia67I2-ecRCg
+Message-ID: <CAPoiz9zRLkYuDZ3YPkxqat5Qz7q+dwEVwFPn-mJFNnHXwFz2Ag@mail.gmail.com>
+Subject: meta-arm kirkstone update
+To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 16 May 2025 13:49:35 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6503
+ <meta-arm@lists.yoctoproject.org>; Fri, 16 May 2025 13:51:35 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6504
 
-meta-arm has released an updated styhead support tag, 5.1.1.  The tag 
-contains 19 patches from between 16 Oct 2024 and 15 Apr 2025.
+meta-arm has released an updated kirkstone support tag, 4.0.6.  The tag
+contains 2 patches from between 21 Oct 2024 and 04 Apr 2025.
 
-Per an external request, we have duplicated all existing "numbers only" 
-tags (i.e., 5.1.1) with a yocto-x.y.z tag (i.e., yocto-5.1.1).
+Per an external request, we have duplicated all existing "numbers only"
+tags (i.e., 4.0.6) with a yocto-x.y.z tag (i.e., yocto-4.0.6).
 
 Thanks,
 Jon
