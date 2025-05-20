@@ -1,74 +1,88 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83E2C3ABC9
-	for <webhook@archiver.kernel.org>; Fri, 16 May 2025 14:23:25 +0000 (UTC)
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
- by mx.groups.io with SMTP id smtpd.web10.14439.1747405397533247886
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E60C3DA6D
+	for <webhook@archiver.kernel.org>; Tue, 20 May 2025 16:05:53 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.24950.1747757150646545135
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 16 May 2025 07:23:17 -0700
+ Tue, 20 May 2025 09:05:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=JSGXr+NH;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.167.182, mailfrom: jdmason@kudzu.us)
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3feaedb531dso796081b6e.3
-        for <meta-arm@lists.yoctoproject.org>; Fri, 16 May 2025 07:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1747405396; x=1748010196; darn=lists.yoctoproject.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kJwdc0DLNHFMGlRBJllMeRBYO3rCkIKxr/FLNAW74/o=;
-        b=JSGXr+NHlqGHHyIOVJX6xkXNDq61vGmeo8K/W/U6jLBrXTFZC+yau3tSHTr0zICbXJ
-         1AiNpplrzpAzX2cqYiSXXxsTLpzGi6aJIdL5DxGmhAu+yRDtHFvv3hw7tBVyIOcAN/QJ
-         +NKfZ1NOwfcyYlyCzD/9zkSHpC/pSpHqeuF0XnwYSd/jVzGw6ZEhnBEIW9vNMx+ARHFK
-         fSeQk6ihOKWnGQrnYB46qusMCLe3fN2SvmTVF/Lup41zTBIQL/RPJHOyb6Pj5cZ9VQt9
-         5qqKXh7PImeM+fHO2Vxu8CaVDAxI7Sbt9r4OdgaahoL5ZMRa4pPD0mswEfYVduzkxLtN
-         vOQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747405396; x=1748010196;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kJwdc0DLNHFMGlRBJllMeRBYO3rCkIKxr/FLNAW74/o=;
-        b=n7zJ/mVKiqrvvumoZQ6mYWaWxP3XOk3C7TvlgaeM04e3iFrhKfknr5RxZA//SMGXBf
-         fnXVS5ekxMPkhlkfrT4zG2v3WAU0aNWsAcAiafOA1Ql1YqJAr9eFDF4x1LsIMz33VL+e
-         YmYe+/inBD/0aU140e9597tGHNQZfnm07sVk9VGF8TUkUXH/q7s+azrjWSU4Zh1Y+m2M
-         V6wzPf1wRYRbtJcKx6bzBtb05336dzINikE/e1i/BQJiLpEyyLBgZ9PePSnxaKyLXx1s
-         lq0UzGZWkJzQc0H8EfSWSMM024XwRQ1Vi/P+PC/+6KgcnRZBBuU/2HK4qPvKIJf2Sov6
-         yRGg==
-X-Gm-Message-State: AOJu0YyndVaha9LpqHpQZ3pG22WZl5UQlHnjQkpwBsWHyVnnV4uToAeD
-	mNhsJMSHowhmi6v+sstMJRi+DKxNL/1BSVmt2BbwzT4XXsInlmyaS0fNfp/v2DgGPy6MD0aL2nW
-	kdfpQVCSU0YzEArFgDlq3T/aIqDbQQnhAVgqSJTC3Ew8t08hmfehPCC3L
-X-Gm-Gg: ASbGncuw1FBXQxbMO9X6eMCOuTU2w4JDswDV5SD2CbeBDhH+jhgg01Uxrtnz7tDefWS
-	E7F9/TSoN6L0jJRDt8R5m+JJ6Y766gd4wWVWXwTj+KyB8yq6EhmqOQiEd7hHqtlPD2Rc+LaMn6f
-	tSCzBKklxweKqGUENnY3d0gr51kSXrxznH
-X-Google-Smtp-Source: AGHT+IFF9Y+r1T6BFhlWzn+tjmYn7VqSZhx7b6pu3A3iyl1trzG3fUDMt6PqKIwI7VYC736wqc9Gkpya6EwOQfiCTzY=
-X-Received: by 2002:a05:6808:1b85:b0:402:ebf9:b770 with SMTP id
- 5614622812f47-404da7e1bbbmr1703885b6e.28.1747405396457; Fri, 16 May 2025
- 07:23:16 -0700 (PDT)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EF851516
+	for <meta-arm@lists.yoctoproject.org>; Tue, 20 May 2025 09:05:36 -0700 (PDT)
+Received: from cesw-amp-gbt-1s-m12830-04.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AD81D3F5A1
+	for <meta-arm@lists.yoctoproject.org>; Tue, 20 May 2025 09:05:49 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/2] arm/fvp-base-a-aem: upgrade to 11.29.27
+Date: Tue, 20 May 2025 17:05:44 +0100
+Message-ID: <20250520160545.2283646-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-From: Jon Mason <jdmason@kudzu.us>
-Date: Fri, 16 May 2025 10:23:05 -0400
-X-Gm-Features: AX0GCFuFppaCrIhNivZ96fDV4pjJcwtDgixGOhos76HMpIkaEQYsImozs9CAjNg
-Message-ID: <CAPoiz9xQMTrCC9L+B18EK36xrYTk1mtp_6SusJg5RmdsQOUe=g@mail.gmail.com>
-Subject: meta-arm walnascar release
-To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 16 May 2025 14:23:25 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6505
+ <meta-arm@lists.yoctoproject.org>; Tue, 20 May 2025 16:05:53 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6506
 
-meta-arm has released the walnascar support branch.  The branch was
-forked on 16 May 2025 from the master branch and was tagged as "5.2".  The
-tag is GPG signed and my public key can be provided if someone wants to
-use it to verify.  Per the previous public discussion on this list,
-walnascar will only be taking bug fixes and be passively maintained
-(with scarthgap being the actively supported LTS).
+Notably, this fixes the need for an executable stack.
 
-Per an external request, we have duplicated all existing numbers only
-tags (i.e., 5.2) with a yocto-x.y.z tag (i.e., yocto-5.2).
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ ...base-a-aem_11.28.23.bb =3D> fvp-base-a-aem_11.29.27.bb} | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+ rename meta-arm/recipes-devtools/fvp/{fvp-base-a-aem_11.28.23.bb =3D> fv=
+p-base-a-aem_11.29.27.bb} (66%)
 
-Thanks,
-Jon
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.28.23.bb b/m=
+eta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.29.27.bb
+similarity index 66%
+rename from meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.28.23.bb
+rename to meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.29.27.bb
+index 46884520..a45fa153 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.28.23.bb
++++ b/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.29.27.bb
+@@ -4,11 +4,11 @@ LICENSE:append =3D " & Artistic-2.0 & BSL-1.0 & BSD-2-C=
+lause & Unlicense"
+=20
+ SUMMARY =3D "Arm Fixed Virtual Platform - Armv-A Base RevC Architecture =
+Envelope Model FVP"
+ LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
+a33828e132ba71861c11688dbb0bd16 \
+-                    file://license_terms/third_party_licenses/third_part=
+y_licenses.txt;md5=3Dc51b57b6a4731881849eb0e2e2b6d799 \
++                    file://license_terms/third_party_licenses/third_part=
+y_licenses.txt;md5=3D92ea58bb219213dfdc48111b693019b6 \
+                     file://license_terms/third_party_licenses/arm_licens=
+e_management_utilities/third_party_licenses.txt;md5=3Dabcaafefc7b7a0cdf66=
+64c51f9075c5b"
+=20
+-SRC_URI[fvp-aarch64.sha256sum] =3D "a380e271f14ce7cf99158018368ac86fe8c3=
+05f82c7d332a93eb08bf7a172571"
+-SRC_URI[fvp-x86_64.sha256sum] =3D "0f6d67d834a8ed5dff3c863e0e3545ef39c73=
+6405ea8227577ac004cffd66e93"
++SRC_URI[fvp-aarch64.sha256sum] =3D "8fce0dc6346c37b0df4809d08b599463c880=
+b6375f9b58d89a73fa6f9ab2e129"
++SRC_URI[fvp-x86_64.sha256sum] =3D "8a8c4a609c32890ce96799aa7319fff3ecf75=
+2c7a9dab52b2e968cb80cc1836f"
+=20
+ # The CSS used in the FVP homepage make it too difficult to query with t=
+he tooling currently in Yocto
+ UPSTREAM_VERSION_UNKNOWN =3D "1"
+@@ -16,6 +16,3 @@ UPSTREAM_VERSION_UNKNOWN =3D "1"
+ MODEL_CODE =3D "FVP_Base_RevC-2xAEMvA"
+=20
+ COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
+-
+-require remove-execstack.inc
+-REMOVE_EXECSTACKS:x86-64 =3D "${FVPDIR}/models/${FVP_ARCH_DIR}*/libarmct=
+model.so"
+--=20
+2.43.0
+
 
