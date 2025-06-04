@@ -1,138 +1,93 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94298C5B559
-	for <webhook@archiver.kernel.org>; Wed,  4 Jun 2025 14:25:13 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.17873.1749047111712859772
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6DEC5B543
+	for <webhook@archiver.kernel.org>; Wed,  4 Jun 2025 21:38:16 +0000 (UTC)
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+ by mx.groups.io with SMTP id smtpd.web11.28614.1749073087793054333
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 04 Jun 2025 07:25:11 -0700
+ Wed, 04 Jun 2025 14:38:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAB4125E3
-	for <meta-arm@lists.yoctoproject.org>; Wed,  4 Jun 2025 07:24:53 -0700 (PDT)
-Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D6A2D3F5A1
-	for <meta-arm@lists.yoctoproject.org>; Wed,  4 Jun 2025 07:25:10 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/3] arm/trusted-firmware-a: update 2.10 lts
-Date: Wed,  4 Jun 2025 10:25:07 -0400
-Message-Id: <20250604142509.15895-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=V73Kgnl+;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.173, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7d09b0a5009so35625485a.1
+        for <meta-arm@lists.yoctoproject.org>; Wed, 04 Jun 2025 14:38:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1749073086; x=1749677886; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VCoqRz32Yw3fWaJrqEDxfs7mRs9xDbE3s/KNO8yGdBo=;
+        b=V73Kgnl+4u8g+imsVtiN+d/1UuEKpsPikBPfoSU64ymdyHlqgc6WOP3FlXUg5+ID6K
+         qVf2zZi7WPmGdLpR+2xrKDujgoyjfv+G8WhO+I04RI04VRiwfoOSU8U725Z2yIjnlF5J
+         7YBE4lHY+ey7F5UjaHKfbJU0VPKRXjxvGzdZriYi5buC0PodxaoLQ2HUNYmlw0dXYTRB
+         v0c9zl3jQRmYF/RMNsm4632hgwS70ofqfkboz+7ArIihUfdDqm/vVO+jGVCOiRNt2ekc
+         vOmfkkd0OzKWz+CzcL02vdIA0EoC21Rr6kUtB/94TaZh9QZC1fPqefazrX2y9n67OHi5
+         0Sig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749073086; x=1749677886;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VCoqRz32Yw3fWaJrqEDxfs7mRs9xDbE3s/KNO8yGdBo=;
+        b=QsTP/RdoHs+DDygTdgw4sgYoyjyHYMK1QtBaEifGrDabgrV7D/XS/phKPPIzQ0q7mU
+         ozVsP53M9ak/pIKlpYYtNhSBPizMendrwrA0u37EnL7i6zllvc36tCzcVMM8H/zGYt9G
+         umdOkbVYvFrCgLZlqceemQceV/k4KSua1fq8iOBMNfxS3UIYD5sdW4JLoMX/4h0Yq67L
+         1YICzq43Q+WTkO05qqaXGx6Oz1nEJWiUzSjur9FF34CNOV6MbQstPncJjlqv3DBmda6/
+         eR/9Dw8j85OyZLoEIjNGAOIoC/+rIbg5ZPn/AvhtY/dSYoLWy5T2NOYTcBzQYV7r4Fve
+         5/dw==
+X-Gm-Message-State: AOJu0YzVE0JHwQVlwSdiremwNrBRjyopkMGibxmNQ9TO2OtfspidyblW
+	QcLiK2DP3ZXk7tIerEWEaSnn2fhiKyAuJ6+mE8Tz5ih/0S5kD0uXTr5QYR6FT0v2kp5rjBJT9YA
+	I+W5DBA==
+X-Gm-Gg: ASbGncu++SiI1Iw2wRND4zf2iM9TTRK4WTIyIGYvz079Do4GKQUdWMFICUZ1217/KvU
+	JCr9RD/LfPO/u56/1+yFU8bVNkwcRqiEuLkiOk3J7W67NdNv3hUsNA1x2tdhgXuj9CsybSBOnF1
+	zUlZDpNhQPPS8emvaZY7zkzkXqghhtPJnjQlR+dSa7MXeK+heMQzrYacMXcMf0lAtIN6rBXrCwk
+	I8TBE3QYjMoGPNpBZQwr641IUDs2UQbQMcZaAR3A3dmcsMSLSQ8FRUH5au28eEVxEcxBayyXuBN
+	kDZ/YfnicDrZRlhVCZdMh6W2mLLUiRL18mRhgWI+PYk=
+X-Google-Smtp-Source: AGHT+IHgsu/JiuffnvBitGuvYvZH4hYgEqlparUcvpTjCWFdBSQ6VQZJvpHqKXTon/pW1B+97sBNPw==
+X-Received: by 2002:a05:6214:242d:b0:6fa:cd35:3da6 with SMTP id 6a1803df08f44-6faf701aa09mr60393446d6.41.1749073085610;
+        Wed, 04 Jun 2025 14:38:05 -0700 (PDT)
+Received: from localhost ([136.56.27.188])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6e1a6f6sm106803036d6.96.2025.06.04.14.38.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 14:38:05 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/3] arm/trusted-firmware-a: update 2.10 lts
+Date: Wed,  4 Jun 2025 17:37:58 -0400
+Message-Id: <174907307799.2988566.9766297194557602749.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250604142509.15895-1-jon.mason@arm.com>
+References: <20250604142509.15895-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 04 Jun 2025 14:25:13 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6525
+ <meta-arm@lists.yoctoproject.org>; Wed, 04 Jun 2025 21:38:16 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6528
 
-Update the TF-A 2.10 LTS recipes to the latest versions, which are
-2.10.17 and 2.10.15 for the tests.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- ...ool-native_2.10.9.bb =3D> fiptool-native_2.10.17.bb} |  4 ++--
- .../{tf-a-tests_2.10.3.bb =3D> tf-a-tests_2.10.15.bb}   |  6 +++---
- ...are-a_2.10.12.bb =3D> trusted-firmware-a_2.10.17.bb} | 11 ++++++-----
- 3 files changed, 11 insertions(+), 10 deletions(-)
- rename meta-arm/recipes-bsp/trusted-firmware-a/{fiptool-native_2.10.9.bb=
- =3D> fiptool-native_2.10.17.bb} (92%)
- rename meta-arm/recipes-bsp/trusted-firmware-a/{tf-a-tests_2.10.3.bb =3D=
-> tf-a-tests_2.10.15.bb} (89%)
- rename meta-arm/recipes-bsp/trusted-firmware-a/{trusted-firmware-a_2.10.=
-12.bb =3D> trusted-firmware-a_2.10.17.bb} (70%)
+On Wed, 04 Jun 2025 10:25:07 -0400, Jon Mason wrote:
+> Update the TF-A 2.10 LTS recipes to the latest versions, which are
+> 2.10.17 and 2.10.15 for the tests.
+> 
+> 
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.=
-9.bb b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.17.bb
-similarity index 92%
-rename from meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.9=
-.bb
-rename to meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.17.=
-bb
-index a6ebea976d1c..1534b7e5f562 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.9.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.17.bb
-@@ -9,8 +9,8 @@ SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://git.trustedfirmwar=
-e.org/TF-A/trusted-firmwa
- SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A};destsuffix=3Dfiptool-${PV};br=
-anch=3D${SRCBRANCH}"
- LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3Db2c740efedc159745b9b=
-31f88ff03dde"
-=20
--# Use fiptool from TF-A v2.10.9
--SRCREV =3D "7e63213601425c7a6d83e47dc936b264deb9df2b"
-+# Use fiptool from TF-A v2.10.17
-+SRCREV =3D "4b1f6671b0cbddad7577fea5fcd7027f5533dc71"
- SRCBRANCH =3D "lts-v2.10"
-=20
- DEPENDS +=3D "openssl-native"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.3.bb=
- b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.15.bb
-similarity index 89%
-rename from meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.3.bb
-rename to meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.15.bb
-index 39fddd9b7fd6..5b2899600bfb 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.3.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.15.bb
-@@ -8,9 +8,9 @@ inherit deploy
- COMPATIBLE_MACHINE ?=3D "invalid"
-=20
- SRC_URI_TRUSTED_FIRMWARE_A_TESTS ?=3D "git://git.trustedfirmware.org/TF-=
-A/tf-a-tests.git;protocol=3Dhttps"
--SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A_TESTS};nobranch=3D1"
--SRCBRANCH =3D "master"
--SRCREV =3D "8917cf8b5eeb409b63256076d0dc35c60930ce18"
-+SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A_TESTS};branch=3D${SRCBRANCH}"
-+SRCBRANCH =3D "lts-v2.10"
-+SRCREV =3D "42c6a147d6f8957ff0b6e9eec4591b0927b8769f"
-=20
- EXTRA_OEMAKE +=3D "USE_NVM=3D0"
- EXTRA_OEMAKE +=3D "SHELL_COLOR=3D1"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
-.10.12.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.=
-10.17.bb
-similarity index 70%
-rename from meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.=
-10.12.bb
-rename to meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10=
-.17.bb
-index 5454e84cc8aa..e7dd90a5fec5 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.12.=
-bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.17.=
-bb
-@@ -1,15 +1,16 @@
- require recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-=20
--# TF-A v2.10.12
--SRCREV_tfa =3D "408ba4ddfe9a8d55e3e2488bea89c39adef07981"
-+# TF-A v2.10.17
-+SRCREV_tfa =3D "4b1f6671b0cbddad7577fea5fcd7027f5533dc71"
- SRCBRANCH =3D "lts-v2.10"
-=20
- LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3Db2c740efedc159745b9=
-b31f88ff03dde"
-=20
- # in TF-A src, docs/getting_started/prerequisites.rst lists the expected=
- version mbedtls
--# mbedtls-3.6.2
--SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls=
-;protocol=3Dhttps;destsuffix=3Dgit/mbedtls;branch=3Dmbedtls-3.6"
--SRCREV_mbedtls =3D "107ea89daaefb9867ea9121002fbbdf926780e98"
-+# mbedtls-3.6.3
-+SRCBRANCH_MBEDTLS =3D "mbedtls-3.6"
-+SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls=
-;protocol=3Dhttps;destsuffix=3Dgit/mbedtls;branch=3D${SRCBRANCH_MBEDTLS}"
-+SRCREV_mbedtls =3D "22098d41c6620ce07cf8a0134d37302355e1e5ef"
-=20
- LIC_FILES_CHKSUM_MBEDTLS =3D "file://mbedtls/LICENSE;md5=3D379d5819937a6=
-c2f1ef1630d341e026d"
-=20
---=20
-2.39.5 (Apple Git-154)
+Applied, thanks!
 
+[1/3] arm/trusted-firmware-a: update 2.10 lts
+      commit: 1250d00074fd085ec97e66a281a535c0c758e8ee
+[2/3] arm/trusted-firmware-a: update 2.12 lts
+      commit: b4ece023fb4e98262cee291983525539111bcef4
+[3/3] arm/trusted-firmware-a: add 2.13.0 support
+      commit: 8a11dd3a1651a6b3ad36520aa94ab1045fc8aed3
+
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
