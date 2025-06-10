@@ -1,138 +1,176 @@
-Return-Path: <marek.bykowski@gmail.com>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDB0C5B543
-	for <webhook@archiver.kernel.org>; Tue, 10 Jun 2025 11:49:06 +0000 (UTC)
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
- by mx.groups.io with SMTP id smtpd.web10.84939.1749556138680012965
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED87C5B543
+	for <webhook@archiver.kernel.org>; Tue, 10 Jun 2025 13:11:26 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.86479.1749561076917395438
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 10 Jun 2025 04:48:58 -0700
+ Tue, 10 Jun 2025 06:11:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=L46kIoIA;
- spf=pass (domain: gmail.com, ip: 209.85.219.41, mailfrom: marek.bykowski@gmail.com)
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6facacf521eso56093416d6.3
-        for <meta-arm@lists.yoctoproject.org>; Tue, 10 Jun 2025 04:48:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749556138; x=1750160938; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1pHbHMwZrfOzDZABqGuimtv55T7J9r5QlRrpNMGkVME=;
-        b=L46kIoIAwgQjaLU461YEuVmHR0mU/cOfrfEGscuTZOD/Oh/pwHLNiS45lR+BkgcXcu
-         /Dc0/vBHloHDgllT3MRef7z2G7BpihkxjcR1jhdXk+MqrzK0ndyzH1PwZ+Bu0klfPBCn
-         33Hvj3nz37KhkKLAMeI+vrrMzM3uQ6bFzkAvRl7Rnt+V/MdyGGQ33nhI/UP9qXVKuAx1
-         TwBj4gvsbch1DWCRRUt821TCRy8xz6L9n1FSKsAcFudz2soveI7F/bpN73q5gSy+29j8
-         KkeXcJ86Lw2We28IhZ88RcvnyptHU2/8xsx1qoi86tmh3xQt5Hx4q/XBJikWhyOrocUg
-         110g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749556138; x=1750160938;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1pHbHMwZrfOzDZABqGuimtv55T7J9r5QlRrpNMGkVME=;
-        b=fSRyjwE7J5silk5kl9ERaHWGNtiDqHfDGW5ZiCm4cilNfGxXwvz7wexX0B4jjZVD+g
-         ipk7x85d7MHdYFq2AQartw8WGNLE0QPAvKp8VU+3fRjoKmPX9cJUe5cZ3SnzjovsgRXA
-         vDq3lkFYCBIpNVSkCqDGDtsjj9bwSQH5JUrE9wUElyAB3LUt1cQahb9kGSWKzl7rDchX
-         c/LO74ShPC2STRtV4faVV2MY+Ymm8bhBSvj1G66RCZHPhU67YLVnvKjmLBDZ5Q+l0FS+
-         Uii1Eym/xbdyZ3JZbmpWPp7GlUqXefSaz/5wJRE2s1Ct04hMPPEUjlbL5ZrxD5pFpnDW
-         DnSw==
-X-Gm-Message-State: AOJu0YzYWZL4P3fneFrjUVrEdM5vm9NXRcv1sTQNpO/3MaEoVgJ3oCCP
-	83sqdAgxUuLEnW8F8Rs+8uSvscet9pP+hVtQ3rgoU2kYJit4Yj8qAvw4AaI1MvFlYUWD5rXPfSd
-	uaDA/m91um1Eo7YoQEgl4uVUYv5nTLxY=
-X-Gm-Gg: ASbGncuZACdsK6YYD6iGhEtMOwTlhvuYjEGm8IuIS7VRwZnv+pNsdCSxoiq729eFRnw
-	cUL90lr3YqZLT1C0G6NxVtXldiVX1elCKC9N7EOiej9cOFSkFNpR5uRX2XclRuXbPGhBy2K+Sqx
-	RwfeFRyUgcrAste7CS4vdhHMQHOLOChxiNcaLaBo6btao=
-X-Google-Smtp-Source: AGHT+IEV/sEJiMrTjZk0rw1DnG1drfhw1n1a1rxQ/JavEfzLR0/zStTvn6Mynzz1iitXvks3LAVaEtQeTRolsAU6aPc=
-X-Received: by 2002:ad4:5967:0:b0:6fb:3d7:71bb with SMTP id
- 6a1803df08f44-6fb24c4f420mr36375966d6.1.1749556137598; Tue, 10 Jun 2025
- 04:48:57 -0700 (PDT)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F187E14BF
+	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Jun 2025 06:10:56 -0700 (PDT)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 17C3E3F59E
+	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Jun 2025 06:11:16 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm/sbsa-acs: update to 7.2.2
+Date: Tue, 10 Jun 2025 09:11:15 -0400
+Message-Id: <20250610131115.17543-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 MIME-Version: 1.0
-References: <CAHw2UgDSp9jK_9Q0FsdfiGPdmWmGQRTfiTQoBg=ZrD16q0ucXA@mail.gmail.com>
- <09231705-62A7-4D39-B395-D670B097BBB0@arm.com> <CAHw2UgCz_nCWMLJkSRFu6mYza=_x2i8-a1bPfF+nCCAWxWoC-g@mail.gmail.com>
-In-Reply-To: <CAHw2UgCz_nCWMLJkSRFu6mYza=_x2i8-a1bPfF+nCCAWxWoC-g@mail.gmail.com>
-From: Marek <marek.bykowski@gmail.com>
-Date: Tue, 10 Jun 2025 13:48:47 +0200
-X-Gm-Features: AX0GCFum3zIOAvtBBa90-FFLExd_25A0WQ5zn6G9vBHv0XjpUxKDoVzL7OCaUos
-Message-ID: <CAHw2UgA_vK3Qk2bSu9kJ23R3HwPHM4m+kDRyzJG5OwpTfCftcg@mail.gmail.com>
-Subject: Re: [meta-arm] fvp-base doesn't support armv8.2
-To: Ross Burton <Ross.Burton@arm.com>
-Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 10 Jun 2025 11:49:06 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6539
+ <meta-arm@lists.yoctoproject.org>; Tue, 10 Jun 2025 13:11:26 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6540
 
-I forked off the scarthgap branch some time ago (SHA1 commit and date
-below), parked and recently resumed my work on it.
+Update to the latest version of SBSA ACS.  Since 7.1.4, BSA things were
+put in a separate git repo and it now has a dependency on that.
 
-$ git branch -r --contains a8fe9d22eaefc294f91096c6a32663e2f4ab3b10
-  origin/scarthgap
-$ git log --format=3Dformat:%cd -1 a8fe9d22eaefc294f91096c6a32663e2f4ab3b10
-Mon Jan 6 06:00:11 2025 -0500
+Also, address an issue with BSA, GCC15, and incompatible pointer type
+errors.
 
-My goal is to have a Cortex-A55 simulated which is armv8.2.
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ ...C15-incompatible-pointer-type-errors.patch | 31 +++++++++++++++++++
+ ...-in-the-paths-to-the-SBSA-test-suite.patch |  8 ++---
+ .../{sbsa-acs_7.1.4.bb =3D> sbsa-acs_7.2.2.bb}  | 11 +++++--
+ 3 files changed, 44 insertions(+), 6 deletions(-)
+ create mode 100644 meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Bug-fix-for-GCC=
+15-incompatible-pointer-type-errors.patch
+ rename meta-arm/recipes-bsp/uefi/{sbsa-acs_7.1.4.bb =3D> sbsa-acs_7.2.2.bb=
+} (67%)
 
-I followed Ross's suggestion
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Bug-fix-for-GCC15-inco=
+mpatible-pointer-type-errors.patch b/meta-arm/recipes-bsp/uefi/sbsa-acs/000=
+1-Bug-fix-for-GCC15-incompatible-pointer-type-errors.patch
+new file mode 100644
+index 000000000000..337bb4bc2278
+--- /dev/null
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Bug-fix-for-GCC15-incompatibl=
+e-pointer-type-errors.patch
+@@ -0,0 +1,31 @@
++From eaec352436ee0830f2c34088931f707c0ae73d2a Mon Sep 17 00:00:00 2001
++From: Jon Mason <jon.mason@arm.com>
++Date: Sun, 8 Jun 2025 10:33:27 -0400
++Subject: [PATCH] Bug fix for GCC15 incompatible pointer type errors
++
++GCC15 is identifying isr in RegisterInterruptSource as having an
++incompatible pointer type due to the function definition not matching
++the declared one in in edk2 firmware
++EmbeddedPkg/Include/Protocol/HardwareInterrupt.h
++
++Change the local one to match this one and everyone is happy.
++
++Signed-off-by: Jon Mason <jon.mason@arm.com>
++Upstream-Status: Pending [https://github.com/ARM-software/bsa-acs/issues/5=
+04]
++---
++ pal/uefi_acpi/common/src/pal_gic.c | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/pal/uefi_acpi/common/src/pal_gic.c b/pal/uefi_acpi/common/src=
+/pal_gic.c
++index 755d2bce62ee..e52899eb613e 100644
++--- a/pal/uefi_acpi/common/src/pal_gic.c
+++++ b/pal/uefi_acpi/common/src/pal_gic.c
++@@ -198,7 +198,7 @@ pal_gic_create_info_table(GIC_INFO_TABLE *GicTable)
++   @return Status of the operation
++ **/
++ UINT32
++-pal_gic_install_isr(UINT32 int_id,  VOID (*isr)())
+++pal_gic_install_isr(UINT32 int_id,  VOID (*isr)(long long unsigned int,  =
+EFI_SYSTEM_CONTEXT))
++ {
++=20
++   EFI_STATUS  Status;
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Patch-in-the-paths-to-=
+the-SBSA-test-suite.patch b/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Patch-i=
+n-the-paths-to-the-SBSA-test-suite.patch
+index c9aa014cb759..3073e94ae4d9 100644
+--- a/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Patch-in-the-paths-to-the-SBS=
+A-test-suite.patch
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Patch-in-the-paths-to-the-SBS=
+A-test-suite.patch
+@@ -1,4 +1,4 @@
+-From 17df0e93949097c18c65567bdf8c7ad2478f63b4 Mon Sep 17 00:00:00 2001
++From 148120a41c5ef3abe63d9e2e42c6b5c4e425aa5a Mon Sep 17 00:00:00 2001
+ From: Ross Burton <ross.burton@arm.com>
+ Date: Thu, 16 Feb 2023 21:53:25 -0500
+ Subject: [PATCH] Patch in the paths to the SBSA test suite
+@@ -10,15 +10,15 @@ Signed-off-by: Ross Burton <ross.burton@arm.com>
+  1 file changed, 3 insertions(+)
+=20
+ diff --git a/ShellPkg/ShellPkg.dsc b/ShellPkg/ShellPkg.dsc
+-index 7e985f8280a7..052510236cae 100644
++index 7e985f8280a7..1d23aefa120e 100644
+ --- a/ShellPkg/ShellPkg.dsc
+ +++ b/ShellPkg/ShellPkg.dsc
+ @@ -23,6 +23,8 @@
+  !include MdePkg/MdeLibs.dsc.inc=0D
+  =0D
+  [LibraryClasses.common]=0D
+-+  SbsaValLib|ShellPkg/Application/sbsa-acs/val/SbsaValLib.inf=0D
+-+  SbsaPalLib|ShellPkg/Application/sbsa-acs/platform/pal_uefi/SbsaPalLib.i=
+nf=0D
+++  SbsaValLib|ShellPkg/Application/bsa-acs/val/SbsaValLib.inf=0D
+++  SbsaPalLib|ShellPkg/Application/bsa-acs/pal/uefi_acpi/SbsaPalLib.inf=0D
+    UefiApplicationEntryPoint|MdePkg/Library/UefiApplicationEntryPoint/Uefi=
+ApplicationEntryPoint.inf=0D
+    UefiDriverEntryPoint|MdePkg/Library/UefiDriverEntryPoint/UefiDriverEntr=
+yPoint.inf=0D
+    UefiBootServicesTableLib|MdePkg/Library/UefiBootServicesTableLib/UefiBo=
+otServicesTableLib.inf=0D
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.4.bb b/meta-arm/recipes=
+-bsp/uefi/sbsa-acs_7.2.2.bb
+similarity index 67%
+rename from meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.4.bb
+rename to meta-arm/recipes-bsp/uefi/sbsa-acs_7.2.2.bb
+index 961a0c4344c8..766e2e482ec1 100644
+--- a/meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.4.bb
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs_7.2.2.bb
+@@ -6,12 +6,18 @@ LIC_FILES_CHKSUM +=3D "file://ShellPkg/Application/sbsa-a=
+cs/LICENSE.md;md5=3D2a94494
+=20
+ SRC_URI +=3D "git://github.com/ARM-software/sbsa-acs;destsuffix=3Dedk2/She=
+llPkg/Application/sbsa-acs;protocol=3Dhttps;branch=3Dmaster;name=3Dacs \
+             git://github.com/tianocore/edk2-libc;destsuffix=3Dedk2/edk2-li=
+bc;protocol=3Dhttps;branch=3Dmaster;name=3Dlibc \
++            git://github.com/ARM-software/bsa-acs.git;destsuffix=3Dedk2/Sh=
+ellPkg/Application/bsa-acs;protocol=3Dhttps;branch=3Dmain;name=3Dbsa \
+             file://0001-Patch-in-the-paths-to-the-SBSA-test-suite.patch \
+             file://0002-Enforce-using-good-old-BFD-linker.patch \
++            file://0001-Bug-fix-for-GCC15-incompatible-pointer-type-errors=
+.patch;patchdir=3DShellPkg/Application/bsa-acs \
+             "
+=20
+-SRCREV_acs =3D "be169f0008d86341e1e48cb70d524bd1518c3acc"
+-SRCREV_libc =3D "4667a82f0d873221f8b25ea701ce57a29270e4cb"
++# v25.03_REL7.2.2 tag
++SRCREV_acs =3D "642bc12bbc3b526f3931eca580002430c162f2a2"
++# v25.03_REL1.1.0 tag
++SRCREV_bsa =3D "db423614002621e1f0a9440955e3503623ff64f3"
++# v3.6.8.1 tag
++SRCREV_libc =3D "caea801aac338aa60f85a7c10148ca0b4440fff3"
+=20
+ UPSTREAM_CHECK_URI =3D "https://github.com/ARM-software/sbsa-acs/releases"
+=20
+@@ -23,6 +29,7 @@ EDK2_PLATFORM =3D "Shell"
+ EDK2_PLATFORM_DSC =3D "ShellPkg/ShellPkg.dsc"
+ EDK2_EXTRA_BUILD =3D "--module ShellPkg/Application/sbsa-acs/uefi_app/Sbsa=
+Avs.inf"
+=20
++export BSA_PATH =3D "${S}/ShellPkg/Application/bsa-acs"
+ PACKAGES_PATH .=3D ":${S}/edk2-libc"
+=20
+ do_install() {
+--=20
+2.39.5 (Apple Git-154)
 
-meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
-
--EXTRA_OEMAKE +=3D "ARM_ARCH_MAJOR=3D8 ARM_ARCH_MINOR=3D4"
-+EXTRA_OEMAKE +=3D "ARM_ARCH_MAJOR=3D8 ARM_ARCH_MINOR=3D2"
-
-and it worked. Seeing the model booted up to Linux prompt.
-
-Connected with arm ds and the midr_el1 shows me this MIDR_EL1 0x410FD0F0 32=
- RO.
-Implementer Arm Limited. 8 RO
-Variant 0x0 4 RO
-Architecture Architectural features are individually identified in the
-ID_* registers. 4 RO
-PartNum 0xD0F 12 RO
-Revision 0x0 4 RO
-
-I guess for the ARM AEM models there is really no way to read it back
-if the model implements version 8.2, isn' it?
-
-
-
-
-
-On Tue, 10 Jun 2025 at 12:42, Marek <marek.bykowski@gmail.com> wrote:
->
-> Thanks Jon and Ross!
->
-> On Mon, 9 Jun 2025 at 15:54, Ross Burton <Ross.Burton@arm.com> wrote:
-> >
-> > On 8 Jun 2025, at 21:14, Marek Bykowski via lists.yoctoproject.org <mar=
-ek.bykowski=3Dgmail.com@lists.yoctoproject.org> wrote:
-> > >
-> > > When I simply change to "require conf/machine/include/arm/arch-armv8-=
-2a.inc" and "FVP_CONFIG[cluster0.has_arm_v8-2] =3D "1"" and "FVP_CONFIG[clu=
-ster1.has_arm_v8-2] =3D "1" " the FVP_Base_RevC-2xAEMvA doesn't boot at all=
-. I do not see even a single line of log even from bl1. Would that mean the=
- SW stack/Yocto doesn't support armv8.2 for fvp-base model platform?
-> >
-> > If you=E2=80=99re using a recent meta-arm which sets the base-fvp to v8=
-.4 cores, then you didn=E2=80=99t also tell TF-A to use 8.2 and it might ha=
-ve been trying to use 8.4 instructions.  See this in the TF-A recipe:
-> >
-> > EXTRA_OEMAKE +=3D "ARM_ARCH_MAJOR=3D8 ARM_ARCH_MINOR=3D4=E2=80=9D
-> >
-> > Ross
->
->
->
-> --
-> Sl=C3=A1n,
-> Marek
-
-
-
---
-Sl=C3=A1n,
-Marek
 
