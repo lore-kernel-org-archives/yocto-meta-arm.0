@@ -1,90 +1,54 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <yogesh.wani@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1BDC71157
-	for <webhook@archiver.kernel.org>; Tue, 17 Jun 2025 14:01:51 +0000 (UTC)
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
- by mx.groups.io with SMTP id smtpd.web11.19770.1750168903124481096
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C30C7115B
+	for <webhook@archiver.kernel.org>; Tue, 17 Jun 2025 16:30:33 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.23767.1750177823800470417
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 17 Jun 2025 07:01:43 -0700
+ Tue, 17 Jun 2025 09:30:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=v8El1bgE;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.180, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4a440a72584so56130321cf.2
-        for <meta-arm@lists.yoctoproject.org>; Tue, 17 Jun 2025 07:01:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1750168902; x=1750773702; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LQ2GgQnxU3Xvsqr7pPMtjy3pwgcdR5TzD+mWIjleTD8=;
-        b=v8El1bgE3T36mJ0Jf8/nZZDzSsqryHMoaZxFJRHnDGMJkaLZoVRXhgZT0VbYdls8Qu
-         i0r+GP7aklxi1ho3m0lHnwaixD85zcEhSoGWeZsmrtRY9SNzAzZ+XlLv/UftWlwXfQIp
-         Uedtb+GogMfgea0QxoviS1lV4Jn0fTNuhel+fUwYLf1ckphTumMxTY8nWvktsW+ZHDHv
-         rJC1wF7XkRkOlbKrZbIs+RQKUcgzvRphvqDIXPxgb7NgCJysLdNS1yb7zXISyxM1KkTJ
-         TBzcBuxSPSHUXeKcT6dTRRR9GNCXy9qCefQ+mFjt+XwYogLf236pPfduLGoma4Zl9JQl
-         G83w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750168902; x=1750773702;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LQ2GgQnxU3Xvsqr7pPMtjy3pwgcdR5TzD+mWIjleTD8=;
-        b=fuxfcEYNzhdDszn1yQfmzC5UJua7pgfcxOEDnbOmSASKagi1Bd7TbDGwFLVZZUGojE
-         gpppYG0GUX2ZDEykD5hqQQ0579bhKzjcQPZUjqnHtlJH7O1VN2I3G6YOlCBVzTa1x21d
-         XjjACu5H3UaHHZXGWXw2uWO1KMd9E9rWxzS4AzMCWJiHPqhRXyyYEdY2dZg/FH0fvULl
-         KjclHvKkKmA+O3gBeMMEaGmPqL/NmInXcxovxXzZ5edmvx5Nnqndq45lEYIVCEPfchHN
-         4981WzQ4G2FWgRlLO1vCgd0sMvw8lwtXT06lDyr9LmUK1+S0VaCMJgb+ZStDZWCEAHdJ
-         OZIA==
-X-Gm-Message-State: AOJu0YyneIbxb9ma4bSu+oa8xTnJJpRrIgVMbIqAV1O9KGs842kDca0X
-	2GqT9Ldf6/NE3sPXd/6Lqtmj4Oe6oMtcKzcDkIpJx+8sMwEi57QhXJ9J/eVfzKeLBs1lTfNqg2G
-	9FiE=
-X-Gm-Gg: ASbGncuxp/7n3KaROR8trEEiAj+hapeoDbQnFWn1c7qcM0fJMhrrbKw02GFVovOw5XK
-	NmlC3kLw45/lZ/Jo8AfdI8P5rSOe0obpC0cajxEzdntlnoOsXQnn1vK0l6e8Yflpn7REFQLatr6
-	jCCb5j69v3CknN0s/LYo1vqA4Gg0k3LX84P9tfSiY8sqvU29bS9QmBnLTVS9+jY9Bt41CJx1OAr
-	U7QNSkJ7CqbYFB2qj2JSU9gIWF9E5H6COYmIJZ3SL/59ToMThOAF6eKWamfh2d5W0hj2uAEQN19
-	dUi4l/DCEd/4Sg/D5moLacj/Mt7KWwt9pX51dGNyk4DCcjfLo7lStw==
-X-Google-Smtp-Source: AGHT+IGwsW7FQJa5J9fwW1GtXDon0JpVWK//3VgYfj52LT5wWIT1qI7Z5JLXmTzWuL7TrOe3e1nsVQ==
-X-Received: by 2002:ac8:5a43:0:b0:4a3:fcc7:c73c with SMTP id d75a77b69052e-4a73c4fd271mr198114541cf.8.1750168901673;
-        Tue, 17 Jun 2025 07:01:41 -0700 (PDT)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a51cebfsm60774661cf.76.2025.06.17.07.01.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 07:01:41 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] arm-systemready/ir-acs: Update URL
-Date: Tue, 17 Jun 2025 10:00:48 -0400
-Message-Id: <175016884823.1970111.14136225171453122312.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250616135214.29942-1-jon.mason@arm.com>
-References: <20250616135214.29942-1-jon.mason@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: yogesh.wani@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65471150C;
+	Tue, 17 Jun 2025 09:30:02 -0700 (PDT)
+Received: from localhost.localdomain (unknown [10.57.84.156])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01B883F58B;
+	Tue, 17 Jun 2025 09:30:22 -0700 (PDT)
+From: Yogesh Wani <yogesh.wani@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Yogesh Wani <yogesh.wani@arm.com>
+Subject: [PATCH 0/1] arm/trusted-firmware-m: Remove duplicate config in the cmake file.
+Date: Tue, 17 Jun 2025 17:30:10 +0100
+Message-ID: <20250617163011.2238429-1-yogesh.wani@arm.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 17 Jun 2025 14:01:51 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6561
+ <meta-arm@lists.yoctoproject.org>; Tue, 17 Jun 2025 16:30:33 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6562
 
+The PS_NUM_ASSET is duplicated in the cmake.config and the config_tfm_tar=
+get.h file
+under corstone-1000. The commit removes the one from the cmake.config and=
+ keeps the
+one in the header file.
 
-On Mon, 16 Jun 2025 09:52:14 -0400, Jon Mason wrote:
-> The github URL where the image was located has gone away on the master
-> branch.  Update the URL to point to the legacy branch, which should stay
-> around (according to the documentation).
-> 
-> 
+The whole rationale behind this is for the vendor to be able to override =
+the
+configuration using the cmake file.
 
-Applied, thanks!
+Yogesh Wani (1):
+  arm/trusted-firmware-m: Remove duplicate config in the cmake file.
 
-[1/1] arm-systemready/ir-acs: Update URL
-      commit: acd1d70123479c789942b43bcbd6f52935c1f3cc
+ ...e-duplicate-configuration-parameters.patch | 30 +++++++++++++++++++
+ .../trusted-firmware-m-corstone1000.inc       |  1 +
+ 2 files changed, 31 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0023-Platform-CS1000-Remove-duplicate-configuration-parameters.=
+patch
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
