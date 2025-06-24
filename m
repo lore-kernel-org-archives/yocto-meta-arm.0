@@ -2,83 +2,86 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7568EC77B7C
-	for <webhook@archiver.kernel.org>; Tue, 24 Jun 2025 19:31:52 +0000 (UTC)
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
- by mx.groups.io with SMTP id smtpd.web11.5198.1750793510704205566
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567A5C77B7C
+	for <webhook@archiver.kernel.org>; Tue, 24 Jun 2025 19:32:02 +0000 (UTC)
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+ by mx.groups.io with SMTP id smtpd.web11.5205.1750793520010733659
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 24 Jun 2025 12:31:50 -0700
+ Tue, 24 Jun 2025 12:32:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=GoS5EsQt;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.44, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6fafd3cc8f9so86780616d6.3
-        for <meta-arm@lists.yoctoproject.org>; Tue, 24 Jun 2025 12:31:50 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=Vc4uxAmz;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.182, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7d20f799fe9so81220885a.2
+        for <meta-arm@lists.yoctoproject.org>; Tue, 24 Jun 2025 12:31:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1750793509; x=1751398309; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1750793519; x=1751398319; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oIOZH4flbW3+STqrm25eOOeIvP2qN+MguYrziBks8K4=;
-        b=GoS5EsQtyWPs00AP0u+D8ZgIaZvIjy3mfLxefOxEcSpLr9Idjjm68ukTlkbFI8WLqj
-         08tKyaYj/RrfgfY/Wvz78L74eDJcvM2K7Lvt+OPcHQXXj+SZ7jwMaOmBv2EhGP9Fd2YN
-         y738JWeYRHc3Umvy2hja2V99oqRR5EqyTWY6QUTgorH3Yrk1+hWKbfGPMUS1lh6xUX64
-         rsQoJ/uT+o9hDERYUmpAdeTG9dvgZWZ1I/+efsP02AlqjRTC5xl78Lbe31BJmU6R8qtp
-         0NzUeK1gZqedLxwGu82F+WEqKxF2EieMC0tCQTxhx2dl3SjTPPtO/xrKPj8n+jT/dWp1
-         76CQ==
+        bh=2YTANm993Vzn7KARo8vXNcNYbZv0PvlT18luAosSRYc=;
+        b=Vc4uxAmzVyDE5lLCF/8VYXx6RxIku4iCfhI8NFRTlKZBEqIeyMjopNwS4P3c+Nt2uG
+         z3KWcrjb++YucQkpDVjXbtujYwK8u7mB5QY5/0h7f7QAkZhsohVsN86iDFGUORxgXUEm
+         t1mwwBXxanzYOP/BjMupVa26HBzoDbR+/eGXoGvsN9/4YUmmVrHm5YlMlc5FxeRM4/zk
+         MhqtVG+K3xfjROZTpXiHzMQbR3jU2aDZRZXmaGkJE07UqS8kWSRQ+Sk8loZ650fG8Fvj
+         0Rkbtd4WgfzC60FELOM8+l6QShuL4nAv6CNVtTz1b4hLaMFnF6+9D7wGKbJgv2+xmp5H
+         2P0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750793509; x=1751398309;
+        d=1e100.net; s=20230601; t=1750793519; x=1751398319;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oIOZH4flbW3+STqrm25eOOeIvP2qN+MguYrziBks8K4=;
-        b=nO9BBZ6xg59rsCNuKSda/ZdbvHd3tde3TnyMhQiY3yeBV7QrqFZJ27qlZYr/KSW/DH
-         Ym2l/mKDULSuajDD5GkQD8f+bxWf9sxdlaOToaNI5JlHONkTCHJCyHkqe2/DWCu+5G+R
-         ZFE/i721H29czfjH3CQPZ+Zg5KHzD1BcaaxrAOkFzXdXop9c4Wfh2z/6QNWPBWG7bneH
-         yfP7azNX2y9xfVMKM7PraWMxDyhJuXZ113jgnX2MEq6t5LjLHr0VaTMmI4wCS2YegK9e
-         QLYIco79M9+dOY2THMP2z0zg2hF81GoShHjGhre7u51017I0WWzvufMuUgDtdIiBk8Cu
-         rdiA==
-X-Gm-Message-State: AOJu0YytSNXqer6mOdK5QKg/3hGK87qaM+c/Q7dBTjvWQ7nWJd8heFg/
-	LeBcXubxJjDBxkPzJhgG9KyjpDT3FHlF8TT+HAaqTCWvh9UWYQuGIFNk7qSVcZRwOQ8mqJFqnLE
-	DkiA=
-X-Gm-Gg: ASbGnctfeFp54w+4trUsCfj3NMgcvLvweAttcOZtieQmoWgE5nWecbr4n8fBawy8DC5
-	xrZOH38U1Dmam5zgkawZnv2/shpu97sySpdqLC0do6UUYe4ONWWOc5kCTGh4Y4uve1gIwE7AR6F
-	iMNbpOBNKC6QYa0vnyXlkAZMa5T4GKtaMffMXLOOWEwQ3+TcS/SGRkUwIBs5hyFxueXajcILklp
-	HwumZ/C75PsuRMO59gsweC+Najq4V4XoADYB+TC4Cn/w9rk1dla9pbknuQ1RSUYiPdZ11lQUTy1
-	n3h3GxPQvbEkmlMAWqqDM/elerRZYK4SJs9NUyNCdc8ABip4SI6+iQ==
-X-Google-Smtp-Source: AGHT+IH8ldphIbR2euvu8ESbCFXosArE9cfDcHfWdAGUlWFvbZ1x5LDnEM/pmd9CMKGmimebblLkRw==
-X-Received: by 2002:a05:6214:da3:b0:6fa:ab49:4482 with SMTP id 6a1803df08f44-6fd5ef940bamr1806636d6.35.1750793509265;
-        Tue, 24 Jun 2025 12:31:49 -0700 (PDT)
+        bh=2YTANm993Vzn7KARo8vXNcNYbZv0PvlT18luAosSRYc=;
+        b=jw6JMVWZ0rgC3ByyglmTKHMD8k+TJ9XGwAM8lM4ZXodC7kienAdpVkCr4um8T88nmo
+         4y11H+y48rcM/klbfwBiqSABJ1auPHT3bWCQx6jxag2h8eOw2QQFfBo6kh4p1tTxFGfz
+         WDdqX7tUnVgsakXgUl5XOnDSAbLdIj77mcB7K71R+RO951wE829nH1KmXNEY+N6IlCTV
+         L0FAsJZ4kGwHvShVjokcyVuz6F9piKUpx+HGFkCzs70HfWq/GAgqDjrqkGexoj6k2NHO
+         ffwMrDG+EUHmBohFDkL6i4kXX8VroP0lvQQWbfJnoJnSQXIMjdssJb3L0qsyKCrl8ebi
+         3N6Q==
+X-Gm-Message-State: AOJu0YwP2lcPvR42vlY5mHl2cE+p7MAmakWynTCSDZZ3JdKUT7OST/jI
+	fZwP6VlttGML4LLDv4xbksJoGiJeQ+awuun5TrN+rOVvcqzKfxAWcAQjxZVrM0IUdK7WX1gTrK/
+	5s/E=
+X-Gm-Gg: ASbGnctrqAoL0/bSpBMKLYXxnpCDPZUznyzKGb7TEIT0LWQ+pk/N2s5QNpwjJdINiRr
+	BAlKubcMLHkSpP2dKY1tnHoSGP7HD9/K+wKdy5mE3RWPtlJ57+g402So4cRpuY3MR/YQUK8RNR+
+	AN5c2O4/qrWTe6FtzxzDF1fREgACnQOS1pHJD0ASIqlfo8AiDYW4dN/hjptdQ2md2buCWcKLylb
+	7s6A2C9Rbt4lO1T5dy+ZH+Z6nEY6cFVj16pgVheHCXEwIU+StaI3JYLr5hccTysmhvHwBs96ZvR
+	tLhUZQYZh4J0kRMdLLVVfzyTjpHTvUYi2eyYb48SNlWPMt2EfPF1FQ==
+X-Google-Smtp-Source: AGHT+IGyM8t8z7GKiiatktocg22ISTaFH1rLd0eLQ3GjeedJtk+TR9RodrRBrRFH0FaGEJqieF1cxg==
+X-Received: by 2002:a05:620a:462c:b0:7d2:257e:21d6 with SMTP id af79cd13be357-7d4296359c8mr48333085a.9.1750793518831;
+        Tue, 24 Jun 2025 12:31:58 -0700 (PDT)
 Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd093e00e7sm60339986d6.15.2025.06.24.12.31.48
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd094342casm60834546d6.29.2025.06.24.12.31.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 12:31:48 -0700 (PDT)
+        Tue, 24 Jun 2025 12:31:58 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Yogesh Wani <yogesh.wani@arm.com>
-Subject: Re: [PATCH 0/1] arm/trusted-firmware-m: Remove duplicate config in the cmake file.
-Date: Tue, 24 Jun 2025 15:31:40 -0400
-Message-Id: <175079350181.41239.8238440348245687522.b4-ty@arm.com>
+Subject: Re: [PATCH v2 0/1] arm/trusted-firmware-m: Remove duplicate config in the cmake file.
+Date: Tue, 24 Jun 2025 15:31:41 -0400
+Message-Id: <175079350181.41239.882674309285535680.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250617163011.2238429-1-yogesh.wani@arm.com>
-References: <20250617163011.2238429-1-yogesh.wani@arm.com>
+In-Reply-To: <20250623110134.3074109-1-yogesh.wani@arm.com>
+References: <20250623110134.3074109-1-yogesh.wani@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 24 Jun 2025 19:31:52 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6582
+ <meta-arm@lists.yoctoproject.org>; Tue, 24 Jun 2025 19:32:02 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6583
 
 
-On Tue, 17 Jun 2025 17:30:10 +0100, Yogesh Wani wrote:
+On Mon, 23 Jun 2025 12:01:33 +0100, Yogesh Wani wrote:
+> v2
+> 
+> Added upsteam submission link.
+> 
+> v1
+> 
 > The PS_NUM_ASSET is duplicated in the cmake.config and the config_tfm_target.h file
 > under corstone-1000. The commit removes the one from the cmake.config and keeps the
 > one in the header file.
-> 
-> The whole rationale behind this is for the vendor to be able to override the
-> configuration using the cmake file.
 > 
 > [...]
 
