@@ -1,81 +1,72 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6100C83026
-	for <webhook@archiver.kernel.org>; Fri, 27 Jun 2025 13:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A37AC77B7F
+	for <webhook@archiver.kernel.org>; Fri, 27 Jun 2025 19:51:29 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.14177.1751032191019767204
+ by mx.groups.io with SMTP id smtpd.web11.1924.1751053885382508781
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 27 Jun 2025 06:49:51 -0700
+ Fri, 27 Jun 2025 12:51:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D01B1007
-	for <meta-arm@lists.yoctoproject.org>; Fri, 27 Jun 2025 06:49:33 -0700 (PDT)
-Received: from cesw-amp-gbt-1s-m12830-04.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2C8AA3F66E
-	for <meta-arm@lists.yoctoproject.org>; Fri, 27 Jun 2025 06:49:50 -0700 (PDT)
-From: Ross Burton <ross.burton@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 941CE1007;
+	Fri, 27 Jun 2025 12:51:07 -0700 (PDT)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7D6383F66E;
+	Fri, 27 Jun 2025 12:51:24 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH][kirkstone 2/6] CI: clean up variable definitions
-Date: Fri, 27 Jun 2025 14:49:42 +0100
-Message-ID: <20250627134946.154438-2-ross.burton@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250627134946.154438-1-ross.burton@arm.com>
-References: <20250627134946.154438-1-ross.burton@arm.com>
+Cc: Marcin Juszkiewicz <marcin-oe@juszkiewicz.com.pl>
+Subject: [PATCH 1/2] arm-bsp/sbsa-ref: modify network device and pflash for runqemu
+Date: Fri, 27 Jun 2025 15:51:22 -0400
+Message-Id: <20250627195123.14524-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 27 Jun 2025 13:49:57 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6586
+ <meta-arm@lists.yoctoproject.org>; Fri, 27 Jun 2025 19:51:29 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6591
 
-Mostly taken from master, rationalise the variable definitions and stop
-hardcoding /persist/.
+The network device and pflash can be modified to more correctly emulate
+an actual system.
 
-Users of this CI will have to ensure that they've set CACHE_DIR if they
-want anything actually cached.
-
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+Suggested-by: Marcin Juszkiewicz <marcin-oe@juszkiewicz.com.pl>
+Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .gitlab-ci.yml | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ meta-arm-bsp/conf/machine/sbsa-ref.conf | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index fd6cbd57c3..9c9eb74191 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -7,6 +7,10 @@ variables:
-   # by default
-   FF_USE_LEGACY_KUBERNETES_EXECUTION_STRATEGY: 0
-   FF_KUBERNETES_HONOR_ENTRYPOINT: 1
-+  # The directory to use as the persistent cache (the root for DL_DIR,
-+  # SSTATE_DIR, etc). The default is the build tree which will not be
-+  # persistent, so this should be set in the runner.
-+  CACHE_DIR: $CI_PROJECT_DIR
-=20
- stages:
-   - prep
-@@ -20,11 +24,12 @@ stages:
-   interruptible: true
-   variables:
-     KAS_WORK_DIR: $CI_PROJECT_DIR/work
--    KAS_REPO_REF_DIR: $CI_BUILDS_DIR/persist/repos
--    SSTATE_DIR: $CI_BUILDS_DIR/persist/sstate
--    DL_DIR: $CI_BUILDS_DIR/persist/downloads
-+    KAS_BUILD_DIR: $KAS_WORK_DIR/build
-+    KAS_REPO_REF_DIR: ""
-+    SSTATE_DIR: $CACHE_DIR/sstate
-+    DL_DIR: $CACHE_DIR/downloads
-     BB_LOGCONFIG: $CI_PROJECT_DIR/ci/logging.yml
--    TOOLCHAIN_DIR: $CI_BUILDS_DIR/persist/toolchains
-+    TOOLCHAIN_DIR: $CACHE_DIR/toolchains
-     IMAGE_DIR: $CI_PROJECT_DIR/work/build/tmp/deploy/images
-     TOOLCHAIN_LINK_DIR: $CI_PROJECT_DIR/work/build/toolchains
-   before_script:
+diff --git a/meta-arm-bsp/conf/machine/sbsa-ref.conf b/meta-arm-bsp/conf/=
+machine/sbsa-ref.conf
+index 116b4276319d..3f93b6929121 100644
+--- a/meta-arm-bsp/conf/machine/sbsa-ref.conf
++++ b/meta-arm-bsp/conf/machine/sbsa-ref.conf
+@@ -36,11 +36,11 @@ QB_MACHINE =3D "-machine sbsa-ref"
+ QB_CPU =3D "-cpu neoverse-n2"
+ QB_MEM =3D "-m 1024"
+ QB_DEFAULT_FSTYPE =3D "wic.qcow2"
+-QB_NETWORK_DEVICE =3D "-device virtio-net-pci,netdev=3Dnet0,mac=3D@MAC@"
++QB_NETWORK_DEVICE =3D "-device e1000e,netdev=3Dnet0,mac=3D@MAC@"
+ QB_DRIVE_TYPE =3D "/dev/hd"
+ QB_ROOTFS_OPT =3D "-drive file=3D@ROOTFS@,if=3Dide,format=3Dqcow2"
+ QB_DEFAULT_KERNEL =3D "none"
+-QB_OPT_APPEND =3D "-device usb-tablet -device usb-kbd -pflash @DEPLOY_DI=
+R_IMAGE@/SBSA_FLASH0.fd -pflash @DEPLOY_DIR_IMAGE@/SBSA_FLASH1.fd"
++QB_OPT_APPEND =3D "-device usb-tablet -device usb-kbd -drive if=3Dpflash=
+,format=3Draw,unit=3D0,readonly,file=3D@DEPLOY_DIR_IMAGE@/SBSA_FLASH0.fd =
+-drive if=3Dpflash,format=3Draw,unit=3D1,readonly,file=3D@DEPLOY_DIR_IMAG=
+E@/SBSA_FLASH1.fd"
+ QB_SERIAL_OPT =3D "-device virtio-serial-pci -chardev null,id=3Dvirtcon =
+-device virtconsole,chardev=3Dvirtcon"
+ QB_TCPSERIAL_OPT =3D "-device virtio-serial-pci -chardev socket,id=3Dvir=
+tcon,port=3D@PORT@,host=3D127.0.0.1 -device virtconsole,chardev=3Dvirtcon=
+"
+ # sbsa-ref is a true virtual machine so can't use KVM
 --=20
-2.43.0
+2.39.5 (Apple Git-154)
 
 
