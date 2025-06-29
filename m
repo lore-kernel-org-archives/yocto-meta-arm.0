@@ -2,96 +2,89 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D76C7EE30
-	for <webhook@archiver.kernel.org>; Sun, 29 Jun 2025 18:47:03 +0000 (UTC)
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
- by mx.groups.io with SMTP id smtpd.web10.22600.1751222814322765693
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A5AC7EE39
+	for <webhook@archiver.kernel.org>; Sun, 29 Jun 2025 18:47:13 +0000 (UTC)
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+ by mx.groups.io with SMTP id smtpd.web11.22468.1751222825223546928
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 29 Jun 2025 11:46:54 -0700
+ Sun, 29 Jun 2025 11:47:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=q37btHXK;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.174, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d38b84984dso620796885a.0
-        for <meta-arm@lists.yoctoproject.org>; Sun, 29 Jun 2025 11:46:54 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=DRuwVMK9;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.47, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6fd0a91ae98so8743346d6.1
+        for <meta-arm@lists.yoctoproject.org>; Sun, 29 Jun 2025 11:47:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1751222813; x=1751827613; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1751222824; x=1751827624; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TUXTWi+EDFOV67niY30PzaxVXXqNqG0i7T4HfKpuQJo=;
-        b=q37btHXKu16Z5U4oyivsOgAUIZS8EUZAtyoqMVyTLJiUAkXFNcXNFZE23WyUyq9t4/
-         rX6XsotoNpFD9UaJvoLpj/OX+JhCLRZFo9K3UdLjClKWQl36xhxDMfffEZEHgpKrW59H
-         WSW5asImtPcILelw1I6lUYqps64AWNyXUyU7lHDNwqHW4654q+yQHYlJHaTIJ6Z8UVqy
-         Go8KkuQLISwFCiRlju84UpG9erv7gLjhcSmhRtWyO8OW+HoqJ0/K5s6x6dWAtsZnOAEr
-         qeJd9Ehc6PV3Ipc5CvaHM5xYe3Gdf2eI2grSCUotikayWPbILqVX5jqBbZGZeNDUb3IT
-         EnhA==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pw5V4RrYZP9XYnA4doizCq0kxz6OacHu2WAt/LsDpKs=;
+        b=DRuwVMK9EUdJvV1IRfRFvkNpwwQWJH0MNlPpqm17C1TTlOdaRkMd6TQL4rgDBjtAc0
+         h8+JuxRYajDss1oSyboVGeEKtnyTyLcIozQ7OQfFunLk2AfwAQ7ghfluci9ZsHHIQWHh
+         E17tTHYOrrTJYDpsbb7EaG6ofN8JgQFS1zV8ocl1mGRQsDjFfVXAMOGOQLLHvN+1UzHg
+         rhAFq76YhNvdcg1Wkng0YXBmx+Z+KhipDjoloHGfuvC3cAA43GK3c5KqT0CpF07ZJfrG
+         h029qMI+ceAaF23H6049juYR8rl4XPDj20WNkZQl4C3strO+F7D3aApuO/7XR/tLog0U
+         Va8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751222813; x=1751827613;
+        d=1e100.net; s=20230601; t=1751222824; x=1751827624;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TUXTWi+EDFOV67niY30PzaxVXXqNqG0i7T4HfKpuQJo=;
-        b=t5S3HpeIgvvaY4GC5PrHPS/jKXDx13qXbSpuWArzerPUWpOiZkIFvAybWN9NyBYAHc
-         REsI3PAoXs3tboUO2OxNK7SF61wAT2YvPIR+PMfMQfOPaujPvQsokUTL3usjRbV9eIwq
-         IZV7PdJa3dxMErgeCi6SkliW6ReAUZdydYY23VvwmI1Z/6q5Z4MeTAY/i6A4iBUJqcD5
-         lupBBsNl21Sd0KXHjX/AqmOpX0dL9A9vr+T1U8Nkns7C5dOZBO9LPfHjqQ8jMfTBcMfc
-         pdW7EuSbo2lSbLaBLQhO7ou7mXWvX2HiibgEqnXL1n2HCw7tE0RNcS5Oz7TXSlkEE03U
-         jVHQ==
-X-Gm-Message-State: AOJu0YxyEbqd2RBIia0fYB29abGf2umIMwipfvCdf7o+ppiWquLqXmJQ
-	IXMMebybdFHGHmczJTAejgLdRyt2exu9aTdcvwNEVX3cAvmFuVsSGwnMyHcn/xnSdW+vAoM9ESI
-	WU4M=
-X-Gm-Gg: ASbGnctk65G1RHZZFr78nL2kTAoUOyh/3JAUdilBXHW3HlW/sJwudR0lv+VJf6+HiMN
-	75hw7qciWdlznpD8y6q/0IdX9fXeBYn8YcG97dsZnevngE4atBCsm87Qe09Yi8W0V+2X5QM7gDE
-	UuElUrBqbUoe1+f+g9jQ1kaasx4XrrmHEGeCkpJYk1idJAfwJm0k6kdAE8UyOxH0PnQYLx+6SpW
-	eXd0oGCO1ItVSz2aURlFXc5gHAYdA6HJhKEujaBLKd3utXZt6TWUQRmHTJlgeRNSA94N7wmku11
-	CKn8LJlvaQPVpf7WKC+skTouK/P02LFb8bH1QbsBTx5K+wzakOfLrA==
-X-Google-Smtp-Source: AGHT+IEHTBHtnb0+O8IEAVUzKFZZ6Ph8DHQ2Z9v/ieRKJfXQNa8jpSiORdqxn7AVmPf7Bic03xD1sQ==
-X-Received: by 2002:a05:620a:f02:b0:7d4:5b68:2646 with SMTP id af79cd13be357-7d45b6828femr186388985a.57.1751222813070;
-        Sun, 29 Jun 2025 11:46:53 -0700 (PDT)
+        bh=pw5V4RrYZP9XYnA4doizCq0kxz6OacHu2WAt/LsDpKs=;
+        b=A9UCxE5MbrOwK8jL2Bi18msa0yk2e74WRrEfB622aLHJja+OMpf3HaZR4wgjGSD0RV
+         Lh31YBAu6APXBhk2DVq/t5jTlmvDboJv2D+7PeRt+IXktdg21w5LZyOUlunzVWhVJSnK
+         eWmIM7HID9hgzz8O6fajbvxJJPtJneEoC8taLCKrFaCu1Xj7a5t7gv5Fky6yHotBn1zc
+         nb3NWgnM+E4l6wbaAs2NIoDvQbJDoblhwRpNZB4TpknqZNm20dzXInlrsEGXqXQdJT2U
+         xkm5LD4Mh1QyrXzzKtlNCNXqyvpzOGVv3AGwUiW5cBzHf+uK/LOrnYEuM5lO1/3ib4xA
+         byGA==
+X-Gm-Message-State: AOJu0Yxjf6z8hfO3Jgo5cei7NtdsI1xxyh+iH3klKIj3rXCUzCGkPd2n
+	+YmIirR39ANbwBe0RpgwSocwJdpXOB/8c9idVfLFfvY8HMqGk/njp29PtIzuybA5/1/ifFuNFi7
+	V904=
+X-Gm-Gg: ASbGncvk1FNXYLf5kP9LfSSVWxlZT0h+FKKFbT4p+UCm7KUdvZ+/0QRJkO+Xz/z1oe+
+	BEiD1FbFQl5fAA1w7vmJHo6muz/olfq3QkNUZHz3+oS40zVUo0Kzg8REjEpgTMeKiS1rYqxrSaN
+	0DJzr07ieaMd2Er5qCEXEUjO8lw9ewj7zEoF6OWCmBCk/63dJCIF51GDnAX8Lsc+JevcqXYnmZR
+	4cnhTvsLUx6a/Z8TGywBcgAc+EmQimI5BJH+3iARcHFXEPZN5yuo/goGdz5DTkEGrdwSJqwG2pE
+	D5XMztpERSHPcAVi23uOYlB6elnWDSH+LjfZbjaKhJvLdDm6vlBM1w==
+X-Google-Smtp-Source: AGHT+IE03tMppW3qnFpjdvbn9uyD8ow6cxDsR+fyHYw4Y4kObPWEAW4aWBCR12h88Dvu7+GBP0TngQ==
+X-Received: by 2002:a05:6214:2606:b0:6fd:74d4:b6 with SMTP id 6a1803df08f44-70001c5db96mr184651976d6.28.1751222823981;
+        Sun, 29 Jun 2025 11:47:03 -0700 (PDT)
 Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d442e8db3csm473414385a.0.2025.06.29.11.46.52
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772e3ca8sm54674906d6.71.2025.06.29.11.47.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jun 2025 11:46:52 -0700 (PDT)
+        Sun, 29 Jun 2025 11:47:03 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Clement Faure <clement.faure@arm.com>
-Subject: Re: [PATCH 0/3] corstone1000: Upgrade OP-TEE to 4.6.0
-Date: Sun, 29 Jun 2025 14:46:42 -0400
-Message-Id: <175122280396.1667135.14841010916169504028.b4-ty@arm.com>
+	Jon Mason <jon.mason@arm.com>
+Cc: Marcin Juszkiewicz <marcin-oe@juszkiewicz.com.pl>
+Subject: Re: [PATCH v2 1/2] arm-bsp/sbsa-ref: modify network device and pflash for runqemu
+Date: Sun, 29 Jun 2025 14:46:44 -0400
+Message-Id: <175122280397.1667135.10799049438402998694.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250618081047.34990-1-clement.faure@arm.com>
-References: <20250618081047.34990-1-clement.faure@arm.com>
+In-Reply-To: <20250628153109.37423-1-jon.mason@arm.com>
+References: <20250628153109.37423-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sun, 29 Jun 2025 18:47:03 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6595
+ <meta-arm@lists.yoctoproject.org>; Sun, 29 Jun 2025 18:47:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6596
 
 
-On Wed, 18 Jun 2025 10:10:44 +0200, Clement Faure wrote:
-> Add recipes for optee 4.6.0
-> Backport patch for optee-test 4.6.0 to fix compilation
-> issue with musl.
-> Set optee 4.6.0 as preferred version for Corstone-1000.
-> Remove optee 4.3.0 and 4.4.0 recipes.
+On Sat, 28 Jun 2025 11:31:08 -0400, Jon Mason wrote:
+> The network device and pflash can be modified to more correctly emulate
+> an actual system.
 > 
-> Clement Faure (1):
->   arm-bsp/optee-os: corstone-1000: upgrade to 4.6.0
 > 
-> [...]
 
 Applied, thanks!
 
-[1/3] arm-bsp/optee-os: corstone-1000: upgrade to 4.6.0
-      commit: d782eeeae4acf620c9e094ac127501884fae0560
-[2/3] arm/optee: remove 4.3.0
-      commit: 5f8b0d44c8bfca16adb4127a205019823ce2e8be
-[3/3] arm/optee: remove 4.4.0
-      commit: 54cb65ca03a663a66a6d88c3397b76630ce7b043
+[1/2] arm-bsp/sbsa-ref: modify network device and pflash for runqemu
+      commit: bb60348450ad7ff0efbbdc7b99ae542ffea2df4d
+[2/2] arm: WORKDIR fixes
+      commit: eea748608c82df1c50d133c769279315e08dca5f
 
 Best regards,
 -- 
