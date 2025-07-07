@@ -1,60 +1,87 @@
-Return-Path: <marek.bykowski@gmail.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD68C8302B
-	for <webhook@archiver.kernel.org>; Mon, 30 Jun 2025 14:49:40 +0000 (UTC)
-Subject: Re: boot fvp-base in aarch32
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61B8C8303C
+	for <webhook@archiver.kernel.org>; Mon,  7 Jul 2025 18:30:53 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.522.1751913051887547358
+ for <meta-arm@lists.yoctoproject.org>;
+ Mon, 07 Jul 2025 11:30:51 -0700
+Authentication-Results: mx.groups.io;
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E9053168F
+	for <meta-arm@lists.yoctoproject.org>; Mon,  7 Jul 2025 11:30:38 -0700 (PDT)
+Received: from cesw-amp-gbt-1s-m12830-04.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E1B2E3F694
+	for <meta-arm@lists.yoctoproject.org>; Mon,  7 Jul 2025 11:30:50 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-From: "Marek Bykowski" <marek.bykowski@gmail.com>
-X-Originating-Location: Warsaw, Mazovia, PL (5.173.30.38)
-X-Originating-Platform: Windows Chrome 138
-User-Agent: GROUPS.IO Web Poster
+Subject: [PATCH 4/5] arm/trusted-services: use UNPACKDIR instead of WORKDIR/sources/
+Date: Mon,  7 Jul 2025 19:30:41 +0100
+Message-ID: <20250707183042.1299783-4-ross.burton@arm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250707183042.1299783-1-ross.burton@arm.com>
+References: <20250707183042.1299783-1-ross.burton@arm.com>
 MIME-Version: 1.0
-Date: Mon, 30 Jun 2025 07:49:33 -0700
-References: <CAHw2UgBkVKuaj4+f-TzxiLzgFn197zWLQgJipK_yLvagkHL10w@mail.gmail.com>
-In-Reply-To: <CAHw2UgBkVKuaj4+f-TzxiLzgFn197zWLQgJipK_yLvagkHL10w@mail.gmail.com>
-Message-ID: <25560.1751294973424046402@lists.yoctoproject.org>
-Content-Type: multipart/alternative; boundary="srWKBf458qlQL2rRaRbM"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 30 Jun 2025 14:49:40 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6597
+ <meta-arm@lists.yoctoproject.org>; Mon, 07 Jul 2025 18:30:53 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6601
 
---srWKBf458qlQL2rRaRbM
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Use UNPACKDIR directly instead of constructing it manually from WORKDIR.
 
-I see you have `fvp-base-arm32` that you dropped the support at the mickled=
-ore Yocto release time.
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ .../trusted-services/trusted-services-src.inc | 24 +++++++++----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-I have built and successfully run it with Linux booting on a single CPU0 on=
- the FVP_BASE_REVC-2xAEMvA model.
+diff --git a/meta-arm/recipes-security/trusted-services/trusted-services-=
+src.inc b/meta-arm/recipes-security/trusted-services/trusted-services-src=
+.inc
+index 5a7ab785c2..f557fccf6b 100644
+--- a/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
++++ b/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
+@@ -56,19 +56,19 @@ inherit apply_local_src_patches
+ LOCAL_SRC_PATCHES_INPUT_DIR =3D "N/A"
+=20
+ do_apply_local_src_patches() {
+-    apply_local_src_patches ${S}/external/qcbor ${WORKDIR}/sources/qcbor
+-    apply_local_src_patches ${S}/external/t_cose ${WORKDIR}/sources/tcos=
+e
+-    apply_local_src_patches ${S}/external/MbedTLS ${WORKDIR}/sources/mbe=
+dtls
+-    apply_local_src_patches ${S}/external/CppUTest ${WORKDIR}/sources/cp=
+putest
+-    apply_local_src_patches ${S}/external/libfdt ${WORKDIR}/sources/dtc
+-    apply_local_src_patches ${S}/external/nanopb ${WORKDIR}/sources/nano=
+pb
++    apply_local_src_patches ${S}/external/qcbor ${UNPACKDIR}/qcbor
++    apply_local_src_patches ${S}/external/t_cose ${UNPACKDIR}/tcose
++    apply_local_src_patches ${S}/external/MbedTLS ${UNPACKDIR}/mbedtls
++    apply_local_src_patches ${S}/external/CppUTest ${UNPACKDIR}/cpputest
++    apply_local_src_patches ${S}/external/libfdt ${UNPACKDIR}/dtc
++    apply_local_src_patches ${S}/external/nanopb ${UNPACKDIR}/nanopb
+ }
+=20
+ # Paths to dependencies required by some TS SPs/tools
+-EXTRA_OECMAKE +=3D "-DDTC_SOURCE_DIR=3D${WORKDIR}/sources/dtc \
+-                  -DCPPUTEST_SOURCE_DIR=3D${WORKDIR}/sources/cpputest \
+-                  -DNANOPB_SOURCE_DIR=3D${WORKDIR}/sources/nanopb \
+-                  -DT_COSE_SOURCE_DIR=3D${WORKDIR}/sources/tcose \
+-                  -DQCBOR_SOURCE_DIR=3D${WORKDIR}/sources/qcbor \
+-                  -DMBEDTLS_SOURCE_DIR=3D${WORKDIR}/sources/mbedtls \
++EXTRA_OECMAKE +=3D "-DDTC_SOURCE_DIR=3D${UNPACKDIR}/dtc \
++                  -DCPPUTEST_SOURCE_DIR=3D${UNPACKDIR}/cpputest \
++                  -DNANOPB_SOURCE_DIR=3D${UNPACKDIR}/nanopb \
++                  -DT_COSE_SOURCE_DIR=3D${UNPACKDIR}/tcose \
++                  -DQCBOR_SOURCE_DIR=3D${UNPACKDIR}/qcbor \
++                  -DMBEDTLS_SOURCE_DIR=3D${UNPACKDIR}/mbedtls \
+                  "
+--=20
+2.43.0
 
-It seems to be armv7 though. Can any of your experts please confirm with me=
- this is equivalent to armv8/AArch32 with reset to BL1 entrypoint?
-
-Thanks,
-Marek
-
---srWKBf458qlQL2rRaRbM
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div id=3D":1cm" class=3D"Am aiL Al editable LW-avf tS-tW tS-tY" style=3D"d=
-irection: ltr; min-height: 376px;" tabindex=3D"1" role=3D"textbox" contente=
-ditable=3D"true" spellcheck=3D"false" aria-label=3D"Message Body" aria-mult=
-iline=3D"true" aria-owns=3D":2zk" aria-controls=3D":2zk" aria-expanded=3D"f=
-alse">I see you have `fvp-base-arm32` that you dropped the support at the m=
-ickledore Yocto release time.<br /><br />
-<div>I have built and successfully run it with Linux booting on a single CP=
-U0 on the FVP_BASE_REVC-2xAEMvA model.<br /><br /></div>
-<div>It seems to be armv7 though. Can any of your experts please confirm wi=
-th me this is equivalent to armv8/AArch32 with reset to BL1 entrypoint?<br =
-/>&nbsp;<br />Thanks,</div>
-<div>Marek</div>
-</div>
-
---srWKBf458qlQL2rRaRbM--
 
