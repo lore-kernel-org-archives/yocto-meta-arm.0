@@ -1,214 +1,248 @@
-Return-Path: <mariam.elshakfy@linaro.org>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 081F0C83F1A
-	for <webhook@archiver.kernel.org>; Mon, 14 Jul 2025 12:07:32 +0000 (UTC)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
- by mx.groups.io with SMTP id smtpd.web11.76466.1752494842274278486
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01DFC83F1A
+	for <webhook@archiver.kernel.org>; Mon, 14 Jul 2025 13:57:52 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.78653.1752501471949402572
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 14 Jul 2025 05:07:22 -0700
+ Mon, 14 Jul 2025 06:57:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=F5fuoHWz;
- spf=pass (domain: linaro.org, ip: 209.85.221.45, mailfrom: mariam.elshakfy@linaro.org)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3ab112dea41so2259540f8f.1
-        for <meta-arm@lists.yoctoproject.org>; Mon, 14 Jul 2025 05:07:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1752494840; x=1753099640; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pmhe04NutJ+1hMAEZiMwsbqsi7Sr1yJNUAJDmsKYcf4=;
-        b=F5fuoHWzxfEJPZdpopPt+W20fiNqaiSPKN4D5TGeFlMCAAJD6cL/eb7eAifZM0B9yS
-         xZmlQkDY6wPwk1E4uUbKtivNfeyipy49vzVQSTFNXB5CUvMPqJ0oJ+3vxmdyu3d3sL4H
-         gWoqaMLLb3SdHZPv6mh0Uw4qauI9g4QlvsW/jhd3Pk0X0t+1kDQUXPKpv9pwNgpk0QTq
-         f4Zp1oBBtDWFLcd/gLT7KDy5uxT5rQfyScbiyUmMnuK3E2K0VYlUP4rx9ZaqTimhjB9r
-         5onRvobZXdSrcUWIVi8prDt2pqmstq9gDpsgcMP/cJDr5iDAw5mCWADR5/HZjUHrd+KS
-         V2ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752494840; x=1753099640;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pmhe04NutJ+1hMAEZiMwsbqsi7Sr1yJNUAJDmsKYcf4=;
-        b=DjDMwB4u2dJgV2zxVJegCY2TKPzUxC24tkFSffeUCMbNG/LPKaEWQN/brh212CzmjY
-         5mQeZkxSznQk+qvvtzK7S19vAXz2R41MJqpKnwvZ5HWz2n2ON5/Q5gXgaSJtdpj0F2KH
-         xA1sF24hPP8Rp0tubS2oAoDxJtapzW/91khxKUBYFYsLhOT/q/rupRAF+kIu5/2FkjJZ
-         Eb12Bs0hUdV62rofl8HzvjzYTxDBeVCSytkHU8+NkMqlqol+t/wxj9ecMtodQ+vRFik9
-         ADEhe76pRm+NJKqXkv8UU2xlbbFhroq81alioblwVxmvokHfNbGIryWG5GPnrUT/HSZY
-         +A9A==
-X-Gm-Message-State: AOJu0Yy5r1RcV6BAXswKHsU2eeZRr9Db25uOkI1KWQShdWL26ge9TndV
-	1GIWo+yp1LgjUuOfCurLdyL+fRBGqOAF9NQ7GK265gBFg/lcYvXEsRlL4U/SNZCRq2DR9JvCnXL
-	ZUZ8/
-X-Gm-Gg: ASbGncvuAvcLoxVOcO22EZcC9L0ZU6hiXNND2NlRL72C060UoBqYbJm+SwfAyi9y/N0
-	TsGGgM/K6DuXrLU1PkJwHbZXrJLH6Vqgzj6/s7Td/2Hf4mh8PKoLwe9p2edID0+l1cAuX8pd2hO
-	Lb43bs7JykltcRpeS2nPfVE/S0kb1fpdHCJdatdFKXKLGADU48UgbUuzH1MRQtun72rciHuKv/Z
-	oybB0zoH1+PvJyP2u/6xGZif9bJyzt2w7qFiWApvJo5SbthrAkm5Yld1rHW5wvJRMpZG9QDliZh
-	hjGrdcMaRw8L6HeiTtvtYG0XMOe4lQILyKJdngXgLVx6xc+5JrTWWpH4JI/f5FCNeFMVqAjmUcQ
-	xSXe6lbDEn7RaIatmVzA8hz3Gir4cwkBs+7TKYuXIgjDpHxlx83IzvtRX9yrFSbLY1hlisB4=
-X-Google-Smtp-Source: AGHT+IFt4nnB79VNSo/nVb7qO+7NxiOZhiZrBdElNYXzilXlY6bUw0IakgBkNc+dMv6yd5r1ZyYkcg==
-X-Received: by 2002:a05:6000:40de:b0:3a4:d9fa:f1ed with SMTP id ffacd0b85a97d-3b5f3530763mr8984616f8f.13.1752494840241;
-        Mon, 14 Jul 2025 05:07:20 -0700 (PDT)
-Received: from ip-10-252-32-24.eu-west-1.compute.internal ([217.140.109.21])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8bd1997sm12472060f8f.10.2025.07.14.05.07.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Jul 2025 05:07:19 -0700 (PDT)
-From: Mariam Elshakfy <mariam.elshakfy@linaro.org>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E223E1BC0
+	for <meta-arm@lists.yoctoproject.org>; Mon, 14 Jul 2025 06:57:41 -0700 (PDT)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E6DBB3F694
+	for <meta-arm@lists.yoctoproject.org>; Mon, 14 Jul 2025 06:57:50 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Mariam Elshakfy <mariam.elshakfy@linaro.org>
-Subject: [PATCH 2/2] arm/optee: Backport fix for CVE-2025-46733
-Date: Mon, 14 Jul 2025 12:07:14 +0000
-Message-Id: <20250714120714.337891-3-mariam.elshakfy@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250714120714.337891-1-mariam.elshakfy@linaro.org>
-References: <20250714120714.337891-1-mariam.elshakfy@linaro.org>
+Subject: [PATCH] arm/arch-armv*: Add basic tunes for newly added ARM ISAs
+Date: Mon, 14 Jul 2025 09:57:40 -0400
+Message-Id: <20250714135740.56280-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 14 Jul 2025 12:07:32 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6609
+ <meta-arm@lists.yoctoproject.org>; Mon, 14 Jul 2025 13:57:52 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6610
 
-This CVE is fixed in optee 4.7, so backport for 4.6
-For optee-ftpm, the change is submitted right after
-the 4.6 tag, so update the SHA instead of holding an
-out-of-tree patch.
+Add some basic tunes for the newly added Arm architectures in GCC.
+These will need to be further fleshed out before submitting this to OE
+Core, but should be sufficient to use for machines that need them in the
+interim.
 
-Signed-off-by: Mariam Elshakfy <mariam.elshakfy@linaro.org>
+Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../optee-ftpm/optee-ftpm_4.6.0.bb            |  4 +-
- ... => 0001-optee-enable-clang-support.patch} |  0
- ...002-Add-optee-ta-instanceKeepCrashed.patch | 89 +++++++++++++++++++
- .../recipes-security/optee/optee-os_4.6.0.bb  |  3 +-
- 4 files changed, 93 insertions(+), 3 deletions(-)
- rename meta-arm/recipes-security/optee/optee-os/{0003-optee-enable-clang-support.patch => 0001-optee-enable-clang-support.patch} (100%)
- create mode 100644 meta-arm/recipes-security/optee/optee-os/0002-Add-optee-ta-instanceKeepCrashed.patch
+ .../conf/machine/include/arm/arch-armv8-7a.inc     | 14 ++++++++++++++
+ .../conf/machine/include/arm/arch-armv8-8a.inc     | 14 ++++++++++++++
+ .../conf/machine/include/arm/arch-armv8-9a.inc     | 14 ++++++++++++++
+ .../conf/machine/include/arm/arch-armv9-1a.inc     | 13 +++++++++++++
+ .../conf/machine/include/arm/arch-armv9-2a.inc     | 13 +++++++++++++
+ .../conf/machine/include/arm/arch-armv9-3a.inc     | 13 +++++++++++++
+ .../conf/machine/include/arm/arch-armv9-4a.inc     | 13 +++++++++++++
+ .../conf/machine/include/arm/arch-armv9-5a.inc     | 13 +++++++++++++
+ 8 files changed, 107 insertions(+)
+ create mode 100644 meta-arm/conf/machine/include/arm/arch-armv8-7a.inc
+ create mode 100644 meta-arm/conf/machine/include/arm/arch-armv8-8a.inc
+ create mode 100644 meta-arm/conf/machine/include/arm/arch-armv8-9a.inc
+ create mode 100644 meta-arm/conf/machine/include/arm/arch-armv9-1a.inc
+ create mode 100644 meta-arm/conf/machine/include/arm/arch-armv9-2a.inc
+ create mode 100644 meta-arm/conf/machine/include/arm/arch-armv9-3a.inc
+ create mode 100644 meta-arm/conf/machine/include/arm/arch-armv9-4a.inc
+ create mode 100644 meta-arm/conf/machine/include/arm/arch-armv9-5a.inc
 
-diff --git a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.6.0.bb b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.6.0.bb
-index f611a451..9f328c25 100644
---- a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.6.0.bb
-+++ b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.6.0.bb
-@@ -35,8 +35,8 @@ SRC_URI = "\
- # As per optee-ftpm TA documentation, we have to use this SHA of MS TPM reference
- SRCREV_ms-tpm   ?= "98b60a44aba79b15fcce1c0d1e46cf5918400f6a"
- 
--# v4.6.0
--SRCREV_optee-ta ?= "6f99e783eb9bb57c314a881433d4ec970de87959"
-+# v4.6.0 + fix for CVE-2025-46733
-+SRCREV_optee-ta ?= "ce33372ab772e879826361a1ca91126260bd9be1"
- 
- SRCREV_FORMAT    = "ms-tpm_optee-ta"
- 
-diff --git a/meta-arm/recipes-security/optee/optee-os/0003-optee-enable-clang-support.patch b/meta-arm/recipes-security/optee/optee-os/0001-optee-enable-clang-support.patch
-similarity index 100%
-rename from meta-arm/recipes-security/optee/optee-os/0003-optee-enable-clang-support.patch
-rename to meta-arm/recipes-security/optee/optee-os/0001-optee-enable-clang-support.patch
-diff --git a/meta-arm/recipes-security/optee/optee-os/0002-Add-optee-ta-instanceKeepCrashed.patch b/meta-arm/recipes-security/optee/optee-os/0002-Add-optee-ta-instanceKeepCrashed.patch
+diff --git a/meta-arm/conf/machine/include/arm/arch-armv8-7a.inc b/meta-a=
+rm/conf/machine/include/arm/arch-armv8-7a.inc
 new file mode 100644
-index 00000000..6ba379aa
+index 000000000000..6039baca3568
 --- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os/0002-Add-optee-ta-instanceKeepCrashed.patch
-@@ -0,0 +1,89 @@
-+From 941a58d78c99c4754fbd4ec3079ec9e1d596af8f Mon Sep 17 00:00:00 2001
-+From: Jens Wiklander <jens.wiklander@linaro.org>
-+Date: Fri, 4 Apr 2025 10:24:34 +0200
-+Subject: [PATCH] Add optee.ta.instanceKeepCrashed property
++++ b/meta-arm/conf/machine/include/arm/arch-armv8-7a.inc
+@@ -0,0 +1,14 @@
++DEFAULTTUNE ?=3D "armv8-7a"
 +
-+Add the optee.ta.instanceKeepCrashed property to prevent a TA with
-+gpd.ta.instanceKeepAlive=true to be restarted. This prevents unexpected
-+resetting of the state of the TA.
++TUNEVALID[armv8-7a] =3D "Enable instructions for ARMv8.7-a"
++TUNE_CCARGS_MARCH .=3D "${@bb.utils.contains('TUNE_FEATURES', 'armv8-7a'=
+, ' -march=3Darmv8.7-a', '', d)}"
++MACHINEOVERRIDES =3D. "${@bb.utils.contains('TUNE_FEATURES', 'armv8-7a',=
+ 'armv8-7a:', '', d)}"
 +
-+Upstream-Status: Backport
-+CVE: CVE-2025-46733
-+Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-+Reviewed-by: Jerome Forissier <jerome.forissier@linaro.org>
-+Reviewed-by: Alex Lewontin <alex.lewontin@canonical.com>
-+Reviewed-by: Etienne Carriere <etienne.carriere@foss.st.com>
-+---
-+ core/kernel/tee_ta_manager.c         | 10 +++++++---
-+ lib/libutee/include/user_ta_header.h |  8 +++++++-
-+ ta/user_ta_header.c                  |  3 +++
-+ 3 files changed, 17 insertions(+), 4 deletions(-)
++require conf/machine/include/arm/arch-armv8a.inc
 +
-+diff --git a/core/kernel/tee_ta_manager.c b/core/kernel/tee_ta_manager.c
-+index e4740468873..75e55a8e475 100644
-+--- a/core/kernel/tee_ta_manager.c
-++++ b/core/kernel/tee_ta_manager.c
-+@@ -455,6 +455,7 @@ TEE_Result tee_ta_close_session(struct tee_ta_session *csess,
-+	struct tee_ta_session *sess = NULL;
-+	struct tee_ta_ctx *ctx = NULL;
-+	struct ts_ctx *ts_ctx = NULL;
-++	bool keep_crashed = false;
-+	bool keep_alive = false;
++# Little Endian base configs
++AVAILTUNES +=3D "armv8-7a"
++ARMPKGARCH:tune-armv8-7a                    ?=3D "armv8-7a"
++TUNE_FEATURES:tune-armv8-7a                  =3D "aarch64 armv8-7a"
++PACKAGE_EXTRA_ARCHS:tune-armv8-7a            =3D "${PACKAGE_EXTRA_ARCHS:=
+tune-armv8a} armv8-7a"
++BASE_LIB:tune-armv8-7a                       =3D "lib64"
+diff --git a/meta-arm/conf/machine/include/arm/arch-armv8-8a.inc b/meta-a=
+rm/conf/machine/include/arm/arch-armv8-8a.inc
+new file mode 100644
+index 000000000000..5694330a1d22
+--- /dev/null
++++ b/meta-arm/conf/machine/include/arm/arch-armv8-8a.inc
+@@ -0,0 +1,14 @@
++DEFAULTTUNE ?=3D "armv8-8a"
 +
-+	DMSG("csess 0x%" PRIxVA " id %u",
-+@@ -501,9 +502,12 @@ TEE_Result tee_ta_close_session(struct tee_ta_session *csess,
-+		panic();
++TUNEVALID[armv8-8a] =3D "Enable instructions for ARMv8.8-a"
++TUNE_CCARGS_MARCH .=3D "${@bb.utils.contains('TUNE_FEATURES', 'armv8-8a'=
+, ' -march=3Darmv8.8-a', '', d)}"
++MACHINEOVERRIDES =3D. "${@bb.utils.contains('TUNE_FEATURES', 'armv8-8a',=
+ 'armv8-8a:', '', d)}"
 +
-+	ctx->ref_count--;
-+-	keep_alive = (ctx->flags & TA_FLAG_INSTANCE_KEEP_ALIVE) &&
-+-			(ctx->flags & TA_FLAG_SINGLE_INSTANCE);
-+-	if (!ctx->ref_count && (ctx->panicked || !keep_alive)) {
-++	if (ctx->flags & TA_FLAG_SINGLE_INSTANCE)
-++		keep_alive = ctx->flags & TA_FLAG_INSTANCE_KEEP_ALIVE;
-++	if (keep_alive)
-++		keep_crashed = ctx->flags & TA_FLAG_INSTANCE_KEEP_CRASHED;
-++	if (!ctx->ref_count &&
-++	    ((ctx->panicked && !keep_crashed) || !keep_alive)) {
-+		if (!ctx->is_releasing) {
-+			TAILQ_REMOVE(&tee_ctxes, ctx, link);
-+			ctx->is_releasing = true;
-+diff --git a/lib/libutee/include/user_ta_header.h b/lib/libutee/include/user_ta_header.h
-+index 0336c64b2f7..c5622982f2e 100644
-+--- a/lib/libutee/include/user_ta_header.h
-++++ b/lib/libutee/include/user_ta_header.h
-+@@ -52,8 +52,13 @@
-+					BIT32(11)
-+ #define TA_FLAG_DEVICE_ENUM_TEE_STORAGE_PRIVATE	\
-+					BIT32(12) /* with TEE_STORAGE_PRIVATE */
-++/*
-++ * Don't restart a TA with TA_FLAG_INSTANCE_KEEP_ALIVE set if it has
-++ * crashed.
-++ */
-++#define TA_FLAG_INSTANCE_KEEP_CRASHED	BIT32(13)
++require conf/machine/include/arm/arch-armv8a.inc
 +
-+-#define TA_FLAGS_MASK			GENMASK_32(12, 0)
-++#define TA_FLAGS_MASK			GENMASK_32(13, 0)
++# Little Endian base configs
++AVAILTUNES +=3D "armv8-8a"
++ARMPKGARCH:tune-armv8-8a                    ?=3D "armv8-8a"
++TUNE_FEATURES:tune-armv8-8a                  =3D "aarch64 armv8-8a"
++PACKAGE_EXTRA_ARCHS:tune-armv8-8a            =3D "${PACKAGE_EXTRA_ARCHS:=
+tune-armv8a} armv8-8a"
++BASE_LIB:tune-armv8-8a                       =3D "lib64"
+diff --git a/meta-arm/conf/machine/include/arm/arch-armv8-9a.inc b/meta-a=
+rm/conf/machine/include/arm/arch-armv8-9a.inc
+new file mode 100644
+index 000000000000..9c79658d3077
+--- /dev/null
++++ b/meta-arm/conf/machine/include/arm/arch-armv8-9a.inc
+@@ -0,0 +1,14 @@
++DEFAULTTUNE ?=3D "armv8-9a"
 +
-+ struct ta_head {
-+	TEE_UUID uuid;
-+@@ -133,6 +138,7 @@ extern struct __elf_phdr_info __elf_phdr_info;
-+ #define TA_PROP_STR_SINGLE_INSTANCE	"gpd.ta.singleInstance"
-+ #define TA_PROP_STR_MULTI_SESSION	"gpd.ta.multiSession"
-+ #define TA_PROP_STR_KEEP_ALIVE		"gpd.ta.instanceKeepAlive"
-++#define TA_PROP_STR_KEEP_CRASHED	"optee.ta.instanceKeepCrashed"
-+ #define TA_PROP_STR_DATA_SIZE		"gpd.ta.dataSize"
-+ #define TA_PROP_STR_STACK_SIZE		"gpd.ta.stackSize"
-+ #define TA_PROP_STR_VERSION		"gpd.ta.version"
-+diff --git a/ta/user_ta_header.c b/ta/user_ta_header.c
-+index 3125af55c44..aa804c1efaa 100644
-+--- a/ta/user_ta_header.c
-++++ b/ta/user_ta_header.c
-+@@ -142,6 +142,9 @@ const struct user_ta_property ta_props[] = {
-+	{TA_PROP_STR_KEEP_ALIVE, USER_TA_PROP_TYPE_BOOL,
-+	 &(const bool){(TA_FLAGS & TA_FLAG_INSTANCE_KEEP_ALIVE) != 0}},
++TUNEVALID[armv8-9a] =3D "Enable instructions for ARMv8.9-a"
++TUNE_CCARGS_MARCH .=3D "${@bb.utils.contains('TUNE_FEATURES', 'armv8-9a'=
+, ' -march=3Darmv8.9-a', '', d)}"
++MACHINEOVERRIDES =3D. "${@bb.utils.contains('TUNE_FEATURES', 'armv8-9a',=
+ 'armv8-9a:', '', d)}"
 +
-++	{TA_PROP_STR_KEEP_CRASHED, USER_TA_PROP_TYPE_BOOL,
-++	 &(const bool){(TA_FLAGS & TA_FLAG_INSTANCE_KEEP_CRASHED) != 0}},
-++
-+	{TA_PROP_STR_DATA_SIZE, USER_TA_PROP_TYPE_U32,
-+	 &(const uint32_t){TA_DATA_SIZE}},
-diff --git a/meta-arm/recipes-security/optee/optee-os_4.6.0.bb b/meta-arm/recipes-security/optee/optee-os_4.6.0.bb
-index c9a6b261..3e0eea20 100644
---- a/meta-arm/recipes-security/optee/optee-os_4.6.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-os_4.6.0.bb
-@@ -7,5 +7,6 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
- # v4.6.0
- SRCREV = "71785645fa6ce42db40dbf5a54e0eaedc4f61591"
- SRC_URI += " \
--    file://0003-optee-enable-clang-support.patch \
-+    file://0001-optee-enable-clang-support.patch \
-+    file://0002-Add-optee-ta-instanceKeepCrashed.patch \
-    "
++require conf/machine/include/arm/arch-armv8a.inc
++
++# Little Endian base configs
++AVAILTUNES +=3D "armv8-9a"
++ARMPKGARCH:tune-armv8-9a                    ?=3D "armv8-9a"
++TUNE_FEATURES:tune-armv8-9a                  =3D "aarch64 armv8-9a"
++PACKAGE_EXTRA_ARCHS:tune-armv8-9a            =3D "${PACKAGE_EXTRA_ARCHS:=
+tune-armv8a} armv8-9a"
++BASE_LIB:tune-armv8-9a                       =3D "lib64"
+diff --git a/meta-arm/conf/machine/include/arm/arch-armv9-1a.inc b/meta-a=
+rm/conf/machine/include/arm/arch-armv9-1a.inc
+new file mode 100644
+index 000000000000..c42b5c00a9e4
+--- /dev/null
++++ b/meta-arm/conf/machine/include/arm/arch-armv9-1a.inc
+@@ -0,0 +1,13 @@
++DEFAULTTUNE ?=3D "armv9-1a"
++
++TUNEVALID[armv9-1a] =3D "Enable instructions for ARMv9.1-a"
++TUNE_CCARGS_MARCH .=3D "${@bb.utils.contains('TUNE_FEATURES', 'armv9-1a'=
+, ' -march=3Darmv9.1-a', '', d)}"
++MACHINEOVERRIDES =3D. "${@bb.utils.contains('TUNE_FEATURES', 'armv9-1a',=
+ 'armv9-1a:', '', d)}"
++
++require conf/machine/include/arm/arch-armv9a.inc
++
++AVAILTUNES                                  +=3D "armv9-1a"
++ARMPKGARCH:tune-armv9-1a                    ?=3D "armv9-1a"
++TUNE_FEATURES:tune-armv9-1a                  =3D "aarch64 armv9-1a"
++PACKAGE_EXTRA_ARCHS:tune-armv9-1a            =3D "${PACKAGE_EXTRA_ARCHS:=
+tune-armv8a} armv9-1a"
++BASE_LIB:tune-armv9-1a                       =3D "lib64"
+diff --git a/meta-arm/conf/machine/include/arm/arch-armv9-2a.inc b/meta-a=
+rm/conf/machine/include/arm/arch-armv9-2a.inc
+new file mode 100644
+index 000000000000..211dac527f85
+--- /dev/null
++++ b/meta-arm/conf/machine/include/arm/arch-armv9-2a.inc
+@@ -0,0 +1,13 @@
++DEFAULTTUNE ?=3D "armv9-2a"
++
++TUNEVALID[armv9-2a] =3D "Enable instructions for ARMv9.2-a"
++TUNE_CCARGS_MARCH .=3D "${@bb.utils.contains('TUNE_FEATURES', 'armv9-2a'=
+, ' -march=3Darmv9.2-a', '', d)}"
++MACHINEOVERRIDES =3D. "${@bb.utils.contains('TUNE_FEATURES', 'armv9-2a',=
+ 'armv9-2a:', '', d)}"
++
++require conf/machine/include/arm/arch-armv9a.inc
++
++AVAILTUNES                                  +=3D "armv9-2a"
++ARMPKGARCH:tune-armv9-2a                    ?=3D "armv9-2a"
++TUNE_FEATURES:tune-armv9-2a                  =3D "aarch64 armv9-2a"
++PACKAGE_EXTRA_ARCHS:tune-armv9-2a            =3D "${PACKAGE_EXTRA_ARCHS:=
+tune-armv8a} armv9-2a"
++BASE_LIB:tune-armv9-2a                       =3D "lib64"
+diff --git a/meta-arm/conf/machine/include/arm/arch-armv9-3a.inc b/meta-a=
+rm/conf/machine/include/arm/arch-armv9-3a.inc
+new file mode 100644
+index 000000000000..bdd8bb95388a
+--- /dev/null
++++ b/meta-arm/conf/machine/include/arm/arch-armv9-3a.inc
+@@ -0,0 +1,13 @@
++DEFAULTTUNE ?=3D "armv9-3a"
++
++TUNEVALID[armv9-3a] =3D "Enable instructions for ARMv9.3-a"
++TUNE_CCARGS_MARCH .=3D "${@bb.utils.contains('TUNE_FEATURES', 'armv9-3a'=
+, ' -march=3Darmv9.3-a', '', d)}"
++MACHINEOVERRIDES =3D. "${@bb.utils.contains('TUNE_FEATURES', 'armv9-3a',=
+ 'armv9-3a:', '', d)}"
++
++require conf/machine/include/arm/arch-armv9a.inc
++
++AVAILTUNES                                  +=3D "armv9-3a"
++ARMPKGARCH:tune-armv9-3a                    ?=3D "armv9-3a"
++TUNE_FEATURES:tune-armv9-3a                  =3D "aarch64 armv9-3a"
++PACKAGE_EXTRA_ARCHS:tune-armv9-3a            =3D "${PACKAGE_EXTRA_ARCHS:=
+tune-armv8a} armv9-3a"
++BASE_LIB:tune-armv9-3a                       =3D "lib64"
+diff --git a/meta-arm/conf/machine/include/arm/arch-armv9-4a.inc b/meta-a=
+rm/conf/machine/include/arm/arch-armv9-4a.inc
+new file mode 100644
+index 000000000000..88c907c85d14
+--- /dev/null
++++ b/meta-arm/conf/machine/include/arm/arch-armv9-4a.inc
+@@ -0,0 +1,13 @@
++DEFAULTTUNE ?=3D "armv9-4a"
++
++TUNEVALID[armv9-4a] =3D "Enable instructions for ARMv9.4-a"
++TUNE_CCARGS_MARCH .=3D "${@bb.utils.contains('TUNE_FEATURES', 'armv9-4a'=
+, ' -march=3Darmv9.4-a', '', d)}"
++MACHINEOVERRIDES =3D. "${@bb.utils.contains('TUNE_FEATURES', 'armv9-4a',=
+ 'armv9-4a:', '', d)}"
++
++require conf/machine/include/arm/arch-armv9a.inc
++
++AVAILTUNES                                  +=3D "armv9-4a"
++ARMPKGARCH:tune-armv9-4a                    ?=3D "armv9-4a"
++TUNE_FEATURES:tune-armv9-4a                  =3D "aarch64 armv9-4a"
++PACKAGE_EXTRA_ARCHS:tune-armv9-4a            =3D "${PACKAGE_EXTRA_ARCHS:=
+tune-armv8a} armv9-4a"
++BASE_LIB:tune-armv9-4a                       =3D "lib64"
+diff --git a/meta-arm/conf/machine/include/arm/arch-armv9-5a.inc b/meta-a=
+rm/conf/machine/include/arm/arch-armv9-5a.inc
+new file mode 100644
+index 000000000000..7202418b5dce
+--- /dev/null
++++ b/meta-arm/conf/machine/include/arm/arch-armv9-5a.inc
+@@ -0,0 +1,13 @@
++DEFAULTTUNE ?=3D "armv9-5a"
++
++TUNEVALID[armv9-5a] =3D "Enable instructions for ARMv9.5-a"
++TUNE_CCARGS_MARCH .=3D "${@bb.utils.contains('TUNE_FEATURES', 'armv9-5a'=
+, ' -march=3Darmv9.5-a', '', d)}"
++MACHINEOVERRIDES =3D. "${@bb.utils.contains('TUNE_FEATURES', 'armv9-5a',=
+ 'armv9-5a:', '', d)}"
++
++require conf/machine/include/arm/arch-armv9a.inc
++
++AVAILTUNES                                  +=3D "armv9-5a"
++ARMPKGARCH:tune-armv9-5a                    ?=3D "armv9-5a"
++TUNE_FEATURES:tune-armv9-5a                  =3D "aarch64 armv9-5a"
++PACKAGE_EXTRA_ARCHS:tune-armv9-5a            =3D "${PACKAGE_EXTRA_ARCHS:=
+tune-armv8a} armv9-5a"
++BASE_LIB:tune-armv9-5a                       =3D "lib64"
+--=20
+2.39.5 (Apple Git-154)
+
 
