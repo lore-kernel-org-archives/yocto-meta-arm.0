@@ -2,67 +2,67 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961A1CA0EE9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95480CA0EE4
 	for <webhook@archiver.kernel.org>; Sun, 17 Aug 2025 22:16:43 +0000 (UTC)
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
- by mx.groups.io with SMTP id smtpd.web11.62102.1755468994813056542
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+ by mx.groups.io with SMTP id smtpd.web11.62105.1755468999802657183
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 17 Aug 2025 15:16:35 -0700
+ Sun, 17 Aug 2025 15:16:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=WAquR2Y3;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.169, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7e870636870so360532685a.2
-        for <meta-arm@lists.yoctoproject.org>; Sun, 17 Aug 2025 15:16:34 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=LfE/vISH;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.47, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-70a9282f475so32578296d6.1
+        for <meta-arm@lists.yoctoproject.org>; Sun, 17 Aug 2025 15:16:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1755468994; x=1756073794; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1755468999; x=1756073799; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DRFsV6JQd5wMuTXuheh4P7rdgnl3K2P8Lnm2RXmqpgI=;
-        b=WAquR2Y39l6ApzEkMxLXoRcVRm5KidJEpZ3anKvdzTm6mEqTWUUS6M1hqvVaheNxHW
-         Md8820ejSkW/PWvoC44Q/qToMVN0GUjCOn0IxYEPUhM+Kh8wU98Q8XAivGcwKaXm7NsE
-         feo/O1xIJof7TJ2NvXQ1cNX0lNC/d9PMJs0ZkKnIM/xA6ZmS16d07N32NnbZHHWY9dBa
-         F7C9HCd3+Y45PK2xaZNpwN2Oxw6HPjPOG/xv92RWhdhOWBBjS9F8dgefUoPZy84/5sEl
-         YBytf4WmrBDfzNQsvBIGuxQcxeXSSWB8ssmJj/dmbtoiwdwAS54NcVINDi5/VelgZzNC
-         Nvug==
+        bh=pp63I+lXUa3EHF/3ndlBNR/ij3TgUxhjCbEqLS0s4i8=;
+        b=LfE/vISHoVbXzEF/nxALYLz3ZpKjv/uBbNR4K+ILBg9lXsTicYJ7MNWRSRL/vD9SMM
+         /gbCTlblxF4HVFlf2hN96T4vIEUHh8qDSDf0AWf4nnblTyr0ois3g4sxw5Ehiokmpv2C
+         3F/2035rGssIWzm5WQmbssprmJaJjAJxE4o1bv4OmGnJt1mtxtixxuyksBzs3T7dA37+
+         aXucskZDTLoquzm68v2WSHxc/8oBbkZmokDrAiPQ3g/3qkc6664T9bdpRBKgeE+ByxDT
+         mjFyuym7z/Ha5KQZ0TV6bTgYW9E10NBPtkr2xi5c1K5uYipxX39Gto/2y9I8Cpi+MEwL
+         7Nzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755468994; x=1756073794;
+        d=1e100.net; s=20230601; t=1755468999; x=1756073799;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DRFsV6JQd5wMuTXuheh4P7rdgnl3K2P8Lnm2RXmqpgI=;
-        b=hd2ORO97lbFDYmnqHkIvAUnqIaSmWLRCqMwM9ovEC1+KBbTk7fVnKts+BP1SSWKiCU
-         9s277Wgm4Q26Xtw33nEkYyQzfQLXWQQ44Q5XShP417YR3bOyY0NIswsKCRz6EZkpnb/C
-         5deC8HnTsBfgVrEp4KL2qxguLwuZghJFvKVNvN2SspVR1vloMa3UPe8u6PjrGJQG315S
-         YsgvHkPyZ9WpzTLN8t1Uf1AGIS8KVHO0QrCwKp38KNh75xEBJwTwJbqp4SLSvL8hzsQx
-         axJ4MiDtfemM7A5Pk1kPbkuNAvYdNO0oMzZpeaFTwR1AO/D6SBJ0+Uwq80WFZBsqWCJ+
-         FdNA==
-X-Gm-Message-State: AOJu0YwU5autXVW7gQcXJfjwnqscegRqRdLSoMFxTJmOQ7sCn8JJwI8H
-	fP24E+HrZtEnT6RClWPfBA/iPH6ToKaiX9WJbLpTUnW1ysYgWG/BS4wYto/4SQpuoj0BanvkvOw
-	OyZQ=
-X-Gm-Gg: ASbGncvxdU7J+dJCXcDXPOS+0b0tDXy5guSxpUjs2B7vEalmcNMZ8hPiUCJIePrOVEi
-	ZMekEN/I9R99oBJhY+tEmwQx6DdnOQ16EgJs5SbJ85hUuQGVImQ1/eVb9QYVK8PhbIyck46KBzd
-	YRn7curApI2gd3qyT6GYg+HUd9QWFqYio4An/DLsQ61j52J7EbmTJOS7+f/hPXPhli/uZd4AEyb
-	vJz4a2fkz6N5F4cq6ghJrjFgcMDTLZpZ1STPHnunQo1/VE5negItwTjjMRHTWCCSNwRFuLA0YPP
-	58N+TK+WalaMJLKXo/1kBMEbyQWT7KdY4JxryrJQpy7CT/+dEGeDZh01isN2e3sVjg+w84UBLA9
-	vW//9Y31FK0sqqBbkAjVuB8tT
-X-Google-Smtp-Source: AGHT+IEVKmB1+jo1LWStSeE6TmMY9HNVT098Z9QB2CXTEkOihs2kY2ixMbiONyL3GN2AWOuTraQW1Q==
-X-Received: by 2002:a05:620a:400c:b0:7e7:fcf7:1f82 with SMTP id af79cd13be357-7e88681c42bmr759354785a.52.1755468993490;
-        Sun, 17 Aug 2025 15:16:33 -0700 (PDT)
+        bh=pp63I+lXUa3EHF/3ndlBNR/ij3TgUxhjCbEqLS0s4i8=;
+        b=QnYJRz/3WZiPl6GbkKvRfunhOplzVCK5/h71TFWb7OCho2tra+xxgWHslyzGYwKEDL
+         hYWB7Jhczh4f7P1OyoTqGrS4gJjAoTLUuIMuV9LSmKbSPo62NFgd5vc/ewTDL7wgaWcu
+         slwqg8fEFi2+MUQxbJIrdHEJj58WxtPctMYKR6lnVqz/qtSH9+Q9eSMaJEopie/Ku/Gk
+         rKhUzeINz+L8L80w8WU+Pcg/95hQd+WU/lrA8PAdXM0BaBue4MOpGElsnvrzvocWiCZA
+         HjoXqInkIWxJ10fhiVahTGU06tGjO40RNRVv42uOCRDvQhaiM3rXDkJIya3XLnHl4DzX
+         g5Nw==
+X-Gm-Message-State: AOJu0YwP23Ohrxtgimj+5QJnR+Sj+Yz0WHB6Ox+zau9KevoaWRwpoEO9
+	ReWpyDul4QvQqaSH1OwjkApnXgPlXtZMxpIbWOhm1WWoAcxT0P3rgTp5nJLvlP+bWE6b5zXUXty
+	hdXM=
+X-Gm-Gg: ASbGncuYXDLvlRONmbyEFZCXtMzX2G5fNiQIeS2d9FMJ9/tFERjoIdUTbek55cy0FDr
+	3VBfB/2AlF1tmdusBxDOwpsX2b68SA2Wy0/3FScEwEicffpxqEjQRvUa6v+zsG/g8kg5bHlPRvW
+	LMxQ5x3TMT2MjqvXOJMgFBln7QFNwMJlPa61UdYa9YoPFVeyPy29rDU5QWfGQbIS6Iyj5bThrff
+	G9b/UXMROPSGJy4ZapKK09bSZnt9wM0hsCEXjj2agt7q6nxMChQ4RP+amgyNgvTUBeMJDUwNlyW
+	nWq5P883MfbuP7MypjQKeE33jLlNN1J7pEWuW9MJnz956yVc5UhUiPzq5GWXrAbw7RQfBZQrooT
+	RVoEDTbHe8NIn6g==
+X-Google-Smtp-Source: AGHT+IF5FUIP9XcpcW5QRzgYOyY2+ASnWMKBIUkEe6J4X0v6ROQLN4U92si8nfw4gMWC9Kr/Rp2+Ug==
+X-Received: by 2002:a05:6214:c82:b0:709:243e:9327 with SMTP id 6a1803df08f44-70ba7bfb5e7mr142625576d6.27.1755468998551;
+        Sun, 17 Aug 2025 15:16:38 -0700 (PDT)
 Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7e87e05477fsm493865485a.22.2025.08.17.15.16.33
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-70ba95b8f10sm43209066d6.74.2025.08.17.15.16.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Aug 2025 15:16:33 -0700 (PDT)
+        Sun, 17 Aug 2025 15:16:38 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Michael Safwat <michael.safwat@arm.com>
-Subject: Re: [PATCH 1/1] arm-bsp/trusted-firmware-m: corstone1000: Update the patches upstream status
-Date: Sun, 17 Aug 2025 18:16:19 -0400
-Message-Id: <175546898073.1250199.3502220299675650773.b4-ty@arm.com>
+	Peter Hoyes <peter.hoyes@arm.com>
+Subject: Re: [PATCH][walnascar] arm/classes: Fix IMAGE_POSTPROCESS_COMMAND in fvpboot
+Date: Sun, 17 Aug 2025 18:16:20 -0400
+Message-Id: <175546898074.1250199.14289394878117906052.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250813082236.2202985-1-michael.safwat@arm.com>
-References: <20250813082236.2202985-1-michael.safwat@arm.com>
+In-Reply-To: <20250813080700.5225-1-peter.hoyes@arm.com>
+References: <20250813080700.5225-1-peter.hoyes@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -70,27 +70,23 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Sun, 17 Aug 2025 22:16:43 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6666
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6667
 
 
-On Wed, 13 Aug 2025 09:22:36 +0100, Michael Safwat wrote:
-> These patches upstream status changed to Backport:
-> 0006-platform-CS1000-Add-multicore-support-for-FVP.patch
-> 0009-CC312-ADAC-Add-PSA_WANT_ALG_SHA_256-definition.patch
-> 0010-Platform-CS1000-Add-crypto-configs-for-ADAC.patch
-> 0012-Platform-CS1000-Remove-unused-BL1-files.patch
-> 0013-Platform-CS1000-Fix-compiler-switch-in-BL1.patch
-> 0017-Platform-CS1000-Enable-FWU-partition.patch
-> 0018-Platform-Corstone1000-Implement-Bootloader-Abstracti.patch
-> 0019-Platform-Corstone1000-Increase-buffer-sizes.patch
-> 0023-Platform-CS1000-Remove-duplicate-configuration-parameters.patch
+On Wed, 13 Aug 2025 09:07:00 +0100, Peter Hoyes wrote:
+> Since OE-core 6fd8af0d, the semicolon delimeter in bb.build_exec_func
+> variables is not needed. The commit silently removes any stray ';' but
+> failed to handle ';' when assigning to vardeps.
+> 
+> In meta-arm, this has the effect of changes to FVP_* variables not being
+> picked up when rebuilding the image recipe since mickledore.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] arm-bsp/trusted-firmware-m: corstone1000: Update the patches upstream status
-      commit: 8d38f576231557f545443cb9dcbedfacc78faa10
+[1/1] arm/classes: Fix IMAGE_POSTPROCESS_COMMAND in fvpboot
+      commit: 60c7910b410deba56d51bda038734802e67fcaf6
 
 Best regards,
 -- 
