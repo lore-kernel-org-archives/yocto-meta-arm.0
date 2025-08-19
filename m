@@ -1,94 +1,105 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <norbert.kocsis@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95480CA0EE4
-	for <webhook@archiver.kernel.org>; Sun, 17 Aug 2025 22:16:43 +0000 (UTC)
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
- by mx.groups.io with SMTP id smtpd.web11.62105.1755468999802657183
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD04DCA0EEB
+	for <webhook@archiver.kernel.org>; Tue, 19 Aug 2025 13:35:03 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.14435.1755610493983811494
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 17 Aug 2025 15:16:39 -0700
+ Tue, 19 Aug 2025 06:34:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=LfE/vISH;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.47, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-70a9282f475so32578296d6.1
-        for <meta-arm@lists.yoctoproject.org>; Sun, 17 Aug 2025 15:16:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1755468999; x=1756073799; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pp63I+lXUa3EHF/3ndlBNR/ij3TgUxhjCbEqLS0s4i8=;
-        b=LfE/vISHoVbXzEF/nxALYLz3ZpKjv/uBbNR4K+ILBg9lXsTicYJ7MNWRSRL/vD9SMM
-         /gbCTlblxF4HVFlf2hN96T4vIEUHh8qDSDf0AWf4nnblTyr0ois3g4sxw5Ehiokmpv2C
-         3F/2035rGssIWzm5WQmbssprmJaJjAJxE4o1bv4OmGnJt1mtxtixxuyksBzs3T7dA37+
-         aXucskZDTLoquzm68v2WSHxc/8oBbkZmokDrAiPQ3g/3qkc6664T9bdpRBKgeE+ByxDT
-         mjFyuym7z/Ha5KQZ0TV6bTgYW9E10NBPtkr2xi5c1K5uYipxX39Gto/2y9I8Cpi+MEwL
-         7Nzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755468999; x=1756073799;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pp63I+lXUa3EHF/3ndlBNR/ij3TgUxhjCbEqLS0s4i8=;
-        b=QnYJRz/3WZiPl6GbkKvRfunhOplzVCK5/h71TFWb7OCho2tra+xxgWHslyzGYwKEDL
-         hYWB7Jhczh4f7P1OyoTqGrS4gJjAoTLUuIMuV9LSmKbSPo62NFgd5vc/ewTDL7wgaWcu
-         slwqg8fEFi2+MUQxbJIrdHEJj58WxtPctMYKR6lnVqz/qtSH9+Q9eSMaJEopie/Ku/Gk
-         rKhUzeINz+L8L80w8WU+Pcg/95hQd+WU/lrA8PAdXM0BaBue4MOpGElsnvrzvocWiCZA
-         HjoXqInkIWxJ10fhiVahTGU06tGjO40RNRVv42uOCRDvQhaiM3rXDkJIya3XLnHl4DzX
-         g5Nw==
-X-Gm-Message-State: AOJu0YwP23Ohrxtgimj+5QJnR+Sj+Yz0WHB6Ox+zau9KevoaWRwpoEO9
-	ReWpyDul4QvQqaSH1OwjkApnXgPlXtZMxpIbWOhm1WWoAcxT0P3rgTp5nJLvlP+bWE6b5zXUXty
-	hdXM=
-X-Gm-Gg: ASbGncuYXDLvlRONmbyEFZCXtMzX2G5fNiQIeS2d9FMJ9/tFERjoIdUTbek55cy0FDr
-	3VBfB/2AlF1tmdusBxDOwpsX2b68SA2Wy0/3FScEwEicffpxqEjQRvUa6v+zsG/g8kg5bHlPRvW
-	LMxQ5x3TMT2MjqvXOJMgFBln7QFNwMJlPa61UdYa9YoPFVeyPy29rDU5QWfGQbIS6Iyj5bThrff
-	G9b/UXMROPSGJy4ZapKK09bSZnt9wM0hsCEXjj2agt7q6nxMChQ4RP+amgyNgvTUBeMJDUwNlyW
-	nWq5P883MfbuP7MypjQKeE33jLlNN1J7pEWuW9MJnz956yVc5UhUiPzq5GWXrAbw7RQfBZQrooT
-	RVoEDTbHe8NIn6g==
-X-Google-Smtp-Source: AGHT+IF5FUIP9XcpcW5QRzgYOyY2+ASnWMKBIUkEe6J4X0v6ROQLN4U92si8nfw4gMWC9Kr/Rp2+Ug==
-X-Received: by 2002:a05:6214:c82:b0:709:243e:9327 with SMTP id 6a1803df08f44-70ba7bfb5e7mr142625576d6.27.1755468998551;
-        Sun, 17 Aug 2025 15:16:38 -0700 (PDT)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-70ba95b8f10sm43209066d6.74.2025.08.17.15.16.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Aug 2025 15:16:38 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Subject: Re: [PATCH][walnascar] arm/classes: Fix IMAGE_POSTPROCESS_COMMAND in fvpboot
-Date: Sun, 17 Aug 2025 18:16:20 -0400
-Message-Id: <175546898074.1250199.14289394878117906052.b4-ty@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: norbert.kocsis@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE5F616A3;
+	Tue, 19 Aug 2025 06:34:44 -0700 (PDT)
+Received: from ad6524fd1664.budapest.arm.com (ubul2.budapest.arm.com [10.45.25.25])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 769A03F738;
+	Tue, 19 Aug 2025 06:34:52 -0700 (PDT)
+From: Norbert Kocsis <norbert.kocsis@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Norbert Kocsis <norbert.kocsis@arm.com>
+Subject: [PATCH 1/1] arm/trusted-services: Fix trusted-service license file paths
+Date: Tue, 19 Aug 2025 15:34:30 +0200
+Message-Id: <20250819133430.3226327-1-norbert.kocsis@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250813080700.5225-1-peter.hoyes@arm.com>
-References: <20250813080700.5225-1-peter.hoyes@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sun, 17 Aug 2025 22:16:43 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6667
+ <meta-arm@lists.yoctoproject.org>; Tue, 19 Aug 2025 13:35:03 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6668
 
+Use UNPACKDIR instead of relative paths.
 
-On Wed, 13 Aug 2025 09:07:00 +0100, Peter Hoyes wrote:
-> Since OE-core 6fd8af0d, the semicolon delimeter in bb.build_exec_func
-> variables is not needed. The commit silently removes any stray ';' but
-> failed to handle ';' when assigning to vardeps.
-> 
-> In meta-arm, this has the effect of changes to FVP_* variables not being
-> picked up when rebuilding the image recipe since mickledore.
-> 
-> [...]
+Signed-off-by: Norbert Kocsis <norbert.kocsis@arm.com>
+---
+ .../trusted-services/trusted-services-src.inc        | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Applied, thanks!
-
-[1/1] arm/classes: Fix IMAGE_POSTPROCESS_COMMAND in fvpboot
-      commit: 60c7910b410deba56d51bda038734802e67fcaf6
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+diff --git a/meta-arm/recipes-security/trusted-services/trusted-services-=
+src.inc b/meta-arm/recipes-security/trusted-services/trusted-services-src=
+.inc
+index e9235cf7..50e11117 100644
+--- a/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
++++ b/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
+@@ -24,32 +24,32 @@ UPSTREAM_CHECK_COMMITS =3D "1"
+ # DTC, tag "v1.6.1"
+ SRC_URI +=3D "git://github.com/dgibson/dtc;name=3Ddtc;protocol=3Dhttps;b=
+ranch=3Dmain;destsuffix=3Ddtc"
+ SRCREV_dtc =3D "b6910bec11614980a21e46fbccc35934b671bd81"
+-LIC_FILES_CHKSUM +=3D "file://../dtc/README.license;md5=3Da1eb22e37f09df=
+5b5511b8a278992d0e"
++LIC_FILES_CHKSUM +=3D "file://${UNPACKDIR}/dtc/README.license;md5=3Da1eb=
+22e37f09df5b5511b8a278992d0e"
+=20
+ # MbedTLS, tag "v3.6.0"
+ SRC_URI +=3D "gitsm://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls;prot=
+ocol=3Dhttps;branch=3Dmaster;destsuffix=3Dmbedtls"
+ SRCREV_mbedtls =3D "2ca6c285a0dd3f33982dd57299012dacab1ff206"
+-LIC_FILES_CHKSUM +=3D "file://../mbedtls/LICENSE;md5=3D379d5819937a6c2f1=
+ef1630d341e026d"
++LIC_FILES_CHKSUM +=3D "file://${UNPACKDIR}/mbedtls/LICENSE;md5=3D379d581=
+9937a6c2f1ef1630d341e026d"
+=20
+ # Nanopb, tag "nanopb-0.4.8" plus some further fixes
+ SRC_URI +=3D "git://github.com/nanopb/nanopb.git;name=3Dnanopb;protocol=3D=
+https;branch=3Dmaster;destsuffix=3Dnanopb"
+ SRCREV_nanopb =3D "6cfe48d6f1593f8fa5c0f90437f5e6522587745e"
+-LIC_FILES_CHKSUM +=3D "file://../nanopb/LICENSE.txt;md5=3D9db4b73a55a399=
+4384112efcdb37c01f"
++LIC_FILES_CHKSUM +=3D "file://${UNPACKDIR}/nanopb/LICENSE.txt;md5=3D9db4=
+b73a55a3994384112efcdb37c01f"
+=20
+ # qcbor, tag "v1.0.0"
+ SRC_URI +=3D "git://github.com/laurencelundblade/QCBOR.git;name=3Dqcbor;=
+protocol=3Dhttps;branch=3Dmaster;destsuffix=3Dqcbor"
+ SRCREV_qcbor =3D "56b17bf9f74096774944bcac0829adcd887d391e"
+-LIC_FILES_CHKSUM +=3D "file://../qcbor/README.md;md5=3De8ff2e88a722cdc55=
+eddd0bb9aeca002"
++LIC_FILES_CHKSUM +=3D "file://${UNPACKDIR}/qcbor/README.md;md5=3De8ff2e8=
+8a722cdc55eddd0bb9aeca002"
+=20
+ # T_Cose
+ SRC_URI +=3D "git://github.com/laurencelundblade/t_cose.git;name=3Dtcose=
+;protocol=3Dhttps;branch=3Dmaster;destsuffix=3Dtcose"
+ SRCREV_tcose =3D "fc3a4b2c7196ff582e8242de8bd4a1bc4eec577f"
+-LIC_FILES_CHKSUM +=3D "file://../tcose/LICENSE;md5=3Db2ebdbfb82602b97aa6=
+28f64cf4b65ad"
++LIC_FILES_CHKSUM +=3D "file://${UNPACKDIR}/tcose/LICENSE;md5=3Db2ebdbfb8=
+2602b97aa628f64cf4b65ad"
+=20
+ # CppUTest,  tag "v3.8"
+ SRC_URI +=3D "git://github.com/cpputest/cpputest.git;name=3Dcpputest;pro=
+tocol=3Dhttps;branch=3Dmaster;destsuffix=3Dcpputest"
+ SRCREV_cpputest =3D "e25097614e1c4856036366877a02346c4b36bb5b"
+-LIC_FILES_CHKSUM +=3D "file://../cpputest/COPYING;md5=3Dce5d5f1fe02bcd13=
+43ced64a06fd4177"
++LIC_FILES_CHKSUM +=3D "file://${UNPACKDIR}/cpputest/COPYING;md5=3Dce5d5f=
+1fe02bcd1343ced64a06fd4177"
+=20
+ SRCREV_FORMAT =3D "trusted-services_dtc_mbedtls_nanopb_qcbor_tcose_cpput=
+est"
+=20
 
