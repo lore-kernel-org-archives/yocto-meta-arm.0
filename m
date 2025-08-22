@@ -2,90 +2,86 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AD2CA0EFA
-	for <webhook@archiver.kernel.org>; Fri, 22 Aug 2025 01:45:36 +0000 (UTC)
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
- by mx.groups.io with SMTP id smtpd.web11.5639.1755827135538023413
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911E0CA0EEB
+	for <webhook@archiver.kernel.org>; Fri, 22 Aug 2025 01:45:46 +0000 (UTC)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+ by mx.groups.io with SMTP id smtpd.web10.5554.1755827145126171015
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 21 Aug 2025 18:45:35 -0700
+ Thu, 21 Aug 2025 18:45:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=UNC42QiI;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.48, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-70d7c7e9653so18943386d6.2
-        for <meta-arm@lists.yoctoproject.org>; Thu, 21 Aug 2025 18:45:35 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=2fqPgCKm;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.173, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4b133b24e69so7430001cf.2
+        for <meta-arm@lists.yoctoproject.org>; Thu, 21 Aug 2025 18:45:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1755827134; x=1756431934; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1755827144; x=1756431944; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=nFdFMq/ayEVKtE1udDmF6uWxQkapIyOSxBi27LsPijU=;
-        b=UNC42QiI+hh235iqAzylnJCdERVAaNQm9ZzKux57FZtEHUPQkdxbtmsUudthdIa+Bh
-         izpFPsf0rI8sNM4nRzobT9EeAzzMXsuq/YS8Q20grX/FBpLEzgrD2FopbhQBwpqjZEZA
-         67tWAr+eO7D/iFhZlkrsldL7KT/ymaf8LZsRtk0QsqwzFGweKx5V7Q1fLAQyRhhB2owH
-         iSNVG7NDHgu5k8HxEiijE5L1613VVkC45uP5TwFI0OMPv630/56FPh/RcVz5p9Bx0JI7
-         V4LcHsfrMtUQyBafaS1zDCMhCyh3tqWkVJB08Aqu+KjAP5/G+1y0yHFDWUbZ+6hwDvK5
-         6xTQ==
+        bh=LZyYCBvKih9rWGkij+K7zAAPqoRh4XkqLGw7eE9tUFE=;
+        b=2fqPgCKm62PDdCQiL4oVz2fOcAvHok3TboRPMrM/hyUrcMY/kv0Pt3q0c7ubtShQBT
+         b9Oto1CW9Ty4KvSgUuRp4lEOtWQCAYKELAzCsGYIvZn92G7LAhHea0xWLP/0v0qgObS0
+         gLo3KDBVzBl7ljfjczn6Oef141601nji3S4z6JOwjIkY3M7i5rp9QhKBkBUKIMksQMFp
+         n7R4K5lLfPa48g9o582ZUKW5wqZOdyaTjjc6lo5pxcm/xTqHQT1AxdjMsU3XwryDyLn/
+         pSXWJ9nKIJ/NKGVBeR5IsWVIPRxv6+1urWmUJOgQJq5CqoJNBlDdh3g1wtQwqVbL4E+X
+         Y4iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755827134; x=1756431934;
+        d=1e100.net; s=20230601; t=1755827144; x=1756431944;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nFdFMq/ayEVKtE1udDmF6uWxQkapIyOSxBi27LsPijU=;
-        b=FLFJsrmnSO7wOM0ODHCKvpx0I7qj+p0aO5tehAITuBGfedMgmUbauXEwMQdQq2tNQP
-         bo/nzjhTMPqL6Lzlzq3GUR9Le7bgEOB7WKr55aKhHkCPMZzG0LoW5c5QsigxheLYxhSx
-         ItcpjJToSam4toGsq8gieC90o2ueWhGgmHZSE6CkPKdApXlpWZwgpxQjQLTMDq7J/ijc
-         TAWNulHFANS3plWohiCXEUYaA/oHrySUv7Pzfx7n+1fqkr0mozeeKoyUC4OWzDsGDNdj
-         vlsJMdgN/S1dtf7cssH8Uu6gfR56HcJ6UmELCbTVtqqpZdqZ4ZXeiYbjxPLiEAReApfj
-         AVlA==
-X-Gm-Message-State: AOJu0YzF8TNRSHvorVfubXA2bHki3SX4KJsuNKfcXdiO00ghKArxfDqy
-	Zso5YPxyGV9Z3fwta5oiSyTUwNl6C1JrsQxPKWeT0rW3fvo/75vBwlQCUyrdKwk1huQ8xaRIaKH
-	wiAk=
-X-Gm-Gg: ASbGnct9tdx2793SbMu46nKmuWtLnYetMm+MKdwrF4zRz4Ce2RHs2KXZ3cq7jtESfaR
-	HYNx1E+0aTaW+5ZmU/zmaawVqG9SezZVY1RateVUJ2qsiNsoIQX1VEHmnKbWQVxdxj3Dd/1nfR3
-	IbNFCxN4xke/QeGvqXRhslyi2YmcDsr2h87yW1xz3P2iLi19cZP95IQevD+W8pvve48mcqTPfpE
-	HNe/aZAj3qOfybXKhDKiNu9a0v55MY8REtkh+OxvAXtZLy/1XqcE3zf2Li28xUB0hmxpisOWENk
-	f92ImbpWWw+5+XDfDNU/p4mQhaKJnhLraaRnAiVFInm+v0Zgs3dWlA0HKG5ijAjPVPX4SBEPqdw
-	86N6TO11krcptSFnJaf8HNs5w5wLOXbFD81U=
-X-Google-Smtp-Source: AGHT+IHi3O1ZiSapZZBebgGEHHnsU1AlxyL/gJrZhbNXEKIoi/q88/CdRWHjEsuaG9EZkYVlppAvSA==
-X-Received: by 2002:a05:6214:2aaf:b0:707:5273:9dd2 with SMTP id 6a1803df08f44-70d97236dcbmr22402936d6.45.1755827134402;
-        Thu, 21 Aug 2025 18:45:34 -0700 (PDT)
+        bh=LZyYCBvKih9rWGkij+K7zAAPqoRh4XkqLGw7eE9tUFE=;
+        b=WqnF7RlIfpBDx9yRAb8xjuGsS2bD4VJDPXD7iZUr2saHOs7I5t9KAHafw6TeS2VTP2
+         0mkWf1nv0gVlrcuNSqSOXvTOb9JG4WKSgi3aHsb2pXdmJcF197hXlB1dGmNlm9sS31aa
+         k6KRoCNmmmRrU8A5S1LeZWQUvUqLe52i331uFE/yT/tBkD9pDMSUA8AvKFNdA2rT4ZQL
+         bvBvlqGNH8zRJKOO/HrdAB/Qu6TOdCFtfd/j77QFFTkEUeaGljNfo0OfhT8eaMeJSrh9
+         m78EVlCjkEmj1PdZyHHUIyxO4f71I9/zX8X5/e1WaN2AJ+n9l9aVvEpZtv50VencdmyK
+         IRuQ==
+X-Gm-Message-State: AOJu0YwXwv1RorjKUqfpK12+H9guNPWJDxPQ9ZUSH+PoqUh1lg29FCz6
+	y2k/Uc+QMRW/g3dUafpuNKhTZJDsRauOTn4g6ydFac8cm3ooKh4bkHGaK6on5HnQkS0+kie5OSs
+	Rd90=
+X-Gm-Gg: ASbGncu2k4iecdgVbtH0XAe4Y9YU3mcJsEw/JZZcoPuQ3Ntxm+NUd33dT5I3Zb6B4PS
+	ANPmysXVpAV3PvNVqW8yYJoLjWDKpyXuNMyx21d2HLbruou7RzmTOQMpMVHNALcE0MI/gUBA1vI
+	yAO///DF0TFngdnRImcOo0Fx0y53VwabcQ8qkA/pWSIXAoEQ9lN4R93GybOM6waKEzfEDU7wXqk
+	AU7+Ilaz+cKJGePO/k+PYD3BeCcxCXTXxtahJjSJ2lgO6GZraxOD6LIzcbAjUBn3qmsRO+vCg2S
+	4Bsk9wew9vuTrj5p+8hj+Qor6NQyncqJwL52xAqrfZ8PemTSXfjy6OVnqJkZA3MBeoO7apuuMev
+	fOIOesgx4wCNmIvIDCIlAqJSy
+X-Google-Smtp-Source: AGHT+IGCkG2sSzdf1Cmxd3nK0+m2knY74vcX002Cane+WMORq8s4zxjCLaTam/tRB+IDbOZXx0bzYA==
+X-Received: by 2002:a05:622a:198f:b0:4ae:6a54:b989 with SMTP id d75a77b69052e-4b2aaa3fd6bmr19145141cf.15.1755827143758;
+        Thu, 21 Aug 2025 18:45:43 -0700 (PDT)
 Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-70ba902f4b2sm115947716d6.6.2025.08.21.18.45.33
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4b11dc19631sm109748431cf.12.2025.08.21.18.45.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Aug 2025 18:45:33 -0700 (PDT)
+        Thu, 21 Aug 2025 18:45:43 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH 1/2] arm/gn: disable uninitialized variable warning
-Date: Thu, 21 Aug 2025 21:45:23 -0400
-Message-Id: <175582712406.241153.8910086960164172598.b4-ty@arm.com>
+	Norbert Kocsis <norbert.kocsis@arm.com>
+Subject: Re: [PATCH 1/1] arm/trusted-services: Fix trusted-service license file paths
+Date: Thu, 21 Aug 2025 21:45:24 -0400
+Message-Id: <175582712406.241153.1907723222083511293.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250820165424.20345-1-jon.mason@arm.com>
-References: <20250820165424.20345-1-jon.mason@arm.com>
+In-Reply-To: <20250819133430.3226327-1-norbert.kocsis@arm.com>
+References: <20250819133430.3226327-1-norbert.kocsis@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 22 Aug 2025 01:45:36 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6671
+ <meta-arm@lists.yoctoproject.org>; Fri, 22 Aug 2025 01:45:46 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6672
 
 
-On Wed, 20 Aug 2025 12:54:23 -0400, Jon Mason wrote:
-> An uninitialized variable warning is occurring when compiling gn.
-> However, since Wall is being used in gn, this is being logged as an
-> error.  Pass the no-error flag for this case to workaround this issue.
+On Tue, 19 Aug 2025 15:34:30 +0200, Norbert Kocsis wrote:
+> Use UNPACKDIR instead of relative paths.
 > 
 > 
 
 Applied, thanks!
 
-[1/2] arm/gn: disable uninitialized variable warning
-      commit: d8f0ab517b8bfe47a9e6d011711013877413cc4e
-[2/2] arm/gn: update to the latest SHA
-      commit: 6ec4a039a35c9f0947b82873b577b8a148473242
+[1/1] arm/trusted-services: Fix trusted-service license file paths
+      commit: 9e6671a222acf1a3c9ff736fbcc784f092c624a1
 
 Best regards,
 -- 
