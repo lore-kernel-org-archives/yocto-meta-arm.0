@@ -1,140 +1,139 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <hugues.kambampiana@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75DDCA101F
-	for <webhook@archiver.kernel.org>; Fri, 12 Sep 2025 21:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B97CAC59B
+	for <webhook@archiver.kernel.org>; Tue, 16 Sep 2025 15:00:26 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.248.1757712446822034425
+ by mx.groups.io with SMTP id smtpd.web10.633.1758034818772790284
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 12 Sep 2025 14:27:26 -0700
+ Tue, 16 Sep 2025 08:00:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: hugues.kambampiana@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 240F7292B
-	for <meta-arm@lists.yoctoproject.org>; Fri, 12 Sep 2025 14:27:18 -0700 (PDT)
-Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 454943F694
-	for <meta-arm@lists.yoctoproject.org>; Fri, 12 Sep 2025 14:27:26 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 093C2FEC;
+	Tue, 16 Sep 2025 08:00:10 -0700 (PDT)
+Received: from LXKV206JHX.arm.com (unknown [10.57.80.132])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BA9C3F694;
+	Tue, 16 Sep 2025 08:00:17 -0700 (PDT)
+From: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 3/3] arm-bsp/trusted-firmware-a: remove unreferenced patches
-Date: Fri, 12 Sep 2025 17:27:25 -0400
-Message-Id: <20250912212725.95249-3-jon.mason@arm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250912212725.95249-1-jon.mason@arm.com>
-References: <20250912212725.95249-1-jon.mason@arm.com>
+Cc: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
+Subject: [PATCH 0/4] arm/trusted-services: Upgrade Trusted Services to v1.2
+Date: Tue, 16 Sep 2025 16:00:09 +0100
+Message-ID: <20250916150013.30666-1-hugues.kambampiana@arm.com>
+X-Mailer: git-send-email 2.50.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 12 Sep 2025 21:27:33 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6709
+ <meta-arm@lists.yoctoproject.org>; Tue, 16 Sep 2025 15:00:26 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6710
 
-These patches were moved to meta-arm-bsp for tf-a recipes that have since
-been removed.  Remove them now.
+* Bump Trusted Services BB recipe to v1.2
+* Mirror Corstone-1000 related out of tree patches sent upstream
+* Update Corstone-1000 patches upstream status
+* Remove Corstone-1000 patches that are no longer applicable
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- ...-handle-secure-SGI-at-EL1-for-OP-TEE.patch | 33 -------------------
- ...ot.c-ignore-TPM-error-and-continue-w.patch | 33 -------------------
- 2 files changed, 66 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/000=
-1-fix-zynqmp-handle-secure-SGI-at-EL1-for-OP-TEE.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/000=
-1-qemu_measured_boot.c-ignore-TPM-error-and-continue-w.patch
+Hugues KAMBA MPIANA (4):
+  arm/trusted-services:corstone1000: Pass Corstone-1000 target type
+  arm/trusted-services: Upgrade Trusted Services to v1.2.0
+  arm-bsp/ts:corstone1000: Remove obsolete patches
+  arm-bsp/ts:corstone1000: Rename patches
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/0001-fix-z=
-ynqmp-handle-secure-SGI-at-EL1-for-OP-TEE.patch b/meta-arm-bsp/recipes-bs=
-p/trusted-firmware-a/files/0001-fix-zynqmp-handle-secure-SGI-at-EL1-for-O=
-P-TEE.patch
-deleted file mode 100644
-index 3dcc2de81c2f..000000000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/0001-fix-zynqmp-h=
-andle-secure-SGI-at-EL1-for-OP-TEE.patch
-+++ /dev/null
-@@ -1,33 +0,0 @@
--From f5b2fa90e0c0324f31e72429e7a7382f49a25912 Mon Sep 17 00:00:00 2001
--From: Shen Jiamin <shen_jiamin@comp.nus.edu.sg>
--Date: Wed, 24 Jul 2024 18:58:55 +0800
--Subject: [PATCH] fix(zynqmp): handle secure SGI at EL1 for OP-TEE
--
--OP-TEE requires SGIs to be handled at S-EL1. The
--Makefile was not properly setting the flag
--GICV2_G0_FOR_EL3 to 0 when the SPD is OP-TEE.
--
--Change-Id: I256afa37ddf4ad4a154c43d51807de670c3689bb
--Signed-off-by: Shen Jiamin <shen_jiamin@comp.nus.edu.sg>
-----
-- plat/xilinx/zynqmp/platform.mk | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
--
--Upstream-Status: Backport
--
--diff --git a/plat/xilinx/zynqmp/platform.mk b/plat/xilinx/zynqmp/platfor=
-m.mk
--index c340009d0..22eceb621 100644
----- a/plat/xilinx/zynqmp/platform.mk
--+++ b/plat/xilinx/zynqmp/platform.mk
--@@ -21,7 +21,7 @@ ENABLE_LTO :=3D 1
-- EL3_EXCEPTION_HANDLING :=3D $(SDEI_SUPPORT)
--=20
-- # pncd SPD requires secure SGI to be handled at EL1
---ifeq (${SPD}, $(filter ${SPD},pncd tspd))
--+ifeq (${SPD}, $(filter ${SPD},pncd tspd opteed))
-- ifeq (${ZYNQMP_WDT_RESTART},1)
-- $(error "Error: ZYNQMP_WDT_RESTART and SPD=3Dpncd are incompatible")
-- endif
----=20
--2.34.1
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/0001-qemu_=
-measured_boot.c-ignore-TPM-error-and-continue-w.patch b/meta-arm-bsp/reci=
-pes-bsp/trusted-firmware-a/files/0001-qemu_measured_boot.c-ignore-TPM-err=
-or-and-continue-w.patch
-deleted file mode 100644
-index 75103332e32e..000000000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/0001-qemu_measure=
-d_boot.c-ignore-TPM-error-and-continue-w.patch
-+++ /dev/null
-@@ -1,33 +0,0 @@
--From b91c651e6d596cfe27448b19c8fb2f1168493827 Mon Sep 17 00:00:00 2001
--From: Mikko Rapeli <mikko.rapeli@linaro.org>
--Date: Mon, 15 Jan 2024 09:26:56 +0000
--Subject: [PATCH] qemu_measured_boot.c: ignore TPM error and continue wit=
-h boot
--
--If firmware is configured with TPM support but it's missing
--on HW, e.g. swtpm not started and/or configured with qemu,
--then continue booting. Missing TPM is not a fatal error.
--Enables testing boot without TPM device to see that
--missing TPM is detected further up the SW stack and correct
--fallback actions are taken.
--
--Upstream-Status: Pending
--
--Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
-----
-- plat/qemu/qemu/qemu_measured_boot.c | 3 ++-
-- 1 file changed, 2 insertions(+), 1 deletion(-)
--
--diff --git a/plat/qemu/qemu/qemu_measured_boot.c b/plat/qemu/qemu/qemu_m=
-easured_boot.c
--index 76a4da17e6a9..ec7f44d3720d 100644
----- a/plat/qemu/qemu/qemu_measured_boot.c
--+++ b/plat/qemu/qemu/qemu_measured_boot.c
--@@ -80,7 +80,8 @@ void bl2_plat_mboot_finish(void)
-- 		 * Note: In QEMU platform, OP-TEE uses nt_fw_config to get the
-- 		 * secure Event Log buffer address.
-- 		 */
---		panic();
--+		ERROR("Ignoring TPM errors, continuing without\n");
--+		return;
-- 	}
--=20
-- 	/* Copy Event Log to Non-secure memory */
---=20
-2.39.5 (Apple Git-154)
+ .../conf/machine/corstone1000-fvp.conf        |   2 +-
+ .../conf/machine/corstone1000-mps3.conf       |   6 +-
+ ...01-Fix-in-AEAD-for-psa-arch-test-254.patch | 129 ---
+ ...e1000-Add-CORSTONE_1000_TYPE-variabl.patch |  66 ++
+ .../0002-Fix-psa-api-crypto-test-no-243.patch |  31 -
+ ...e1000-Add-event-provider-proxy-for-b.patch | 304 +++++++
+ .../0003-Remove-Werror-flag.patch             |  83 --
+ ...ow-platform-override-of-FWU-mapping-.patch | 245 +++++
+ ...UCCESS_REBOOT-and-PSA_SUCCESS_RESTAR.patch |  74 ++
+ ...-sizes-compile-time-definitions-user.patch |  40 -
+ ...1000-Add-MM-communication-buffer-co.patch} |  31 +-
+ .../0006-Align-PSA-Crypto-with-TF-Mv2.1.patch | 298 ------
+ ...pport-for-ESRT-v1-in-PSA-FWU-M-agent.patch | 290 ++++++
+ ...ting-warnings-as-errors-configurable.patch | 194 ++++
+ .../0008-se-proxy-protobuf-change.patch       |  71 --
+ ...-config-Remove-Werror-compile-option.patch |  46 +
+ ...e1000-Add-PLATFORM_IS_FVP-toggle-for.patch |  77 --
+ ...009-fwu-proxy-refactor-image-mapping.patch | 856 ++++++++++++++++++
+ ...-FWU-IPC-framework-for-Corstone-1000.patch | 436 ---------
+ ...store-UEFI-variable-index-in-chunks.patch} |  26 +-
+ ...mage-state-in-PSA-FWU-M-update-agent.patch | 188 ----
+ ..._HAS_ATTEST_PK-define-from-IAT-test.patch} |  17 +-
+ ...fine-PSA-FWU-image-mapping-structure.patch | 128 ---
+ ...crypto-fix-AEAD-block-cypher-support.patch |  73 ++
+ ...C-psa_fwu_install-return-value-check.patch |  31 -
+ .../0014-fwu-Add-EFI-ESRT-v1-support.patch    | 178 ----
+ ...orm-corstone1000-Enable-ESRT-support.patch | 129 ---
+ ...orstone1000-Add-event-provider-proxy.patch | 289 ------
+ ...ne1000-Define-GUID-for-each-payloads.patch | 141 ---
+ ...n-PSA-Crypto-structs-with-TF-Mv2.1.1.patch |  29 -
+ .../trusted-services/ts-arm-platforms.inc     |  38 +-
+ .../trusted-services/trusted-services-src.inc |   3 +-
+ 32 files changed, 2221 insertions(+), 2328 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0001-Fix-in-AEAD-for-psa-arch-test-254.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0001-platform-corstone1000-Add-CORSTONE_1000_TYPE-variabl.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0002-Fix-psa-api-crypto-test-no-243.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0002-platform-corstone1000-Add-event-provider-proxy-for-b.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0003-Remove-Werror-flag.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0003-fwu-se-proxy-Allow-platform-override-of-FWU-mapping-.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0004-fwu-Coerce-PSA_SUCCESS_REBOOT-and-PSA_SUCCESS_RESTAR.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0005-Make-RSS-and-MHU-sizes-compile-time-definitions-user.patch
+ rename meta-arm-bsp/recipes-security/trusted-services/corstone1000/{0018=
+-Add-the-com-buffer-address-and-page-count.patch =3D> 0005-platform-corst=
+one1000-Add-MM-communication-buffer-co.patch} (53%)
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0006-Align-PSA-Crypto-with-TF-Mv2.1.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0006-fwu-Add-support-for-ESRT-v1-in-PSA-FWU-M-agent.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0007-Make-treating-warnings-as-errors-configurable.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0008-se-proxy-protobuf-change.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0008-smm-gateway-config-Remove-Werror-compile-option.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0009-Platform-Corstone1000-Add-PLATFORM_IS_FVP-toggle-for.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0009-fwu-proxy-refactor-image-mapping.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0010-Integrate-PSA-FWU-IPC-framework-for-Corstone-1000.patch
+ rename meta-arm-bsp/recipes-security/trusted-services/corstone1000/{0007=
+-Revert-Load-and-store-UEFI-variable-index-in-chunks.patch =3D> 0010-Reve=
+rt-Load-and-store-UEFI-variable-index-in-chunks.patch} (92%)
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0011-Load-initial-image-state-in-PSA-FWU-M-update-agent.patch
+ rename meta-arm-bsp/recipes-security/trusted-services/corstone1000/{0004=
+-Remove-PLATFORM_HAS_ATTEST_PK-define-from-IAT-test.patch =3D> 0011-Remov=
+e-PLATFORM_HAS_ATTEST_PK-define-from-IAT-test.patch} (63%)
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0012-Corstone1000-Define-PSA-FWU-image-mapping-structure.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0012-psa-crypto-fix-AEAD-block-cypher-support.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0013-Fix-PSA-FWU-IPC-psa_fwu_install-return-value-check.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0014-fwu-Add-EFI-ESRT-v1-support.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0015-platform-corstone1000-Enable-ESRT-support.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0016-platform-corstone1000-Add-event-provider-proxy.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0017-platform-corstone1000-Define-GUID-for-each-payloads.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0021-Align-PSA-Crypto-structs-with-TF-Mv2.1.1.patch
 
 
