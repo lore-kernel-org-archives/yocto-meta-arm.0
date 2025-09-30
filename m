@@ -1,92 +1,120 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <Michael.safwat@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC7DCAC5BE
-	for <webhook@archiver.kernel.org>; Tue, 30 Sep 2025 15:03:21 +0000 (UTC)
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
- by mx.groups.io with SMTP id smtpd.web10.27736.1759244595049752559
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9434CAC5B8
+	for <webhook@archiver.kernel.org>; Tue, 30 Sep 2025 15:48:21 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.28793.1759247295409407756
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 30 Sep 2025 08:03:15 -0700
+ Tue, 30 Sep 2025 08:48:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=y4XSEDFa;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.178, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-856328df6e1so589092485a.0
-        for <meta-arm@lists.yoctoproject.org>; Tue, 30 Sep 2025 08:03:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1759244594; x=1759849394; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YbbBjzah37FZPawYt67arKMzPxM1/bZxGILZeTGlbxM=;
-        b=y4XSEDFa8NbMvgwhl6g7frqjoHvla3nok89zJ0cGR9hG3LYNiutJSgQaKOp1vpfWY9
-         fv/H8WCa6DZPgSCxFk+dtCdgdwhnI3S8SGz4WLtkjTgHsfM1y8XSDDAFn9/v64f4WCeU
-         tNcUOfgQnOIIc+eCZfZbgABfJv0xhRi0ItBtq9Caa1fpmkIiDTdAJLNkSJNuPTCeIEF6
-         Uf6kZfTvV52cuazf3pVDEdfk+VKFgQ9jNQUKySfxqSBtj3j2+7dVYIrn9B2JNQqL82WP
-         5TAIB5ghJyjtOKQeeUjlkhSKlm7FCAi9+KGhvlN6JtAMXyDoNsBc4ehUTRbmmupujcEI
-         RSWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759244594; x=1759849394;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YbbBjzah37FZPawYt67arKMzPxM1/bZxGILZeTGlbxM=;
-        b=pSZnPbIz6/Q5CJnfr3QKdOQIbEjTSXMleqWsBSUvk19H9JXJ2h9n0a9fsJZLW4I3Yk
-         wf3LPrzqyNmLrrDS2CzDM/tBXurybECmpM0ob2S3wfqvQOvOzlGAmFvvJ3V6onH++3OO
-         ekSevAE4w4/KmrMtnsqY25IBVzqT7iISFOPaTRzKzW2eptlf3SS59Cia97D06uHUPKC2
-         zBJvSkuSGP9pKIjxSgU0jjv4S+CGrixaGCPxjg5nck+wwEOoLe/zgo4YhWKyXYoLumt8
-         wEtaxN529PI3hULxmwQwizegvSWkaOIvMfS6A7CWSr6CbRkyIJe2cG4Db1WRp2GvloFl
-         RmQg==
-X-Gm-Message-State: AOJu0YyIp1a66oYEO8Tg6g9fZlDWdEcwBdbj/JCKvBDinR7iOBsf4LCb
-	0m8I2Wq1VHoMQsEhfjBwE3oLHB4hW8CRNCDgMec8NiLlnE/uUo/CME1bdD9hDU9CXvY7vaQOgMF
-	xEUE=
-X-Gm-Gg: ASbGnctZ2bTV0vFaEWC1oMYH+T3jEym6sWBV9wgR/xAyTLld6yUDw6cBQpXd/mStnvJ
-	//e5ee6BvX8Wr6yK2KjLk0ZKzVmCH89UhtGIHJOPSS3LoSkpEu/mA3Og+OOwbTLfx3KTfNATllX
-	D+9+4pJR0uBzSs+rkobwbwuQf4mTQZrmIiAzP7Z0xCcY66ac1aejJRwMBNIdFtwvfrKcn4aosva
-	bfUn/zYSOboL+G55AGQf5ymlUrc3dPz9lK5cY9BDVoKyjH4dOgs8zr2NJIXlaA+89K/FihsWYNu
-	NGL8AxI9TT0N576guiRgLwGFIEG9PZr0LBZ7q9/uSRQWJ9j1r4W7IQfh5OrQS2R0EZs/taIU/3N
-	W77dg9A6BeMDNC+QaBsivSwjV7pARNQxkHwPANA==
-X-Google-Smtp-Source: AGHT+IEuY6XXSJPabRi3gJUr+2R9DAKC/TY/kt7OBjP/gRK8Bf4P2wMA57jPMeKizTapsR2gx5B/OA==
-X-Received: by 2002:a05:620a:319f:b0:85e:a145:ce25 with SMTP id af79cd13be357-873768a527dmr9042885a.64.1759244584285;
-        Tue, 30 Sep 2025 08:03:04 -0700 (PDT)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-85c2a1913d5sm1053717385a.31.2025.09.30.08.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Sep 2025 08:03:03 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH 1/2] arm/optee: remove redundant libgcc flags
-Date: Tue, 30 Sep 2025 11:02:57 -0400
-Message-Id: <175924457697.3383641.77111686183168773.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250929164552.2107331-1-ross.burton@arm.com>
-References: <20250929164552.2107331-1-ross.burton@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: michael.safwat@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D60272B;
+	Tue, 30 Sep 2025 08:48:06 -0700 (PDT)
+Received: from e121095.cambridge.arm.com (e121095.arm.com [10.1.198.39])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6DCF73F59E;
+	Tue, 30 Sep 2025 08:48:14 -0700 (PDT)
+From: Michael Safwat <michael.safwat@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Michael Safwat <michael.safwat@arm.com>
+Subject: [PATCH 1/1] arm/trusted-firmware-a: Re-enable BL31 console by default
+Date: Tue, 30 Sep 2025 16:47:57 +0100
+Message-ID: <20250930154758.2465614-1-michael.safwat@arm.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 30 Sep 2025 15:03:21 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6721
+ <meta-arm@lists.yoctoproject.org>; Tue, 30 Sep 2025 15:48:21 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6722
 
+Backport Trusted Firmware-A patch to re-enable the BL31
+console during early boot.
 
-On Mon, 29 Sep 2025 17:45:51 +0100, Ross Burton wrote:
-> Upstream appear to have resolved the libgcc linkage issues as these
-> variables are not used in upstream nor our patches.
-> 
-> 
+Signed-off-by: Michael Safwat <michael.safwat@arm.com>
+---
+ ...re-enable-console-by-default-in-BL31.patch | 46 +++++++++++++++++++
+ .../trusted-firmware-a_2.13.0.bb              |  4 ++
+ 2 files changed, 50 insertions(+)
+ create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/files/0001-fi=
+x-arm-re-enable-console-by-default-in-BL31.patch
 
-Applied, thanks!
-
-[1/2] arm/optee: remove redundant libgcc flags
-      commit: d85711c0498ed651a3be4a5e31e9a74814a6f288
-[2/2] arm/optee: clean up OPTEE_COMPILER assignment
-      commit: 1c86990f95174a698962e9423785ca059c2d00e3
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-fix-arm-r=
+e-enable-console-by-default-in-BL31.patch b/meta-arm/recipes-bsp/trusted-=
+firmware-a/files/0001-fix-arm-re-enable-console-by-default-in-BL31.patch
+new file mode 100644
+index 00000000..f5b8d538
+--- /dev/null
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-fix-arm-re-enabl=
+e-console-by-default-in-BL31.patch
+@@ -0,0 +1,46 @@
++From de4640579c5318ba08ec57531ef87d63f5574557 Mon Sep 17 00:00:00 2001
++From: Chris Kay <chris.kay@arm.com>
++Date: Thu, 21 Aug 2025 14:16:25 +0100
++Subject: [PATCH] fix(arm): re-enable console by default in BL31
++
++In c997a8d, the common `arm_bl31_early_platform_setup` function
++underwent a consolidation of two large preprocessor branches that were
++conditional on whether or not Transfer List support is enabled.
++
++This function would initialise the console via `arm_console_boot_init`
++*only* if Transfer List support was disabled. During the consolidation,
++this call was removed, such that the behaviour was the same for both
++branches.
++
++However, the common `bl31_early_platform_setup2` implementation was not
++updated to reflect this change, and so platforms that a) relied on this
++common implementation and b) did not enable Transfer List support no
++longer initialise the console in BL31.
++
++This change ensures that the common implementation correctly initialises
++the console during early BL31 boot.
++
++Change-Id: I332af3932ac70382fbf7a5434c0008807f38f86c
++Signed-off-by: Chris Kay <chris.kay@arm.com>
++Upstream-Status: Backport [de4640579c5318ba08ec57531ef87d63f5574557]
++---
++ plat/arm/common/arm_bl31_setup.c | 3 +++
++ 1 file changed, 3 insertions(+)
++
++diff --git a/plat/arm/common/arm_bl31_setup.c b/plat/arm/common/arm_bl31=
+_setup.c
++index 8ac984fd1..e7dc70bdb 100644
++--- a/plat/arm/common/arm_bl31_setup.c
+++++ b/plat/arm/common/arm_bl31_setup.c
++@@ -343,6 +343,9 @@ void __init arm_bl31_early_platform_setup(u_register=
+_t arg0, u_register_t arg1,
++ void bl31_early_platform_setup2(u_register_t arg0, u_register_t arg1,
++ 		u_register_t arg2, u_register_t arg3)
++ {
+++	/* Initialize the console to provide early debug support */
+++	arm_console_boot_init();
+++
++ 	arm_bl31_early_platform_setup(arg0, arg1, arg2, arg3);
++=20
++ 	/*
++--=20
++2.43.0
++
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
+.13.0.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1=
+3.0.bb
+index 5c99446e..3de30bca 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.13.0.b=
+b
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.13.0.b=
+b
+@@ -13,3 +13,7 @@ SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.g=
+it;name=3Dmbedtls;protocol=3Dht
+ SRCREV_mbedtls =3D "22098d41c6620ce07cf8a0134d37302355e1e5ef"
+=20
+ LIC_FILES_CHKSUM_MBEDTLS =3D "file://mbedtls/LICENSE;md5=3D379d5819937a6=
+c2f1ef1630d341e026d"
++
++SRC_URI +=3D "\
++    file://0001-fix-arm-re-enable-console-by-default-in-BL31.patch \
++"
 
