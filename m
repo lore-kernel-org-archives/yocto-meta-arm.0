@@ -1,90 +1,136 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3F8CAC5B8
-	for <webhook@archiver.kernel.org>; Fri,  3 Oct 2025 02:51:47 +0000 (UTC)
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
- by mx.groups.io with SMTP id smtpd.web11.5493.1759459899872188485
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03783CCA471
+	for <webhook@archiver.kernel.org>; Mon,  6 Oct 2025 15:25:40 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.36647.1759764332176117957
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 02 Oct 2025 19:51:40 -0700
+ Mon, 06 Oct 2025 08:25:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=p0mcZBLZ;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.48, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-81fdd5d7b59so18457176d6.3
-        for <meta-arm@lists.yoctoproject.org>; Thu, 02 Oct 2025 19:51:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1759459899; x=1760064699; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hU2LNfzdumnjtbsbN+lvUUd2nvkAEUz7wa7WqsyksLA=;
-        b=p0mcZBLZ/5FF1iVzwbCjPtxKPuyeCjJ8YvirlKzXlc1g7b/Z6Sl29OyTbd7OtSrZHn
-         qMj6VXo+Pmr3B7uMSinS1vD+GbIcjiViRhgtt2xAPeyHz01F21LLBsyuRrHszh2dcHN0
-         qftqjxVvNJx1kb0ODRGk2sAHuNLazvW14HGrfhQYS0iXYieVrE7TzOcjhPzEl6DAwQIX
-         N42ZiQexOvCQMtob+OSl1TklIFuEIWkZEHPXNf/sJj/3wb0SuAbacJWDZ6sjgVD3PUzP
-         r5i+8uBGdDimoUB0Z8ZFeyU5S3XrVa4ERwFhJ2y/Q0e7HbELlaVJMBzNb4VnvMazydH4
-         Jf3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759459899; x=1760064699;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hU2LNfzdumnjtbsbN+lvUUd2nvkAEUz7wa7WqsyksLA=;
-        b=Xtql+KxXI5j2dtXK53PuUi8ItcXmmnCYm89CG04Yfv1SwwntwNd/mfTRIF4N2NVgCW
-         hKKtanj/TU441klaQ3YNa7wREwyAZVHMLuSLhdn1SozQ8GBrCq3HGK3nQQbdKdGzHZ2v
-         7vxw3jd1lPy2wQakNWp7DTATC89JKBoSoKMZiKvkTFs2282QkkMUbMuI/sb4AX2TQ/07
-         3gY4FevBqQ3Icyzz/r6CUZkH4fM1hnAo48dpusHVGN3yi/IjdUfXzdiHVEQtIrXTGnYE
-         cjkBQc66+U7SDwcewNN4XPVPsqdsFng+PGOdRdVGI/qK5U5xw7wbwTJFzUX5iAvhdDTm
-         s90g==
-X-Gm-Message-State: AOJu0Yzbwg20gQBF9DGTkVe+UmAbELZ6qCCKT2ww1JSMVfiHwLK6d5AU
-	s4/m2cATfbe82Hmnv4+rIGuD9dngdsT5FZIkWQ4Hws3kLFxHMKzuBu7WObv6vseAvXuAIOhHZhV
-	9FHo=
-X-Gm-Gg: ASbGncuwPBxAmvCYKF4dL9h+ozXHPsPkcVG0voJFtKkogByD46rU8mZt45+21mXUSST
-	Vq553CSlj3lkrs4RvkTl0kwFSfvG9YlbhzwEroxSZojIaXsMcoSbW2iKQPVsFXU3SrxfqxoiOan
-	8OutiDG30NmnL/VMRuTaZyiXETbUe/IZOuhUE1+EKVP5pi3AXmo6X0kxffdG/8HXwvwqbvzZSdg
-	DeE9/2Ood+Va+VbYMXXrE9v2ycHjOeVx9mIz+k6VCdfLt+xzXwgkHEYb52j8SI1d858G17fUiu2
-	1dNFvK6tiMGI+eTpTVm7xPgR9dQpqvxhy9h4nGEF6/L5Qo41hq3j0lkJ6RMmYoWhgdaoVVDO0Dv
-	TQpVSErGZ9mTrhTwhXku0dKuSWZ+iQ3OlFLFsTg==
-X-Google-Smtp-Source: AGHT+IEhp/WEOclt/KjYiwe+XSK76gbgU9yf4tEKpoFpZ1a1pRZRkCN59Mb0saO/uhc6/PUmjJBtSg==
-X-Received: by 2002:a05:6214:20a7:b0:7f7:777e:39c5 with SMTP id 6a1803df08f44-879dc7c3a92mr24694146d6.25.1759459898584;
-        Thu, 02 Oct 2025 19:51:38 -0700 (PDT)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-878bd786797sm29038566d6.39.2025.10.02.19.51.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Oct 2025 19:51:38 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Michael Safwat <michael.safwat@arm.com>
-Subject: Re: [PATCH 1/1] arm/trusted-firmware-a: Re-enable BL31 console by default
-Date: Thu,  2 Oct 2025 22:51:32 -0400
-Message-Id: <175945989237.3615376.7266725723802921730.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250930154758.2465614-1-michael.safwat@arm.com>
-References: <20250930154758.2465614-1-michael.safwat@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E6621515
+	for <meta-arm@lists.yoctoproject.org>; Mon,  6 Oct 2025 08:25:23 -0700 (PDT)
+Received: from cesw-amp-gbt-1s-m12830-04.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0E2543F66E
+	for <meta-arm@lists.yoctoproject.org>; Mon,  6 Oct 2025 08:25:30 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm-bsp/edk2-firmware: backport a patch to fix builds with host gcc15
+Date: Mon,  6 Oct 2025 16:25:26 +0100
+Message-ID: <20251006152526.2401666-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 03 Oct 2025 02:51:47 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6724
+ <meta-arm@lists.yoctoproject.org>; Mon, 06 Oct 2025 15:25:40 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6725
 
+Backport a patch from upstream to fix the build of antlr with GCC 15 on
+the host.
 
-On Tue, 30 Sep 2025 16:47:57 +0100, Michael Safwat wrote:
-> Backport Trusted Firmware-A patch to re-enable the BL31
-> console during early boot.
-> 
-> 
+The build still fails with clang, so update the message with the current
+error message.
 
-Applied, thanks!
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ .../recipes-bsp/uefi/edk2-firmware_202408.bb  |  7 ++-
+ .../0001-BaseTools-Pccts-set-C-standard.patch | 47 +++++++++++++++++++
+ 2 files changed, 52 insertions(+), 2 deletions(-)
+ create mode 100644 meta-arm-bsp/recipes-bsp/uefi/files/0001-BaseTools-Pc=
+cts-set-C-standard.patch
 
-[1/1] arm/trusted-firmware-a: Re-enable BL31 console by default
-      commit: 18cc301460be85f24d34019a878cf70627c97ed1
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_202408.bb b/meta=
+-arm-bsp/recipes-bsp/uefi/edk2-firmware_202408.bb
+index ea03d47ba1..fa44e28f7f 100644
+--- a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_202408.bb
++++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_202408.bb
+@@ -1,9 +1,12 @@
+ SRCREV_edk2           ?=3D "b158dad150bf02879668f72ce306445250838201"
+ SRCREV_edk2-platforms ?=3D "a3c898956a4d48dc5980336fa6ce6eeb23c4f72b"
+=20
+-SRC_URI +=3D "file://0001-Platform-StMmRpmb-Fix-build.patch;patchdir=3De=
+dk2-platforms"
++SRC_URI +=3D "file://0001-Platform-StMmRpmb-Fix-build.patch;patchdir=3De=
+dk2-platforms \
++            file://0001-BaseTools-Pccts-set-C-standard.patch"
+=20
+-# FIXME - clang is having issues with antlr
++# FIXME:
++# ArmPkg/Universal/Smbios/SmbiosMiscDxe/Type03/MiscChassisManufacturerFu=
+nction.c:146:37:
++# error: variable 'ContainedElements' is uninitialized when passed as a =
+const pointer argument here [-Werror,-Wuninitialized-const-pointer]
+ TOOLCHAIN:aarch64 =3D "gcc"
+=20
+ require recipes-bsp/uefi/edk2-firmware.inc
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/0001-BaseTools-Pccts-set=
+-C-standard.patch b/meta-arm-bsp/recipes-bsp/uefi/files/0001-BaseTools-Pc=
+cts-set-C-standard.patch
+new file mode 100644
+index 0000000000..058073c9d8
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/uefi/files/0001-BaseTools-Pccts-set-C-stan=
+dard.patch
+@@ -0,0 +1,47 @@
++From e063f8b8a53861043b9872cc35b08a3dc03b0942 Mon Sep 17 00:00:00 2001
++From: Gerd Hoffmann <kraxel@redhat.com>
++Date: Mon, 20 Jan 2025 09:40:31 +0100
++Subject: [PATCH] BaseTools/Pccts: set C standard
++
++The prehistoric code base doesn't build with ISO C23.  Set the C
++standard to C11 (for both clang and gcc) so it continues to build with
++gcc 15 (which uses C23 by default).
++
++Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
++
++Upstream-Status: Backport [e063f8b8a53861043b9872cc35b08a3dc03b0942]
++Signed-off-by: Ross Burton <ross.burton@arm.com>
++---
++ BaseTools/Source/C/VfrCompile/Pccts/antlr/makefile | 2 +-
++ BaseTools/Source/C/VfrCompile/Pccts/dlg/makefile   | 2 +-
++ 2 files changed, 2 insertions(+), 2 deletions(-)
++
++diff --git a/BaseTools/Source/C/VfrCompile/Pccts/antlr/makefile b/BaseTo=
+ols/Source/C/VfrCompile/Pccts/antlr/makefile
++index 746d58b5e2..b47c8a37af 100644
++--- a/BaseTools/Source/C/VfrCompile/Pccts/antlr/makefile
+++++ b/BaseTools/Source/C/VfrCompile/Pccts/antlr/makefile
++@@ -169,7 +169,7 @@ ANTLR=3D${BIN_DIR}/antlr
++ DLG=3D${BIN_DIR}/dlg
++ OBJ_EXT=3Do
++ OUT_OBJ =3D -o
++-CFLAGS=3D $(COPT) -I. -I$(SET) -I$(PCCTS_H) -DUSER_ZZSYN $(COTHER) -DZZ=
+LEXBUFSIZE=3D65536
+++CFLAGS=3D $(COPT) -I. -I$(SET) -I$(PCCTS_H) -DUSER_ZZSYN $(COTHER) -DZZ=
+LEXBUFSIZE=3D65536 -std=3Dgnu11
++ CPPFLAGS=3D
++ #
++ # SGI Users, use this CFLAGS
++diff --git a/BaseTools/Source/C/VfrCompile/Pccts/dlg/makefile b/BaseTool=
+s/Source/C/VfrCompile/Pccts/dlg/makefile
++index e45ac98e04..d72bee3d70 100644
++--- a/BaseTools/Source/C/VfrCompile/Pccts/dlg/makefile
+++++ b/BaseTools/Source/C/VfrCompile/Pccts/dlg/makefile
++@@ -123,7 +123,7 @@ endif
++ COPT=3D-O
++ ANTLR=3D${BIN_DIR}/antlr
++ DLG=3D${BIN_DIR}/dlg
++-CFLAGS=3D $(COPT) -I. -I$(SET) -I$(PCCTS_H) -DUSER_ZZSYN -DZZLEXBUFSIZE=
+=3D65536
+++CFLAGS=3D $(COPT) -I. -I$(SET) -I$(PCCTS_H) -DUSER_ZZSYN -DZZLEXBUFSIZE=
+=3D65536 -std=3Dgnu11
++ CPPFLAGS=3D
++ OBJ_EXT=3Do
++ OUT_OBJ =3D -o
++--=20
++2.43.0
++
+--=20
+2.43.0
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
