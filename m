@@ -2,60 +2,58 @@ Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D735CCF9FE
-	for <webhook@archiver.kernel.org>; Fri, 31 Oct 2025 14:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34F6CCFA03
+	for <webhook@archiver.kernel.org>; Mon,  3 Nov 2025 16:42:04 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.16824.1761920516380741883
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.2049.1762188123463336361
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 31 Oct 2025 07:21:56 -0700
+ Mon, 03 Nov 2025 08:42:03 -0800
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A7191595
-	for <meta-arm@lists.yoctoproject.org>; Fri, 31 Oct 2025 07:21:48 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD11E1D14
+	for <meta-arm@lists.yoctoproject.org>; Mon,  3 Nov 2025 08:41:54 -0800 (PST)
 Received: from cesw-amp-gbt-1s-m12830-04.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 90CCD3F673
-	for <meta-arm@lists.yoctoproject.org>; Fri, 31 Oct 2025 07:21:55 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2FE7B3F694
+	for <meta-arm@lists.yoctoproject.org>; Mon,  3 Nov 2025 08:42:02 -0800 (PST)
 From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm/trusted-services: use SHA, not tag name
-Date: Fri, 31 Oct 2025 14:21:53 +0000
-Message-ID: <20251031142153.2226419-1-ross.burton@arm.com>
+Subject: [PATCH] CI: only run pending-updates on master
+Date: Mon,  3 Nov 2025 16:41:58 +0000
+Message-ID: <20251103164158.3062744-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
-X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 31 Oct 2025 14:21:58 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6748
+ <meta-arm@lists.yoctoproject.org>; Mon, 03 Nov 2025 16:42:04 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6749
 
-It turns out that the base SRCREV for trusted-services is a tag name,
-which meant it was hitting the network on every build. Use the SHA
-instead.
+This job takes a few minutes and isn't useful unless it's being ran for
+master, or is being actively worked on.
 
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../recipes-security/trusted-services/trusted-services-src.inc | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .gitlab-ci.yml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/meta-arm/recipes-security/trusted-services/trusted-services-=
-src.inc b/meta-arm/recipes-security/trusted-services/trusted-services-src=
-.inc
-index 210086fe31..4d10f6ea24 100644
---- a/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
-+++ b/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
-@@ -13,7 +13,8 @@ SRC_URI:append =3D "\
-     file://0005-cpputest-fix-cmake-4.0-compatibility.patch \
- "
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index c06b05e474..d7c214b673 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -253,6 +253,11 @@ musca-s1:
 =20
--SRCREV_trusted-services =3D "v1.2.0"
-+# v1.2.0
-+SRCREV_trusted-services =3D "0d55b4c7a8e53958271feb7341e928853b7914cf"
- LIC_FILES_CHKSUM =3D "file://${S}/license.rst;md5=3Dea160bac7f690a069c60=
-8516b17997f4"
-=20
- S =3D "${UNPACKDIR}/trusted-services"
+ pending-updates:
+   extends: .setup
++  # Only run this job for the default branch (master), or if forced with
++  # BUILD_FORCE_PENDING_UPDATES.
++  rules:
++    - if: $CI_COMMIT_BRANCH =3D=3D $CI_DEFAULT_BRANCH
++    - if: $BUILD_FORCE_PENDING_UPDATES !=3D null
+   artifacts:
+     paths:
+       - update-report
 --=20
 2.43.0
 
