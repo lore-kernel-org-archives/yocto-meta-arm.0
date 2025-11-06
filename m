@@ -1,199 +1,91 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAA2CCFA13
-	for <webhook@archiver.kernel.org>; Thu,  6 Nov 2025 14:24:38 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.16649.1762439073547661976
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F95CCFA03
+	for <webhook@archiver.kernel.org>; Thu,  6 Nov 2025 14:44:08 +0000 (UTC)
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.17189.1762440245850625995
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 06 Nov 2025 06:24:33 -0800
+ Thu, 06 Nov 2025 06:44:06 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 669291515
-	for <meta-arm@lists.yoctoproject.org>; Thu,  6 Nov 2025 06:24:25 -0800 (PST)
-Received: from cesw-amp-gbt-1s-m12830-04.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CDB803F66E
-	for <meta-arm@lists.yoctoproject.org>; Thu,  6 Nov 2025 06:24:32 -0800 (PST)
-From: Ross Burton <ross.burton@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/4] arm/trusted-firmware-a: unify git repository URL
-Date: Thu,  6 Nov 2025 14:24:28 +0000
-Message-ID: <20251106142430.614591-2-ross.burton@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251106142430.614591-1-ross.burton@arm.com>
-References: <20251106142430.614591-1-ross.burton@arm.com>
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=C+vJiDzx;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.48, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-88025eb208bso12137456d6.2
+        for <meta-arm@lists.yoctoproject.org>; Thu, 06 Nov 2025 06:44:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1762440244; x=1763045044; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wOv0nUNYhY+07I5ULgsOvO0HftSP6P7QenVpLJI26os=;
+        b=C+vJiDzxGUdytAE8WUyz0KgOchXOaxXd2lhsKScputJlTttXR+tdF6OSIFXAeb+uEm
+         Z552B/ewzClfgFq6iq+ihIrbZ+kTqr6Hrox2F5Gug7nDXP7ssVkQsLkFfLE8K71nPmY4
+         HXD6b4ajKka5USwxujf/Z9kv60MTiIO0v0jT2tXD+MbncwkfV0IblHL+pZV5xVwxE6Tq
+         h3yzvB7AuXEtqJDXBujgQtOJv/azyTPEgjw4x9hr0oJ/fQJMLYZbGDIkhJ2JUa9unqAg
+         k7A7ajkG7/wazhDGMdPgBcIlhULR4dF/DB7eTED4+U5YpluD3Vr5CPSNBY8fbucsVy9/
+         Eomg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1762440244; x=1763045044;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wOv0nUNYhY+07I5ULgsOvO0HftSP6P7QenVpLJI26os=;
+        b=kJCXL1aznDInG5PpwqWTi6t5YpF3AslAstbpyYhh26zqVir0f+w4UHvKUwFsQ9PTfE
+         6QqNOWne0DMt3e06z8A15JZMAs6yL/Uc8W/fk0Dokqdbs956tBJQgeqtkkkoWPsDNd6U
+         6fqoCppM1pgcHRyfZ/gAgaIuYVwGJuhaqLR0Gw0tTa7GCGnkGSxbYsNIztJSp1KcJETd
+         CzpPtsflxJ+U2HmoqI66ViiFFqmqkSfiEHCPeXBGzSFGiOXw9pivHIEYW9XwYlGzDVzb
+         n4t+MkEICwvP6hmbH1T+Twz4G9U2tP58N4N1zna1dhkrVSJuHSE6QgkhvXOI7U3rSRLS
+         iwzw==
+X-Gm-Message-State: AOJu0Yy+Hi0dlERBs6wXtsouId5QjIodsxUFYd194dFsSV0dNmsHOQB8
+	oYyqmTaQOpNio+f8VTabjCR3I4Y1HMau98arShoVKxIbo4+bMpaFJeZAnf8ZutsldV3tCcg7aKv
+	CKVA=
+X-Gm-Gg: ASbGncsU6YDP0OadT8EoTK+st8fo9cyS6BsBMKTwnNDjzlirExz4yyRJ/haOAztvWry
+	tUBggZwzoPddM3dGNpvIYCPcp7lbrNWszLlVJ8mlis2GDkfZz8V4XyIvtOYHdjQcQZd+RXMKMsi
+	upixOPHJYlwHHCiWTk9QBHS3XYbzKnNieBdlECmeyShkoZqOvfXmbpMVzBlCWL/0/WDETTtqe+l
+	NvjwBkYRj+Xyh+bYCiIXEy8dcmCBTpQnm7UHJngHHZdSeCtZTOLHIoT5HvTAwjQLpvbdZvoawkN
+	xmPxAP9U7fQXfCdIoO+ACXX9T0GZFVwJ03xQYvnHfhTS+ypfO09Oqwxr+o5vpa/yFtp7UOrftsT
+	7bdsoYLexFqfEq34A/bf9m5eI9Tjho5jXZfP3bvWUO+X2EtgvTiCgiCRAceui5gNhloQ=
+X-Google-Smtp-Source: AGHT+IGUhWMfk2UxwTOkT3X+Kh7FHx+PIbP9qIIcPc+neaJ9Lc5p+0cMHY05/x9yTxXZZU/DbuMmAw==
+X-Received: by 2002:a05:6214:c47:b0:880:580e:b3e5 with SMTP id 6a1803df08f44-88071170f7emr98794206d6.36.1762440244095;
+        Thu, 06 Nov 2025 06:44:04 -0800 (PST)
+Received: from localhost ([136.56.27.188])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8808290ca3csm20583086d6.25.2025.11.06.06.44.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Nov 2025 06:44:03 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] CI: reduce coverage for time improvement
+Date: Thu,  6 Nov 2025 09:43:51 -0500
+Message-Id: <176244023313.1691764.2637424139116285770.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20251031141933.77799-1-jon.mason@arm.com>
+References: <20251031141933.77799-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 06 Nov 2025 14:24:38 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6753
+ <meta-arm@lists.yoctoproject.org>; Thu, 06 Nov 2025 14:44:08 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6756
 
-git.trustedfirmware.org is an alias for review.trustedfirmware.org. We
-moved the  main recipe to use review.trustedfirmware.org last year[1]
-but not all other recipes that fetch the source followed, which means
-that we have to fetch TF-A multiple times.
 
-This commit ensures that all the recipes are using the same SRC_URI, so
-we just fetch TF-A once.
+On Fri, 31 Oct 2025 10:19:33 -0400, Jon Mason wrote:
+> Reduce the number of tests being run in CI to reduce the amount of time
+> it takes to complete, while providing the same code coverage.  Internal
+> CI runs went from 2.5h to 1.5h.
+> 
+> 
 
-[1] a6a4952e ("arm/trusted-firmware-a: use correct git URL")
+Applied, thanks!
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- meta-arm/recipes-bsp/trusted-firmware-a/cot-dt2c_0.1.0.bb       | 2 +-
- .../recipes-bsp/trusted-firmware-a/fiptool-native_2.10.17.bb    | 2 +-
- .../recipes-bsp/trusted-firmware-a/fiptool-native_2.12.3.bb     | 2 +-
- .../recipes-bsp/trusted-firmware-a/fiptool-native_2.13.0.bb     | 2 +-
- meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.15.bb   | 2 +-
- meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.12.3.bb    | 2 +-
- meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.13.0.bb    | 2 +-
- meta-arm/recipes-security/trusted-services/ts-sp-fwu_git.bb     | 2 +-
- 8 files changed, 8 insertions(+), 8 deletions(-)
+[1/1] CI: reduce coverage for time improvement
+      commit: 3bf5bc2a3cd002c8d318d913e1548f784e08d92d
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/cot-dt2c_0.1.0.bb b/=
-meta-arm/recipes-bsp/trusted-firmware-a/cot-dt2c_0.1.0.bb
-index ce021527b7..5d7efcc936 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/cot-dt2c_0.1.0.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/cot-dt2c_0.1.0.bb
-@@ -2,7 +2,7 @@
- DESCRIPTION =3D "CoT-dt2c Tool is a python script to convert CoT DT file=
- into corresponding C file"
- LICENSE =3D "BSD-3-Clause"
-=20
--SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://git.trustedfirmware.org/TF-A/trus=
-ted-firmware-a.git;protocol=3Dhttps"
-+SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://review.trustedfirmware.org/TF-A/t=
-rusted-firmware-a;protocol=3Dhttps"
- SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A};branch=3D${SRCBRANCH}"
- LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3D83b7626b8c7a37263c6a=
-58af8d19bee1"
-=20
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.=
-17.bb b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.17.bb
-index 1534b7e5f5..5ae8247c31 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.17.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.17.bb
-@@ -5,7 +5,7 @@
- DESCRIPTION =3D "fiptool - Trusted Firmware tool for packaging"
- LICENSE =3D "BSD-3-Clause"
-=20
--SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://git.trustedfirmware.org/TF-A/trus=
-ted-firmware-a.git;protocol=3Dhttps"
-+SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://review.trustedfirmware.org/TF-A/t=
-rusted-firmware-a;protocol=3Dhttps"
- SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A};destsuffix=3Dfiptool-${PV};br=
-anch=3D${SRCBRANCH}"
- LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3Db2c740efedc159745b9b=
-31f88ff03dde"
-=20
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.12.=
-3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.12.3.bb
-index cfbfe42bc4..af4f4f5b2f 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.12.3.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.12.3.bb
-@@ -5,7 +5,7 @@
- DESCRIPTION =3D "fiptool - Trusted Firmware tool for packaging"
- LICENSE =3D "BSD-3-Clause"
-=20
--SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://git.trustedfirmware.org/TF-A/trus=
-ted-firmware-a.git;protocol=3Dhttps"
-+SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://review.trustedfirmware.org/TF-A/t=
-rusted-firmware-a;protocol=3Dhttps"
- SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A};destsuffix=3Dfiptool-${PV};br=
-anch=3D${SRCBRANCH}"
- LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3D83b7626b8c7a37263c6a=
-58af8d19bee1"
-=20
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.13.=
-0.bb b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.13.0.bb
-index 1eae9eebb8..1b5334d8bb 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.13.0.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.13.0.bb
-@@ -5,7 +5,7 @@
- DESCRIPTION =3D "fiptool - Trusted Firmware tool for packaging"
- LICENSE =3D "BSD-3-Clause"
-=20
--SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://git.trustedfirmware.org/TF-A/trus=
-ted-firmware-a.git;protocol=3Dhttps"
-+SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://review.trustedfirmware.org/TF-A/t=
-rusted-firmware-a;protocol=3Dhttps"
- SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A};destsuffix=3Dfiptool-${PV};br=
-anch=3D${SRCBRANCH}"
- LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3D1118e32884721c0be332=
-67bd7ae11130"
-=20
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.15.b=
-b b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.15.bb
-index e2e46aa038..c484721b93 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.15.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.10.15.bb
-@@ -7,7 +7,7 @@ inherit deploy
-=20
- COMPATIBLE_MACHINE ?=3D "invalid"
-=20
--SRC_URI_TRUSTED_FIRMWARE_A_TESTS ?=3D "git://git.trustedfirmware.org/TF-=
-A/tf-a-tests.git;protocol=3Dhttps"
-+SRC_URI_TRUSTED_FIRMWARE_A_TESTS ?=3D "git://review.trustedfirmware.org/=
-TF-A/tf-a-tests;protocol=3Dhttps"
- SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A_TESTS};branch=3D${SRCBRANCH}"
- SRCBRANCH =3D "lts-v2.10"
- SRCREV =3D "42c6a147d6f8957ff0b6e9eec4591b0927b8769f"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.12.3.bb=
- b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.12.3.bb
-index 32baefa4ca..ecd02f67cd 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.12.3.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.12.3.bb
-@@ -7,7 +7,7 @@ inherit deploy
-=20
- COMPATIBLE_MACHINE ?=3D "invalid"
-=20
--SRC_URI_TRUSTED_FIRMWARE_A_TESTS ?=3D "git://git.trustedfirmware.org/TF-=
-A/tf-a-tests.git;protocol=3Dhttps"
-+SRC_URI_TRUSTED_FIRMWARE_A_TESTS ?=3D "git://review.trustedfirmware.org/=
-TF-A/tf-a-tests;protocol=3Dhttps"
- SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A_TESTS};branch=3D${SRCBRANCH} \
-           file://0001-fix-realm-make-PCIe-tests-default-for-testing.patc=
-h \
-           "
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.13.0.bb=
- b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.13.0.bb
-index 08da7cbabb..aa7f49048b 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.13.0.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.13.0.bb
-@@ -7,7 +7,7 @@ inherit deploy
-=20
- COMPATIBLE_MACHINE ?=3D "invalid"
-=20
--SRC_URI_TRUSTED_FIRMWARE_A_TESTS ?=3D "git://git.trustedfirmware.org/TF-=
-A/tf-a-tests.git;protocol=3Dhttps"
-+SRC_URI_TRUSTED_FIRMWARE_A_TESTS ?=3D "git://review.trustedfirmware.org/=
-TF-A/tf-a-tests;protocol=3Dhttps"
- SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A_TESTS};branch=3D${SRCBRANCH}"
- SRCBRANCH =3D "master"
- SRCREV =3D "fa267c12f9aa790b43b38d171273cf63892e8d51"
-diff --git a/meta-arm/recipes-security/trusted-services/ts-sp-fwu_git.bb =
-b/meta-arm/recipes-security/trusted-services/ts-sp-fwu_git.bb
-index 0ec85b0cf9..e0230fbf26 100644
---- a/meta-arm/recipes-security/trusted-services/ts-sp-fwu_git.bb
-+++ b/meta-arm/recipes-security/trusted-services/ts-sp-fwu_git.bb
-@@ -14,7 +14,7 @@ TS_SP_FWU_CONFIG ?=3D "default"
- OECMAKE_SOURCEPATH =3D "${S}/deployments/fwu/config/${TS_SP_FWU_CONFIG}-=
-${TS_ENV}"
-=20
- # The GPT parser component is needed from TF-A
--SRC_URI +=3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;=
-name=3Dtfa;protocol=3Dhttps;branch=3Dmaster;destsuffix=3Dtf-a"
-+SRC_URI +=3D "git://review.trustedfirmware.org/TF-A/trusted-firmware-a;n=
-ame=3Dtfa;protocol=3Dhttps;branch=3Dmaster;destsuffix=3Dtf-a"
- SRCREV_tfa =3D "35f4c7295bafeb32c8bcbdfb6a3f2e74a57e732b"
- LIC_FILES_CHKSUM =3D "file://../tf-a/docs/license.rst;md5=3Db2c740efedc1=
-59745b9b31f88ff03dde"
- do_apply_local_src_patches:append() {
---=20
-2.43.0
-
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
