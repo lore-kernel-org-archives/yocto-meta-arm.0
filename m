@@ -2,345 +2,334 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897D6D3C928
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81798D3C92F
 	for <webhook@archiver.kernel.org>; Wed, 10 Dec 2025 16:33:43 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.215.1765384415140262853
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.243.1765384414516330797
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 10 Dec 2025 08:33:35 -0800
+ Wed, 10 Dec 2025 08:33:34 -0800
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B8631762
-	for <meta-arm@lists.yoctoproject.org>; Wed, 10 Dec 2025 08:33:27 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA7CA153B
+	for <meta-arm@lists.yoctoproject.org>; Wed, 10 Dec 2025 08:33:26 -0800 (PST)
 Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7840F3F73B
-	for <meta-arm@lists.yoctoproject.org>; Wed, 10 Dec 2025 08:33:34 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E3BCA3F73B
+	for <meta-arm@lists.yoctoproject.org>; Wed, 10 Dec 2025 08:33:33 -0800 (PST)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 3/3] arm-bsp: add git recipe versions
-Date: Wed, 10 Dec 2025 11:33:32 -0500
-Message-ID: <20251210163332.66571-3-jon.mason@arm.com>
+Subject: [PATCH 1/3] arm-bsp/u-boot: update fvp-base patches
+Date: Wed, 10 Dec 2025 11:33:30 -0500
+Message-ID: <20251210163332.66571-1-jon.mason@arm.com>
 X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20251210163332.66571-1-jon.mason@arm.com>
-References: <20251210163332.66571-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 10 Dec 2025 16:33:43 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6794
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6792
 
-Add git recipe versions that track the latest git versions of u-boot and
-the various OP-TEE recipes.  This, in combination with the previously
-existing trusted firmware a and m recipes, allows for using the latest
-code in platform development and testing (as part of CI).
-
-For CI usage, a KAS yml file has been created to allow for those recipes
-to be used, and an entry for fvp-base has been added to the gitlab CI
-yml file.
-
-NOTE: the wildcard for corstone1000 u-boot PREFERRED_VERSION was causing
-it to pick-up the newest version (and failing to apply the patches).
-The wildcard is unnecessary, since it is using a layer supplied package.
-So, remove it and everyone is happy.
+u-boot has accepted some of the fvp-base patches.  Take the upstream
+versions and rebase the third patch to apply.
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .gitlab-ci.yml                                |  3 ++
- ci/latest-revisions.yml                       | 15 +++++++++
- .../conf/machine/include/corstone1000.inc     |  2 +-
- .../recipes-bsp/u-boot/u-boot-fvp-base.inc    |  6 ++++
- ....bbappend =3D> optee-os-tadevkit_%.bbappend} |  0
- ...ee-os_4.%.bbappend =3D> optee-os_%.bbappend} |  0
- ...est_4.%.bbappend =3D> optee-test_%.bbappend} |  0
- meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend |  6 ++++
- .../recipes-security/optee/optee-client.inc   |  5 ++-
- .../optee/optee-client_4.7.0.bb               |  4 ---
- .../optee/optee-client_git.bb                 | 11 +++++++
- .../optee/optee-examples_git.bb               |  8 +++++
- .../optee/optee-os-tadevkit_git.bb            | 32 +++++++++++++++++++
- ...ee-os_4.%.bbappend =3D> optee-os_%.bbappend} |  0
- .../recipes-security/optee/optee-os_git.bb    | 10 ++++++
- .../recipes-security/optee/optee-test_git.bb  | 20 ++++++++++++
- 16 files changed, 116 insertions(+), 6 deletions(-)
- create mode 100644 ci/latest-revisions.yml
- rename meta-arm-bsp/recipes-security/optee/{optee-os-tadevkit_4.%.bbappe=
-nd =3D> optee-os-tadevkit_%.bbappend} (100%)
- rename meta-arm-bsp/recipes-security/optee/{optee-os_4.%.bbappend =3D> o=
-ptee-os_%.bbappend} (100%)
- rename meta-arm-bsp/recipes-security/optee/{optee-test_4.%.bbappend =3D>=
- optee-test_%.bbappend} (100%)
- create mode 100644 meta-arm/recipes-security/optee/optee-client_git.bb
- create mode 100644 meta-arm/recipes-security/optee/optee-examples_git.bb
- create mode 100644 meta-arm/recipes-security/optee/optee-os-tadevkit_git=
-.bb
- rename meta-arm/recipes-security/optee/{optee-os_4.%.bbappend =3D> optee=
--os_%.bbappend} (100%)
- create mode 100644 meta-arm/recipes-security/optee/optee-os_git.bb
- create mode 100644 meta-arm/recipes-security/optee/optee-test_git.bb
+ .../recipes-bsp/u-boot/u-boot-fvp-base.inc    |  2 +-
+ ...1-vexpress64-Set-the-DM_RNG-property.patch | 29 ++++----
+ ...64-Enable-SYSRESET-and-SYSRESET_PSCI.patch | 71 +++++++++++++++++++
+ ...press64-Select-PSCI-RESET-by-default.patch | 46 ------------
+ ...-Imply-CONFIG_ARM64_CRC32-by-default.patch | 48 +++++++++++--
+ 5 files changed, 129 insertions(+), 67 deletions(-)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0002-=
+arm-vexpress64-Enable-SYSRESET-and-SYSRESET_PSCI.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0002-=
+vexpress64-Select-PSCI-RESET-by-default.patch
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index 4e1dc0e3f91c..095a1addc21b 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -209,6 +209,9 @@ fvp-base:
-       - FIRMWARE: [u-boot, edk2]
-         TESTING: testimage
-       - SYSTEMREADY_FIRMWARE: arm-systemready-firmware
-+      - KERNEL: linux-yocto-dev
-+        LATEST: latest-revisions
-+        TESTING: testimage
-=20
- fvps:
-   extends: .build
-diff --git a/ci/latest-revisions.yml b/ci/latest-revisions.yml
-new file mode 100644
-index 000000000000..94d6bc2eadc0
---- /dev/null
-+++ b/ci/latest-revisions.yml
-@@ -0,0 +1,15 @@
-+# yaml-language-server: $schema=3Dhttps://raw.githubusercontent.com/siem=
-ens/kas/master/kas/schema-kas.json
-+
-+header:
-+  version: 14
-+
-+local_conf_header:
-+  latest_revisions: |
-+    PREFERRED_VERSION_trusted-firmware-a ?=3D "git"
-+    PREFERRED_VERSION_trusted-firmware-m ?=3D "git"
-+    PREFERRED_VERSION_optee-client ?=3D "git"
-+    PREFERRED_VERSION_optee-examples ?=3D "git"
-+    PREFERRED_VERSION_optee-os-tadevkit ?=3D "git"
-+    PREFERRED_VERSION_optee-os ?=3D "git"
-+    PREFERRED_VERSION_optee-test ?=3D "git"
-+    PREFERRED_PROVIDER_u-boot =3D "u-boot:class-devupstream"
-diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-ar=
-m-bsp/conf/machine/include/corstone1000.inc
-index 09468c7c0fa4..6f5127b67855 100644
---- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
-+++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
-@@ -26,7 +26,7 @@ TS_SP_SE_PROXY_CONFIG =3D "corstone1000"
- MACHINE_FEATURES +=3D "ts-smm-gateway ts-se-proxy"
-=20
- # U-Boot
--PREFERRED_VERSION_u-boot ?=3D "2025.04%"
-+PREFERRED_VERSION_u-boot ?=3D "2025.04"
- MACHINE_FEATURES +=3D "efi"
- EFI_PROVIDER ?=3D "grub-efi"
-=20
 diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc b/meta-a=
 rm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
-index e7f2287797b6..44b98f8fca7e 100644
+index d7558f4ff456..e7f2287797b6 100644
 --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
 +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
-@@ -6,3 +6,9 @@ SRC_URI:append =3D " \
-     file://0002-arm-vexpress64-Enable-SYSRESET-and-SYSRESET_PSCI.patch \
+@@ -3,6 +3,6 @@
+ SRC_URI:append =3D " \
+     file://virtio-boot.cfg \
+     file://0001-vexpress64-Set-the-DM_RNG-property.patch \
+-    file://0002-vexpress64-Select-PSCI-RESET-by-default.patch \
++    file://0002-arm-vexpress64-Enable-SYSRESET-and-SYSRESET_PSCI.patch \
      file://0003-vexpress64-Imply-CONFIG_ARM64_CRC32-by-default.patch \
      "
-+
-+# Remove backported patches from latest version
-+SRC_URI:remove:class-devupstream =3D " \
-+    file://0001-vexpress64-Set-the-DM_RNG-property.patch \
-+    file://0002-arm-vexpress64-Enable-SYSRESET-and-SYSRESET_PSCI.patch \
-+    "
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_4.%.bb=
-append b/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_%.bbappend
-similarity index 100%
-rename from meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_4.%.bba=
-ppend
-rename to meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_%.bbappen=
-d
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os_4.%.bbappend b/=
-meta-arm-bsp/recipes-security/optee/optee-os_%.bbappend
-similarity index 100%
-rename from meta-arm-bsp/recipes-security/optee/optee-os_4.%.bbappend
-rename to meta-arm-bsp/recipes-security/optee/optee-os_%.bbappend
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-test_4.%.bbappend =
-b/meta-arm-bsp/recipes-security/optee/optee-test_%.bbappend
-similarity index 100%
-rename from meta-arm-bsp/recipes-security/optee/optee-test_4.%.bbappend
-rename to meta-arm-bsp/recipes-security/optee/optee-test_%.bbappend
-diff --git a/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm/rec=
-ipes-bsp/u-boot/u-boot_%.bbappend
-index 8542ccfc9084..8ddc53619560 100644
---- a/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -4,3 +4,9 @@ SRC_URI:append:qemuarm64-secureboot =3D " file://qemuarm6=
-4.cfg"
- SRC_URI:append:qemuarm-secureboot =3D " file://qemuarm.cfg"
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0001-vexpres=
+s64-Set-the-DM_RNG-property.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boo=
+t/fvp-base/0001-vexpress64-Set-the-DM_RNG-property.patch
+index 4912491fb68a..dee48e1dd68c 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0001-vexpress64-Set=
+-the-DM_RNG-property.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0001-vexpress64-Set=
+-the-DM_RNG-property.patch
+@@ -1,28 +1,31 @@
+-From 6813b56a11f423f3faa0e960bb044534e11d0104 Mon Sep 17 00:00:00 2001
+-From: Debbie Martin <Debbie.Martin@arm.com>
+-Date: Fri, 25 Aug 2023 15:09:33 +0100
++From 364d81afbf4fdc1b3d35c137f02ffa6f1ddd929d Mon Sep 17 00:00:00 2001
++From: Debbie Horsfall <debbie.horsfall@arm.com>
++Date: Wed, 17 Sep 2025 17:22:21 +0100
+ Subject: [PATCH] vexpress64: Set the DM_RNG property
 =20
- require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'u-b=
-oot-uefi-secureboot.inc', '', d)}
-+
-+# Work some magic here for devupstream
-+BBCLASSEXTEND =3D "devupstream:target"
-+SRC_URI:class-devupstream =3D "git://source.denx.de/u-boot/u-boot.git;pr=
-otocol=3Dhttps;branch=3Dmaster"
-+# tag: v2026.01-rc2
-+SRCREV:class-devupstream =3D "365a7079fb918643da0f0709660a7d8ea76dd6f3"
-diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/=
-recipes-security/optee/optee-client.inc
-index 0c3aefbb6c36..4d3d83da4521 100644
---- a/meta-arm/recipes-security/optee/optee-client.inc
-+++ b/meta-arm/recipes-security/optee/optee-client.inc
-@@ -5,7 +5,10 @@ HOMEPAGE =3D "https://www.op-tee.org/"
- LICENSE =3D "BSD-2-Clause"
- LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D69663ab153298557a59c67a60a743=
-e5b"
+-Enable the DM_RNG virtio random number generator driver in
+-in order to consume entropy within u-boot. This is necessary
+-in the case that the kernel is not configured to enable the
+-virtio rng driver itself.
++Enable the DM_RNG virtio random number generator driver in order to
++consume entropy within U-Boot. This allows U-Boot to inject entropy to t=
+he
++kernel via UEFI, so the kernel can use that early, for instance for
++address layout randomisation, or when the kernel does not provide an
++entropy driver itself.
 =20
--inherit systemd update-rc.d cmake useradd
-+inherit systemd update-rc.d cmake useradd pkgconfig
-+
-+DEPENDS +=3D "util-linux"
-+EXTRA_OEMAKE +=3D "PKG_CONFIG=3Dpkg-config"
+-Upstream-Status: Pending
+-Signed-off-by: Debbie Martin <Debbie.Martin@arm.com>
++Signed-off-by: Debbie Horsfall <debbie.horsfall@arm.com>
++Reviewed-by: Andre Przywara <andre.przywara@arm.com>
++Upstream-Status: Backport [2767386806c254820ea22a812bb02e5405495a29]
+ ---
+- board/armltd/vexpress64/Kconfig | 1 +
+- 1 file changed, 1 insertion(+)
++ board/armltd/vexpress64/Kconfig | 2 ++
++ 1 file changed, 2 insertions(+)
 =20
- SRC_URI =3D " \
-     git://github.com/OP-TEE/optee_client.git;branch=3Dmaster;protocol=3D=
-https \
-diff --git a/meta-arm/recipes-security/optee/optee-client_4.7.0.bb b/meta=
--arm/recipes-security/optee/optee-client_4.7.0.bb
-index 00f829e18bfb..2fb157dfec81 100644
---- a/meta-arm/recipes-security/optee/optee-client_4.7.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-client_4.7.0.bb
-@@ -3,7 +3,3 @@ require recipes-security/optee/optee-client.inc
- # v4.7.0
- SRCREV =3D "23c112a6f05cc5e39bd4aaf52ad515cad532237d"
- SRC_URI +=3D "file://0001-tee-supplicant-update-udev-systemd-install-cod=
-e.patch"
+ diff --git a/board/armltd/vexpress64/Kconfig b/board/armltd/vexpress64/K=
+config
+-index 7e8709444fe3..f413c51ac43b 100644
++index 7e8709444fe3..610ab0ac37dc 100644
+ --- a/board/armltd/vexpress64/Kconfig
+ +++ b/board/armltd/vexpress64/Kconfig
+-@@ -21,6 +21,7 @@ config VEXPRESS64_BASE_MODEL
++@@ -21,6 +21,8 @@ config VEXPRESS64_BASE_MODEL
+  	imply EFI_SET_TIME if DM_RTC
+  	select LINUX_KERNEL_IMAGE_HEADER
+  	select POSITION_INDEPENDENT
+ +	imply DM_RNG
+++	imply RNG_ARM_RNDR
+ =20
+  choice
+  	prompt "VExpress64 board variant"
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0002-arm-vex=
+press64-Enable-SYSRESET-and-SYSRESET_PSCI.patch b/meta-arm-bsp/recipes-bs=
+p/u-boot/u-boot/fvp-base/0002-arm-vexpress64-Enable-SYSRESET-and-SYSRESET=
+_PSCI.patch
+new file mode 100644
+index 000000000000..e6bd28d927f1
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0002-arm-vexpress64=
+-Enable-SYSRESET-and-SYSRESET_PSCI.patch
+@@ -0,0 +1,71 @@
++From bec13f424612ba01dace86fe4a4ab49eedaca4b2 Mon Sep 17 00:00:00 2001
++From: Debbie Horsfall <debbie.horsfall@arm.com>
++Date: Wed, 17 Sep 2025 17:22:22 +0100
++Subject: [PATCH] arm: vexpress64: Enable SYSRESET and SYSRESET_PSCI
++
++Select SYSRESET on Vexpress64 to enable system reset to support other
++features, such as capsule-on-disk. Select SYSRESET_PSCI if PSCI is
++inferred from the firmware (via ARM_PSCI_FW).
++Select ARM_SMCCC for Vexpress64 boards which in turn selects
++ARM_PSCI_FW.
++
++The sysreset uclass unconditionally implements a reset_cpu() function.
++Remove the empty reset_cpu() in vexpress64 board code.
++
++Signed-off-by: Debbie Horsfall <debbie.horsfall@arm.com>
++Upstream-Status: Backport [1f3f1e090a2695e0b17cbf9dc50ccb59d100458f]
++---
++ arch/arm/Kconfig                     | 2 ++
++ board/armltd/vexpress64/Kconfig      | 2 ++
++ board/armltd/vexpress64/vexpress64.c | 5 -----
++ 3 files changed, 4 insertions(+), 5 deletions(-)
++
++diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
++index 625d2e995d2f..68f37f633fdf 100644
++--- a/arch/arm/Kconfig
+++++ b/arch/arm/Kconfig
++@@ -1418,6 +1418,8 @@ config ARCH_VEXPRESS64
++ 	select MTD_NOR_FLASH if MTD
++ 	select FLASH_CFI_DRIVER if MTD
++ 	select ENV_IS_IN_FLASH if MTD
+++	select SYSRESET
+++	select SYSRESET_PSCI if ARM_PSCI_FW
++ 	imply DISTRO_DEFAULTS
++=20
++ config TARGET_CORSTONE1000
++diff --git a/board/armltd/vexpress64/Kconfig b/board/armltd/vexpress64/K=
+config
++index 610ab0ac37dc..9ef3fa1b379f 100644
++--- a/board/armltd/vexpress64/Kconfig
+++++ b/board/armltd/vexpress64/Kconfig
++@@ -23,6 +23,7 @@ config VEXPRESS64_BASE_MODEL
++ 	select POSITION_INDEPENDENT
++ 	imply DM_RNG
++ 	imply RNG_ARM_RNDR
+++	select ARM_SMCCC
++=20
++ choice
++ 	prompt "VExpress64 board variant"
++@@ -48,6 +49,7 @@ config TARGET_VEXPRESS64_JUNO
++ 	select USB_EHCI_GENERIC if USB
++ 	select USB_OHCI_HCD if USB
++ 	select USB_OHCI_GENERIC if USB
+++	select ARM_SMCCC
++ 	imply OF_HAS_PRIOR_STAGE
++=20
++ endchoice
++diff --git a/board/armltd/vexpress64/vexpress64.c b/board/armltd/vexpres=
+s64/vexpress64.c
++index 0b75c1358f0b..e8f1c2fe9fe2 100644
++--- a/board/armltd/vexpress64/vexpress64.c
+++++ b/board/armltd/vexpress64/vexpress64.c
++@@ -206,11 +206,6 @@ int board_fdt_blob_setup(void **fdtp)
++ #endif
++ #endif
++=20
++-/* Actual reset is done via PSCI. */
++-void reset_cpu(void)
++-{
++-}
++-
++ /*
++  * Board specific ethernet initialization routine.
++  */
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0002-vexpres=
+s64-Select-PSCI-RESET-by-default.patch b/meta-arm-bsp/recipes-bsp/u-boot/=
+u-boot/fvp-base/0002-vexpress64-Select-PSCI-RESET-by-default.patch
+deleted file mode 100644
+index 822a308dd29a..000000000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0002-vexpress64-Sel=
+ect-PSCI-RESET-by-default.patch
++++ /dev/null
+@@ -1,46 +0,0 @@
+-From ca70595913d7584605be1ea37362da25254fb829 Mon Sep 17 00:00:00 2001
+-From: Diego Sueiro <diego.sueiro@arm.com>
+-Date: Wed, 4 Oct 2023 06:31:50 +0100
+-Subject: [PATCH] vexpress64: Select PSCI RESET by default
 -
--inherit pkgconfig
--DEPENDS +=3D "util-linux"
--EXTRA_OEMAKE +=3D "PKG_CONFIG=3Dpkg-config"
-diff --git a/meta-arm/recipes-security/optee/optee-client_git.bb b/meta-a=
-rm/recipes-security/optee/optee-client_git.bb
-new file mode 100644
-index 000000000000..9c1c622fb82f
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-client_git.bb
-@@ -0,0 +1,11 @@
-+require recipes-security/optee/optee-client.inc
-+
-+# v4.8.0
-+SRCREV =3D "9d6f69844ff60ec0966cf3659abcc38eda8b31ea"
-+PV .=3D "+git"
-+
-+FILESEXTRAPATHS:prepend :=3D "${THISDIR}/${PN}:"
-+SRC_URI +=3D "file://0001-tee-supplicant-update-udev-systemd-install-cod=
-e.patch"
-+
-+# Not a release recipe, try our hardest to not pull this in implicitly
-+DEFAULT_PREFERENCE =3D "-1"
-diff --git a/meta-arm/recipes-security/optee/optee-examples_git.bb b/meta=
--arm/recipes-security/optee/optee-examples_git.bb
-new file mode 100644
-index 000000000000..e0c85660a8a3
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-examples_git.bb
-@@ -0,0 +1,8 @@
-+require recipes-security/optee/optee-examples.inc
-+
-+# v4.8.0
-+SRCREV =3D "3ef17eb1f309def91113637f95f67613b1d89119"
-+PV .=3D "+git"
-+
-+# Not a release recipe, try our hardest to not pull this in implicitly
-+DEFAULT_PREFERENCE =3D "-1"
-diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_git.bb b/m=
-eta-arm/recipes-security/optee/optee-os-tadevkit_git.bb
-new file mode 100644
-index 000000000000..78588b8111f4
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_git.bb
-@@ -0,0 +1,32 @@
-+require recipes-security/optee/optee-os_${PV}.bb
-+
-+SUMMARY =3D "OP-TEE Trusted OS TA devkit"
-+DESCRIPTION =3D "OP-TEE TA devkit for build TAs"
-+HOMEPAGE =3D "https://www.op-tee.org/"
-+
-+DEPENDS +=3D "python3-pycryptodome-native"
-+
-+do_install() {
-+    #install TA devkit
-+    install -d ${D}${includedir}/optee/export-user_ta/
-+    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
-+        cp -aR $f ${D}${includedir}/optee/export-user_ta/
-+    done
-+}
-+
-+do_deploy() {
-+	echo "Do not inherit do_deploy from optee-os."
-+}
-+
-+FILES:${PN} =3D "${includedir}/optee/"
-+
-+# Build paths are currently embedded
-+INSANE_SKIP:${PN}-dev +=3D "buildpaths"
-+
-+# Include extra headers needed by SPMC tests to TA DEVKIT.
-+# Supported after op-tee v3.20
-+EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
--spmc-test', \
-+                                        ' CFG_SPMC_TESTS=3Dy', '' , d)}"
-+
-+# Not a release recipe, try our hardest to not pull this in implicitly
-+DEFAULT_PREFERENCE =3D "-1"
-diff --git a/meta-arm/recipes-security/optee/optee-os_4.%.bbappend b/meta=
--arm/recipes-security/optee/optee-os_%.bbappend
-similarity index 100%
-rename from meta-arm/recipes-security/optee/optee-os_4.%.bbappend
-rename to meta-arm/recipes-security/optee/optee-os_%.bbappend
-diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb b/meta-arm/r=
-ecipes-security/optee/optee-os_git.bb
-new file mode 100644
-index 000000000000..244ff9b71877
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os_git.bb
-@@ -0,0 +1,10 @@
-+require recipes-security/optee/optee-os.inc
-+
-+DEPENDS +=3D "dtc-native"
-+
-+# v4.8.0
-+SRCREV =3D "86660925433a8d4d1b19cfa5fe940081d77b34b4"
-+PV .=3D "+git"
-+
-+# Not a release recipe, try our hardest to not pull this in implicitly
-+DEFAULT_PREFERENCE =3D "-1"
-diff --git a/meta-arm/recipes-security/optee/optee-test_git.bb b/meta-arm=
-/recipes-security/optee/optee-test_git.bb
-new file mode 100644
-index 000000000000..d29333905865
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-test_git.bb
-@@ -0,0 +1,20 @@
-+require recipes-security/optee/optee-test.inc
-+
-+# v4.8.0
-+SRCREV =3D "6569cd7b13e1b37b37069e090d592adca7d3926d"
-+PV .=3D "+git"
-+
-+LIC_FILES_CHKSUM =3D "file://LICENSE.md;md5=3Da8fa504109e4cd7ea575bc49ea=
-4be560"
-+
-+# Include ffa_spmc test group if the SPMC test is enabled.
-+# Supported after op-tee v3.20
-+EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
--spmc-test', \
-+                                        ' CFG_SPMC_TESTS=3Dy CFG_SECURE_=
-PARTITION=3Dy', '' , d)}"
-+
-+RDEPENDS:${PN} +=3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee-spm=
-c-test', \
-+                                              ' arm-ffa-user', '' , d)}"
-+
-+# Not a release recipe, try our hardest to not pull this in implicitly
-+DEFAULT_PREFERENCE =3D "-1"
-+
-+CFLAGS +=3D "-Wno-error=3Dunterminated-string-initialization"
+-Set SYSRESET and SYSRESET_PSCI config for vexpress64 by
+-by default. This means that the reset_cpu function in
+-vexpress64.c is no longer needed because it is called in
+-sysreset-uclass.c instead.
+-
+-Upstream-Status: Pending
+-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+----
+- board/armltd/vexpress64/Kconfig      | 2 ++
+- board/armltd/vexpress64/vexpress64.c | 5 -----
+- 2 files changed, 2 insertions(+), 5 deletions(-)
+-
+-diff --git a/board/armltd/vexpress64/Kconfig b/board/armltd/vexpress64/K=
+config
+-index f413c51ac43b..d0733ba62432 100644
+---- a/board/armltd/vexpress64/Kconfig
+-+++ b/board/armltd/vexpress64/Kconfig
+-@@ -30,6 +30,8 @@ config TARGET_VEXPRESS64_BASE_FVP
+- 	bool "Support Versatile Express ARMv8a FVP BASE model"
+- 	select VEXPRESS64_BASE_MODEL
+- 	imply OF_HAS_PRIOR_STAGE if !BLOBLIST
+-+	select SYSRESET
+-+	select SYSRESET_PSCI
+-=20
+- config TARGET_VEXPRESS64_BASER_FVP
+- 	bool "Support Versatile Express ARMv8r64 FVP BASE model"
+-diff --git a/board/armltd/vexpress64/vexpress64.c b/board/armltd/vexpres=
+s64/vexpress64.c
+-index 0b75c1358f0b..e8f1c2fe9fe2 100644
+---- a/board/armltd/vexpress64/vexpress64.c
+-+++ b/board/armltd/vexpress64/vexpress64.c
+-@@ -206,11 +206,6 @@ int board_fdt_blob_setup(void **fdtp)
+- #endif
+- #endif
+-=20
+--/* Actual reset is done via PSCI. */
+--void reset_cpu(void)
+--{
+--}
+--
+- /*
+-  * Board specific ethernet initialization routine.
+-  */
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0003-vexpres=
+s64-Imply-CONFIG_ARM64_CRC32-by-default.patch b/meta-arm-bsp/recipes-bsp/=
+u-boot/u-boot/fvp-base/0003-vexpress64-Imply-CONFIG_ARM64_CRC32-by-defaul=
+t.patch
+index 5ebdda095dd4..5bb738982002 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0003-vexpress64-Imp=
+ly-CONFIG_ARM64_CRC32-by-default.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0003-vexpress64-Imp=
+ly-CONFIG_ARM64_CRC32-by-default.patch
+@@ -1,4 +1,4 @@
+-From 9c98333d7c5f4c2611c76d60f5e7cb96bfdaca26 Mon Sep 17 00:00:00 2001
++From 67b2bcd428a13d14d4311bd1122e664f391af4d4 Mon Sep 17 00:00:00 2001
+ From: Diego Sueiro <diego.sueiro@arm.com>
+ Date: Wed, 4 Oct 2023 06:29:12 +0100
+ Subject: [PATCH] vexpress64: Imply CONFIG_ARM64_CRC32 by default
+@@ -10,18 +10,52 @@ feature of ARMv8.1 and newer.
+ Upstream-Status: Pending
+ Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+ ---
+- board/armltd/vexpress64/Kconfig | 1 +
+- 1 file changed, 1 insertion(+)
++ board/armltd/vexpress64/Kconfig  |  1 +
++ include/configs/vexpress_aemv8.h | 13 +++++++------
++ 2 files changed, 8 insertions(+), 6 deletions(-)
+=20
+ diff --git a/board/armltd/vexpress64/Kconfig b/board/armltd/vexpress64/K=
+config
+-index d0733ba62432..543cbdb5631b 100644
++index 9ef3fa1b379f..1a0e0a5018d8 100644
+ --- a/board/armltd/vexpress64/Kconfig
+ +++ b/board/armltd/vexpress64/Kconfig
+-@@ -22,6 +22,7 @@ config VEXPRESS64_BASE_MODEL
+- 	select LINUX_KERNEL_IMAGE_HEADER
+- 	select POSITION_INDEPENDENT
++@@ -24,6 +24,7 @@ config VEXPRESS64_BASE_MODEL
+  	imply DM_RNG
++ 	imply RNG_ARM_RNDR
++ 	select ARM_SMCCC
+ +	imply ARM64_CRC32
+ =20
+  choice
+  	prompt "VExpress64 board variant"
++diff --git a/include/configs/vexpress_aemv8.h b/include/configs/vexpress=
+_aemv8.h
++index 5eee13b3fc01..5c271d239501 100644
++--- a/include/configs/vexpress_aemv8.h
+++++ b/include/configs/vexpress_aemv8.h
++@@ -172,7 +172,7 @@
++  */
++ #define BOOTENV_DEV_SMH(devtypeu, devtypel, instance) \
++ 	"bootcmd_smh=3D " 						\
++-		"if load hostfs - ${boot_addr_r} ${boot_name}; then"		\
+++		"if load hostfs - ${boot_addr_r} ${boot_name}; then"	\
++ 		"  setenv bootargs;"					\
++ 		"  abootimg addr ${boot_addr_r};"			\
++ 		"  abootimg get dtb --index=3D0 fdt_addr_r;"		\
++@@ -181,13 +181,14 @@
++ 		"  if load hostfs - ${kernel_addr_r} ${kernel_name}; then"	\
++ 		"    setenv fdt_high 0xffffffffffffffff;"		\
++ 		"    setenv initrd_high 0xffffffffffffffff;"		\
++-		"    if test -n load hostfs - ${fdt_addr_r} ${fdtfile}; then"			\
++-		"        fdt move $fdtcontroladdr $fdt_addr_r;"			\
++-		"    fi;"			\
++-		"    load hostfs - ${ramdisk_addr_r} ${ramdisk_name};" \
+++		"    load hostfs - ${fdt_addr_r} ${fdtfile};"		\
+++		"    if test $? -eq 1; then "                           \
+++		"        fdt move $fdtcontroladdr $fdt_addr_r;"		\
+++		"    fi;"						\
+++		"    load hostfs - ${ramdisk_addr_r} ${ramdisk_name};" 	\
++ 		"    fdt addr ${fdt_addr_r};"				\
++ 		"    fdt resize;"					\
++-		"    fdt chosen ${ramdisk_addr_r} ${filesize};"	\
+++		"    fdt chosen ${ramdisk_addr_r} ${filesize};"		\
++ 		"    booti $kernel_addr_r - ${fdt_addr_r};"		\
++ 		"  fi;"							\
++ 		"fi\0"
 --=20
 2.50.1 (Apple Git-155)
 
