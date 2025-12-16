@@ -2,25 +2,25 @@ Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2448DD609D2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14443D609C2
 	for <webhook@archiver.kernel.org>; Tue, 16 Dec 2025 16:23:37 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.27032.1765902212274394945
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.27033.1765902213606080153
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 16 Dec 2025 08:23:32 -0800
+ Tue, 16 Dec 2025 08:23:33 -0800
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFB4DFEC
-	for <meta-arm@lists.yoctoproject.org>; Tue, 16 Dec 2025 08:23:24 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4800FEC
+	for <meta-arm@lists.yoctoproject.org>; Tue, 16 Dec 2025 08:23:25 -0800 (PST)
 Received: from e133390.cambridge.arm.com (unknown [10.1.198.56])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AAF7A3F73F
-	for <meta-arm@lists.yoctoproject.org>; Tue, 16 Dec 2025 08:23:31 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFAB73F73F
+	for <meta-arm@lists.yoctoproject.org>; Tue, 16 Dec 2025 08:23:32 -0800 (PST)
 From: Peter Hoyes <peter.hoyes@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 3/4] arm/scp-firmware: Use firmware.bbclass
-Date: Tue, 16 Dec 2025 16:23:09 +0000
-Message-ID: <20251216162311.3985918-3-peter.hoyes@arm.com>
+Subject: [PATCH 4/4] arm/trusted-firmware-m: Use firmware.bbclass
+Date: Tue, 16 Dec 2025 16:23:10 +0000
+Message-ID: <20251216162311.3985918-4-peter.hoyes@arm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251216162311.3985918-1-peter.hoyes@arm.com>
 References: <20251216162311.3985918-1-peter.hoyes@arm.com>
@@ -30,199 +30,201 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 16 Dec 2025 16:23:37 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6803
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6804
 
 Replace inherit deploy with firmware.
 
-Initialize SCP_DEBUG using the FIRMWARE_DEBUG_BUILD variable. Initialize
-SCP_PLATFORM using the FIRMWARE_PLATFORM variable.
+Initialize TFM_DEBUG using the FIRMWARE_DEBUG_BUILD variable. Initialize
+TFM_PLATFORM with FIRMWARE_PLATFORM.
 
 Refactor do_install to use ${FIRMWARE_DIR} and remove now redundant
 configuration.
 
+Refactor corstone1000 config files to use ${FIRMWARE_DIR} and the
+base do_install.
+
 Signed-off-by: Peter Hoyes <peter.hoyes@arm.com>
 ---
- meta-arm-bsp/conf/machine/sgi575.conf         |  6 ++--
- .../recipes-bsp/images/firmware-image-juno.bb |  2 +-
- .../scp-firmware/scp-firmware-juno.inc        |  4 +--
- .../trusted-firmware-a-juno.inc               |  2 +-
- .../scp-firmware/scp-firmware_2.16.0.bb       | 36 +++++++------------
- 5 files changed, 20 insertions(+), 30 deletions(-)
+ .../corstone1000-firmware-deploy-image.inc    |  2 +-
+ .../corstone1000-flash-firmware-image.bb      |  4 ++--
+ .../trusted-firmware-m-corstone1000.inc       | 11 ++-------
+ .../wic/corstone1000-flash-firmware.wks.in    |  4 ++--
+ .../trusted-firmware-m/trusted-firmware-m.inc | 23 +++++++------------
+ 5 files changed, 15 insertions(+), 29 deletions(-)
 
-diff --git a/meta-arm-bsp/conf/machine/sgi575.conf b/meta-arm-bsp/conf/ma=
-chine/sgi575.conf
-index 07d1e79c..6217ecc2 100644
---- a/meta-arm-bsp/conf/machine/sgi575.conf
-+++ b/meta-arm-bsp/conf/machine/sgi575.conf
-@@ -46,9 +46,9 @@ FVP_CONFIG[css.cmn600.mesh_config_file] =3D "SGI-575_cm=
-n600.yml"
- FVP_CONFIG[css.cmn600.force_rnsam_internal] ?=3D "false"
- FVP_CONFIG[css.gic_distributor.ITS-device-bits] ?=3D "20"
+diff --git a/meta-arm-bsp/recipes-bsp/images/corstone1000-firmware-deploy=
+-image.inc b/meta-arm-bsp/recipes-bsp/images/corstone1000-firmware-deploy=
+-image.inc
+index dfd88971..eb06db10 100644
+--- a/meta-arm-bsp/recipes-bsp/images/corstone1000-firmware-deploy-image.=
+inc
++++ b/meta-arm-bsp/recipes-bsp/images/corstone1000-firmware-deploy-image.=
+inc
+@@ -1,7 +1,7 @@
+ COMPATIBLE_MACHINE =3D "corstone1000"
 =20
--FVP_DATA ?=3D "css.scp.armcortexm7ct=3Dscp_ramfw.bin@0x0BD80000"
--FVP_CONFIG[css.mcp.ROMloader.fname] ?=3D "mcp_romfw.bin"
--FVP_CONFIG[css.scp.ROMloader.fname] ?=3D "scp_romfw.bin"
-+FVP_DATA ?=3D "css.scp.armcortexm7ct=3Dscp-firmware/scp_ramfw.bin@0x0BD8=
-0000"
-+FVP_CONFIG[css.mcp.ROMloader.fname] ?=3D "scp-firmware/mcp_romfw.bin"
-+FVP_CONFIG[css.scp.ROMloader.fname] ?=3D "scp-firmware/scp_romfw.bin"
- FVP_CONFIG[css.trustedBootROMloader.fname] ?=3D "trusted-firmware-a/bl1.=
-bin"
- FVP_CONFIG[board.flashloader0.fname] ?=3D "trusted-firmware-a/fip.bin"
+ FIRMWARE_BINARIES =3D "corstone1000-flash-firmware-image-${MACHINE}.wic =
+\
+-                     bl1.bin \
++                     trusted-firmware-m/bl1.bin \
+                      ${@bb.utils.contains('MACHINE_FEATURES', \
+                                           'corstone1000-extsys', \
+                                           'es_flashfw.bin', \
+diff --git a/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-=
+image.bb b/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-im=
+age.bb
+index e705efd3..a8c74086 100644
+--- a/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.b=
+b
++++ b/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.b=
+b
+@@ -79,7 +79,7 @@ CAPSULE_INDEXES +=3D "${PAYLOAD_BL2_INDEX} "
+ CAPSULE_HARDWARE_INSTANCES +=3D "${PAYLOAD_HARDWARE_INSTANCE} "
+ CAPSULE_MONOTONIC_COUNTS +=3D "${PAYLOAD_MONOTONIC_COUNT} "
+ CAPSULE_PRIVATE_KEY_PATHS +=3D "${PAYLOAD_PRIVATE_KEY_PATH} "
+-UEFI_FIRMWARE_BINARIES +=3D "${DEPLOY_DIR_IMAGE}/bl2_signed.bin "
++UEFI_FIRMWARE_BINARIES +=3D "${DEPLOY_DIR_IMAGE}/trusted-firmware-m/bl2_=
+signed.bin "
+ CAPSULE_FW_VERSIONS +=3D "${PAYLOAD_BL2_VERSION} "
+ CAPSULE_LOWEST_SUPPORTED_VERSIONS +=3D "${PAYLOAD_BL2_LOWEST_SUPPORTED_V=
+ERSION} "
 =20
-diff --git a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb b/met=
-a-arm-bsp/recipes-bsp/images/firmware-image-juno.bb
-index 16e4e8db..48486d6e 100644
---- a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb
-+++ b/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb
-@@ -41,7 +41,7 @@ do_install() {
-     cp -f ${RECIPE_SYSROOT}/firmware/trusted-firmware-a/fip.bin \
-         ${D}/${FIRMWARE_DIR}/SOFTWARE/fip.bin
+@@ -97,7 +97,7 @@ CAPSULE_INDEXES +=3D "${PAYLOAD_TFM_S_INDEX} "
+ CAPSULE_HARDWARE_INSTANCES +=3D "${PAYLOAD_HARDWARE_INSTANCE} "
+ CAPSULE_MONOTONIC_COUNTS +=3D "${PAYLOAD_MONOTONIC_COUNT} "
+ CAPSULE_PRIVATE_KEY_PATHS +=3D "${PAYLOAD_PRIVATE_KEY_PATH} "
+-UEFI_FIRMWARE_BINARIES +=3D "${DEPLOY_DIR_IMAGE}/tfm_s_signed.bin "
++UEFI_FIRMWARE_BINARIES +=3D "${DEPLOY_DIR_IMAGE}/trusted-firmware-m/tfm_=
+s_signed.bin "
+ CAPSULE_FW_VERSIONS +=3D "${PAYLOAD_TFM_S_VERSION} "
+ CAPSULE_LOWEST_SUPPORTED_VERSIONS +=3D "${PAYLOAD_TFM_S_LOWEST_SUPPORTED=
+_VERSION} "
 =20
--    cp -f ${RECIPE_SYSROOT}/firmware/scp_romfw_bypass.bin \
-+    cp -f ${RECIPE_SYSROOT}/firmware/scp-firmware/scp_romfw_bypass.bin \
-         ${D}/${FIRMWARE_DIR}/SOFTWARE/scp_bl1.bin
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware=
+-m-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted=
+-firmware-m-corstone1000.inc
+index a355e844..97f1bf6a 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
+tone1000.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
+tone1000.inc
+@@ -51,16 +51,9 @@ SRC_URI:append:corstone1000-mps3 =3D " \
+     file://0003-Fix-psa_key_handle_t-initialization.patch;patchdir=3D../=
+tfm-psa-adac \
+     "
 =20
-     # u-boot environment file
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-juno.inc =
-b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-juno.inc
-index 1f02d8e5..1bdc78e0 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-juno.inc
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-juno.inc
-@@ -8,8 +8,8 @@ FW_INSTALL:append =3D " romfw_bypass"
- do_install:append() {
-     for TYPE in ${FW_INSTALL}; do
-         if [ "$TYPE" =3D "romfw_bypass" ]; then
--            install -D "${B}/${TYPE}/${FW_TARGETS}/bin/${SCP_PLATFORM}-b=
-l1-bypass.bin" "${D}/firmware/${FW}_${TYPE}.bin"
--            install -D "${B}/${TYPE}/${FW_TARGETS}/bin/${SCP_PLATFORM}-b=
-l1-bypass.elf" "${D}/firmware/${FW}_${TYPE}.elf"
-+            install -D "${B}/${TYPE}/${FW_TARGETS}/bin/${SCP_PLATFORM}-b=
-l1-bypass.bin" "${D}${FIRMWARE_DIR}/${FW}_${TYPE}.bin"
-+            install -D "${B}/${TYPE}/${FW_TARGETS}/bin/${SCP_PLATFORM}-b=
-l1-bypass.elf" "${D}${FIRMWARE_DIR}/${FW}_${TYPE}.elf"
-         fi
-     done
+-do_install() {
+-  install -D -p -m 0644 ${B}/bin/tfm_s_signed.bin ${D}/firmware/tfm_s_si=
+gned.bin
+-  install -D -p -m 0644 ${B}/bin/bl2_signed.bin ${D}/firmware/bl2_signed=
+.bin
+-  install -D -p -m 0644 ${B}/bin/bl1_1.bin ${D}/firmware/bl1_1.bin
+-  install -D -p -m 0644 ${B}/bin/bl1_provisioning_bundle.bin ${D}/firmwa=
+re/bl1_provisioning_bundle.bin
+-}
+-
+ create_bl1_image(){
+-    dd conv=3Dnotrunc bs=3D1 if=3D${D}/firmware/bl1_1.bin of=3D${D}/firm=
+ware/bl1.bin seek=3D0
++    dd conv=3Dnotrunc bs=3D1 if=3D${D}${FIRMWARE_DIR}/bl1_1.bin of=3D${D=
+}${FIRMWARE_DIR}/bl1.bin seek=3D0
+     # Size of bl1_1.bin is 58KB (59392 bytes) =20
+-    dd conv=3Dnotrunc bs=3D1 if=3D${D}/firmware/bl1_provisioning_bundle.=
+bin of=3D${D}/firmware/bl1.bin seek=3D59392
++    dd conv=3Dnotrunc bs=3D1 if=3D${D}${FIRMWARE_DIR}/bl1_provisioning_b=
+undle.bin of=3D${D}${FIRMWARE_DIR}/bl1.bin seek=3D59392
  }
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-juno.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmwar=
-e-a-juno.inc
-index 3ddd8cb5..a3a35ab4 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-juno=
-.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-juno=
-.inc
-@@ -10,4 +10,4 @@ TFA_BUILD_TARGET =3D "bl1 bl2 bl31 dtbs fip"
- # Juno needs the System Control Processor Firmware
- DEPENDS +=3D "virtual/control-processor-firmware"
+ do_install[postfuncs] +=3D "create_bl1_image"
+diff --git a/meta-arm-bsp/wic/corstone1000-flash-firmware.wks.in b/meta-a=
+rm-bsp/wic/corstone1000-flash-firmware.wks.in
+index 8cc0558c..78109aff 100644
+--- a/meta-arm-bsp/wic/corstone1000-flash-firmware.wks.in
++++ b/meta-arm-bsp/wic/corstone1000-flash-firmware.wks.in
+@@ -16,10 +16,10 @@ part --source empty --size 4k --align 4 --offset 28k =
+--part-name=3D"private_metada
+ part --source empty --size 4k --align 4 --offset 32k --part-name=3D"priv=
+ate_metadata_replica_2" --uuid DCE9C503-8DFD-4DCB-8889-647E49641552 --par=
+t-type ECB55DC3-8AB7-4A84-AB56-EB0A9974DB42
 =20
--EXTRA_OEMAKE:append =3D " SCP_BL2=3D${RECIPE_SYSROOT}/firmware/scp_ramfw=
-.bin"
-+EXTRA_OEMAKE:append =3D " SCP_BL2=3D${RECIPE_SYSROOT}${FIRMWARE_BASE_DIR=
-}/scp-firmware/scp_ramfw.bin"
-diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.16.0.bb b/m=
-eta-arm/recipes-bsp/scp-firmware/scp-firmware_2.16.0.bb
-index d41a9892..6a32a734 100644
---- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.16.0.bb
-+++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.16.0.bb
-@@ -16,8 +16,9 @@ SRCREV  =3D "190e938c2da3631b4834a90448516423099c79f7"
+ # The size has to be aligned to TF-M's SE_BL2_PARTITION_SIZE (tfm/platfo=
+rm/ext/target/arm/corstone1000/partition/flash_layout.h)
+-part --source rawcopy --size 144k --sourceparams=3D"file=3Dbl2_signed.bi=
+n" --offset 36k --align 4 --part-name=3D"bl2_primary" --uuid 9A3A8FBF-55E=
+F-439C-80C9-A3F728033929 --part-type 64BD8ADB-02C0-4819-8688-03AB4CAB0ED9
++part --source rawcopy --size 144k --sourceparams=3D"file=3Dtrusted-firmw=
+are-m/bl2_signed.bin" --offset 36k --align 4 --part-name=3D"bl2_primary" =
+--uuid 9A3A8FBF-55EF-439C-80C9-A3F728033929 --part-type 64BD8ADB-02C0-481=
+9-8688-03AB4CAB0ED9
 =20
- PROVIDES +=3D "virtual/control-processor-firmware"
+ # The size has to be aligned to TF-M's TFM_PARTITION_SIZE (tfm/platform/=
+ext/target/arm/corstone1000/partition/flash_layout.h)
+-part --source rawcopy --size 320k --sourceparams=3D"file=3Dtfm_s_signed.=
+bin" --align 4 --part-name=3D"tfm_primary" --uuid 07F9616C-1233-439C-ACBA=
+-72D75421BF70 --part-type D763C27F-07F6-4FF0-B2F3-060CB465CD4E
++part --source rawcopy --size 320k --sourceparams=3D"file=3Dtrusted-firmw=
+are-m/tfm_s_signed.bin" --align 4 --part-name=3D"tfm_primary" --uuid 07F9=
+616C-1233-439C-ACBA-72D75421BF70 --part-type D763C27F-07F6-4FF0-B2F3-060C=
+B465CD4E
 =20
--CMAKE_BUILD_TYPE    ?=3D "RelWithDebInfo"
--SCP_PLATFORM        ?=3D "${MACHINE}"
-+SCP_DEBUG           ?=3D "${FIRMWARE_DEBUG_BUILD}"
-+CMAKE_BUILD_TYPE    ?=3D "${@oe.utils.vartrue('SCP_DEBUG', 'Debug', 'Rel=
-WithDebInfo', d)}"
-+SCP_PLATFORM        ?=3D "${FIRMWARE_PLATFORM}"
- SCP_PRODUCT_GROUP   ?=3D "."
- SCP_LOG_LEVEL       ?=3D "WARN"
- SCP_PLATFORM_FEATURE_SET ?=3D "0"
-@@ -31,7 +32,7 @@ DEPENDS =3D "gcc-arm-none-eabi-native \
- # For now we only build with GCC, so stop meta-clang trying to get invol=
-ved
- TOOLCHAIN =3D "gcc"
+ # Rawcopy of the FIP binary
+ part --source rawcopy --size 2 --sourceparams=3D"file=3Dsigned_fip.bin" =
+--align 4 --part-name=3D"FIP_A" --uuid B9C7AC9D-40FF-4675-956B-EEF4DE9DF1=
+C5 --part-type B5EB19BD-CF56-45E8-ABA7-7ADB228FFEA7
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.i=
+nc b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc
+index dc11e984..d47541da 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc
+@@ -15,7 +15,7 @@ UPSTREAM_CHECK_GITTAGREGEX =3D "^TF-Mv(?P<pver>\d+(\.\d=
++)+)$"
+ # cmake here. You can easily short-circuit the toolchain but the install
+ # is so convoluted there's no gain.
 =20
--inherit deploy
-+inherit firmware
+-inherit python3native deploy
++inherit python3native firmware
 =20
+ # Baremetal and we bring a compiler below
+ INHIBIT_DEFAULT_DEPS =3D "1"
+@@ -44,10 +44,10 @@ DEPENDS +=3D "cmake-native \
  B =3D "${WORKDIR}/build"
 =20
-@@ -39,7 +40,6 @@ B =3D "${WORKDIR}/build"
- FW_TARGETS ?=3D "scp mcp"
- FW_INSTALL ?=3D "ramfw romfw"
+ # Build for debug (set TFM_DEBUG to 1 to activate)
+-TFM_DEBUG ?=3D "0"
++TFM_DEBUG ?=3D "${FIRMWARE_DEBUG_BUILD}"
 =20
--PACKAGE_ARCH =3D "${MACHINE_ARCH}"
- COMPATIBLE_MACHINE ?=3D "invalid"
-=20
- export CFLAGS =3D "${DEBUG_PREFIX_MAP}"
-@@ -75,41 +75,31 @@ do_compile() {
- }
+-# Platform must be set, ideally in the machine configuration.
+-TFM_PLATFORM ?=3D ""
++# Platform can be overridden in the machine configuration.
++TFM_PLATFORM ?=3D "${FIRMWARE_PLATFORM}"
+ python() {
+     if not d.getVar("TFM_PLATFORM"):
+         raise bb.parse.SkipRecipe("TFM_PLATFORM needs to be set")
+@@ -106,17 +106,10 @@ do_compile[progress] =3D "outof:^\[(\d+)/(\d+)\]\s+=
+"
 =20
  do_install() {
--    install -d ${D}/firmware
-+    install -d ${D}${FIRMWARE_DIR}
-     for TYPE in ${FW_INSTALL}; do
-         for FW in ${FW_TARGETS}; do
-            if [ "$TYPE" =3D "romfw" ]; then
-                if [ "$FW" =3D "scp" ]; then
--                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-bl=
-1.bin" "${D}/firmware/${FW}_${TYPE}.bin"
--                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-bl=
-1.elf" "${D}/firmware/${FW}_${TYPE}.elf"
-+                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-bl=
-1.bin" "${D}${FIRMWARE_DIR}/${FW}_${TYPE}.bin"
-+                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-bl=
-1.elf" "${D}${FIRMWARE_DIR}/${FW}_${TYPE}.elf"
-                else
--                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-${=
-FW}-bl1.bin" "${D}/firmware/${FW}_${TYPE}.bin"
--                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-${=
-FW}-bl1.elf" "${D}/firmware/${FW}_${TYPE}.elf"
-+                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-${=
-FW}-bl1.bin" "${D}${FIRMWARE_DIR}/${FW}_${TYPE}.bin"
-+                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-${=
-FW}-bl1.elf" "${D}${FIRMWARE_DIR}/${FW}_${TYPE}.elf"
-                fi
-            elif [ "$TYPE" =3D "ramfw" ]; then
-                if [ "$FW" =3D "scp" ]; then
--                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-bl=
-2.bin" "${D}/firmware/${FW}_${TYPE}.bin"
--                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-bl=
-2.elf" "${D}/firmware/${FW}_${TYPE}.elf"
-+                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-bl=
-2.bin" "${D}${FIRMWARE_DIR}/${FW}_${TYPE}.bin"
-+                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-bl=
-2.elf" "${D}${FIRMWARE_DIR}/${FW}_${TYPE}.elf"
-                else
--                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-${=
-FW}-bl2.bin" "${D}/firmware/${FW}_${TYPE}.bin"
--                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-${=
-FW}-bl2.elf" "${D}/firmware/${FW}_${TYPE}.elf"
-+                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-${=
-FW}-bl2.bin" "${D}${FIRMWARE_DIR}/${FW}_${TYPE}.bin"
-+                   install -D "${B}/${TYPE}/${FW}/bin/${SCP_PLATFORM}-${=
-FW}-bl2.elf" "${D}${FIRMWARE_DIR}/${FW}_${TYPE}.elf"
-                fi
-            fi
-        done
-     done
- }
-=20
+     # TODO install headers and static libraries when we know how they're=
+ used
+-    install -d -m 755 ${D}/firmware
+-    install -m 0644 ${B}/bin/* ${D}/firmware/
+-}
+-
 -FILES:${PN} =3D "/firmware"
 -SYSROOT_DIRS +=3D "/firmware"
+-FILES:${PN}-dbg =3D "/firmware/*.elf"
 -
--FILES:${PN}-dbg +=3D "/firmware/*.elf"
- # These binaries are specifically for 32-bit arm
- INSANE_SKIP:${PN}-dbg +=3D "arch"
- INHIBIT_PACKAGE_DEBUG_SPLIT =3D "1"
- INHIBIT_PACKAGE_STRIP =3D "1"
--
--do_deploy() {
--    # Copy the images to deploy directory
--    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
--}
 -addtask deploy after do_install
+-do_deploy() {
+-    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
++    install -d -m 755 ${D}${FIRMWARE_DIR}
++    find ${B}/bin \( -name '*.bin' -o -name '*.elf' \) -type f | while r=
+ead -r file; do
++        install -m 0644 "$file" "${D}${FIRMWARE_DIR}"
++    done
+ }
+=20
+ # Build paths are currently embedded because it's impossible to pass -fd=
+ebug-prefix-map
 --=20
 2.43.0
 
