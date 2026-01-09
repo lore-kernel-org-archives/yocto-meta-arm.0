@@ -1,264 +1,265 @@
-Return-Path: <peter.hoyes@arm.com>
+Return-Path: <quentin.schulz@cherry.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A374D26D7D
-	for <webhook@archiver.kernel.org>; Fri,  9 Jan 2026 17:54:01 +0000 (UTC)
-Received: from DUZPR83CU001.outbound.protection.outlook.com (DUZPR83CU001.outbound.protection.outlook.com [52.101.66.54])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.16067.1767981236638520614
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC7DD26D85
+	for <webhook@archiver.kernel.org>; Fri,  9 Jan 2026 18:30:51 +0000 (UTC)
+Received: from AS8PR04CU009.outbound.protection.outlook.com (AS8PR04CU009.outbound.protection.outlook.com [52.101.70.46])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.16858.1767983443794957538
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 09 Jan 2026 09:53:57 -0800
+ Fri, 09 Jan 2026 10:30:44 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@arm.com header.s=selector1 header.b=W6JRPgdh;
- dkim=pass header.i=@arm.com header.s=selector1 header.b=W6JRPgdh;
- spf=pass (domain: arm.com, ip: 52.101.66.54, mailfrom: peter.hoyes@arm.com)
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=nKG6ks+EI9x8NNW7nJ3G30zbhwe1cClgeZMfb+UNOhIearQH1zMYu1FfsOc21i1a3T3iLesSGBGfQhrAadgAFkMg/AjBjpBcQUKLe8tstQ3LrIn07j0T7SQuwvtjg1BpKSfz4zuvZtWo0RFdUd0LchtsSCCR609AqSYheZeZ5q9xcczZC9jrQLBzkzcSEadkW/YtCUcvMVytV2dKyR7KpAkaNEKMFETJsrNS07fzMyNWlDwDNQO/aHESNIPt7l7imTTZr7ItVX9o4vgk6O5/YBjgFd67ZXKbZf/TCBRen8QtGiRBfMyq/41dpaZoDDKGTOEK+CYD6V3bxi9FkoDrzg==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+GPvzvHR1WvfX5s2KKvQCZd/snIigarX2oJYbHKcWbA=;
- b=UMun4fholRDbcveQcg37fEG9mU97Dk/IEqgcyQ2GOIstlCb695FNpMqSnSb2AVkiWIDj2ye5rQmXpqHl4izq7eBgqqkyPAn8EBwmDgYHhpdk6ihiQD2q27iEMAE2wqXsIZlZjtWoxdfPuFp0I+umEiufwd0B/e4YRcGBI8fDk9GGk2uInFCuSHUz2BF8hznBnA1TDsct04urxcnigizNUDEDBe/tp7CQgAG8BY77BTrd0IHqj3s31jP0G5Rcszls1/9Y9T391k8SB8K5+s8bIHt6LQU6xcCnr17TITWN0cWWCvY2iG4mJNmo7zHXjGt/lyTo2u+UtWivdMYmhvENSQ==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=cherry.de smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+GPvzvHR1WvfX5s2KKvQCZd/snIigarX2oJYbHKcWbA=;
- b=W6JRPgdhouX137GKFBSiQtO5fXlKrN+kZStnFgQ/ZDEBscL6RSLGOhN1Zw/yLuH/K+PQsM83DCyUlio4LJ+NYrQidcVPAjUBcO4EfvkEjSvxuX9FkPYSUrD+LNwNtqM775hiOhj6c4VHrHtZN7J3j0vgdJd7HxWVkWV8a7JsU34=
-Received: from DUZPR01CA0203.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b6::16) by PA6PR08MB10664.eurprd08.prod.outlook.com
- (2603:10a6:102:3cc::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Fri, 9 Jan
- 2026 17:53:52 +0000
-Received: from DU6PEPF0000B622.eurprd02.prod.outlook.com
- (2603:10a6:10:4b6:cafe::50) by DUZPR01CA0203.outlook.office365.com
- (2603:10a6:10:4b6::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9499.5 via Frontend Transport; Fri, 9
- Jan 2026 17:54:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DU6PEPF0000B622.mail.protection.outlook.com (10.167.8.139) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.1
- via Frontend Transport; Fri, 9 Jan 2026 17:53:52 +0000
+ dkim=pass header.i=@cherry.de header.s=selector1 header.b=ZcklTWgv;
+ spf=pass (domain: cherry.de, ip: 52.101.70.46, mailfrom: quentin.schulz@cherry.de)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vSgJ1fRJ6Z4VZ2J/v/x+muqACJDWZTfOcl62c2fJ94QnqypgC8VxY0Bo4q14iPxz0Gm0YeoH+6u1HCqsXHSGNtXwIUXZzx0ICSPIP7J8BuWIDQ2fR8V6KCK0DpGPOlF2JC4J+zlo0VTOJjldN+wkykoQA1/k9611rP4e4x6CKVWxVnaQQgaYAtIS8vVUpOOAdjLSIbgLHE/vfppyMPFWFDVJooUTNJP8c00MOgDs97lVRUIRnXID99fw6gW7WzCl5nrdXSLntgl/Aay2SV3LBivFzqC87WG8DTcRg+fwb1Pm7bcq/5d0saEQVgMFwr79HHrsoAXPc3VnkPfKgJ/qWg==
+ b=F+DfVDRunHqzWEfzLBiZ4i3ad5/pxqsF5RBzFEYwc+r4EKZU+QrcfMFoGrXyYPqIyhVl6HnzIMdKDEUEiFMCHJ7NjYKux2ot1CSIH34sgDRUhFk0PJQpdJcZSIJOvET9aSYB6FJwTKokzl5A442XBrm+IOiBwy5q8I2fGSzX/YGI2NwO7O/yz0dBq6Kw/NJRoA5HHz/2AGKNTyTf/4qtL8QsnzV0B2K3G2gbexZBIXUWA5Vauf2d6b+FjBMGEWJ5bhH/QMsf0YFaTRPIFi4qTJTwldKCQAXVE7709q8AWaW+pN51dvKJpb5HwuhQnNaPiTGWA0mVbhvM4DKi0JLs0w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+GPvzvHR1WvfX5s2KKvQCZd/snIigarX2oJYbHKcWbA=;
- b=DefO3Ph3mgDnNSUrx9T3qtBGQiIqNRgfE4CWYccRJIgMeYxz7fqqwGtdn1Wz0HJGvh/IPZKKNnkpM5VibLi89YGQ12y9cY9n+jkeMzzBeJmtN12BayqnAQiCCOIS8c3CNvNAZ2qzkPgIFfN/hyybXPbTNxLGQviAHvHMV2xQgPgqWs1IY5Gk5TUlxSNwY6XGEF2pBsx6J+rTqd6lXUuzXtK1X5593+78eZhDy8d0+shVAKlVztKIEmf6jlB88dOo2mf0AuB1oA7jFc3KoBkQElpV2LCPdEnhgdsr4Be4rlgVOaIx2aQicOUzImcOjE9sZOirJn01buYBvfw2/IB8Jw==
+ bh=8qKTldN3n8G/4zDHOmNI1aQgj2Hm69ceXfbPE0BqMnw=;
+ b=O2t5zrhso2z/f+XbM7wjobnP9iz0Cu30+eOs7sgSIsRDoYt//3blSYQhoK7OCDDnVlmO6Li1RC1J4e5YQVMxsOGn1NALaPPisbqqADUoyIr9pMTnokg9TZpgE3703X4bZiZBJqKyTy5nAysol5iCXgNZEwxhGmAPBjxymqW2jNetUgxvuB3UrP9sxg3LMFD6GIkoZ+TTtHQ2pFjX/y+ALqJmvVXv0nC359ZZ00RpgO+4eGVXzvGKjSWIH89wjCRyxNCRk/l36oPKEsSEoD4SKhoxPKEYaeUhWmihnR7R9FLssFyHLP1SL84MhKIE5Gk7k7JjeTNASe2m2BWxSRQYTA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+GPvzvHR1WvfX5s2KKvQCZd/snIigarX2oJYbHKcWbA=;
- b=W6JRPgdhouX137GKFBSiQtO5fXlKrN+kZStnFgQ/ZDEBscL6RSLGOhN1Zw/yLuH/K+PQsM83DCyUlio4LJ+NYrQidcVPAjUBcO4EfvkEjSvxuX9FkPYSUrD+LNwNtqM775hiOhj6c4VHrHtZN7J3j0vgdJd7HxWVkWV8a7JsU34=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from DB8PR08MB5307.eurprd08.prod.outlook.com (2603:10a6:10:114::8)
- by PA4PR08MB6142.eurprd08.prod.outlook.com (2603:10a6:102:ee::15) with
+ bh=8qKTldN3n8G/4zDHOmNI1aQgj2Hm69ceXfbPE0BqMnw=;
+ b=ZcklTWgvvhDbEjgkp/41IvUiICcgkHg89TzdFilAzQbXq5E/l1WhIUTGzQE3JdM1CcxAHm8um6eHcUBETrPEdTkmjmVxC2tMEftjs07NIfeunsVCAs1nwLz6lWJb5ws1saWy8c40SXWNvx06RlSTgp4RsuiTM86YXZC/jbetSCw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from GVXPR04MB12038.eurprd04.prod.outlook.com (2603:10a6:150:2be::5)
+ by AS1PR04MB9581.eurprd04.prod.outlook.com (2603:10a6:20b:470::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.5; Fri, 9 Jan
- 2026 17:52:48 +0000
-Received: from DB8PR08MB5307.eurprd08.prod.outlook.com
- ([fe80::75a:31ca:819e:c772]) by DB8PR08MB5307.eurprd08.prod.outlook.com
- ([fe80::75a:31ca:819e:c772%6]) with mapi id 15.20.9499.001; Fri, 9 Jan 2026
- 17:52:48 +0000
-Message-ID: <c2617697-0407-494e-bb1f-9f586608c808@arm.com>
-Date: Fri, 9 Jan 2026 17:52:47 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9499.4; Fri, 9 Jan
+ 2026 18:30:39 +0000
+Received: from GVXPR04MB12038.eurprd04.prod.outlook.com
+ ([fe80::1033:5a9a:dc18:dad]) by GVXPR04MB12038.eurprd04.prod.outlook.com
+ ([fe80::1033:5a9a:dc18:dad%4]) with mapi id 15.20.9499.004; Fri, 9 Jan 2026
+ 18:30:39 +0000
+Message-ID: <28377373-a3e8-4416-aa7f-488cdfdbcf55@cherry.de>
+Date: Fri, 9 Jan 2026 19:30:35 +0100
 User-Agent: Mozilla Thunderbird
 Subject: Re: Regression in TF-A installed/deployed artifacts
-To: Quentin Schulz <quentin.schulz@cherry.de>, meta-arm@lists.yoctoproject.org
+To: Peter Hoyes <peter.hoyes@arm.com>, meta-arm@lists.yoctoproject.org
 Cc: Trevor Woerner <twoerner@gmail.com>
 References: <4d7e8527-be0e-48e1-bc96-fbd64ae1ac5f@cherry.de>
+ <c2617697-0407-494e-bb1f-9f586608c808@arm.com>
 Content-Language: en-US
-From: Peter Hoyes <peter.hoyes@arm.com>
-In-Reply-To: <4d7e8527-be0e-48e1-bc96-fbd64ae1ac5f@cherry.de>
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <c2617697-0407-494e-bb1f-9f586608c808@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P123CA0082.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:138::15) To DB8PR08MB5307.eurprd08.prod.outlook.com
- (2603:10a6:10:114::8)
+X-ClientProxiedBy: VI1PR0202CA0006.eurprd02.prod.outlook.com
+ (2603:10a6:803:14::19) To GVXPR04MB12038.eurprd04.prod.outlook.com
+ (2603:10a6:150:2be::5)
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic: 
-	DB8PR08MB5307:EE_|PA4PR08MB6142:EE_|DU6PEPF0000B622:EE_|PA6PR08MB10664:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e0a9139-8a2d-4ef1-f512-08de4fa80cdb
-x-checkrecipientrouted: true
-NoDisclaimer: true
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GVXPR04MB12038:EE_|AS1PR04MB9581:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0cec719d-e3d0-4b6a-361e-08de4fad3090
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info-Original: 
- =?utf-8?B?MERlOE91dXkzOW1ReHZLaVVXVFhKVUNQVFR2cHBuYmhjdnRsSEdvbElFOWdS?=
- =?utf-8?B?ejlWOTJCcWZqSkVPT3ljM1gwWmUvVEFxamRROWlRMTVtazZzcGg4cTJ4VGxa?=
- =?utf-8?B?NGVVaFFPTWpDVHlDQTdaWWJTKzBkdTJsUldWNTRHc1BtZ3FoWW40aFpOYkxS?=
- =?utf-8?B?QlJBSUxyK1k3UkhZRTUrK3ZMMGFnWUt1ektXSDM4NWFNVi9uVGRZeEJHSkdj?=
- =?utf-8?B?bHY5M2tVSEs1blZNZVhzY3J3WWV0L0NobW80UFcvdnVYOXV4NG50d21SQ3d5?=
- =?utf-8?B?NlpIelNKU1hGUmowWUwzVkNHbGF1S25sblc1N1VidXVGbW5KVCtUcWloUGtu?=
- =?utf-8?B?RUdoeWlqUllSb1ZpQjN0R0E4L1FtR3FzLzluM2R5OWQyN1M2R29TdS9MN3Vj?=
- =?utf-8?B?aUVXM2pZaXB1OFJNa0pQN0hqTm9SWE9HcmhUVmlUZUhSOHcrMXpjYTlBK3JW?=
- =?utf-8?B?MkRnMDJQWStRV1BJU3dlbk9JQ0lkQ25JT2NoQ2pxd3ZJSGk0KzRIWHU4cmht?=
- =?utf-8?B?S0Nmek5GWWRsdk5ZWTBnUXlpYXBiQ2NRa2M1UTFaUWFiaStKVXZ0bEZ5a1NN?=
- =?utf-8?B?RzlWeHd6WHF4UkdybjVzTnVVam9tZ0ZKTlBNZ3RPRFZiOFhBNHFLK1ZMWjFv?=
- =?utf-8?B?Vm5nblhOaGtub0xJRGgzS1ZLcGhpcVhvK2hJajBPclJIbzZZM2Jndk02WWNs?=
- =?utf-8?B?eUJkL1M0OHZlM3o0d3h3bHZxOGQ5eG1nK3pjN2NHTUFMYXJSYitWVjd1d3ZN?=
- =?utf-8?B?L2loZkhQMVRHeGt6ZFBwUHpsU0xrdmlsaHpqcUNQOHo1VFkxb3FEYkpieURv?=
- =?utf-8?B?UGpEK1lxNk5WdXpUclJCaE9sTVdXN3BmY0Qwb0NxOENMSGFUb25XQlRzL1FL?=
- =?utf-8?B?OWZkcGhRRy9Ga0crWXJoSFVZRC8vTlBTMVpnZUp3dkUvZ1cydGw2WGtJM0Ur?=
- =?utf-8?B?bGZSTVA4czNrTDc1L2pweE1pcUhPN0tPdHhXK0RBdWZsMEVqdlNXRHZDREJs?=
- =?utf-8?B?NDAweHc4VTFmaEtUQloyUkREdUxIV3NSSDAxTkxTWTF4N0xZRG1wazExblQz?=
- =?utf-8?B?ckdKK1hJT0hQLytWcDk0dTFkTzBnM2VvOHowRXlib0pReHQ5d3NYUWFBUFB0?=
- =?utf-8?B?U1hQY1ZBRkVzU0dQNzZaa0pzU3AzTnJUNC8yZ3czeEhVU0MvRUk1U3FFZlBl?=
- =?utf-8?B?YnJreVI1WDYwVjRyUWhsZTR0amRheGNIbUEzRUw5eUtrSUFVcldaUXI5NDdo?=
- =?utf-8?B?VUdHUTUzRjV0a3NTNUJDVzZpVk92bmx4cC8zK0REbHdoajdYdVJNMHoxanp0?=
- =?utf-8?B?SlF3OHBvYnBKWURnTDlLWEs0czU1bSsxVnhaSWNIamdLUm52Ui9oUjBLaDBM?=
- =?utf-8?B?d3lJUndrUFdwUVEwRndzTnhMdm1IWGsrdHYyNnJMU2RzYTlSMGhISkhSNVBj?=
- =?utf-8?B?RHZVc1krenZrenVoaG8ySmZ5UjNWWGladlRRV2lnZldFanFlVnNHUzFsNkh6?=
- =?utf-8?B?bGI4SUNROGJHRDNBc3pmUE5kOXBpZmM1bW5xdGd0LzlPL08wQ0ZPMGV5OVZ1?=
- =?utf-8?B?aWExY2xoRkJsNjV3MjhERzdBOXNaYjhGQ0NqTTVvakxyY2l2WXRzYU1hNW1S?=
- =?utf-8?B?Qk9lMnFEeXhhdGRzaU01QnRMdTNwMW9CaEFPcFNRWFd6SHRJdXpQSGJLbmdz?=
- =?utf-8?B?TllqbzZmbGMvcncxVW5Dc2NQZ3pKVU9zYS9vNEVJM2FKb3FoSU92T2t1WG9T?=
- =?utf-8?B?MWFrSU4wYmNKR0M4ODZGQ2FZRUVXQTJhY2Y0T1dFNGQ2dmp1MFlEbDExMVl5?=
- =?utf-8?B?ZzlLRHlaT0hOT1ZrWE5RTEtiM0MxMGJxSS9wQUd0RXY5MUtlS1dONm9iLzBP?=
- =?utf-8?B?YkxNTW05YWViUi9aS0NtWW9yQTlQdzd3MU1QVEZHbWEyem5BQnAzdjJmUUpO?=
- =?utf-8?B?OXdSV2Njc3NQS2hyNUg3NEpxaXpjRndDMVB1YlNnRzU5NGsyL3JPeGRWWC9S?=
- =?utf-8?B?Zm1jU2k0NTdnPT0=?=
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB5307.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR08MB6142
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DU6PEPF0000B622.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	ad1ff892-cd4c-4415-5947-08de4fa7e6d7
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|82310400026|14060799003|35042699022|1800799024|36860700013|376014|13003099007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?SHBEN211NnNSYkRmUHdOK1JzSkNEWmpwelFZazRPVDlQR3J1TXlBMCs2UlMr?=
- =?utf-8?B?SnFMWWU5a3hPZm5CTEdCUlV0UjliMVArK1RpZXozcjBNVDNwV1RhN1JKM01s?=
- =?utf-8?B?dDY0MDV0VDVvQ3J5OHNXV1dUNHBGeEpTRzR4VWRSVXRxbU55My9wYWtHVDgw?=
- =?utf-8?B?cHJJdkhHQmVVRUdvcjN5VnlzNVR1Zk9oeG9DN2UyL2pWVWZtVGZ0YkNLWUlF?=
- =?utf-8?B?V08yS292aG9XaDZuSElZaHlHZW10V2crS3FSNitwanRoZ0lVUzNSVkpKTVFW?=
- =?utf-8?B?WWF0cWxPZTlBRWcycHFDb0xQbCtIZUpaWEpJVHR6eS8xQmlpRkpjdkkxYWw2?=
- =?utf-8?B?TkdSMVZmL0ROK3BXOTZLV2o2S3k1WUhyN1V3ZWVXYklBbHZpdkNQbG12d2FF?=
- =?utf-8?B?bWVZMkI3ejJ3dzh5V2s4N2orSWNYcWg4ZklRNFVJSzZib3QveFlTQUN5S2p3?=
- =?utf-8?B?TUYvT2JVSkpCSnU1blh2c3FCSXFOUFVSL29MOVBEYVNKdWx1Q0tqdW8wenNw?=
- =?utf-8?B?YXdUaUE1S2MvQ2xBUFFxbDRwYjJyUTBnNDU4NVEvdXdsaXhidktqVFUyd1VZ?=
- =?utf-8?B?amw4SVlGb2xJc3ZyU3IzZG1pZXZmK0c1cmtRMUd6K2ROWmpVL2xRRG1TMDln?=
- =?utf-8?B?MFRhTEczcCttYXp6Z1ZpUXZLYmVRUG9yV3VqbExUd2NvYng5U3Vhc3c0U2hV?=
- =?utf-8?B?bEo2ckpZNHNLbm1rWGs2VnhrQVVMdjErR25KdVRpcGRTKzhLMjdyYkxtMjQ0?=
- =?utf-8?B?bFhyT1kyeDd3ZUhGS09oQXVuSWxyalk5ZlVROVBhem9ObVRCK0haQ2t0aEdP?=
- =?utf-8?B?dUxla0ZCTU9remsxY2trNlNqUFUxZkRocDhRYzByS005dEtPR3o4NTdJK1pN?=
- =?utf-8?B?MDhveEgrdGY3Qll6NDZERXdvc21lV1VhTFdjVGdrS0x5bElGL2c1eU1EL0Vi?=
- =?utf-8?B?ejJrQk93MjM0eU1ySDhyRHJqeVRsUzVzZ2ZaN0cycDh1RWpCditZbDFjMGZ5?=
- =?utf-8?B?R1VGTnNUcTdFNHU1UHFkT256aVY0eDBIemdOWVpCblY0Uk9VZlZ6WXdoa25y?=
- =?utf-8?B?Zmpzam94R1BpM01kOWp3WWEyT2RhRjhxY1pyd2xvTSt2S29FemM4NzVQMlVV?=
- =?utf-8?B?S2k5SWhxVzRmeWx5dXBSZEFhK3o5cjNhT3U2dnVaS2xMTEVBZzg1c2U1b3JN?=
- =?utf-8?B?Y2lwdUtNeEZCWHVnKzNTdlBWaTArT1pLZmZlYkwrVmtCK2JXM0hEeW1QL29H?=
- =?utf-8?B?OUdYRmd2Y3ZBbWVBQ1FWbnJYbFBIdmZQR0lzbUorRTNxN2NiTHNmTEp3Smtv?=
- =?utf-8?B?d2NNamJQRCtFeWplVFRSTEdLOWM2RS9QVHh4S1pQTXd0VVZ4Z3FVbkZnazQz?=
- =?utf-8?B?UjdYVUh1QjlTSlFBdjFrS3g4aGo2U05zMTZBaVp1ekRnK1lkRTB6YzRhdWhX?=
- =?utf-8?B?QTdOVk9MbFEreFJvbEJqTTQ0TlUxZGY5S280NjN6TlRUV3NuU3FrUzdvdHZy?=
- =?utf-8?B?MGIwa0RubURLR0xUNzMvQ3hCb3krTm9YK0hoVVI1ZXl1YlNjVFhUcEp5cXkz?=
- =?utf-8?B?M1ZIMm40SkpJbEJyL3M5aEZoRjRPbXp2cWlLNjVNSEFIbmlPRFBRcjZPVGJO?=
- =?utf-8?B?TjBkei9wb0xranlJN09BR0R1c2MycVBTa1RxTXprdUZSbWVaR3J2Wm9Ba3Rq?=
- =?utf-8?B?Z2hTbXNia0RXa1YzcStPU0FDdlZ6ZXl2RWlVVzVjN3pmRjJjT0YrY2lKUnFU?=
- =?utf-8?B?bld2bkRkZC9JNXVMaWtXbHY0SWd4VklsVHAxVGl0STB2SzllbVdWVnBPYUFI?=
- =?utf-8?B?NnJXazFLUkpVNHRIL2paVWQxajlNZXFYWFBFZER3bE9ablNuTTNaKytaVGVS?=
- =?utf-8?B?cTVIOWI1ZHhsb2pmaGlBSEFUbUVmN3hQdVQycGkrb2hkNVdDZzF6RWx3MUhV?=
- =?utf-8?B?UzE5aHRJNmNMbW5QKzQ3aURTTjk4WlVvY2tvcENDb0pMY1lYbzdFZm9VM0pp?=
- =?utf-8?B?VVJVUVRkbWxFdlZZZklweSs0UUExV3VtLy9nRHhhWG5sSVFLTkxFNHVUaWk4?=
- =?utf-8?B?ZE4yR0luUWdKZkk1WXp3cFMzL1VRakJLMHpPSGNhZGhPTTNjU3BuanBFOE9L?=
- =?utf-8?Q?2mWY=3D?=
+	=?utf-8?B?RVVSeGpFMFJUcy9sMGJhTXhJRkxwM2FTT2RlYjZxQTVyTGJVVXkyaWhTSG9Z?=
+ =?utf-8?B?YWFJdlJxSVhBSFNWL1lxbWtmc0xaTStXdzlPWWVWMGFCbjA3SklKNWM1NDh6?=
+ =?utf-8?B?NDhVSFVGUE9BZlhGanNMeTFCdkYxTUhyZ1dhNXVoK1ZNWmNVNmE5ZnIwVU1U?=
+ =?utf-8?B?VkIxejgrV2ZBMlpxY1k1dFlXcE5uQVhhWEprRU1vSmhwd09waFA5Qm5PUTla?=
+ =?utf-8?B?bW1KYXNVbGw0VG1XSzlxYlhmRzdDK1owdmhnTVZXeEl2aHdJNkhIMFFBbVRS?=
+ =?utf-8?B?d0t5VkI1YnVCbERZZzM3OHgxZ2NYbGtMSDYzVEpSdEdrVmhsb1p0SnRUWC9X?=
+ =?utf-8?B?ZmNlNENaYmlmZWJsenRPNTRhaXNCV2hBL0tqVWFWVEUwWllpOUovWkxPSFZ0?=
+ =?utf-8?B?SzJKcDVNdE92dk9iY1RuWE9xTDdFZTI2V1k2QVRRUkdGenhYaCtCZXJ2SG5Z?=
+ =?utf-8?B?NDlPL0pTV09Pd3VCK2ZCakUvVFNNbnNLTllsU2EvY05YbkpIUUlVcXhEd0lv?=
+ =?utf-8?B?VXZlblo3RVY5RlZmbXhHNndoOTJDMHhyTjdDcnpXcnYxRjd2cmd6UXhyY2xo?=
+ =?utf-8?B?aHJKb3huZGRnTmxwaklmNW9BSDZ6TzBlY1ZCMmgrblZ2T1h6dC9CTEJvdEYw?=
+ =?utf-8?B?OEtSYnRSTU5LQWJ3RzBaL2l1T2lTUkdzTDdlaGR2UHN0VzlZVlAxdUQ1eStk?=
+ =?utf-8?B?Qk5DVGVGVTgwN3l4dk1wL2V2cHAxeTlpOURLeDhRWmpvSUo1OUlDd0d3SFdj?=
+ =?utf-8?B?Z0hkZEF6b1pBM0t4S3BCWHptcWVZTFFWczJIemVuZ2NRUDhOSWZOSzI4eEx0?=
+ =?utf-8?B?SHEwQXJLZ1R6RFFLK2lIbUo3dEhVOURJM2xkdTN1aXN5UTZuSlVQanIzVW5j?=
+ =?utf-8?B?bVowRGtnSXFHUU9wK0pYQzByam1XdUtmS0oyOVRhVkZDd1oyUUEyVUcvd21J?=
+ =?utf-8?B?b2lvVGNqM3lZZ3c5SnMwdnNJNGZadGhqVXhsL0tEdW10SjFHR1ZpOFdLMFZz?=
+ =?utf-8?B?Tk1IRHorTjlNMVR5OWg1a25YVHZSZWZwN21RQWUxSk9CWEtuVHl5N1lySjBP?=
+ =?utf-8?B?UUdraHRkZXdFaHFHV1gvTnh2cHpHUjQycmtzVGF1QmRnWnlYRnJmUFVhdzJk?=
+ =?utf-8?B?Ky9waDk0czUrMEZzejFycUcvandSdjd4eVB0dmJpUWFEajVObEI5LzI2WndP?=
+ =?utf-8?B?WTBIUDI5dkNOa3Z3aEtGS2EzcFVOMlk3dC9rR3hqS1JPVEM0SExNdnl2MnhQ?=
+ =?utf-8?B?ditDSzJPZ1h6NEhnOG1nZjR5TzRuMk03bWNLbXJWelRtdXUxMVcxeXFMaFlX?=
+ =?utf-8?B?aVY3K3IyeFhrWU4vUnZIeHY3eklzU01vK2FoUWowT3g0YUtaeExzQVNRaXVs?=
+ =?utf-8?B?YWJtWU1iQldoMjNiakY0S0JJRUpVR0gvQnVlUkFtWFpEUHJzK3pQSUx0K0V1?=
+ =?utf-8?B?eVByOVRoTFpoTWtETk43OHpBV0tMS04vaUhFMXVqa2Z5WHNrZC9zZ3RsTkQ1?=
+ =?utf-8?B?L1IwSkhib1IzYjZtYSszdEdxaVVna3FaNG01WGx5NFZhanZSMjAwSjQvaTdV?=
+ =?utf-8?B?azcrZ3dwOGtwdjZKZGJucSsxQ1pLTTlpV01RdG1zZm9HbUdkTTJ3UDZOUUtZ?=
+ =?utf-8?B?ZlJyeW5tSXhVL3BzYjc5bExWcFpFYlp6ZGFsOVd6N2VvNTA5UHc5ZHhrQnVH?=
+ =?utf-8?B?UzBVT3R1Vm1qcWxrU2hRR3pBU1RlWXN3amVkS3poM0JQOEhlY1U4M05CWGVr?=
+ =?utf-8?B?Vy9QTy80eldpa1J6K0hKb2gvSGFOMFJ1TlJLN2p5cVQ3MDdpOWY1bVJwKzJU?=
+ =?utf-8?B?Y0NsSUtGOWtjMCtsSE1hY0wyTG45clhjekV6YVNYaWd3dFYzbkpvSXBKOFdv?=
+ =?utf-8?B?SXc0WVJaTzlZVkpqdmJmNW9ZZmRvNlErdVIwVXl1TUpzZjJIcUN2TTZrdjZ3?=
+ =?utf-8?Q?fK4CFrtiqTrzcYVAMb5S3QOGmypSJIMF?=
 X-Forefront-Antispam-Report: 
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(14060799003)(35042699022)(1800799024)(36860700013)(376014)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2026 17:53:52.1050
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GVXPR04MB12038.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?bkVKVU1vSEM4Y05ZQ2J3d1BzZnNLRnQ2QlpLb2NaWm02R2FXRExubzBLWW5B?=
+ =?utf-8?B?MzlIYlpGTWZCVHgyZTYzbDFlOE5JaldCNTh2aTAydUVtbFBEQm1uWmpnZG5w?=
+ =?utf-8?B?Z3JLNmQ1eUxQTGdTVW8yRGlCQlhwOFkrSHoxVi8waG45MCtmSTFiVVBwbjVi?=
+ =?utf-8?B?MXFzSlFmbkJocjdsblVjellQcVNRNjFmZHZTbXNSOUJNTHFDSnU2OEYySmN5?=
+ =?utf-8?B?dWJMY0NVMDlWNklGMHg2V3BtZE5aUWFmUmhSUzNBMStRU21JdnpFbHAyc3Aw?=
+ =?utf-8?B?bVJFUDl5MkhUdG9xR1kxRktMNWMyS0MyUmYxNXQyd1dVL29SWm4xVkVIek1z?=
+ =?utf-8?B?c2krZlNyZUdSb2c2ckc0UVhrNi95NWNmNU82TnVHYmRkSU82aUNWYk9JVVJh?=
+ =?utf-8?B?WHFrV2Z0TmRFYkY2cVREMDhVaFQyalphZWJIOVRWZGwvMDJwY2gvMkFjM004?=
+ =?utf-8?B?b2F6T0tZUTdhQzEvKzgrYmdQNFhTR0FiM0hTMjFnMnFjMkJpekt5R09IdERs?=
+ =?utf-8?B?aUdFYXlBMkJkc3I4aG1PUjE0eGFvaExjeXdHZkU3NjdhbTR6N3pvU3NHdjBt?=
+ =?utf-8?B?YkpneS95Q2pMdHJ5aW5UWEhNNGMzUXNLeTJReEs2cU11UUFEb29KaEpqWFBY?=
+ =?utf-8?B?NlJ4ck5MTXBaSlFnRFM5SW9iUi90dTNid0pyWG8yMGFUL0cyMWNHcURPT0FB?=
+ =?utf-8?B?Y0MzNENOSE1LRUhTUzl2VUY2MmlzYVowclBXdm4wTnU3RGkySGlKN3o4RmQ2?=
+ =?utf-8?B?Q29sdmpoM0F6ekM5YVZ6cmtTMXNQZTIvNEU5Z0tOczJXOHZRYm5GWnpMdTZC?=
+ =?utf-8?B?MWl6TDhvQUh0TmxPQXdTaWczeDJKam9FaG5ydzh2c2gyNnZnZ1FlbUhDbnNl?=
+ =?utf-8?B?T2xSNE5NV0VHTmpxU0NxVEQ4NjdxeDF0WWNYS3NhT2lrMnhwZTFJbXpzSXRE?=
+ =?utf-8?B?U2pnVDNJWG0zVFF3N2d5OEtaSUJDN3RRTURYNHlMM1gyQmtWcWJDQ0w1bWR1?=
+ =?utf-8?B?SFFQMm5uOVdHbG9VNXp1ZGY2elMyRFlUK3lWbjNEWEc3U3dYeU9wRGplZ3NB?=
+ =?utf-8?B?Y25iQmdXOXFSS3JuNm8vRzB3UU1HemIwYXhKZkZVT01Vdk5QOWxRNXNCdHFM?=
+ =?utf-8?B?akcwY0QzalZTcjZYTklDb3ZObDFnUlo5M0NBQk9TMnoyYTNQcFA0OEdsOFVR?=
+ =?utf-8?B?ZWVFTVhCR3RjT3VockpyZi94SGRTUkgrdWJpdEVrbW1HWjhIRUh4Q0g4R1Zm?=
+ =?utf-8?B?Q29oQ2VNam54cDl1UzQ1bk5qaHFZWkZOcXE0L1Fld3c5czI4Vk9kUXBpaHla?=
+ =?utf-8?B?WmwrWVNkR3UyVGw5SHhvZWx6aGo4c1lwQTZGZThsbStTK2tRRWlTSXVqZHhG?=
+ =?utf-8?B?djU3NUxTNGRocHB1c1FaVTJrQUMzcU5UaXo0VENhR1haQ3BHMzlBU3d5bWpD?=
+ =?utf-8?B?S2ZrYno3R0JURTV6dlB6RkxiY2V1Z2NYYVJHWC8xV0FncVdsMVlmci82U3JW?=
+ =?utf-8?B?NGRuU0w3cDYyRmZZMytWYytjN0tocUdDWWwvenJTQlJPQ2I4NUZyRkJodjEv?=
+ =?utf-8?B?OWY4U1B3RzlRaWpacW9YY3drY2toNnFsRGRROVhINnRyRUEzZ0FuRlRCNWdR?=
+ =?utf-8?B?US9rZnpwOCtoczhjVWxuckRsK0NIOGlnak5FT3NiVjQ4R3lDZmdHSHVRZzk2?=
+ =?utf-8?B?ZTNheHpINXYvK0VPYVpVb25YTCtyVTJVVmhLdWhkS3pCSkVIUk1qbVNTWHlV?=
+ =?utf-8?B?VGFlSnZmeGVhM2J3WjZyS2M4TS90THZMdmIvejJzL2htcForOEpnWlFBR3Fk?=
+ =?utf-8?B?SHRUaUUxSGRMNTlTUnFMVkRFTGZqYWhLSUxaVndVRlR0SVBQbkw5enFzUXV4?=
+ =?utf-8?B?cHdqdURNWHlwUkFDSW1KbHFKdU8xcHVlUyt1UVVoR2JXZHFCMGZkQlgrMUhw?=
+ =?utf-8?B?NG1STXkwN0VuNkpTOEJPaVJRN0duWGxncEFlY2Q3bnkwNklPZkVxcXVuKzdX?=
+ =?utf-8?B?bk5FUEZYT09pa2VoMXVseHFsTFQ2b1BlQWdIU2VwQU9qY3A5MUJUcEwxc1c1?=
+ =?utf-8?B?cHBGejg0OFBWSS96VlR6Rk9YcGFUZnNMY21zRnZrODM5Ui92TnVlam85aHNo?=
+ =?utf-8?B?Uk1CcWo4cnFSSElud1AvdldGaDRhelhJVXppOUk1Vm93WkV0OVd6NjAya0k2?=
+ =?utf-8?B?eHhGMXhXUDgxM2RFUjhLSzlGU1pKaEV3bFc4WHRtYzFFWlhMMFJhd3YxYTQz?=
+ =?utf-8?B?blYrMlNvRjhyUERLRTI5cUdadnY4YVJNRDFsMnRUL3FzVFZDaDdhZnJtMldQ?=
+ =?utf-8?B?Ykt0ajRubG5GMDdZSW1QQ01MTXJHNVZtUTRIWFh0WDNCeDhFaCtDTkxLM3pE?=
+ =?utf-8?Q?XCnBK6MmQlbn4uz0=3D?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0cec719d-e3d0-4b6a-361e-08de4fad3090
+X-MS-Exchange-CrossTenant-AuthSource: GVXPR04MB12038.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jan 2026 18:30:39.6528
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e0a9139-8a2d-4ef1-f512-08de4fa80cdb
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	DU6PEPF0000B622.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA6PR08MB10664
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2eAILGO/pmHPABXDGdZ8BsOC7rwUUS1v6Y5KecnCGYArSkdi5f9N7HvpDNg9jck0UGkuo79jf28FF1h3qrNbUvEi/NthESj85dPDvPn4jig=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9581
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 09 Jan 2026 17:54:01 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6828
+ <meta-arm@lists.yoctoproject.org>; Fri, 09 Jan 2026 18:30:51 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6829
 
-Hi Quentin,
+Hi Peter,
 
-On 1/9/26 15:27, Quentin Schulz wrote:
-> Hi,
->
-> I believe there's been a regression since commit 7bce36a2c64b 
-> ("arm/trusted-firmware-a: Use firmware.bbclass") where the installed 
-> name isn't bl31-<platform>.elf anymore, but simply bl31.elf.
->
-> This commit removed -${TFA_PLATFORM} from the installed firmware 
-> filename (and the symlink). The commit log seems to hint that this was 
-> intended "Drop the redundant ${TFA_PLATFORM} suffixes."... which isn't?
->
-> Changing TFA_INSTALL_SUFFIX to the value of TFA_PLATFORM (it currently 
-> is the empty string) would help with that but then you either have 
-> bl31.elf or bl31-rk3399.elf (for example). I don't mind about that, 
-> but still odd to remove a symlink.
+Thanks for the prompt answer :)
 
-The changes are intentional and mainly motivated by the fact that we now 
-have TF-M, TF-A and sometimes SCP-firmware all putting files in 
-DEPLOY_DIR_IMAGE with similar filenames (bl1.bin, bl2.bin etc) and it 
-was getting quite confusing for people to know which binaries originate 
-from which project. So I felt that some sort of additional namespacing 
-was needed.
+On 1/9/26 6:52 PM, Peter Hoyes wrote:
+> Hi Quentin,
+> 
+> On 1/9/26 15:27, Quentin Schulz wrote:
+>> Hi,
+>>
+>> I believe there's been a regression since commit 7bce36a2c64b ("arm/ 
+>> trusted-firmware-a: Use firmware.bbclass") where the installed name 
+>> isn't bl31-<platform>.elf anymore, but simply bl31.elf.
+>>
+>> This commit removed -${TFA_PLATFORM} from the installed firmware 
+>> filename (and the symlink). The commit log seems to hint that this was 
+>> intended "Drop the redundant ${TFA_PLATFORM} suffixes."... which isn't?
+>>
+>> Changing TFA_INSTALL_SUFFIX to the value of TFA_PLATFORM (it currently 
+>> is the empty string) would help with that but then you either have 
+>> bl31.elf or bl31-rk3399.elf (for example). I don't mind about that, 
+>> but still odd to remove a symlink.
+> 
+> The changes are intentional and mainly motivated by the fact that we now 
+> have TF-M, TF-A and sometimes SCP-firmware all putting files in 
+> DEPLOY_DIR_IMAGE with similar filenames (bl1.bin, bl2.bin etc) and it 
+> was getting quite confusing for people to know which binaries originate 
+> from which project. So I felt that some sort of additional namespacing 
+> was needed.
+> 
+> The ${TFA_PLATFORM} redundancy comment relates to the whole filename - 
+> tmp/deploy/images/rk3568/trusted-firmware-a/bl31.bin is already 
+> guaranteed not to clash with tmp/deploy/images/rk3566/trusted-firmware- 
+> a/bl31.bin if you are sharing TMPDIRs.
+> 
 
-The ${TFA_PLATFORM} redundancy comment relates to the whole filename - 
-tmp/deploy/images/rk3568/trusted-firmware-a/bl31.bin is already 
-guaranteed not to clash with 
-tmp/deploy/images/rk3566/trusted-firmware-a/bl31.bin if you are sharing 
-TMPDIRs.
+Indeed. It wasn't clear from the commit log what you were talking about, 
+thanks for explaining. I sometimes forget the deploydir is 
+machine-specific as I've been bitten in the past by different images 
+stepping on each other's toes. Not an issue for TF-A as this isn't 
+image-specific :)
 
-> meta-rockchip has support for TF-A binary blobs from Rockchip, which 
-> we do name bl31-rk3399.elf and since this filename needs to be 
-> consistent between upstream tf-a and blob tf-a (and we cannot modify 
-> U-Boot's BL31 variable from TF-A's recipe due to variable scope), this 
-> broke builds of meta-rockchip and forced the following (yet 
-> incomplete) band-aid patch 
-> https://git.yoctoproject.org/meta-rockchip/commit/?id=2a13a49da4af4487ee71db6aff19364220da694a. 
-> I'm now trying to figure out how to properly fix that.
->
-> Additionally, the binaries are now forced into a subdirectory named 
-> after the recipe (see do_deploy in firmware.bbclass) and cannot be 
-> modified. So I need to patch our TF-A blob recipe to install in the 
-> identically named directory (that is, trusted-firmware-a/) so that 
-> U-Boot can find the binary named the same in the same location 
-> regardless of the kind of TF-A we're building. It does feel kinda 
-> wrong doing that.
+>> meta-rockchip has support for TF-A binary blobs from Rockchip, which 
+>> we do name bl31-rk3399.elf and since this filename needs to be 
+>> consistent between upstream tf-a and blob tf-a (and we cannot modify 
+>> U-Boot's BL31 variable from TF-A's recipe due to variable scope), this 
+>> broke builds of meta-rockchip and forced the following (yet 
+>> incomplete) band-aid patch https:// 
+>> eur02.safelinks.protection.outlook.com/? 
+>> url=https%3A%2F%2Fgit.yoctoproject.org%2Fmeta- 
+>> rockchip%2Fcommit%2F%3Fid%3D2a13a49da4af4487ee71db6aff19364220da694a&data=05%7C02%7Cquentin.schulz%40cherry.de%7C0373d36d1ba14647cfed08de4fa80e79%7C5e0e1b5221b54e7b83bb514ec460677e%7C0%7C0%7C639035780376094222%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=qVjkKpHFgYhWnTPwyKJW%2BiwCnU2hinm1s%2F7zOhpHg68%3D&reserved=0. I'm now trying to figure out how to properly fix that.
+>>
+>> Additionally, the binaries are now forced into a subdirectory named 
+>> after the recipe (see do_deploy in firmware.bbclass) and cannot be 
+>> modified. So I need to patch our TF-A blob recipe to install in the 
+>> identically named directory (that is, trusted-firmware-a/) so that U- 
+>> Boot can find the binary named the same in the same location 
+>> regardless of the kind of TF-A we're building. It does feel kinda 
+>> wrong doing that.
+> 
+> This would be my suggestion. Looking at u-boot-rockchip.inc, this might 
+> simplify the logic there as you no longer need to handle machine- 
+> specific differences between ${SOC_FAMILY} - it'll always be just 
+> "${DEPLOY_DIR_IMAGE}/trusted-firmware-a/bl31.elf"?
+> 
 
-This would be my suggestion. Looking at u-boot-rockchip.inc, this might 
-simplify the logic there as you no longer need to handle 
-machine-specific differences between ${SOC_FAMILY} - it'll always be 
-just "${DEPLOY_DIR_IMAGE}/trusted-firmware-a/bl31.elf"?
+Yeah, I don't know the historical reasons for going with the SoC family 
+in the filename in meta-rockchip. It seems like it's coming from 
+d26980364900 ("Use TF-A recipe from meta-arm") in meta-rockchip, maybe 
+bl31-TFA_PLATFORM.elf was the only file deployed by meta-arm back then. 
+In a way, it makes it explicit that if you have a bl31-rk3568.elf for an 
+RK3399-based board, something's gone awfully wrong :)
 
-I could add a variable to firmware.bbclass (say, FIRMWARE_INSTALL_DIR ?= 
-"${PN}") so that the subdirectory can be customized from the recipe?
+> I could add a variable to firmware.bbclass (say, FIRMWARE_INSTALL_DIR ?= 
+> "${PN}") so that the subdirectory can be customized from the recipe?
+> 
 
-Thanks,
+I'll let Trevor (maintainer of meta-rockchip) speak his mind if he wants 
+to, but considering someone will need to patch rockchip-rkbin-tf-a in 
+any case, at first glance I don't mind if it's in a subdir. After all, 
+*we* control where we can put rockchip-rkbin-tf-a's blob, and it can be 
+in a trusted-firmware-a/ directory :)
 
-Peter
+On another topic, I'm not sure we actually support using upstream OP-TEE 
+OS in meta-rockchip (I don't see a TEE=/path/to/bl32.bin mentioned 
+anywhere in the code; and Rockchip's blob won't work with upstream 
+U-Boot AFAIR), something I maybe should be looking into. You do also 
+have a subdir for OP-TEE OS so a similar logic should be followed. /me 
+thinks.
 
+I'm inclined to say that nothing needs to be done from meta-arm's side 
+and we shall fix things up in meta-rockchip.
+
+Thanks again for the prompt answer and the explanations.
+
+I'll look into patches for meta-rockchip next week if I don't forget.
+
+Have a nice weekend,
+Cheers,
+Quentin
+
+> Thanks,
+> 
+> Peter
+> 
+> 
 
 
