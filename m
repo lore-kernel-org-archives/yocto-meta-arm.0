@@ -1,194 +1,90 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74657D4662B
-	for <webhook@archiver.kernel.org>; Thu, 15 Jan 2026 22:45:48 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.676.1768517138722325711
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64729D4A5FB
+	for <webhook@archiver.kernel.org>; Fri, 16 Jan 2026 04:03:21 +0000 (UTC)
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.321.1768536194877842421
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 15 Jan 2026 14:45:39 -0800
+ Thu, 15 Jan 2026 20:03:15 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 692A81515
-	for <meta-arm@lists.yoctoproject.org>; Thu, 15 Jan 2026 14:45:31 -0800 (PST)
-Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F408C3F632
-	for <meta-arm@lists.yoctoproject.org>; Thu, 15 Jan 2026 14:45:37 -0800 (PST)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp/u-boot: remove upstreamed fvp-base patches
-Date: Thu, 15 Jan 2026 17:45:37 -0500
-Message-ID: <20260115224537.26252-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.50.1
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=hFowu8vN;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.49, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-8888a444300so16753256d6.1
+        for <meta-arm@lists.yoctoproject.org>; Thu, 15 Jan 2026 20:03:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1768536194; x=1769140994; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uCIm+npcgwtEH1iauNMEjevP+eCF9X8vmnMAq2W7Evs=;
+        b=hFowu8vN7x3DS7ByUXghaYeXqbtCNM+HSBkQ3B/+8stSWs8eo2ZL1tZHRWqeTRSrRq
+         t6rAPNIddmSQ1o2STk2eUqh4o7t6RR/Rkhp1RRpi//H95BHJQ71aJvjjgtBjc97c8PtB
+         syfbEgllAleDuGdiNL2Cpu+BvzRSLQGxB9m85VF+7xksBwMgAOH5BFARE64ZuQjFU9PW
+         Qm7iLMNtkkADKeKL/a99oPOqv/Ar/YThxh6/z3kPL3X0TTQEf9RCB0PP2mpVM2r/esDE
+         a5wsBAHoWCdwSEs6dJYKdFxuRDhxHza5NF6WmRB7jntcVUUM5rqb7xqUadPzz8esg2yc
+         WQEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768536194; x=1769140994;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uCIm+npcgwtEH1iauNMEjevP+eCF9X8vmnMAq2W7Evs=;
+        b=hbnFunoMN25mfFS1QYeOLhIUlFtKNh+lnwluLwbtg64u4xW4TnIt3ykBdv9frvORPI
+         YyEGUytXJOpiB6U+DusZm+xJNEv8kXYn3YmWtQB0uxeDGC5Z6Xnd8uO9Ye0RTbeU7mV6
+         THudyVA+UEpmq7CYEAEjr6jVizDn4CgTXHLxdjXcdTS7VnjhfGJEB6w6XF225PU5z7B8
+         cteH3p2bzxXrzI6mjPlM4fVkNQZ0GwSYfFhkxKVs0VGq4TcjyNxt5/8NmW3VNr3BtCmV
+         ebxDvFzQNJrYkNqZ3qCfwesbZlEHWo7DuoHWa05UM/0hOlge4+Q/JD28nmMM6Gvh9lF5
+         WIcg==
+X-Gm-Message-State: AOJu0YzHTq0dwBqt6tKoDodr/9d9JCgAFmK1ru299MrSkmK5QLQpJwr5
+	EQwkpltK4uQTdXu09NwE1VmQlL3zLfyVElm0uYsl6WqNEYcYWFbjzdaIXdI8mOoqrC+PnT7gVU/
+	Cq/Y=
+X-Gm-Gg: AY/fxX6wj8bFquj26VZQ7KhetlyjCG/27PXfpO8h/keMeTjJaO4MpBLY9lQtcOHWRc9
+	0JOzYuX27ZWC4bBdWRKW6S5AvjUg/mRSxpJa8l+GmCgcgXBR8Muqh2powYFVSaGBrWxAKygZolN
+	sA7bIASN6IUKO2hYGHUzR6N3jHZxnWMqB2+IjvU93tK4YM2F1eygA+ElPxS2aiVKWukgjXxibd8
+	0E57zMukxU9eJCM2gGmm1f+vxqMhGG7yeYD4va1a3ntFYef7gTzPyvgJBGV8Uyt7CuPS8dUtJzv
+	XryG6VCZZ+bG1+a5C6n8HWqoykL/kK9XUYsaG72vvQykK8/fpk/fLoE+vqILn+EkArYgZqGraV9
+	qPKziHbCeC2aE2B0zyPVisAZVpJbBYa9GYYBVVwMxwUCMOm/N5S62c0Grx0bxomVHXpf12NJrPu
+	8kPB2DGGrbN/c=
+X-Received: by 2002:ad4:5f05:0:b0:890:8aef:2b3f with SMTP id 6a1803df08f44-8942ddb8c33mr27855676d6.65.1768536193704;
+        Thu, 15 Jan 2026 20:03:13 -0800 (PST)
+Received: from localhost ([136.56.27.188])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8942e6049d9sm13766986d6.23.2026.01.15.20.03.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jan 2026 20:03:13 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] arm-bsp/u-boot: remove upstreamed fvp-base patches
+Date: Thu, 15 Jan 2026 23:03:05 -0500
+Message-Id: <176853618596.2093914.15673412823815594412.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260115224537.26252-1-jon.mason@arm.com>
+References: <20260115224537.26252-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 15 Jan 2026 22:45:48 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6852
+ <meta-arm@lists.yoctoproject.org>; Fri, 16 Jan 2026 04:03:21 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6853
 
-2 of the fvp-base specific u-boot patches were merged in the 2026.01
-release.  Remove those, as they are no longer necessary.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- .../recipes-bsp/u-boot/u-boot-fvp-base.inc    |  8 ---
- ...1-vexpress64-Set-the-DM_RNG-property.patch | 31 --------
- ...64-Enable-SYSRESET-and-SYSRESET_PSCI.patch | 71 -------------------
- 3 files changed, 110 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0001-=
-vexpress64-Set-the-DM_RNG-property.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0002-=
-arm-vexpress64-Enable-SYSRESET-and-SYSRESET_PSCI.patch
+On Thu, 15 Jan 2026 17:45:37 -0500, Jon Mason wrote:
+> 2 of the fvp-base specific u-boot patches were merged in the 2026.01
+> release.  Remove those, as they are no longer necessary.
+> 
+> 
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc b/meta-a=
-rm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
-index 44b98f8fca7e..a52837218f9b 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
-@@ -2,13 +2,5 @@
-=20
- SRC_URI:append =3D " \
-     file://virtio-boot.cfg \
--    file://0001-vexpress64-Set-the-DM_RNG-property.patch \
--    file://0002-arm-vexpress64-Enable-SYSRESET-and-SYSRESET_PSCI.patch \
-     file://0003-vexpress64-Imply-CONFIG_ARM64_CRC32-by-default.patch \
-     "
--
--# Remove backported patches from latest version
--SRC_URI:remove:class-devupstream =3D " \
--    file://0001-vexpress64-Set-the-DM_RNG-property.patch \
--    file://0002-arm-vexpress64-Enable-SYSRESET-and-SYSRESET_PSCI.patch \
--    "
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0001-vexpres=
-s64-Set-the-DM_RNG-property.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boo=
-t/fvp-base/0001-vexpress64-Set-the-DM_RNG-property.patch
-deleted file mode 100644
-index dee48e1dd68c..000000000000
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0001-vexpress64-Set=
--the-DM_RNG-property.patch
-+++ /dev/null
-@@ -1,31 +0,0 @@
--From 364d81afbf4fdc1b3d35c137f02ffa6f1ddd929d Mon Sep 17 00:00:00 2001
--From: Debbie Horsfall <debbie.horsfall@arm.com>
--Date: Wed, 17 Sep 2025 17:22:21 +0100
--Subject: [PATCH] vexpress64: Set the DM_RNG property
--
--Enable the DM_RNG virtio random number generator driver in order to
--consume entropy within U-Boot. This allows U-Boot to inject entropy to t=
-he
--kernel via UEFI, so the kernel can use that early, for instance for
--address layout randomisation, or when the kernel does not provide an
--entropy driver itself.
--
--Signed-off-by: Debbie Horsfall <debbie.horsfall@arm.com>
--Reviewed-by: Andre Przywara <andre.przywara@arm.com>
--Upstream-Status: Backport [2767386806c254820ea22a812bb02e5405495a29]
-----
-- board/armltd/vexpress64/Kconfig | 2 ++
-- 1 file changed, 2 insertions(+)
--
--diff --git a/board/armltd/vexpress64/Kconfig b/board/armltd/vexpress64/K=
-config
--index 7e8709444fe3..610ab0ac37dc 100644
----- a/board/armltd/vexpress64/Kconfig
--+++ b/board/armltd/vexpress64/Kconfig
--@@ -21,6 +21,8 @@ config VEXPRESS64_BASE_MODEL
-- 	imply EFI_SET_TIME if DM_RTC
-- 	select LINUX_KERNEL_IMAGE_HEADER
-- 	select POSITION_INDEPENDENT
--+	imply DM_RNG
--+	imply RNG_ARM_RNDR
--=20
-- choice
-- 	prompt "VExpress64 board variant"
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0002-arm-vex=
-press64-Enable-SYSRESET-and-SYSRESET_PSCI.patch b/meta-arm-bsp/recipes-bs=
-p/u-boot/u-boot/fvp-base/0002-arm-vexpress64-Enable-SYSRESET-and-SYSRESET=
-_PSCI.patch
-deleted file mode 100644
-index e6bd28d927f1..000000000000
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0002-arm-vexpress64=
--Enable-SYSRESET-and-SYSRESET_PSCI.patch
-+++ /dev/null
-@@ -1,71 +0,0 @@
--From bec13f424612ba01dace86fe4a4ab49eedaca4b2 Mon Sep 17 00:00:00 2001
--From: Debbie Horsfall <debbie.horsfall@arm.com>
--Date: Wed, 17 Sep 2025 17:22:22 +0100
--Subject: [PATCH] arm: vexpress64: Enable SYSRESET and SYSRESET_PSCI
--
--Select SYSRESET on Vexpress64 to enable system reset to support other
--features, such as capsule-on-disk. Select SYSRESET_PSCI if PSCI is
--inferred from the firmware (via ARM_PSCI_FW).
--Select ARM_SMCCC for Vexpress64 boards which in turn selects
--ARM_PSCI_FW.
--
--The sysreset uclass unconditionally implements a reset_cpu() function.
--Remove the empty reset_cpu() in vexpress64 board code.
--
--Signed-off-by: Debbie Horsfall <debbie.horsfall@arm.com>
--Upstream-Status: Backport [1f3f1e090a2695e0b17cbf9dc50ccb59d100458f]
-----
-- arch/arm/Kconfig                     | 2 ++
-- board/armltd/vexpress64/Kconfig      | 2 ++
-- board/armltd/vexpress64/vexpress64.c | 5 -----
-- 3 files changed, 4 insertions(+), 5 deletions(-)
--
--diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
--index 625d2e995d2f..68f37f633fdf 100644
----- a/arch/arm/Kconfig
--+++ b/arch/arm/Kconfig
--@@ -1418,6 +1418,8 @@ config ARCH_VEXPRESS64
-- 	select MTD_NOR_FLASH if MTD
-- 	select FLASH_CFI_DRIVER if MTD
-- 	select ENV_IS_IN_FLASH if MTD
--+	select SYSRESET
--+	select SYSRESET_PSCI if ARM_PSCI_FW
-- 	imply DISTRO_DEFAULTS
--=20
-- config TARGET_CORSTONE1000
--diff --git a/board/armltd/vexpress64/Kconfig b/board/armltd/vexpress64/K=
-config
--index 610ab0ac37dc..9ef3fa1b379f 100644
----- a/board/armltd/vexpress64/Kconfig
--+++ b/board/armltd/vexpress64/Kconfig
--@@ -23,6 +23,7 @@ config VEXPRESS64_BASE_MODEL
-- 	select POSITION_INDEPENDENT
-- 	imply DM_RNG
-- 	imply RNG_ARM_RNDR
--+	select ARM_SMCCC
--=20
-- choice
-- 	prompt "VExpress64 board variant"
--@@ -48,6 +49,7 @@ config TARGET_VEXPRESS64_JUNO
-- 	select USB_EHCI_GENERIC if USB
-- 	select USB_OHCI_HCD if USB
-- 	select USB_OHCI_GENERIC if USB
--+	select ARM_SMCCC
-- 	imply OF_HAS_PRIOR_STAGE
--=20
-- endchoice
--diff --git a/board/armltd/vexpress64/vexpress64.c b/board/armltd/vexpres=
-s64/vexpress64.c
--index 0b75c1358f0b..e8f1c2fe9fe2 100644
----- a/board/armltd/vexpress64/vexpress64.c
--+++ b/board/armltd/vexpress64/vexpress64.c
--@@ -206,11 +206,6 @@ int board_fdt_blob_setup(void **fdtp)
-- #endif
-- #endif
--=20
---/* Actual reset is done via PSCI. */
---void reset_cpu(void)
---{
---}
---
-- /*
--  * Board specific ethernet initialization routine.
--  */
---=20
-2.50.1 (Apple Git-155)
+Applied, thanks!
 
+[1/1] arm-bsp/u-boot: remove upstreamed fvp-base patches
+      commit: 755287ed334e64576b653296b11afd004a5e275e
+
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
