@@ -2,34 +2,34 @@ Return-Path: <Michael.safwat@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B4AD6261A
-	for <webhook@archiver.kernel.org>; Fri, 23 Jan 2026 12:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CF7D74EC3
+	for <webhook@archiver.kernel.org>; Fri, 23 Jan 2026 12:55:48 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.66319.1769171157517499198
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.66840.1769172947931059766
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 23 Jan 2026 04:25:57 -0800
+ Fri, 23 Jan 2026 04:55:48 -0800
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: michael.safwat@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0B3E1476;
-	Fri, 23 Jan 2026 04:25:49 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4E961476;
+	Fri, 23 Jan 2026 04:55:40 -0800 (PST)
 Received: from LD2MDJPLW0.arm.com (unknown [10.57.50.215])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF67F3F740;
-	Fri, 23 Jan 2026 04:25:55 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C65373F632;
+	Fri, 23 Jan 2026 04:55:46 -0800 (PST)
 From: Michael Safwat <michael.safwat@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Michael Safwat <michael.safwat@arm.com>
-Subject: [PATCH] arm-bsp/docs:corstone1000: Update copyright and host tool versions
-Date: Fri, 23 Jan 2026 12:25:52 +0000
-Message-ID: <20260123122552.32756-1-michael.safwat@arm.com>
+Subject: [PATCH whinlatter] arm-bsp/docs:corstone1000: Update copyright and host tool versions
+Date: Fri, 23 Jan 2026 12:55:40 +0000
+Message-ID: <20260123125540.41390-1-michael.safwat@arm.com>
 X-Mailer: git-send-email 2.50.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 23 Jan 2026 12:25:58 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6868
+ <meta-arm@lists.yoctoproject.org>; Fri, 23 Jan 2026 12:55:48 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6869
 
 Update Corstone-1000 documentation to reflect 2026 copyright and
 current supported host environment.
@@ -67,7 +67,7 @@ d/or its
 =20
 diff --git a/meta-arm-bsp/documentation/corstone1000/user-guide.rst b/met=
 a-arm-bsp/documentation/corstone1000/user-guide.rst
-index fa088cd4..5c8ee0b2 100644
+index ddea8931..5240e2b6 100644
 --- a/meta-arm-bsp/documentation/corstone1000/user-guide.rst
 +++ b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
 @@ -18,17 +18,17 @@ for more information.
