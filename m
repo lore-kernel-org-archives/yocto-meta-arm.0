@@ -1,338 +1,244 @@
-Return-Path: <hugues.kambampiana@arm.com>
+Return-Path: <quentin.schulz@cherry.de>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA071D1950D
-	for <webhook@archiver.kernel.org>; Mon, 26 Jan 2026 17:17:08 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.25903.1769447825064630893
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EBFD2D8DF
+	for <webhook@archiver.kernel.org>; Tue, 27 Jan 2026 09:52:58 +0000 (UTC)
+Received: from OSPPR02CU001.outbound.protection.outlook.com (OSPPR02CU001.outbound.protection.outlook.com [40.107.159.7])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.7040.1769507576202712846
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 26 Jan 2026 09:17:05 -0800
+ Tue, 27 Jan 2026 01:52:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: hugues.kambampiana@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F7351515;
-	Mon, 26 Jan 2026 09:16:58 -0800 (PST)
-Received: from LXKV206JHX.arm.com (unknown [10.57.94.154])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CEB323F5CA;
-	Mon, 26 Jan 2026 09:17:03 -0800 (PST)
-From: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>,
-	Quentin Schulz <quentin.schulz@cherry.de>
-Subject: [PATCH v2 1/3] arm/arm-bsp: optee: add version 4.9.0
-Date: Mon, 26 Jan 2026 17:16:47 +0000
-Message-ID: <20260126171658.40998-2-hugues.kambampiana@arm.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260126171658.40998-1-hugues.kambampiana@arm.com>
+ dkim=pass header.i=@cherry.de header.s=selector1 header.b=M+BVtZX/;
+ spf=pass (domain: cherry.de, ip: 40.107.159.7, mailfrom: quentin.schulz@cherry.de)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Fh5HKZVE7sc9fJ60nZ6IBOxWe/GMu38uVCCvkCh7+OB0fBoFH1a5H+ZflkIJRXHpN15XopM56yE64Qsy40dj+1QDRlv3YAoHKeEJSxlpjf7FG/VbQdT0cyA/FBd1DjayT8hEFxkaFrMUTIaqRVwG3ns2i+bh6bve+PZ/F714qEeYT0/B11YT4CxaN889Z+d5UgJmkJJZ+ERuC06nzhdixT+16N17CG1K0qB86x/cmcj3cB3h4055nV0gY7uo0T34yjyeH3d+0vKCKopGDYPzY//1R7ptQjdekkA1og622WHx+AsNUfchI8EAc0d5emU4kLcDu26qB4NSubS5s+jShw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=83DpefMrjzOIbpz6xxxN+HzyvdcAwhEWSqNCBo1v5qQ=;
+ b=J2SRLrWZtCgmlUGBubbantKieU7HVbFWbe4TdFEWuEePN6jBudVFT8aknmHtQxvmI25UwSbGeZtLmzTQKOe3FEtOlc3+Q1BCGUIFNKUY1/FVq88J1xcTMiXzgwg0g0Qletf/QNVF3/w5Gec98HRwsXRRGrc7feYoE5bv838W4YQC6s3J2fdqPT2OUMZbnz/eldVrb3FEYLHHOzQAscFrFuRWOKKLZNZ+oeiWk29DBjAB1VDomFvRmEbTSYvhFgqRw30obljO+YiCNHi3pmAtR0mcJ/ruan952Z/9B2f6icZ4Fh7TOXiACRfMJ8ZerTtnAbwtrLpV+NsASyJ0YKzSpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=83DpefMrjzOIbpz6xxxN+HzyvdcAwhEWSqNCBo1v5qQ=;
+ b=M+BVtZX/YO3PTJBymGzBze2+EeTLDghJ+QeSfWqHR0lP1KjsTTmT8H/1RFOVIy/St4ZLjODM8tQvw4eTmAXIWkMDf4gPCmXNNuaZ9vFL8E1Vcvwf50ZwdwHNYToDbXGO1ZihJfH7V5f59YKF7ZOzp28zZBJZuO6YwxzbEWpRub4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from GVXPR04MB12038.eurprd04.prod.outlook.com (2603:10a6:150:2be::5)
+ by GV4PR04MB11356.eurprd04.prod.outlook.com (2603:10a6:150:298::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.16; Tue, 27 Jan
+ 2026 09:52:50 +0000
+Received: from GVXPR04MB12038.eurprd04.prod.outlook.com
+ ([fe80::6c04:8947:f2f0:5e78]) by GVXPR04MB12038.eurprd04.prod.outlook.com
+ ([fe80::6c04:8947:f2f0:5e78%6]) with mapi id 15.20.9542.015; Tue, 27 Jan 2026
+ 09:52:50 +0000
+Message-ID: <84a15067-cde7-4728-8914-3e09d10aea95@cherry.de>
+Date: Tue, 27 Jan 2026 10:52:28 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] arm/arm-bsp: optee: add version 4.9.0
+To: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>,
+ meta-arm@lists.yoctoproject.org
 References: <20260126171658.40998-1-hugues.kambampiana@arm.com>
+ <20260126171658.40998-2-hugues.kambampiana@arm.com>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <20260126171658.40998-2-hugues.kambampiana@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0400.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:cf::20) To GVXPR04MB12038.eurprd04.prod.outlook.com
+ (2603:10a6:150:2be::5)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GVXPR04MB12038:EE_|GV4PR04MB11356:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55394776-10d6-4df8-d8d2-08de5d89d4e5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|10070799003|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?WDhVWmVXM0lEM3Avd0xTUENKRmFDWVFXVmNDVHl3aGJqMWcvT1B6ZGl4KzRO?=
+ =?utf-8?B?aDFpRzBjU3VnRXI1eFRaRTRDYTNRMUZvTXFaKzFla0MwMks2Y2FjcGNNeEpR?=
+ =?utf-8?B?dnF1NktrSC9RU0krVllpTG0yRzBrRjExa0loQTNHaUVlaEppMmQvS1RuWUlR?=
+ =?utf-8?B?MElEMmMyYXJKN2g4SDVZTlVnOUhtOHE2OFM5QU1XVmhYQnp5SG9DNzA1MDVi?=
+ =?utf-8?B?d3hMRlZYdmV1YnN0SDArL0ZVOU43dGIrdCtWS0FxaUtMRG00MjVzT0krbDhM?=
+ =?utf-8?B?MDRlS25PejQralpiRCtxT3ZnYURGWFcyVXp1K3UxTVpjUGM5UVhaZjN2YWlR?=
+ =?utf-8?B?TW5sS1EvM2IwVlp1V004bEdaSE5TWkVNMHRSdFV2VENJQjcrUlBJTXZiVzQ3?=
+ =?utf-8?B?KzlRYXBQU1habXJURWZNaEhuYVYyQXkraDAwQlRsMlA1cVI5WEhKTkFvUFVO?=
+ =?utf-8?B?Q3RSUmFPTFVDaFdlSmg5U004TkhrMXRBSWlHK1hWN1loQWFVdG9DVkVibmtC?=
+ =?utf-8?B?L3k2VnpkUXNlSFB0ODd1T1BYbW83Q3NBSW52Zmg3Y2xJSVh3YjVkdFJISEN5?=
+ =?utf-8?B?dEhlWk1LTU9UOXFMaXY4UzN0NGVTaitib3NUQlllM2RkWnlQc1o2dXgzWU5Y?=
+ =?utf-8?B?Z3IxV2VtVkxERFRjSld3RXEyVFpQVGxRZGpIQzhiVm54aDhEaTN2NENTSDVp?=
+ =?utf-8?B?TWJ1ajZMS1o4ZTBXVDJNUXpQbmZKOGRldlV3N1ptSHBxdFdwczU4K1laUjRj?=
+ =?utf-8?B?THlHTEFEa3MrMldadU9UR1BRU3ZXRnc0THltWHRoSTR4RDJYNFR0VStIVWZo?=
+ =?utf-8?B?RXRNeStGbUVxckwzUWdnbGNqRm01cFVVbUVVRDlQSjJRcnhmSlNiNnhCZW1o?=
+ =?utf-8?B?NGRwbkowa1hVNW1QV3VxZ1BoZUdhem5tYUdRWEFnKzNjUmtuVm8vTU9vWFox?=
+ =?utf-8?B?cFhhbWx6ZWN0cHBNZ094clE5eDdLOHhjaS9YTXZucWtJanVkRHl3OUNwaEdt?=
+ =?utf-8?B?Y3BFNTcyVStodkZTaEVLaHYwdDBGRXlMK1RCeGRSVEtvc3hzMVlzTWlqck5t?=
+ =?utf-8?B?d2RDMElwQ2llN2Q2U0Q4blBPTHRwZkRHRGFxdTJHTzNRVUJJcFJFUmNhVkU4?=
+ =?utf-8?B?MXZiWndEVVJUZWhkYjRBb3M3LzdtdEloUCtMcEt2ZHVaQ2F4UnZUeXdPQXZI?=
+ =?utf-8?B?Y01FVkhaSDJCNmlZZ1dGQ0NBejNTUG5OYjlSaEdOVDR5OWRNZFZkMEZ5eEhi?=
+ =?utf-8?B?TzFyYVRIUDZRdytUT05oNG1Nb2pXVnhHcmg5REF6UjdYQ3NRY3V6bU9GM2F6?=
+ =?utf-8?B?VnNJWFZIc1NLQUx1NVNGQVZ4UUlqbkMvNFVCMzZybTViZW5mc05kb0JXM1hy?=
+ =?utf-8?B?azVjM0VkRXFQb252dFRPc1BwQkdDU1p5cE01TUtnTStXYittY1E1TThqeDZG?=
+ =?utf-8?B?QnF6R3J5RXpmWEp1QnNadDAzSDhMeUQzMHBiNk1HNm14TEtrdWVwbDZucUhV?=
+ =?utf-8?B?SlAzcUU4OFh5ejRxU0wxUWc4UHA2WGpsWjk5SG1WZFZNcWtVTEYzYlFFS2o5?=
+ =?utf-8?B?VnF3T09ZUlBEb3RXV3ZDV1ZIMTFROWJoazI2Q0JRT3lla3lUSmplbW54OXlw?=
+ =?utf-8?B?RmE3bFhKVkpzaVZ5azkvdTYvaDZDM3NZUDVmT3BtaE5WMWpjeWtwN0hIRU1T?=
+ =?utf-8?B?NTdsWGdzOC9kTEhORHIwTDdibG9pR3BTb0NsRzk0RU50b0V3WXhPUFlDT3Iw?=
+ =?utf-8?B?S2UyaXU3UnVlUFN1VmFpSHRoOFNyQWZ1UlgxdzZ4bDVqVHFseGNXRmhlZy9U?=
+ =?utf-8?B?TXZKekF4TDZmMHUrZmtRQWl3YkN1SCsyWllLeWlqcE1vT2k4eDkvei9ROXYx?=
+ =?utf-8?B?aG1kbTlLaXpsK0plVENSdGhYbnd3eVNlcXoyT0lUNVZkejBnd2lmai9oMTdt?=
+ =?utf-8?B?TnFoN0o2QW5SZnJoWGIwM0NwNTI3Zyt5SVNEUlNSUklLMlJ3Q0ZOejRXckc0?=
+ =?utf-8?B?aDBrck8wU01RNW16aSt6TzJXUWtQNVRXVVBkTzVDRFBlYXB6cmU3SXhsUU4v?=
+ =?utf-8?B?ZmJQejMxUG1DWUQzeEM1cWR3Z2Zqd3N4R0ZZS3ArMWNGeld0V1diakU2WXRZ?=
+ =?utf-8?Q?uF5Q=3D?=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GVXPR04MB12038.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?VldnSk90M3JLeVFYaHBtNWsyTk01NDJyeStxU0V6YTdCZnI0MUdEVi9YZ29w?=
+ =?utf-8?B?U0c5aDFpMWhlcHorSG9taG1CY3g3NFNSSFE1eXJKOHdLdTFTOE94M0R1M0Jm?=
+ =?utf-8?B?T2VvclVrYmtGa3E0SzVJRHZ5L3puSEgxNTB5akdJdW1uMmc2dEs4RVVEdHN5?=
+ =?utf-8?B?NHFVSW5lNmFZNFdHYUdzNVBhYlpKS0h2NE9mUFJrWUgzMDFSRGNnZ1p5K0FI?=
+ =?utf-8?B?NUpFblF0QTk3d2RjUnplUjNTQzI4Q0gwSWRzQ0ZWUG9vbGwvRWxFYWI4dTRz?=
+ =?utf-8?B?WkhiVERZb3ZKWkV4WURzTjVqY2k3WTBLbUhGMFoyYzBzL2tnaGRseGVHbldQ?=
+ =?utf-8?B?Mjk3bXQ4ZnAzT1lZZ0NQMElEdUVxVllkNmQyK1h3bkNXc2l2RUx0Zkt1M1lZ?=
+ =?utf-8?B?ejNhK0ZhcXluYzJtTEx2cTVZR21nNjk3N2NGSFVEK2lqdDYvaDhBR2NCVWh3?=
+ =?utf-8?B?MlVnaFB5ZXlGQTRjRVkxaVJyV1lMcDNaUFFUdGhvWnI5VS9mNEgzV3BWbVFr?=
+ =?utf-8?B?UVFGNUo1UTRiZmxYeHpPZTREZ3RRa2RFb3pDYkZzckQrd2l2aWwzVVBHdDNJ?=
+ =?utf-8?B?aTVLeklncnNUaHBuRGRxUURSOGk3cW1DQ1UwTDRER3lhMC92N0dsT0ZDWURz?=
+ =?utf-8?B?RnNLMEZwZTVZS2Z3YUNuU1c5OFR5U3FnS21UMzVLMzVHa2xsamtXUS9hUkFK?=
+ =?utf-8?B?Nlo1U1V5aWd1R1VWSlpBV3FxTzhmR05GSTQ5c0hzNzJ3ZDVPN0dzYWtjOURa?=
+ =?utf-8?B?VnkxL2tzWWFmeVFBODVScWFUNndtV1JLcnJReTE5eEdkUFk0NjZpMlh0S0RV?=
+ =?utf-8?B?aGZzS2RxVG1BdEpKTjVkVktNWURMMVlIRU1XTEJIV21PSm1naWlHeWJwOXlW?=
+ =?utf-8?B?QkJ1dk0yZUNyelJiWE9OVnVseXBQY0N4VTU0ZDBFTWM5Q2JnR3d0dktxR0VM?=
+ =?utf-8?B?NjZrcGxNYjFlR2ZiTGhUVHc1eUVZL295QnVNVTJOa2drcG9VUHJqTkNxQVVw?=
+ =?utf-8?B?SHA1bzhqWENYT1MxQkgrMk5rTzFRNzJxSzAwWmttN3NJTk8xa3QxQ0dTcmM2?=
+ =?utf-8?B?b1k0S0JqbUxhb05kK3RBQURqTmJNbk5VYU42cFJONlR0ZndkUC84RHM2YmpS?=
+ =?utf-8?B?YzIyTGFxeXlGRGlXejltbGVKNVp6TXdlWWpwRmRnUVduRm5ZTjY5VmR1cTZI?=
+ =?utf-8?B?Mk1TQlBQT0htZzdPb3daTFF0UzRIRlJzeEpSbVNZS2R0VDI3VXBORVZRV0xm?=
+ =?utf-8?B?TzJ4aEcwZ1pCbHBzNGdZNWo3S2RPeDBOYzRFUHoyMFR2N0J5Q09mNnNjZ1Vo?=
+ =?utf-8?B?Y3MwL1I4YnRGTmNOc0R0bWRGRTdURmYrOU43a0NBempqeE1HQU5heFQwRXdp?=
+ =?utf-8?B?eG5PdUxDSzJpOU02WXNTdUk5YWVoVEoydmwzaGZ2TW16QUNMZFo4cmVWcXcy?=
+ =?utf-8?B?bjFXMXdHbVZ0ZGc1QkhHTStRTWVDcDhDTTRrNk9WN1ltVHA2U0graWNiVSto?=
+ =?utf-8?B?WXdObFRpMndvMmd5Zm9TeGs3eXNuRVFJNmhMeXJpandKOTd4V2NvRUpGdXNV?=
+ =?utf-8?B?SUd1T00zdE1PbFIxeVFMZElzVGRYc1Q2VlBFYmxLK2swemZaV2thWTNXUVE2?=
+ =?utf-8?B?Vm91RWo0REhvOWp6SWhXK2VGZnRBYUJ1a3F5VTJ1MHM2NlZJMXZxU0ZZNUF0?=
+ =?utf-8?B?OHFadm9ISGlJUmxvaGU3bi8ydlZXTzM3Um1saCtkQWs1L2UwUDhYY3JkZ2kv?=
+ =?utf-8?B?VE4ra0IxcFNJanhzVFJEbkN4aUovcDJ3Myt0R3dVOGZKcGxpdTFSL1JLUmZD?=
+ =?utf-8?B?TUt4UGxabFZYSDd2NkprQ1Q4SGlmc1BDaGZabm9BZGxpSEJ6QzRvalRwcE5h?=
+ =?utf-8?B?SHBKaDA1WmJUdmc5b2JYdzk2amtBRncydVBwN0hyUiszWTFSZW5jbTkyVUJC?=
+ =?utf-8?B?L1R5eTQ0R3FLeGZ0UXpna2RXR0IyQ3UwNVdjSEVkZ0x5MFRSOXcxV0lJbU5G?=
+ =?utf-8?B?cFk1bm9idkUzVkNJNjJLb2tkb25Jd3hsMnQ5WU91NkQvdUlyamV1N2FkbmpR?=
+ =?utf-8?B?NU9iVm9UM25rYUxqN3NzdU1IVW03RlBJODBzSW5TbzJFeitMdkVKSjJQamVX?=
+ =?utf-8?B?VU1vTnFvbzQvK05sNy9KblNmYld1OTUxWGNDVjBEVE1rRU4ycjRkLzd3SHNU?=
+ =?utf-8?B?b3k2NzNodUgwSFB3bmFFSWlNWGpHcUhoVk94dHlEc2dURnBITDRyMElPR2Ni?=
+ =?utf-8?B?emlNNjlHWDV4c1Vib1cyTFRWNTkwTElOYkNQaUdPcmlQNXYvRWNoaXA5Zk91?=
+ =?utf-8?B?RWcwVkJzUUFIc0EwdHhiUXJNK0tyaUNpYU5zSFdXYVJwTFB4d1grZ0ZvZmt4?=
+ =?utf-8?Q?7nmi2O/ehYwrjhOjxurwR4ZI37VjucA0H9f3X?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55394776-10d6-4df8-d8d2-08de5d89d4e5
+X-MS-Exchange-CrossTenant-AuthSource: GVXPR04MB12038.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2026 09:52:49.8548
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nquUDcCpD0KZH+gl40KfG0ON1CUvuZSn0Pswt24avqeIcUD7cPi3vHjaAGmF7HmkbwVhg53MdAIHZX7qCzKydf76LGlRaWYs4wWgXRrAODo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV4PR04MB11356
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 26 Jan 2026 17:17:08 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6875
+ <meta-arm@lists.yoctoproject.org>; Tue, 27 Jan 2026 09:52:58 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6878
 
-OP-TEE version 4.9.0 has been released on 2026-01-16 [1].
+Hi Hugues,
 
-Add OP-TEE recipes to point to version 4.9.0
+On 1/26/26 6:16 PM, Hugues KAMBA MPIANA wrote:
+[...]
+> diff --git a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0.bb b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0.bb
+> new file mode 100644
+> index 00000000..5dfc88c6
+> --- /dev/null
+> +++ b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0.bb
+> @@ -0,0 +1,94 @@
+> +SUMMARY = "OPTEE fTPM Microsoft TA"
+> +DESCRIPTION = "TCG reference implementation of the TPM 2.0 Specification."
+> +HOMEPAGE = "https://github.com/microsoft/ms-tpm-20-ref/"
+> +
+> +COMPATIBLE_MACHINE ?= "invalid"
+> +COMPATIBLE_MACHINE:genericarm64 = "genericarm64"
+> +COMPATIBLE_MACHINE:qemuarm64 = "qemuarm64"
+> +COMPATIBLE_MACHINE:qemuarm64-secureboot = "qemuarm64"
+> +COMPATIBLE_MACHINE:qemuarm-secureboot = "qemuarm"
+> +
+> +inherit deploy python3native
+> +
+> +LICENSE = "MIT"
+> +LIC_FILES_CHKSUM = "file://LICENSE;md5=5a3925ece0806073ae9ebbb08ff6f11e"
+> +LIC_FILES_CHKSUM += "file://optee-ta/LICENSE;md5=5a3925ece0806073ae9ebbb08ff6f11e"
+> +
+> +DEPENDS = "python3-pyelftools-native optee-os-tadevkit python3-cryptography-native"
+> +DEPENDS:append:toolchain-clang = " lld-native"
+> +
+> +FTPM_UUID = "bc50d971-d4c9-42c4-82cb-343fb7f37896"
+> +
+> +SRC_URI_ms-tpm   ?= "gitsm://github.com/Microsoft/ms-tpm-20-ref;protocol=https"
+> +SRC_URI_optee-ta ?= "gitsm://github.com/OP-TEE/optee_ftpm.git;protocol=https"
+> +
+> +SRCBRANCH_ms-tpm    = "main"
+> +SRCBRANCH_optee-ta  = "master"
+> +
 
-Link: [1]: https://github.com/OP-TEE/optee_os/blob/master/CHANGELOG.md#op=
--tee---version-490-2026-01-16
+Maybe we should use a ;tag= for optee-ta since we have tags and use them?
 
-Signed-off-by: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
-Tested-by: Quentin Schulz <quentin.schulz@cherry.de> # xtest on PX30, RK3=
-399, RK3588
----
- .../optee-ftpm/optee-ftpm_4.9.0.bb            | 94 +++++++++++++++++++
- .../optee/optee-client_4.9.0.bb               |  4 +
- .../optee/optee-examples_4.9.0.bb             |  4 +
- .../optee/optee-os-tadevkit_4.9.0.bb          | 30 ++++++
- .../recipes-security/optee/optee-os_4.9.0.bb  |  6 ++
- .../recipes-security/optee/optee-test.inc     |  4 +-
- ...{optee-test_git.bb =3D> optee-test_4.9.0.bb} | 15 ++-
- .../recipes-security/optee/optee-test_git.bb  |  7 +-
- 8 files changed, 153 insertions(+), 11 deletions(-)
- create mode 100644 meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0=
-.bb
- create mode 100644 meta-arm/recipes-security/optee/optee-client_4.9.0.bb
- create mode 100644 meta-arm/recipes-security/optee/optee-examples_4.9.0.=
-bb
- create mode 100644 meta-arm/recipes-security/optee/optee-os-tadevkit_4.9=
-.0.bb
- create mode 100644 meta-arm/recipes-security/optee/optee-os_4.9.0.bb
- copy meta-arm/recipes-security/optee/{optee-test_git.bb =3D> optee-test_=
-4.9.0.bb} (68%)
+[...]
 
-diff --git a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0.bb b/m=
-eta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0.bb
-new file mode 100644
-index 00000000..5dfc88c6
---- /dev/null
-+++ b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0.bb
-@@ -0,0 +1,94 @@
-+SUMMARY =3D "OPTEE fTPM Microsoft TA"
-+DESCRIPTION =3D "TCG reference implementation of the TPM 2.0 Specificati=
-on."
-+HOMEPAGE =3D "https://github.com/microsoft/ms-tpm-20-ref/"
-+
-+COMPATIBLE_MACHINE ?=3D "invalid"
-+COMPATIBLE_MACHINE:genericarm64 =3D "genericarm64"
-+COMPATIBLE_MACHINE:qemuarm64 =3D "qemuarm64"
-+COMPATIBLE_MACHINE:qemuarm64-secureboot =3D "qemuarm64"
-+COMPATIBLE_MACHINE:qemuarm-secureboot =3D "qemuarm"
-+
-+inherit deploy python3native
-+
-+LICENSE =3D "MIT"
-+LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D5a3925ece0806073ae9ebbb08ff6f=
-11e"
-+LIC_FILES_CHKSUM +=3D "file://optee-ta/LICENSE;md5=3D5a3925ece0806073ae9=
-ebbb08ff6f11e"
-+
-+DEPENDS =3D "python3-pyelftools-native optee-os-tadevkit python3-cryptog=
-raphy-native"
-+DEPENDS:append:toolchain-clang =3D " lld-native"
-+
-+FTPM_UUID =3D "bc50d971-d4c9-42c4-82cb-343fb7f37896"
-+
-+SRC_URI_ms-tpm   ?=3D "gitsm://github.com/Microsoft/ms-tpm-20-ref;protoc=
-ol=3Dhttps"
-+SRC_URI_optee-ta ?=3D "gitsm://github.com/OP-TEE/optee_ftpm.git;protocol=
-=3Dhttps"
-+
-+SRCBRANCH_ms-tpm    =3D "main"
-+SRCBRANCH_optee-ta  =3D "master"
-+
-+SRC_URI =3D "\
-+    ${SRC_URI_ms-tpm};branch=3D${SRCBRANCH_ms-tpm};name=3Dms-tpm;destsuf=
-fix=3Dms-tpm \
-+    ${SRC_URI_optee-ta};branch=3D${SRCBRANCH_optee-ta};name=3Doptee-ta;d=
-estsuffix=3Dms-tpm/optee-ta \
-+"
-+
-+# As per optee-ftpm TA documentation, we have to use this SHA of MS TPM =
-reference
-+SRCREV_ms-tpm   ?=3D "98b60a44aba79b15fcce1c0d1e46cf5918400f6a"
-+
-+# v4.9.0
-+SRCREV_optee-ta ?=3D "a09269b15de635e1816fe832e26adfbfb44c5455"
-+
-+SRCREV_FORMAT    =3D "ms-tpm_optee-ta"
-+
-+UPSTREAM_CHECK_COMMITS =3D "1"
-+
-+S =3D "${UNPACKDIR}/ms-tpm"
-+
-+OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
-+TEEC_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
-+TA_DEV_KIT_DIR =3D "${STAGING_INCDIR}/optee/export-user_ta"
-+
-+EXTRA_OEMAKE +=3D '\
-+    COMPILER=3D${TOOLCHAIN} \
-+    TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \
-+    CROSS_COMPILE=3D${TARGET_PREFIX} \
-+    CFG_MS_TPM_20_REF=3D"${S}" \
-+    CFLAGS=3D"${CFLAGS} --sysroot=3D${STAGING_DIR_HOST}" \
-+'
-+
-+EXTRA_OEMAKE:append:aarch64:qemuall =3D "\
-+    CFG_ARM64_ta_arm64=3Dy \
-+"
-+
-+CFLAGS:append:toolchain-clang =3D " -Wno-unknown-warning-option"
-+
-+# python3-cryptography needs the legacy provider, so set OPENSSL_MODULES=
- to the
-+# right path until this is relocated automatically.
-+export OPENSSL_MODULES =3D "${STAGING_LIBDIR_NATIVE}/ossl-modules"
-+
-+PARALLEL_MAKE =3D ""
-+
-+do_compile() {
-+    cd ${S}/optee-ta
-+    oe_runmake
-+}
-+
-+do_install () {
-+    mkdir -p ${D}/${nonarch_base_libdir}/optee_armtz
-+    install -D -p -m 0644 ${S}/optee-ta/${FTPM_UUID}.ta ${D}/${nonarch_b=
-ase_libdir}/optee_armtz/
-+    install -D -p -m 0644 ${S}/optee-ta/${FTPM_UUID}.stripped.elf ${D}/$=
-{nonarch_base_libdir}/optee_armtz/
-+}
-+
-+do_deploy () {
-+    install -d ${DEPLOYDIR}/optee
-+    install -D -p -m 0644 ${S}/optee-ta/${FTPM_UUID}.stripped.elf ${DEPL=
-OYDIR}/optee/
-+}
-+
-+addtask deploy before do_build after do_install
-+
-+FILES:${PN} +=3D " \
-+               ${nonarch_base_libdir}/optee_armtz/${FTPM_UUID}.ta \
-+               ${nonarch_base_libdir}/optee_armtz/${FTPM_UUID}.stripped.=
-elf \
-+               "
-+
-+# Imports machine specific configs from staging to build
-+PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-+INSANE_SKIP:${PN} +=3D "ldflags"
-diff --git a/meta-arm/recipes-security/optee/optee-client_4.9.0.bb b/meta=
--arm/recipes-security/optee/optee-client_4.9.0.bb
-new file mode 100644
-index 00000000..b5c3f0a2
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-client_4.9.0.bb
-@@ -0,0 +1,4 @@
-+require recipes-security/optee/optee-client.inc
-+
-+# v4.9.0
-+SRCREV =3D "9f5e90918093c1d1cd264d8149081b64ab7ba672"
-diff --git a/meta-arm/recipes-security/optee/optee-examples_4.9.0.bb b/me=
-ta-arm/recipes-security/optee/optee-examples_4.9.0.bb
-new file mode 100644
-index 00000000..7c9bd972
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-examples_4.9.0.bb
-@@ -0,0 +1,4 @@
-+require recipes-security/optee/optee-examples.inc
-+
-+# v4.9.0
-+SRCREV =3D "934c7edb74a26e90f68024cf441073528444177f"
-diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_4.9.0.bb b=
-/meta-arm/recipes-security/optee/optee-os-tadevkit_4.9.0.bb
-new file mode 100644
-index 00000000..cca9f62a
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_4.9.0.bb
-@@ -0,0 +1,30 @@
-+require recipes-security/optee/optee-os_${PV}.bb
-+
-+SUMMARY =3D "OP-TEE Trusted OS TA devkit"
-+DESCRIPTION =3D "OP-TEE TA devkit for build TAs"
-+HOMEPAGE =3D "https://www.op-tee.org/"
-+
-+DEPENDS +=3D "python3-pycryptodome-native"
-+DEPENDS:append:toolchain-clang =3D " lld-native"
-+
-+do_install() {
-+    #install TA devkit
-+    install -d ${D}${includedir}/optee/export-user_ta/
-+    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
-+        cp -aR $f ${D}${includedir}/optee/export-user_ta/
-+    done
-+}
-+
-+do_deploy() {
-+	echo "Do not inherit do_deploy from optee-os."
-+}
-+
-+FILES:${PN} =3D "${includedir}/optee/"
-+
-+# Build paths are currently embedded
-+INSANE_SKIP:${PN}-dev +=3D "buildpaths"
-+
-+# Include extra headers needed by SPMC tests to TA DEVKIT.
-+# Supported after op-tee v3.20
-+EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
--spmc-test', \
-+                                        ' CFG_SPMC_TESTS=3Dy', '' , d)}"
-diff --git a/meta-arm/recipes-security/optee/optee-os_4.9.0.bb b/meta-arm=
-/recipes-security/optee/optee-os_4.9.0.bb
-new file mode 100644
-index 00000000..cd369382
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os_4.9.0.bb
-@@ -0,0 +1,6 @@
-+require recipes-security/optee/optee-os.inc
-+
-+DEPENDS +=3D "dtc-native"
-+
-+# 4.9.0
-+SRCREV =3D "c2b0684fcd89929976a8726e6e3af922b48dd2c7"
-diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/re=
-cipes-security/optee/optee-test.inc
-index 397515f9..922911ad 100644
---- a/meta-arm/recipes-security/optee/optee-test.inc
-+++ b/meta-arm/recipes-security/optee/optee-test.inc
-@@ -11,7 +11,9 @@ require optee.inc
- DEPENDS =3D "optee-client optee-os-tadevkit python3-cryptography-native =
-openssl"
- DEPENDS:append:toolchain-clang =3D " lld-native"
-=20
--SRC_URI =3D "git://github.com/OP-TEE/optee_test.git;branch=3Dmaster;prot=
-ocol=3Dhttps \
-+OPTEE_TEST_GIT_TAG =3D ";tag=3D${PV}"
-+
-+SRC_URI =3D "git://github.com/OP-TEE/optee_test.git;branch=3Dmaster;prot=
-ocol=3Dhttps${OPTEE_TEST_GIT_TAG} \
-            file://run-ptest \
-           "
-=20
-diff --git a/meta-arm/recipes-security/optee/optee-test_git.bb b/meta-arm=
-/recipes-security/optee/optee-test_4.9.0.bb
-similarity index 68%
-copy from meta-arm/recipes-security/optee/optee-test_git.bb
-copy to meta-arm/recipes-security/optee/optee-test_4.9.0.bb
-index d2933390..2cd5fc5c 100644
---- a/meta-arm/recipes-security/optee/optee-test_git.bb
-+++ b/meta-arm/recipes-security/optee/optee-test_4.9.0.bb
-@@ -1,10 +1,12 @@
- require recipes-security/optee/optee-test.inc
-=20
--# v4.8.0
--SRCREV =3D "6569cd7b13e1b37b37069e090d592adca7d3926d"
--PV .=3D "+git"
-+# v4.9.0
-+SRCREV =3D "b27648ea8472cceceb8dda368a965c709066f7aa"
-=20
--LIC_FILES_CHKSUM =3D "file://LICENSE.md;md5=3Da8fa504109e4cd7ea575bc49ea=
-4be560"
-+LIC_FILES_CHKSUM =3D "file://LICENSE.md;md5=3Da8fa504109e4cd7ea575bc49ea=
-4be560 \
-+                    file://LICENSE-BSD;md5=3Ddca16d6efa93b55d0fd662ae5cd=
-6feeb \
-+                    file://LICENSE-GPL;md5=3D10e86b5d2a6cb0e2b9dcfdd26a9=
-ac58d \
-+                   "
-=20
- # Include ffa_spmc test group if the SPMC test is enabled.
- # Supported after op-tee v3.20
-@@ -13,8 +15,3 @@ EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_=
-FEATURES', 'optee-spmc-test
-=20
- RDEPENDS:${PN} +=3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee-spm=
-c-test', \
-                                               ' arm-ffa-user', '' , d)}"
--
--# Not a release recipe, try our hardest to not pull this in implicitly
--DEFAULT_PREFERENCE =3D "-1"
--
--CFLAGS +=3D "-Wno-error=3Dunterminated-string-initialization"
-diff --git a/meta-arm/recipes-security/optee/optee-test_git.bb b/meta-arm=
-/recipes-security/optee/optee-test_git.bb
-index d2933390..dfbef843 100644
---- a/meta-arm/recipes-security/optee/optee-test_git.bb
-+++ b/meta-arm/recipes-security/optee/optee-test_git.bb
-@@ -4,7 +4,12 @@ require recipes-security/optee/optee-test.inc
- SRCREV =3D "6569cd7b13e1b37b37069e090d592adca7d3926d"
- PV .=3D "+git"
-=20
--LIC_FILES_CHKSUM =3D "file://LICENSE.md;md5=3Da8fa504109e4cd7ea575bc49ea=
-4be560"
-+OPTEE_TEST_GIT_TAG =3D ""
-+
-+LIC_FILES_CHKSUM =3D "file://LICENSE.md;md5=3Da8fa504109e4cd7ea575bc49ea=
-4be560 \
-+                    file://LICENSE-BSD;md5=3Ddca16d6efa93b55d0fd662ae5cd=
-6feeb \
-+                    file://LICENSE-GPL;md5=3D10e86b5d2a6cb0e2b9dcfdd26a9=
-ac58d \
-+                   "
-=20
- # Include ffa_spmc test group if the SPMC test is enabled.
- # Supported after op-tee v3.20
+> diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/recipes-security/optee/optee-test.inc
+> index 397515f9..922911ad 100644
+> --- a/meta-arm/recipes-security/optee/optee-test.inc
+> +++ b/meta-arm/recipes-security/optee/optee-test.inc
+> @@ -11,7 +11,9 @@ require optee.inc
+>   DEPENDS = "optee-client optee-os-tadevkit python3-cryptography-native openssl"
+>   DEPENDS:append:toolchain-clang = " lld-native"
+>   
+> -SRC_URI = "git://github.com/OP-TEE/optee_test.git;branch=master;protocol=https \
+> +OPTEE_TEST_GIT_TAG = ";tag=${PV}"
+> +
+
+We could have this in optee.inc I believe? It applies to all recipes for 
+which we have a tag and want to use that tag.
+
+Also not entirely sure it makes sense to pass both branch=master and 
+tag=${PV} (but the former is most welcome when the latter isn't 
+specified, so maybe something like
+
+in .inc files:
+SRC_URI_BRANCH_OR_TAG ?= "tag=${PV}"
+
+in _git.bb files:
+SRC_URI_BRANCH_OR_TAG = "branch=master"
+
+SRC_URI = 
+"git://github.com/OP-TEE/optee_test.git;protocol=https;${SRC_URI_BRANCH_OR_TAG}"
+
+for example (not tested!). Or maybe even
+
+SRC_URI_BRANCH_OR_TAG ?= "${@'tag=${PV}' if d.getVar('PV') != 'git' else 
+branch='master'}"
+
+such that if the recipe filename ends with _git it automatically is 
+branch=master, otherwise it is the version number taken as a tag (again, 
+not tested).
+
+This can be a separate patch. No blocker for merging this in my opinion.
+
+Cheers,
+Quentin
 
