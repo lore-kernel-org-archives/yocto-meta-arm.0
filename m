@@ -2,27 +2,27 @@ Return-Path: <hugues.kambampiana@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA74D34094
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D193ED34093
 	for <webhook@archiver.kernel.org>; Tue, 27 Jan 2026 15:45:40 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.14325.1769528737305163183
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.14327.1769528739130881252
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 27 Jan 2026 07:45:37 -0800
+ Tue, 27 Jan 2026 07:45:39 -0800
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: hugues.kambampiana@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 617DD1650;
-	Tue, 27 Jan 2026 07:45:30 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E86F1655;
+	Tue, 27 Jan 2026 07:45:32 -0800 (PST)
 Received: from LXKV206JHX.emea.arm.com (LXKV206JHX.cambridge.arm.com [10.1.28.17])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C30B3F632;
-	Tue, 27 Jan 2026 07:45:36 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 203A73F632;
+	Tue, 27 Jan 2026 07:45:38 -0800 (PST)
 From: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>,
 	Quentin Schulz <quentin.schulz@cherry.de>
-Subject: [PATCH v3 1/3] arm/arm-bsp: optee: add version 4.9.0
-Date: Tue, 27 Jan 2026 15:45:23 +0000
-Message-ID: <20260127154532.27572-2-hugues.kambampiana@arm.com>
+Subject: [PATCH v3 3/3] arm/arm-bsp: optee: drop version 4.7.0
+Date: Tue, 27 Jan 2026 15:45:25 +0000
+Message-ID: <20260127154532.27572-4-hugues.kambampiana@arm.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260127154532.27572-1-hugues.kambampiana@arm.com>
 References: <20260127154532.27572-1-hugues.kambampiana@arm.com>
@@ -32,355 +32,361 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 27 Jan 2026 15:45:40 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6880
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6882
 
-OP-TEE version 4.9.0 has been released on 2026-01-16 [1].
-
-Add OP-TEE recipes to point to version 4.9.0
-
-Link: [1]: https://github.com/OP-TEE/optee_os/blob/master/CHANGELOG.md#op=
--tee---version-490-2026-01-16
+Drop support for OP-TEE version 4.7.0 from the layer as
+version 4.9.0 is present.
 
 Signed-off-by: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
-Tested-by: Quentin Schulz <quentin.schulz@cherry.de> # xtest on PX30, RK3=
-399, RK3588
+Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
- .../optee-ftpm/optee-ftpm_4.9.0.bb            | 94 +++++++++++++++++++
- .../optee/optee-client_4.9.0.bb               |  4 +
- .../recipes-security/optee/optee-examples.inc |  2 +-
- .../optee/optee-examples_4.9.0.bb             |  4 +
- .../optee/optee-os-tadevkit_4.9.0.bb          | 30 ++++++
- meta-arm/recipes-security/optee/optee-os.inc  |  2 +-
- .../recipes-security/optee/optee-os_4.9.0.bb  |  6 ++
- .../recipes-security/optee/optee-test.inc     |  2 +-
- ...{optee-test_git.bb =3D> optee-test_4.9.0.bb} | 15 ++-
- .../recipes-security/optee/optee-test_git.bb  |  5 +-
- meta-arm/recipes-security/optee/optee.inc     |  3 +
- 11 files changed, 154 insertions(+), 13 deletions(-)
- create mode 100644 meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0=
+ .../optee-ftpm/optee-ftpm_4.7.0.bb            | 94 -------------------
+ ...ant-update-udev-systemd-install-code.patch | 78 ---------------
+ .../optee/optee-client_4.7.0.bb               |  5 -
+ .../optee/optee-examples_4.7.0.bb             |  4 -
+ .../optee/optee-os-tadevkit_4.7.0.bb          | 30 ------
+ .../recipes-security/optee/optee-os_4.7.0.bb  |  8 --
+ .../optee/optee-test_4.7.0.bb                 | 14 ---
+ 7 files changed, 233 deletions(-)
+ delete mode 100644 meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.7.0=
 .bb
- create mode 100644 meta-arm/recipes-security/optee/optee-client_4.9.0.bb
- create mode 100644 meta-arm/recipes-security/optee/optee-examples_4.9.0.=
+ delete mode 100644 meta-arm/recipes-security/optee/optee-client/0001-tee=
+-supplicant-update-udev-systemd-install-code.patch
+ delete mode 100644 meta-arm/recipes-security/optee/optee-client_4.7.0.bb
+ delete mode 100644 meta-arm/recipes-security/optee/optee-examples_4.7.0.=
 bb
- create mode 100644 meta-arm/recipes-security/optee/optee-os-tadevkit_4.9=
+ delete mode 100644 meta-arm/recipes-security/optee/optee-os-tadevkit_4.7=
 .0.bb
- create mode 100644 meta-arm/recipes-security/optee/optee-os_4.9.0.bb
- copy meta-arm/recipes-security/optee/{optee-test_git.bb =3D> optee-test_=
-4.9.0.bb} (68%)
+ delete mode 100644 meta-arm/recipes-security/optee/optee-os_4.7.0.bb
+ delete mode 100644 meta-arm/recipes-security/optee/optee-test_4.7.0.bb
 
-diff --git a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0.bb b/m=
-eta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0.bb
-new file mode 100644
-index 00000000..0cbefcee
---- /dev/null
-+++ b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0.bb
-@@ -0,0 +1,94 @@
-+SUMMARY =3D "OPTEE fTPM Microsoft TA"
-+DESCRIPTION =3D "TCG reference implementation of the TPM 2.0 Specificati=
+diff --git a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.7.0.bb b/m=
+eta-arm/recipes-security/optee-ftpm/optee-ftpm_4.7.0.bb
+deleted file mode 100644
+index 9164f31b..00000000
+--- a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.7.0.bb
++++ /dev/null
+@@ -1,94 +0,0 @@
+-SUMMARY =3D "OPTEE fTPM Microsoft TA"
+-DESCRIPTION =3D "TCG reference implementation of the TPM 2.0 Specificati=
 on."
-+HOMEPAGE =3D "https://github.com/microsoft/ms-tpm-20-ref/"
-+
-+COMPATIBLE_MACHINE ?=3D "invalid"
-+COMPATIBLE_MACHINE:genericarm64 =3D "genericarm64"
-+COMPATIBLE_MACHINE:qemuarm64 =3D "qemuarm64"
-+COMPATIBLE_MACHINE:qemuarm64-secureboot =3D "qemuarm64"
-+COMPATIBLE_MACHINE:qemuarm-secureboot =3D "qemuarm"
-+
-+inherit deploy python3native
-+
-+LICENSE =3D "MIT"
-+LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D5a3925ece0806073ae9ebbb08ff6f=
+-HOMEPAGE =3D "https://github.com/microsoft/ms-tpm-20-ref/"
+-
+-COMPATIBLE_MACHINE ?=3D "invalid"
+-COMPATIBLE_MACHINE:genericarm64 =3D "genericarm64"
+-COMPATIBLE_MACHINE:qemuarm64 =3D "qemuarm64"
+-COMPATIBLE_MACHINE:qemuarm64-secureboot =3D "qemuarm64"
+-COMPATIBLE_MACHINE:qemuarm-secureboot =3D "qemuarm"
+-
+-inherit deploy python3native
+-
+-LICENSE =3D "MIT"
+-LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D5a3925ece0806073ae9ebbb08ff6f=
 11e"
-+LIC_FILES_CHKSUM +=3D "file://optee-ta/LICENSE;md5=3D5a3925ece0806073ae9=
+-LIC_FILES_CHKSUM +=3D "file://optee-ta/LICENSE;md5=3D5a3925ece0806073ae9=
 ebbb08ff6f11e"
-+
-+DEPENDS =3D "python3-pyelftools-native optee-os-tadevkit python3-cryptog=
+-
+-DEPENDS =3D "python3-pyelftools-native optee-os-tadevkit python3-cryptog=
 raphy-native"
-+DEPENDS:append:toolchain-clang =3D " lld-native"
-+
-+FTPM_UUID =3D "bc50d971-d4c9-42c4-82cb-343fb7f37896"
-+
-+SRC_URI_ms-tpm   ?=3D "gitsm://github.com/Microsoft/ms-tpm-20-ref;protoc=
+-DEPENDS:append:toolchain-clang =3D " lld-native"
+-
+-FTPM_UUID =3D "bc50d971-d4c9-42c4-82cb-343fb7f37896"
+-
+-SRC_URI_ms-tpm   ?=3D "gitsm://github.com/Microsoft/ms-tpm-20-ref;protoc=
 ol=3Dhttps"
-+SRC_URI_optee-ta ?=3D "gitsm://github.com/OP-TEE/optee_ftpm.git;protocol=
+-SRC_URI_optee-ta ?=3D "gitsm://github.com/OP-TEE/optee_ftpm.git;protocol=
 =3Dhttps"
-+
-+SRCBRANCH_ms-tpm    =3D "main"
-+OPTEE_TA_GIT_TAG ?=3D "tag=3D${PV};nobranch=3D1"
-+
-+SRC_URI =3D "\
-+    ${SRC_URI_ms-tpm};branch=3D${SRCBRANCH_ms-tpm};name=3Dms-tpm;destsuf=
+-
+-SRCBRANCH_ms-tpm    =3D "main"
+-SRCBRANCH_optee-ta  =3D "master"
+-
+-SRC_URI =3D "\
+-    ${SRC_URI_ms-tpm};branch=3D${SRCBRANCH_ms-tpm};name=3Dms-tpm;destsuf=
 fix=3Dms-tpm \
-+    ${SRC_URI_optee-ta};${OPTEE_TA_GIT_TAG};name=3Doptee-ta;destsuffix=3D=
-ms-tpm/optee-ta \
-+"
-+
-+# As per optee-ftpm TA documentation, we have to use this SHA of MS TPM =
+-    ${SRC_URI_optee-ta};branch=3D${SRCBRANCH_optee-ta};name=3Doptee-ta;d=
+estsuffix=3Dms-tpm/optee-ta \
+-"
+-
+-# As per optee-ftpm TA documentation, we have to use this SHA of MS TPM =
 reference
-+SRCREV_ms-tpm   ?=3D "98b60a44aba79b15fcce1c0d1e46cf5918400f6a"
-+
-+# v4.9.0
-+SRCREV_optee-ta ?=3D "a09269b15de635e1816fe832e26adfbfb44c5455"
-+
-+SRCREV_FORMAT    =3D "ms-tpm_optee-ta"
-+
-+UPSTREAM_CHECK_COMMITS =3D "1"
-+
-+S =3D "${UNPACKDIR}/ms-tpm"
-+
-+OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
-+TEEC_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
-+TA_DEV_KIT_DIR =3D "${STAGING_INCDIR}/optee/export-user_ta"
-+
-+EXTRA_OEMAKE +=3D '\
-+    COMPILER=3D${TOOLCHAIN} \
-+    TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \
-+    CROSS_COMPILE=3D${TARGET_PREFIX} \
-+    CFG_MS_TPM_20_REF=3D"${S}" \
-+    CFLAGS=3D"${CFLAGS} --sysroot=3D${STAGING_DIR_HOST}" \
-+'
-+
-+EXTRA_OEMAKE:append:aarch64:qemuall =3D "\
-+    CFG_ARM64_ta_arm64=3Dy \
-+"
-+
-+CFLAGS:append:toolchain-clang =3D " -Wno-unknown-warning-option"
-+
-+# python3-cryptography needs the legacy provider, so set OPENSSL_MODULES=
+-SRCREV_ms-tpm   ?=3D "98b60a44aba79b15fcce1c0d1e46cf5918400f6a"
+-
+-# v4.7.0
+-SRCREV_optee-ta ?=3D "ce33372ab772e879826361a1ca91126260bd9be1"
+-
+-SRCREV_FORMAT    =3D "ms-tpm_optee-ta"
+-
+-UPSTREAM_CHECK_COMMITS =3D "1"
+-
+-S =3D "${UNPACKDIR}/ms-tpm"
+-
+-OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
+-TEEC_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
+-TA_DEV_KIT_DIR =3D "${STAGING_INCDIR}/optee/export-user_ta"
+-
+-EXTRA_OEMAKE +=3D '\
+-    COMPILER=3D${TOOLCHAIN} \
+-    TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \
+-    CROSS_COMPILE=3D${TARGET_PREFIX} \
+-    CFG_MS_TPM_20_REF=3D"${S}" \
+-    CFLAGS=3D"${CFLAGS} --sysroot=3D${STAGING_DIR_HOST}" \
+-'
+-
+-EXTRA_OEMAKE:append:aarch64:qemuall =3D "\
+-    CFG_ARM64_ta_arm64=3Dy \
+-"
+-
+-CFLAGS:append:toolchain-clang =3D " -Wno-unknown-warning-option"
+-
+-# python3-cryptography needs the legacy provider, so set OPENSSL_MODULES=
  to the
-+# right path until this is relocated automatically.
-+export OPENSSL_MODULES =3D "${STAGING_LIBDIR_NATIVE}/ossl-modules"
-+
-+PARALLEL_MAKE =3D ""
-+
-+do_compile() {
-+    cd ${S}/optee-ta
-+    oe_runmake
-+}
-+
-+do_install () {
-+    mkdir -p ${D}/${nonarch_base_libdir}/optee_armtz
-+    install -D -p -m 0644 ${S}/optee-ta/${FTPM_UUID}.ta ${D}/${nonarch_b=
+-# right path until this is relocated automatically.
+-export OPENSSL_MODULES =3D "${STAGING_LIBDIR_NATIVE}/ossl-modules"
+-
+-PARALLEL_MAKE =3D ""
+-
+-do_compile() {
+-    cd ${S}/optee-ta
+-    oe_runmake
+-}
+-
+-do_install () {
+-    mkdir -p ${D}/${nonarch_base_libdir}/optee_armtz
+-    install -D -p -m 0644 ${S}/optee-ta/${FTPM_UUID}.ta ${D}/${nonarch_b=
 ase_libdir}/optee_armtz/
-+    install -D -p -m 0644 ${S}/optee-ta/${FTPM_UUID}.stripped.elf ${D}/$=
+-    install -D -p -m 0644 ${S}/optee-ta/${FTPM_UUID}.stripped.elf ${D}/$=
 {nonarch_base_libdir}/optee_armtz/
-+}
-+
-+do_deploy () {
-+    install -d ${DEPLOYDIR}/optee
-+    install -D -p -m 0644 ${S}/optee-ta/${FTPM_UUID}.stripped.elf ${DEPL=
+-}
+-
+-do_deploy () {
+-    install -d ${DEPLOYDIR}/optee
+-    install -D -p -m 0644 ${S}/optee-ta/${FTPM_UUID}.stripped.elf ${DEPL=
 OYDIR}/optee/
-+}
-+
-+addtask deploy before do_build after do_install
-+
-+FILES:${PN} +=3D " \
-+               ${nonarch_base_libdir}/optee_armtz/${FTPM_UUID}.ta \
-+               ${nonarch_base_libdir}/optee_armtz/${FTPM_UUID}.stripped.=
+-}
+-
+-addtask deploy before do_build after do_install
+-
+-FILES:${PN} +=3D " \
+-               ${nonarch_base_libdir}/optee_armtz/${FTPM_UUID}.ta \
+-               ${nonarch_base_libdir}/optee_armtz/${FTPM_UUID}.stripped.=
 elf \
-+               "
-+
-+# Imports machine specific configs from staging to build
-+PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-+INSANE_SKIP:${PN} +=3D "ldflags"
-diff --git a/meta-arm/recipes-security/optee/optee-client_4.9.0.bb b/meta=
--arm/recipes-security/optee/optee-client_4.9.0.bb
-new file mode 100644
-index 00000000..b5c3f0a2
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-client_4.9.0.bb
-@@ -0,0 +1,4 @@
-+require recipes-security/optee/optee-client.inc
-+
-+# v4.9.0
-+SRCREV =3D "9f5e90918093c1d1cd264d8149081b64ab7ba672"
-diff --git a/meta-arm/recipes-security/optee/optee-examples.inc b/meta-ar=
-m/recipes-security/optee/optee-examples.inc
-index f274f6fa..6cd14920 100644
---- a/meta-arm/recipes-security/optee/optee-examples.inc
-+++ b/meta-arm/recipes-security/optee/optee-examples.inc
-@@ -11,7 +11,7 @@ inherit python3native
-=20
- require optee.inc
-=20
--SRC_URI =3D "git://github.com/linaro-swg/optee_examples.git;branch=3Dmas=
-ter;protocol=3Dhttps \
-+SRC_URI =3D "git://github.com/linaro-swg/optee_examples.git;protocol=3Dh=
-ttps;${OPTEE_SRC_URI_BRANCH_OR_TAG} \
-            file://0001-Makefile-Avoid-variable-override.patch \
-            "
-=20
-diff --git a/meta-arm/recipes-security/optee/optee-examples_4.9.0.bb b/me=
-ta-arm/recipes-security/optee/optee-examples_4.9.0.bb
-new file mode 100644
-index 00000000..7c9bd972
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-examples_4.9.0.bb
-@@ -0,0 +1,4 @@
-+require recipes-security/optee/optee-examples.inc
-+
-+# v4.9.0
-+SRCREV =3D "934c7edb74a26e90f68024cf441073528444177f"
-diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_4.9.0.bb b=
-/meta-arm/recipes-security/optee/optee-os-tadevkit_4.9.0.bb
-new file mode 100644
-index 00000000..cca9f62a
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_4.9.0.bb
-@@ -0,0 +1,30 @@
-+require recipes-security/optee/optee-os_${PV}.bb
-+
-+SUMMARY =3D "OP-TEE Trusted OS TA devkit"
-+DESCRIPTION =3D "OP-TEE TA devkit for build TAs"
-+HOMEPAGE =3D "https://www.op-tee.org/"
-+
-+DEPENDS +=3D "python3-pycryptodome-native"
-+DEPENDS:append:toolchain-clang =3D " lld-native"
-+
-+do_install() {
-+    #install TA devkit
-+    install -d ${D}${includedir}/optee/export-user_ta/
-+    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
-+        cp -aR $f ${D}${includedir}/optee/export-user_ta/
-+    done
-+}
-+
-+do_deploy() {
-+	echo "Do not inherit do_deploy from optee-os."
-+}
-+
-+FILES:${PN} =3D "${includedir}/optee/"
-+
-+# Build paths are currently embedded
-+INSANE_SKIP:${PN}-dev +=3D "buildpaths"
-+
-+# Include extra headers needed by SPMC tests to TA DEVKIT.
-+# Supported after op-tee v3.20
-+EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
+-               "
+-
+-# Imports machine specific configs from staging to build
+-PACKAGE_ARCH =3D "${MACHINE_ARCH}"
+-INSANE_SKIP:${PN} +=3D "ldflags"
+diff --git a/meta-arm/recipes-security/optee/optee-client/0001-tee-suppli=
+cant-update-udev-systemd-install-code.patch b/meta-arm/recipes-security/o=
+ptee/optee-client/0001-tee-supplicant-update-udev-systemd-install-code.pa=
+tch
+deleted file mode 100644
+index cd367124..00000000
+--- a/meta-arm/recipes-security/optee/optee-client/0001-tee-supplicant-up=
+date-udev-systemd-install-code.patch
++++ /dev/null
+@@ -1,78 +0,0 @@
+-From 5ddaac7c0770a423eca0cb727403b2f06657ffea Mon Sep 17 00:00:00 2001
+-From: Gyorgy Szing <gyorgy.szing@arm.com>
+-Date: Tue, 14 Jan 2025 09:42:25 +0100
+-Subject: [PATCH 1/1] tee-supplicant: update udev & systemd install code
+-
+-- Allow optionally using pkg-config to discover install location of
+-  systemd service and udev rule files.
+-- Make systemd service file generation and installation optional.
+-- Make udev rule file generation and installation optional.
+-
+-Changes are backwards compatible and the default operation is unchanged.
+-
+-Upstream-Status: Submitted [https://github.com/OP-TEE/optee_client/pull/=
+402]
+-
+-Signed-off-by: Gyorgy Szing <gyorgy.szing@arm.com>
+----
+- tee-supplicant/CMakeLists.txt | 39 +++++++++++++++++++++++++++++++----
+- 1 file changed, 35 insertions(+), 4 deletions(-)
+-
+-diff --git a/tee-supplicant/CMakeLists.txt b/tee-supplicant/CMakeLists.t=
+xt
+-index 8df9bef..ae1f5a4 100644
+---- a/tee-supplicant/CMakeLists.txt
+-+++ b/tee-supplicant/CMakeLists.txt
+-@@ -7,6 +7,9 @@ option(RPMB_EMU "Enable tee-supplicant to emulate RPMB" =
+ON)
+- option(CFG_TA_GPROF_SUPPORT "Enable tee-supplicant support for TAs inst=
+rumented with gprof" ON)
+- option(CFG_FTRACE_SUPPORT "Enable tee-supplicant support for TAs instru=
+mented with ftrace" ON)
+- option(CFG_TEE_SUPP_PLUGINS "Enable tee-supplicant plugin support" ON)
+-+option(CFG_ENABLE_SYSTEMD "Enable systemd service unit file generation.=
+" ON)
+-+option(CFG_ENABLE_UDEV "Enable udev rules file generation." ON)
+-+option(CFG_USE_PKGCONFIG "Use pkg-config for discovering install target=
+ directory for systemd and udev files." OFF)
+-=20
+- set(CFG_TEE_SUPP_LOG_LEVEL "1" CACHE STRING "tee-supplicant log level")
+- # FIXME: Question is, is this really needed? Should just use defaults f=
+rom # GNUInstallDirs?
+-@@ -117,8 +120,36 @@ endif()
+- #######################################################################=
+#########
+- # Install targets
+- #######################################################################=
+#########
+-+# Discover target install location of the systemd and udev files using =
+pkg-config
+-+if (CFG_USE_PKGCONFIG)
+-+	# Note: pkg-config should return setting valid for the target platform=
+ and not the host.
+-+	include(FindPkgConfig)
+-+	if (PKG_CONFIG_FOUND)
+-+		pkg_search_module(SYSTEMD systemd)
+-+		if (SYSTEMD_FOUND AND CFG_ENABLE_SYSTEMD)
+-+			pkg_get_variable(UNIT_DIR systemd systemd_system_unit_dir)
+-+			set(SYSTEMD_UNIT_DIR "${UNIT_DIR}" CACHE PATH "Location of systemd u=
+nit files.")
+-+			unset(UNIT_DIR)
+-+		endif()
+-+		pkg_search_module(UDEV udev)
+-+		if (UDEV_FOUND)
+-+			pkg_get_variable(UDEV_DIR udev udev_dir)
+-+			set(UDEV_UDEV_DIR "${UDEV_DIR}" CACHE PATH "Location of udev files."=
+)
+-+			unset(UDEV_DIR)
+-+		endif()
+-+	endif()
+-+endif()
+-+
+-+# Some sane defaults is discovering through pkgconfig fails or is disab=
+led.
+-+set(SYSTEMD_UNIT_DIR "${CMAKE_INSTALL_LIBDIR}/systemd/system" CACHE PAT=
+H "Location of systemd unit files.")
+-+set(UDEV_UDEV_DIR "${CMAKE_INSTALL_SYSCONFDIR}/udev/rules.d" CACHE PATH=
+ "Location of udev files.")
+-+
+- install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_SBI=
+NDIR})
+--configure_file(tee-supplicant@.service.in tee-supplicant@.service @ONLY=
+)
+--install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/tee-supplicant@.servi=
+ce DESTINATION ${CMAKE_INSTALL_LIBDIR}/systemd/system)
+--configure_file(optee-udev.rules.in optee-udev.rules @ONLY)
+--install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/optee-udev.rules DEST=
+INATION ${CMAKE_INSTALL_SYSCONFDIR}/udev/rules.d)
+-+if (CFG_ENABLE_SYSTEMD)
+-+	configure_file(tee-supplicant@.service.in tee-supplicant@.service @ONL=
+Y)
+-+	install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/tee-supplicant@.serv=
+ice DESTINATION ${SYSTEMD_UNIT_DIR})
+-+endif()
+-+if (CFG_ENABLE_UDEV)
+-+	configure_file(optee-udev.rules.in optee-udev.rules @ONLY)
+-+	install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/optee-udev.rules DES=
+TINATION ${UDEV_UDEV_DIR})
+-+endif()
+-\ No newline at end of file
+---=20
+-2.43.0
+-
+diff --git a/meta-arm/recipes-security/optee/optee-client_4.7.0.bb b/meta=
+-arm/recipes-security/optee/optee-client_4.7.0.bb
+deleted file mode 100644
+index 2fb157df..00000000
+--- a/meta-arm/recipes-security/optee/optee-client_4.7.0.bb
++++ /dev/null
+@@ -1,5 +0,0 @@
+-require recipes-security/optee/optee-client.inc
+-
+-# v4.7.0
+-SRCREV =3D "23c112a6f05cc5e39bd4aaf52ad515cad532237d"
+-SRC_URI +=3D "file://0001-tee-supplicant-update-udev-systemd-install-cod=
+e.patch"
+diff --git a/meta-arm/recipes-security/optee/optee-examples_4.7.0.bb b/me=
+ta-arm/recipes-security/optee/optee-examples_4.7.0.bb
+deleted file mode 100644
+index a926f819..00000000
+--- a/meta-arm/recipes-security/optee/optee-examples_4.7.0.bb
++++ /dev/null
+@@ -1,4 +0,0 @@
+-require recipes-security/optee/optee-examples.inc
+-
+-# v4.7.0
+-SRCREV =3D "14321a0607db16099d158478b21a2b2e37b3a935"
+diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_4.7.0.bb b=
+/meta-arm/recipes-security/optee/optee-os-tadevkit_4.7.0.bb
+deleted file mode 100644
+index cca9f62a..00000000
+--- a/meta-arm/recipes-security/optee/optee-os-tadevkit_4.7.0.bb
++++ /dev/null
+@@ -1,30 +0,0 @@
+-require recipes-security/optee/optee-os_${PV}.bb
+-
+-SUMMARY =3D "OP-TEE Trusted OS TA devkit"
+-DESCRIPTION =3D "OP-TEE TA devkit for build TAs"
+-HOMEPAGE =3D "https://www.op-tee.org/"
+-
+-DEPENDS +=3D "python3-pycryptodome-native"
+-DEPENDS:append:toolchain-clang =3D " lld-native"
+-
+-do_install() {
+-    #install TA devkit
+-    install -d ${D}${includedir}/optee/export-user_ta/
+-    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
+-        cp -aR $f ${D}${includedir}/optee/export-user_ta/
+-    done
+-}
+-
+-do_deploy() {
+-	echo "Do not inherit do_deploy from optee-os."
+-}
+-
+-FILES:${PN} =3D "${includedir}/optee/"
+-
+-# Build paths are currently embedded
+-INSANE_SKIP:${PN}-dev +=3D "buildpaths"
+-
+-# Include extra headers needed by SPMC tests to TA DEVKIT.
+-# Supported after op-tee v3.20
+-EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
 -spmc-test', \
-+                                        ' CFG_SPMC_TESTS=3Dy', '' , d)}"
-diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/reci=
-pes-security/optee/optee-os.inc
-index 41eb6d1f..076e482b 100644
---- a/meta-arm/recipes-security/optee/optee-os.inc
-+++ b/meta-arm/recipes-security/optee/optee-os.inc
-@@ -14,7 +14,7 @@ DEPENDS =3D "python3-pyelftools-native python3-cryptogr=
-aphy-native"
-=20
- DEPENDS:append:toolchain-clang =3D " lld-native compiler-rt"
-=20
--SRC_URI =3D "git://github.com/OP-TEE/optee_os.git;branch=3Dmaster;protoc=
-ol=3Dhttps"
-+SRC_URI =3D "git://github.com/OP-TEE/optee_os.git;protocol=3Dhttps;${OPT=
-EE_SRC_URI_BRANCH_OR_TAG}"
-=20
- B =3D "${WORKDIR}/build"
-=20
-diff --git a/meta-arm/recipes-security/optee/optee-os_4.9.0.bb b/meta-arm=
-/recipes-security/optee/optee-os_4.9.0.bb
-new file mode 100644
-index 00000000..cd369382
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os_4.9.0.bb
-@@ -0,0 +1,6 @@
-+require recipes-security/optee/optee-os.inc
-+
-+DEPENDS +=3D "dtc-native"
-+
-+# 4.9.0
-+SRCREV =3D "c2b0684fcd89929976a8726e6e3af922b48dd2c7"
-diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/re=
-cipes-security/optee/optee-test.inc
-index 397515f9..bb9471bf 100644
---- a/meta-arm/recipes-security/optee/optee-test.inc
-+++ b/meta-arm/recipes-security/optee/optee-test.inc
-@@ -11,7 +11,7 @@ require optee.inc
- DEPENDS =3D "optee-client optee-os-tadevkit python3-cryptography-native =
-openssl"
- DEPENDS:append:toolchain-clang =3D " lld-native"
-=20
--SRC_URI =3D "git://github.com/OP-TEE/optee_test.git;branch=3Dmaster;prot=
-ocol=3Dhttps \
-+SRC_URI =3D "git://github.com/OP-TEE/optee_test.git;protocol=3Dhttps;${O=
-PTEE_SRC_URI_BRANCH_OR_TAG} \
-            file://run-ptest \
-           "
-=20
-diff --git a/meta-arm/recipes-security/optee/optee-test_git.bb b/meta-arm=
-/recipes-security/optee/optee-test_4.9.0.bb
-similarity index 68%
-copy from meta-arm/recipes-security/optee/optee-test_git.bb
-copy to meta-arm/recipes-security/optee/optee-test_4.9.0.bb
-index d2933390..2cd5fc5c 100644
---- a/meta-arm/recipes-security/optee/optee-test_git.bb
-+++ b/meta-arm/recipes-security/optee/optee-test_4.9.0.bb
-@@ -1,10 +1,12 @@
- require recipes-security/optee/optee-test.inc
-=20
--# v4.8.0
--SRCREV =3D "6569cd7b13e1b37b37069e090d592adca7d3926d"
--PV .=3D "+git"
-+# v4.9.0
-+SRCREV =3D "b27648ea8472cceceb8dda368a965c709066f7aa"
-=20
+-                                        ' CFG_SPMC_TESTS=3Dy', '' , d)}"
+diff --git a/meta-arm/recipes-security/optee/optee-os_4.7.0.bb b/meta-arm=
+/recipes-security/optee/optee-os_4.7.0.bb
+deleted file mode 100644
+index 1d5d8ccc..00000000
+--- a/meta-arm/recipes-security/optee/optee-os_4.7.0.bb
++++ /dev/null
+@@ -1,8 +0,0 @@
+-require recipes-security/optee/optee-os.inc
+-
+-DEPENDS +=3D "dtc-native"
+-
+-FILESEXTRAPATHS:prepend :=3D "${THISDIR}/${PN}:"
+-
+-# v4.7.0
+-SRCREV =3D "86846f4fdf14f25b50fd64a87888ca9fe85a9e2b"
+diff --git a/meta-arm/recipes-security/optee/optee-test_4.7.0.bb b/meta-a=
+rm/recipes-security/optee/optee-test_4.7.0.bb
+deleted file mode 100644
+index f42e254a..00000000
+--- a/meta-arm/recipes-security/optee/optee-test_4.7.0.bb
++++ /dev/null
+@@ -1,14 +0,0 @@
+-require recipes-security/optee/optee-test.inc
+-
+-# v4.7.0
+-SRCREV =3D "a15be9eca1b7e935917d834284726027dffc8cfb"
+-
 -LIC_FILES_CHKSUM =3D "file://LICENSE.md;md5=3Da8fa504109e4cd7ea575bc49ea=
 4be560"
-+LIC_FILES_CHKSUM =3D "file://LICENSE.md;md5=3Da8fa504109e4cd7ea575bc49ea=
-4be560 \
-+                    file://LICENSE-BSD;md5=3Ddca16d6efa93b55d0fd662ae5cd=
-6feeb \
-+                    file://LICENSE-GPL;md5=3D10e86b5d2a6cb0e2b9dcfdd26a9=
-ac58d \
-+                   "
-=20
- # Include ffa_spmc test group if the SPMC test is enabled.
- # Supported after op-tee v3.20
-@@ -13,8 +15,3 @@ EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_=
-FEATURES', 'optee-spmc-test
-=20
- RDEPENDS:${PN} +=3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee-spm=
+-
+-# Include ffa_spmc test group if the SPMC test is enabled.
+-# Supported after op-tee v3.20
+-EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
+-spmc-test', \
+-                                        ' CFG_SPMC_TESTS=3Dy CFG_SECURE_=
+PARTITION=3Dy', '' , d)}"
+-
+-RDEPENDS:${PN} +=3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee-spm=
 c-test', \
-                                               ' arm-ffa-user', '' , d)}"
--
--# Not a release recipe, try our hardest to not pull this in implicitly
--DEFAULT_PREFERENCE =3D "-1"
--
--CFLAGS +=3D "-Wno-error=3Dunterminated-string-initialization"
-diff --git a/meta-arm/recipes-security/optee/optee-test_git.bb b/meta-arm=
-/recipes-security/optee/optee-test_git.bb
-index d2933390..37b00908 100644
---- a/meta-arm/recipes-security/optee/optee-test_git.bb
-+++ b/meta-arm/recipes-security/optee/optee-test_git.bb
-@@ -4,7 +4,10 @@ require recipes-security/optee/optee-test.inc
- SRCREV =3D "6569cd7b13e1b37b37069e090d592adca7d3926d"
- PV .=3D "+git"
-=20
--LIC_FILES_CHKSUM =3D "file://LICENSE.md;md5=3Da8fa504109e4cd7ea575bc49ea=
-4be560"
-+LIC_FILES_CHKSUM =3D "file://LICENSE.md;md5=3Da8fa504109e4cd7ea575bc49ea=
-4be560 \
-+                    file://LICENSE-BSD;md5=3Ddca16d6efa93b55d0fd662ae5cd=
-6feeb \
-+                    file://LICENSE-GPL;md5=3D10e86b5d2a6cb0e2b9dcfdd26a9=
-ac58d \
-+                   "
-=20
- # Include ffa_spmc test group if the SPMC test is enabled.
- # Supported after op-tee v3.20
-diff --git a/meta-arm/recipes-security/optee/optee.inc b/meta-arm/recipes=
--security/optee/optee.inc
-index 4dc24154..9bad64bd 100644
---- a/meta-arm/recipes-security/optee/optee.inc
-+++ b/meta-arm/recipes-security/optee/optee.inc
-@@ -1,5 +1,8 @@
- UPSTREAM_CHECK_GITTAGREGEX =3D "^(?P<pver>\d+(\.\d+)+)$"
-=20
-+# Use tags for versioned recipes, but keep _git recipes on master.
-+OPTEE_SRC_URI_BRANCH_OR_TAG ?=3D "${@'branch=3Dmaster' if d.getVar('PV')=
- =3D=3D 'git' or d.getVar('PV').endswith('+git') else 'tag=3D%s;nobranch=3D=
-1' % d.getVar('PV')}"
-+
- COMPATIBLE_MACHINE ?=3D "invalid"
- COMPATIBLE_MACHINE:genericarm64 ?=3D "genericarm64"
- COMPATIBLE_MACHINE:qemuarm64 ?=3D "qemuarm64"
+-                                              ' arm-ffa-user', '' , d)}"
 
