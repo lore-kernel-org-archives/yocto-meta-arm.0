@@ -1,222 +1,283 @@
-Return-Path: <quentin.schulz@cherry.de>
+Return-Path: <thomas.perrot@bootlin.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1663E6BF35
-	for <webhook@archiver.kernel.org>; Fri, 30 Jan 2026 18:33:52 +0000 (UTC)
-Received: from MRWPR03CU001.outbound.protection.outlook.com (MRWPR03CU001.outbound.protection.outlook.com [40.107.130.44])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.1057.1769798031670162556
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99D4E8784A
+	for <webhook@archiver.kernel.org>; Tue,  3 Feb 2026 16:29:36 +0000 (UTC)
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.20562.1770136174354026568
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 30 Jan 2026 10:33:52 -0800
+ Tue, 03 Feb 2026 08:29:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@cherry.de header.s=selector1 header.b=Kah3c4BI;
- spf=pass (domain: cherry.de, ip: 40.107.130.44, mailfrom: quentin.schulz@cherry.de)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qDVkBjASm4oPaV1/T60sBZlaQlIgSpEOT44XfmWe+zbG7U6xB9Xn9r9hC47mZuuXjQ4Osuwrc5lQW+n4jN/f8UyxA4YMB8qLZq7P3I0VFHMrAonDcxXS36YO8i7bNYtmfAoOQlBXlvVa7IlrZkQdnVV6uSGTR+Cz4/VeeQPDz5/A8SB0jFjmDyfD+s7qj2tuXgEhjyp54CiALuXWMtCzZQOVsCwri6L0W9nB49ToTiLFF1ExZjxw43bu+jHIaAytjdfGzzRIl/Q1fxC3ya1+btga2j/zTAXzEXby66EL+cSc6Q8280JN4jOzNafKpq9SuDw+h/7iU3Lv+ikR/yr84A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=swyl51UrCQm6mhDU6Vt+anPCeOlNwVDDZp8sxh0XgpA=;
- b=b6HgZuSpM3Bhut++RjF1gLiIqKfy4fxAASo1QOvQkCjUNdJQgToKchXtC3hUP8phIIQ/eiZzIZefXjTjfKLx8TPF6/XhrXDIZKJ56LZW26f0Sf36qrvz/BTMtvNWd4uTRvDsN6KB38X5JzlZZ7b3aQTfTv7PnGjuk2QkYb0Ksf60n9cEKqe550Vv9M6ya8YNIx0CX4M7KzvODUGGEt/86BlBmYtCjtOr8G+21DSUDcr+2d9itSCJS3rbQkF2hm/EkOQAQL5kVG0qpSCxUJ8lZs5aHZQL1kuURxInAWrsx0Jf5vsC7B2QD0JBsLMqC/z4HGCw+6TzceN2uChxxJg3yw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=swyl51UrCQm6mhDU6Vt+anPCeOlNwVDDZp8sxh0XgpA=;
- b=Kah3c4BIlL3+EX4zvFhBM0MIvIsaVgkc7e4a7qtHt/i9+XBog0CuzsLX3ecB/EOdXwUjpTTRPrOxkkyOldsNmkThmPd5FwgKSuhDYhzFMO7Ld2TGt14Qu/dg/r1QOlhlHW+zgGnRzv6RpEPnIZkJDkRo7pLhoiMyBRMUHMlwXqM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from GVXPR04MB12038.eurprd04.prod.outlook.com (2603:10a6:150:2be::5)
- by AMBPR04MB11743.eurprd04.prod.outlook.com (2603:10a6:20b:6f2::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.15; Fri, 30 Jan
- 2026 18:33:47 +0000
-Received: from GVXPR04MB12038.eurprd04.prod.outlook.com
- ([fe80::6c04:8947:f2f0:5e78]) by GVXPR04MB12038.eurprd04.prod.outlook.com
- ([fe80::6c04:8947:f2f0:5e78%6]) with mapi id 15.20.9564.010; Fri, 30 Jan 2026
- 18:33:47 +0000
-Message-ID: <a8338666-ed68-467a-a9ac-d32c03f4dc82@cherry.de>
-Date: Fri, 30 Jan 2026 19:33:07 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] arm/arm-bsp: optee: add version 4.9.0
-To: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>,
- meta-arm@lists.yoctoproject.org
-References: <20260127154532.27572-1-hugues.kambampiana@arm.com>
- <20260127154532.27572-2-hugues.kambampiana@arm.com>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20260127154532.27572-2-hugues.kambampiana@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR4P281CA0301.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f6::13) To GVXPR04MB12038.eurprd04.prod.outlook.com
- (2603:10a6:150:2be::5)
+ dkim=pass header.i=@bootlin.com header.s=dkim header.b=NB1w1a6j;
+ spf=pass (domain: bootlin.com, ip: 185.246.84.56, mailfrom: thomas.perrot@bootlin.com)
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 229F61A2BC0;
+	Tue,  3 Feb 2026 16:29:32 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id E5DE760728;
+	Tue,  3 Feb 2026 16:29:31 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E6743119A8891;
+	Tue,  3 Feb 2026 17:29:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1770136171; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references:autocrypt;
+	bh=hI0GxxBYWHN8GYkFHFbGV5f1aRQSEuXG4JfJGJp0NCA=;
+	b=NB1w1a6jDcSrIcPOuFky8GlhTj1O8gI6jyoq3ms0JgOKkvuY0Fokm4MYSz4PHOx6GVWtZk
+	utN5xIoSFogNZuK2HwOmACTTJCdDHZ6JDBTXTvweCos35EClGXFk6MlCxuOGR/H0oZCBWt
+	OEPj7slcWbGMuh0+GI8mo7+jN6dfK6FE+YBFxOTg8DyaPIJ3KreEirCKu4fIcRia3NsJRo
+	TVltTslxQjYgwMobSgkWmdk620h/ECmfVm22xjfdfLC6OLSBL9qlicMa1NDW024CBUdR3B
+	ZDXcMkQ7vPPDEuACe/KPG3rVVkGvePgS5hm4Zz8n+nVMBuD/HrNJ6zk3Ju9m4w==
+Message-ID: <39d5c5061d0c220d37a302b5669df66d04ca41c0.camel@bootlin.com>
+Subject: Re: [yocto] [RFC] Moving OP-TEE support from meta-arm to oe-core
+From: Thomas Perrot <thomas.perrot@bootlin.com>
+To: yocto@lists.yoctoproject.org, raj.khem@gmail.com, ross.burton@arm.com
+Cc: "thomas.perrot@bootlin.com" <thomas.perrot@bootlin.com>, 
+ "nylon.chen@sifive.com"
+	 <nylon.chen@sifive.com>, "peter.lin@sifive.com" <peter.lin@sifive.com>, 
+ "meta-arm@lists.yoctoproject.org"
+	 <meta-arm@lists.yoctoproject.org>
+Date: Tue, 03 Feb 2026 17:29:28 +0100
+In-Reply-To: <CAMKF1sq=OEHMM97DiKsdBTnCdSCbsfzTLiADfyUb0=RbVBVYeA@mail.gmail.com>
+References: <92b1fbe3da82c19ed2ca7a617077f6055a74f7e3.camel@bootlin.com>
+		 <6C7BC2F4-364D-41C1-87CB-755547FE281E@arm.com>
+		 <CAMKF1sq=OEHMM97DiKsdBTnCdSCbsfzTLiADfyUb0=RbVBVYeA@mail.gmail.com>
+Autocrypt: addr=thomas.perrot@bootlin.com; prefer-encrypt=mutual;
+ keydata=mQGNBF+/ZOUBDAC2DghCjZvmgYcve02OG7dGZ7Iy58uEwne3LB7w7nRwdAxKw7ZaiVqwY
+ O+yNGVi+GVx7oA6Wn4pv46z+QDRLQiq6OseuXhkSGCg7U/yBCUq12B/GRGO1Qt2Qi1mJJT1s+1qZ5
+ Gxv6Nypz9qKVn94GM2bR1hXBga0t87vBpebThOHmX5d/0dqIcVxRCM7onNb0dDyRoVgLS5rBhQzrL
+ CMrJaCy39xZUy0J1SOlH4Mgk6EhJIPYY4wlzikGX6urg+Tc9EjGd78ry0e0p5U5qgjFR5QGJDy1Gn
+ U3CfwbT9sowdCASDbQDUoltlv2iWJCLa0xl97KVchCa0pr7HKbFA3J5SLKqFYUBCkFL+5WudYlz2n
+ XxiUgyviMQxyK+ij66kEi6/2zFDAecd43pHV7790ptqZBC3Jc67Emj7Vo3ShX6RXPPxxbeCTOF2uk
+ I45aJ9XcVFH/MFE96NjXj8uahnIsiTPyuCUoJu8tj7TSQyue874qJqVQvqlFyt2aZYJZ8ruq8AEQE
+ AAbQpVGhvbWFzIFBlcnJvdCA8dGhvbWFzLnBlcnJvdEBib290bGluLmNvbT6JAc4EEwEIADgCGwMF
+ CwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQSHQHfGpqMKIwOoEiGfwAsFcf4K7QUCX79mdwAKCRCfw
+ AsFcf4K7fhbC/wP0kSl6id2E/K3+UdXk6CLMVRbCFLCREzQs5WFpQ6l/I0WGOamhrOgegdszheiVF
+ orlUP8d37XSpFAqydhKGaN78V5Dps0Wmwm4lIlS4MtQXJtSLUHXDJLIZLW0pw8tiPLKsd1o/yDkXE
+ dnpsjJTRG6SdDSHnyOB2/gh4p+yTaLytFdARk/r4/P26+L+FiH0fFl+RnBt19LPklfKgeDc7GwIif
+ ja+nIWpp3W23DAUuI6xduEut25Q89yu7Ci8CliLfAiLy9bIGjBQWU2Y+1/j/7KuPj6VbBsZWLTZY0
+ hUmpJSTnWAqc9SMsNxo7NSQuddgviz5e2tqucaRqxP02FGzNa8U4NAKdWaXrlHG5Dglj9XH0DK+SH
+ +c96qqFewYD8VPQ6XAGxQcXbrtJmiMor1R2DfziispLRvJcfYs8xqabbCtoS3ouXB9XRi8hn7A2kh
+ ME1ryS+Oh63JshXHnw6bmjCpVd/p+fGLIGU6A47pJOpviKR4jEO84pl2ejtDZ3Tc=
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-e6rral5v7LeCyHAD+aiZ"
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: GVXPR04MB12038:EE_|AMBPR04MB11743:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7d149fb9-dabe-4244-a18f-08de602e1b29
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: 
-	=?utf-8?B?c29kRnZxTE1KODBZSTBudkxmdjNnMEJibjFZQzZ2ZmwvMElMRFk4L25EL1N1?=
- =?utf-8?B?M09ydmpPSDFndWF5MDBEZ0o3eVptSkhtaGp3WmwwU3ZnVTVWb01mWDRrWkY4?=
- =?utf-8?B?Ymt5KzFJVVVHUFpIcEZWUGFVZk9ENFdHT2JGZEgrejZCM0hOTVBRc2JnOStE?=
- =?utf-8?B?UEU3T1p2ZnR5TTdMT001ekxIQnhsNkhOOE5XUFR4ZDhqVjdWUDJNU0Vtb0ty?=
- =?utf-8?B?M3VnZG9uUmwydEMrd1o2M3phdHJ1Q1kvNWVVMWdVeVYreTBkb01ZQ2E5QzZm?=
- =?utf-8?B?NzRCa2xESXd3OEtvd2ZieWViQVkzbnFYWmJwRnBXa0RkNkNMWWNNbjFmTHJZ?=
- =?utf-8?B?cGl2aXJRLy9jeExHYUhYeUFNNUhpTiswRjQzNDNla2VjVlJqeXBtdVF0Snk2?=
- =?utf-8?B?ZHFaU0E1K1RXWHdCdS9DRE0yS25VdUFEV3cwR3QyTThnUGw2ZlFaWnpWWFhx?=
- =?utf-8?B?bGlzS1VpQ2VtSWFvbXdUZTcwMnl1NFl0ZlAwSzREWEtBaUlzN3kzY2hMNk0y?=
- =?utf-8?B?eUlxYkNRQ1JDbGJYUjFua1VvemY5aFM0VDdwa0YxOUhFdGd3R1VwMUJueHFX?=
- =?utf-8?B?NisvQm1uamZNTVpZajI4Q1J2Nk5NMzY0ZVVOSUpyQVJwMlBGMURXQTlDejlI?=
- =?utf-8?B?UWUwT1RHME4zeVBSVjZvTmtDQkVuN1JZbUkxQ25VMEVlTFdQSkZ0WXhnUHpn?=
- =?utf-8?B?eTBPUWhMMVQ0dmxqREk3YWJ4ZjIrSnVHbU1yNUp3SUlRQ2VHQUovMHRSek0w?=
- =?utf-8?B?dFFHbFdHY3JJTmlDVjlOdjA2MkcwSjRGbDAzdEo1RnVheVRkbHF0bHdYeXhj?=
- =?utf-8?B?aU1Ha2ExVXdka2wxRFNyVUMvVTVCbldpZGJoRjNRczIrOTNqd1UwelVRMVNC?=
- =?utf-8?B?R1V2SjkvNHZMR1J3QWR6dmY5bnFMKzFLSi9pNXkrNnhyUTlkMVZBOURzTFY4?=
- =?utf-8?B?dEpvb0NIT29oaTk5RG9ZYkg4T1dha1NSU2RKUlJPU3F2OHNlaUQ1MjJ0a1RS?=
- =?utf-8?B?bVI1L1F5cTRJcTM3SDFqbmdGWTM2VEZ1eU5vck11RnVBZU9nMGFSeTUrdjcx?=
- =?utf-8?B?b0J3ajJ6QTJWQkVxa05mV0trSk8xeERpbzAxSVIvSEUvUmkrSThSV2ptTzk2?=
- =?utf-8?B?Y2ovbEFuc1o5MXUwRXdDWVdNN0ZNb1dNTkhkUmtyTHpiWStPOG5wTmJMSmZ1?=
- =?utf-8?B?QVc4NWh5NnE2REs4MFBvQlkreWwvSTFPN0p2SktKeE5Ma2F0UFpjWlRFYmda?=
- =?utf-8?B?bEwvdmtGRVZ1N1BSTXg5UDBQSUZEVlVPbHB1QXpFOWk3RHJCSHQvRERYUkZL?=
- =?utf-8?B?RlI3QjUrUFVtOGZtaU5ycUxaM28xbHdtQkIxbC8xTCtMYkQxK3BkM2NvbktQ?=
- =?utf-8?B?Q0tCa1JSZEVnNjFiSlpqQzZwV29oeStiY0wyVG9DU2Qvb0gzTm9IaW1PNGpF?=
- =?utf-8?B?eWN6ZU1hWGErc2ZkS1hlempKOHUzZXZ5cXJJTzh5U1FvaGd6M3NwL2twWXBh?=
- =?utf-8?B?bExEZ2s5MkI3dkNVei9WSXJ4L29XSUdpdngvVSs4c0FHOFZCOHNTWHd2Ry9K?=
- =?utf-8?B?b05ScVZ5RldJelNORFF3NVRPNzZud0dLTEFTQW1lMWNCb0tUSzg4L0hKQ0ZN?=
- =?utf-8?B?bTNZNW02eU50VW9oejJVUkkvcFNuemRxUktUcGRHNkFTajZpUHJaQk5xQ29H?=
- =?utf-8?B?SEhBRmE3eEN0M1dQYTgva2FCTmlzY0VhWXRhak1DbWh1bkNUMjhVVkpwWFE3?=
- =?utf-8?B?aG5sM3ErTjN2OVUrVDh5R2J4aEk4TGxrU081VnB0Y1FXNUFPSDMrWSt4ZDlS?=
- =?utf-8?B?TGdISmE4aEUxRC9ZT2xxaS9ycmpreGZVK0N6dXUyVU9mNUg5VnZocGRLTUhF?=
- =?utf-8?B?am9OT1BLWGZPVlcycTV0T2xrQzRpQmxFamdKalpYWkpRRVd5VFRGSVJJUisz?=
- =?utf-8?B?QnVVUStnSTBvdUxwOUx5bXVBVGlGaG9ITWJqc2hQaUNhMzJjQzNSb1RaaXdR?=
- =?utf-8?B?blh0Z05zS2ZjS1RWMC9ZWUFxaHBnS29JWDRJS0VvL2ZDNHpNc1lMa0VzMGdP?=
- =?utf-8?Q?/wrjkD?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GVXPR04MB12038.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?OHhkbWMyemplNXNpNDc3S3VDcEtpYkhlNFNCc2Y2LzVRNjZmVGVVZ2RvVUtZ?=
- =?utf-8?B?U2RvNzRVSTBVNjZTU2xHWnRyNUFhMlR6WkIrNk04Nnd6ZVRCcGczd0lkWGFr?=
- =?utf-8?B?S0pBOXU5dUZrcjNVb3IyU1RtWHVDYkFaY0lpMjdVU2I1ZHF5TmErSEJWQ2N4?=
- =?utf-8?B?L3hkT05RY0FrWGUweGx3MEtwekpqQUVuQkZpWnl0OHRER29TR2tXdG1BVkFU?=
- =?utf-8?B?NUNrUXdYSVZueXNBRmJRMk5ZOXh5cGpmMTJMYjU2eVdLQXVIeWVhYUVQR0Rh?=
- =?utf-8?B?S3pmWUdIUFlDRGxWeS9KYWZxNDBTYUFHUTc0djJuRFRNajVqbDVadEVrakFz?=
- =?utf-8?B?MUZwcncwUjU3S1NaeGsvSVUvOERIYzhOTDd3TlVUT3VxcnQxWHA0WVRmcHFv?=
- =?utf-8?B?OVVHaE9XR3dEdkNVaHB1ZWNuNEpNKzNQemdIOGZ2a21zZnhsVElTc2RKR0J2?=
- =?utf-8?B?b2ZGSDBrOE15YTNIamhVU3JrWmV0eUN5SHgzeklmMmh6WlZ0b2xkV3A0T3BQ?=
- =?utf-8?B?dEQwZ0FzR1gwQUpwWGR3YW9yNkRmK01iTFFaSGRHRnZrUlNWSmQyTHBOSnVi?=
- =?utf-8?B?WVRtOU1ubGtva2JNTTdDdGJ0NG01WGljMi9NcmhUbmFWN1ZnenZyN3FqKysw?=
- =?utf-8?B?SWlFL0lxazBwTDMwVnhLRDd5Q1MrbEVuMEZVUDZTL0NxYXY3Z2R2WEMwbm5i?=
- =?utf-8?B?dkFHaGU1NnE5UXY2RXN0cm9sWmdPVVVtVGtMVk01KzlqVnNNUExRSGJMK1dD?=
- =?utf-8?B?a3dxbWpKY1p0dUdqZW5DRVE4R09vMXo3NlFXVGZsNVE2RWVubEdEUkYvL2VP?=
- =?utf-8?B?ajR2VHo0V0VINTk5QlBWY3lRMDdTK2dxemlzZEQ2a2lwUnJ6eUlVMC8yU1RW?=
- =?utf-8?B?eGU2QWU1K09ndHYrcndUTVlQT2ZwZStUTEZBbWdXRXE1ZnZLalpBNTRIMHRo?=
- =?utf-8?B?YjRreHN1US9JSU1kSjVzT084dVdiNFNMVXdVR1N3VXRxV2M5THp3Y1piSG1a?=
- =?utf-8?B?aTBQWGMwcE1uMDNNMkJPUzFJMnVZUFJqS2xCMmE0Qmp3NFpRUUJFcDBrWERT?=
- =?utf-8?B?MWJPOUtzRE9jQmE4Ri9UUjBkOGRWYVRndXRYUEVwbTZpTU15VUxNckoxakVl?=
- =?utf-8?B?cEUwQjQ4RmYzaWQ4L3pkelA0ZVB0VjFvSURkc1psNEpFM3ErMm03RllxSUZ1?=
- =?utf-8?B?NU5NdkMzMDBGTXA1R3diWmRTb1ZnZTluQ0hhMDg3ZFRFYm96eE9OL1pQNTJo?=
- =?utf-8?B?dWc4VUYvQk5kQm1YMWN4OE8vc3U0MHdBUktvR0wrUzdmOWVhZGxZREFHd2Ez?=
- =?utf-8?B?Z29WT2tzUm8vR2dWeFljWk1FTFk2NjlRTnFjekxMem1NeEZQdDd5UEdvZVFD?=
- =?utf-8?B?Rit0Wld2RzcxM1VCYzNIeHRlazNzQzNMczl1MngwblR0dTU3anFkMmtBWHFS?=
- =?utf-8?B?N3IwVnhnNWdZSHBJRzdvZXBoK1VldlRUdFFIb3YwTkpLTk1BSjVjYmRwVGZP?=
- =?utf-8?B?MHJGeDBLUmFwMmZLQVB5VTZBZGFncG1Sb29CWFphNnIrbGovUUxjN3BmZnVF?=
- =?utf-8?B?dlM0bEpXaW1XT0FKUEdXOFkvcERmbmhmNEJhQVZyUytlUWZSdTlqTkZsNlNM?=
- =?utf-8?B?T2c2K05VMjJhRmhjTHVvWkltUnFxczBPTzJlZXVtc0hMVEtSS1V5RUxrRTFN?=
- =?utf-8?B?MUpUTXFCcGlSOHJkbG1oR2p0L1pMcnBxR3lKYmIxaUsrSEpoZmVobHlyV1la?=
- =?utf-8?B?RFY3bElNSmlNQW00QkNrUlhzdHhLc09XU1BnNGlNaFdvMkkzNUNUek8xNE9V?=
- =?utf-8?B?d3VWZlE3eGppbDF2a0lyL1d1aU1rSlVLNGkvTGVsOGMyUENiRTFuWERWZFRj?=
- =?utf-8?B?VkJpQjB0Qy94Sk1uWnYvZTlEQlh3MVpLM2o2RFJDajNVdkQ2MmV5K2N3My93?=
- =?utf-8?B?UlZpRVE3TnNOWFZrc2lmTlR1YXJDeVpROXpkNUlZSVpDcmFnT2RyVGFFaHRm?=
- =?utf-8?B?Wk5zdEprc3MyM2pJRnNTb0lvaGhNZFdQd2xuMldGRDN6OFE2TlNYcCttejFO?=
- =?utf-8?B?ZmRvbS85S1EwcFdhVWpNSzdjc2xOWkMxR2NXTW11RVgxY08xZlFSRHJ5Vmhh?=
- =?utf-8?B?UENIbGJIUGRHckpxOTdWcDNkWFNlc3NUVVVzN21PSkVMSkhPUEdESWpGbmV0?=
- =?utf-8?B?NVcrSHFFWWhyN0Z2TzlpNlBNS2tVRUJRaFBCajkvc1pqTVM0d253cFU0UXNC?=
- =?utf-8?B?Tk5KS1RBNmR3aGo4L2dTY0pQemp5MjQrUzRTUVFMOSsrQVZVSERqMXR5WjlP?=
- =?utf-8?B?Z2daczlIMEpQUW8wVnErSzFkWUV0K2dWVVBSR2pTMmxzN1FsMHJSUT09?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d149fb9-dabe-4244-a18f-08de602e1b29
-X-MS-Exchange-CrossTenant-AuthSource: GVXPR04MB12038.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2026 18:33:47.4543
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ykkiyPB3+sFaGWgvp4eBG77kvdkAMFgVyHZcil+43sB/WCXP+NLmTAoc4YG+CLA9vMd7C65pkmZpG538hXuSDOiePuwz1lv0gHZNZG3K+Us=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AMBPR04MB11743
+X-Last-TLS-Session-Version: TLSv1.3
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 30 Jan 2026 18:33:52 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6884
+ <meta-arm@lists.yoctoproject.org>; Tue, 03 Feb 2026 16:29:36 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6885
 
-Hi Hugues,
 
-[...]
+--=-e6rral5v7LeCyHAD+aiZ
+Content-Type: multipart/alternative; boundary="=-ABscI0Fc7iuZdwvnAqED"
 
-> diff --git a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0.bb b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0.bb
-> new file mode 100644
-> index 00000000..0cbefcee
-> --- /dev/null
-> +++ b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_4.9.0.bb
-> @@ -0,0 +1,94 @@
-> +SUMMARY = "OPTEE fTPM Microsoft TA"
-> +DESCRIPTION = "TCG reference implementation of the TPM 2.0 Specification."
-> +HOMEPAGE = "https://github.com/microsoft/ms-tpm-20-ref/"
-> +
-> +COMPATIBLE_MACHINE ?= "invalid"
-> +COMPATIBLE_MACHINE:genericarm64 = "genericarm64"
-> +COMPATIBLE_MACHINE:qemuarm64 = "qemuarm64"
-> +COMPATIBLE_MACHINE:qemuarm64-secureboot = "qemuarm64"
-> +COMPATIBLE_MACHINE:qemuarm-secureboot = "qemuarm"
-> +
-> +inherit deploy python3native
-> +
-> +LICENSE = "MIT"
-> +LIC_FILES_CHKSUM = "file://LICENSE;md5=5a3925ece0806073ae9ebbb08ff6f11e"
-> +LIC_FILES_CHKSUM += "file://optee-ta/LICENSE;md5=5a3925ece0806073ae9ebbb08ff6f11e"
-> +
-> +DEPENDS = "python3-pyelftools-native optee-os-tadevkit python3-cryptography-native"
-> +DEPENDS:append:toolchain-clang = " lld-native"
-> +
-> +FTPM_UUID = "bc50d971-d4c9-42c4-82cb-343fb7f37896"
-> +
-> +SRC_URI_ms-tpm   ?= "gitsm://github.com/Microsoft/ms-tpm-20-ref;protocol=https"
-> +SRC_URI_optee-ta ?= "gitsm://github.com/OP-TEE/optee_ftpm.git;protocol=https"
-> +
-> +SRCBRANCH_ms-tpm    = "main"
-> +OPTEE_TA_GIT_TAG ?= "tag=${PV};nobranch=1"
+--=-ABscI0Fc7iuZdwvnAqED
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Same remark as below.
+Hello,
 
-> diff --git a/meta-arm/recipes-security/optee/optee.inc b/meta-arm/recipes-security/optee/optee.inc
-> index 4dc24154..9bad64bd 100644
-> --- a/meta-arm/recipes-security/optee/optee.inc
-> +++ b/meta-arm/recipes-security/optee/optee.inc
-> @@ -1,5 +1,8 @@
->   UPSTREAM_CHECK_GITTAGREGEX = "^(?P<pver>\d+(\.\d+)+)$"
->   
-> +# Use tags for versioned recipes, but keep _git recipes on master.
-> +OPTEE_SRC_URI_BRANCH_OR_TAG ?= "${@'branch=master' if d.getVar('PV') == 'git' or d.getVar('PV').endswith('+git') else 'tag=%s;nobranch=1' % d.getVar('PV')}"
+On Thu, 2026-01-22 at 09:22 -0800, Khem Raj via lists.yoctoproject.org
+wrote:
+>=20
+>=20
+> On Thu, Jan 22, 2026 at 9:05=E2=80=AFAM Ross Burton via
+> lists.yoctoproject.org <ross.burton=3Darm.com@lists.yoctoproject.org>
+> wrote:
+> > On 22 Jan 2026, at 09:33, Thomas Perrot via lists.yoctoproject.org
+> > <thomas.perrot=3Dbootlin.com@lists.yoctoproject.org> wrote:
+> > >=20
+> > > Hi,
+> > >=20
+> > > Currently, OP-TEE support is maintained in the meta-arm layer.
+> > However,
+> > > OP-TEE is now being adopted by non-ARM platforms as well, notably
+> > RISC-
+> > > V.
+> > >=20
+> > > Given this broader adoption, would it make sense to move the OP-
+> > TEE
+> > > recipes from meta-arm to oe-core?
+> > >=20
+> > > I'd like to hear the community's thoughts on this.
+> >=20
+> > Copying in the meta-arm list.
+> >=20
+> > My immediate thought on this is =E2=80=9Cwould the riscv machines actua=
+lly
+> > use the same recipes=E2=80=9D or is there enough forking and vendor
+> > branches happening that whilst in theory everyone is using OP-TEE,
+> > they=E2=80=99re not all using the _same_ optee.
+> >=20
+> > I=E2=80=99m not against moving genuinely shared recipes somewhere commo=
+n,
+> > but I do think verifying this will actually happen is important.
+> >=20
+> > meta-arm tends to have several versions of optee at once for good
+> > reason=E2=80=A6 (currently one, but about to be two)
+> >=20
+> >=20
+>=20
+>=20
+> I think its=C2=A0a good idea, but Ross's point is good too. If optee is
+> forked for every architecture that can not be a good thing. However,
+> if we can get
+> qemuarm64 and qemuriscv64 based machines use an upstream version
+> reliably, we might be able to even help upstream to keep things sane
+> atleast for emulated=C2=A0machine=C2=A0architecture, similar to u-boot.
+> =C2=A0
 
-Phew.. I'm worried this will introduce much bigger downloads instead of 
-just downloading the tag we need.
+I agree with this approach. It's worth noting that OP-TEE upstream
+already runs their test suite (xtest) on QEMU. This gives us confidence
+that the upstream version works reliably on emulated machines.=20
 
-The obvious difference I could see from the BitBake fetcher is the few 
-lines after 
-https://git.openembedded.org/bitbake/tree/lib/bb/fetch2/git.py#n470. But 
-having a branch= parameter means we would anyway download all branches 
-and tags, so I'm quite confused.
+                                                                           =
+                                                                           =
+                                                                           =
+                                                                           =
+                 =20
+Starting with qemuarm64 and qemuriscv64 support in oe-core using
+upstream OP-TEE would be a reasonable first step, leaving vendor-
+specific versions and hardware-specific configurations in their
+respective layers.
 
-Should we simly have tag=${PV};branch=master by default for 
-OPTEE_SRC_URI_BRANCH_OR_TAG then?
+Kind regards,
+Thomas Perrot
 
-Cheers,
-Quentin
+> > Ross
+> >=20
+> >=20
+>=20
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#66180):
+> https://lists.yoctoproject.org/g/yocto/message/66180
+> Mute This Topic: https://lists.yoctoproject.org/mt/117397331/5443093
+> Group Owner: yocto+owner@lists.yoctoproject.org
+> Unsubscribe:
+> https://lists.yoctoproject.org/g/yocto/unsub=C2=A0[thomas.perrot@bootlin.=
+com
+> ]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>=20
+
+--=20
+Thomas Perrot, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--=-ABscI0Fc7iuZdwvnAqED
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<html><head><style>pre,code,address {
+  margin: 0px;
+}
+h1,h2,h3,h4,h5,h6 {
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+ol,ul {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+blockquote {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+</style></head><body style=3D"overflow-wrap: break-word; -webkit-nbsp-mode:=
+ space; line-break: after-white-space;"><div>Hello,</div><div><br>On Thu, 2=
+026-01-22 at 09:22 -0800, Khem Raj via lists.yoctoproject.org wrote:</div><=
+blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; border-left:2px #729fc=
+f solid;padding-left:1ex"><div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><=
+div class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=3D"g=
+mail_attr">On Thu, Jan 22, 2026 at 9:05=E2=80=AFAM Ross Burton via <a href=
+=3D"http://lists.yoctoproject.org">lists.yoctoproject.org</a> &lt;ross.burt=
+on=3D<a href=3D"mailto:arm.com@lists.yoctoproject.org">arm.com@lists.yoctop=
+roject.org</a>&gt; wrote:<br></div><blockquote type=3D"cite" style=3D"margi=
+n:0 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1ex"><div>On 22 Ja=
+n 2026, at 09:33, Thomas Perrot via <a href=3D"http://lists.yoctoproject.or=
+g" rel=3D"noreferrer" target=3D"_blank">lists.yoctoproject.org</a> &lt;thom=
+as.perrot=3D<a href=3D"mailto:bootlin.com@lists.yoctoproject.org" target=3D=
+"_blank">bootlin.com@lists.yoctoproject.org</a>&gt; wrote:<br>&gt; <br>&gt;=
+ Hi,<br>&gt; <br>&gt; Currently, OP-TEE support is maintained in the meta-a=
+rm layer. However,<br>&gt; OP-TEE is now being adopted by non-ARM platforms=
+ as well, notably RISC-<br>&gt; V.<br>&gt; <br>&gt; Given this broader adop=
+tion, would it make sense to move the OP-TEE<br>&gt; recipes from meta-arm =
+to oe-core?<br>&gt; <br>&gt; I'd like to hear the community's thoughts on t=
+his.<br></div><div><br>Copying in the meta-arm list.<br></div><div><br>My i=
+mmediate thought on this is =E2=80=9Cwould the riscv machines actually use =
+the same recipes=E2=80=9D or is there enough forking and vendor branches ha=
+ppening that whilst in theory everyone is using OP-TEE, they=E2=80=99re not=
+ all using the _same_ optee.<br></div><div><br>I=E2=80=99m not against movi=
+ng genuinely shared recipes somewhere common, but I do think verifying this=
+ will actually happen is important.<br></div><div><br>meta-arm tends to hav=
+e several versions of optee at once for good reason=E2=80=A6 (currently one=
+, but about to be two)<br></div><div><br></div><div><br></div></blockquote>=
+<div><br></div><div>I think its&nbsp;a good idea, but Ross's point is good =
+too. If optee is forked for every architecture that can not be a good thing=
+. However, if we can get</div><div>qemuarm64 and qemuriscv64 based machines=
+ use an upstream version reliably, we might be able to even help upstream t=
+o keep things sane</div><div>atleast for emulated&nbsp;machine&nbsp;archite=
+cture, similar to u-boot.</div><div>&nbsp;</div></div></div></blockquote><d=
+iv><br></div><div><div>I agree with this approach. It's worth noting that O=
+P-TEE upstream already runs their test suite (xtest) on QEMU. This gives us=
+ confidence that the upstream version works reliably on emulated machines. =
+                                                        </div><div><br></di=
+v><div>                                                                    =
+                                                                           =
+                                                                           =
+                                                                           =
+                         </div><div>  Starting with qemuarm64 and qemuriscv=
+64 support in oe-core using upstream OP-TEE would be a reasonable first ste=
+p, leaving vendor-specific versions and hardware-specific configurations in=
+ their respective layers.<br></div></div><div><br>Kind regards,<br>Thomas P=
+errot<br><br></div><blockquote type=3D"cite" style=3D"margin:0 0 0 .8ex; bo=
+rder-left:2px #729fcf solid;padding-left:1ex"><div dir=3D"ltr"><div class=
+=3D"gmail_quote gmail_quote_container"><blockquote type=3D"cite" style=3D"m=
+argin:0 0 0 .8ex; border-left:2px #729fcf solid;padding-left:1ex"><div>Ross=
+<br></div><div><br></div><div><br></div></blockquote></div></div><div><br><=
+/div><div>-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br></div><div>Links=
+: You receive all messages sent to this group.<br></div><div>View/Reply Onl=
+ine (#66180): <a href=3D"https://lists.yoctoproject.org/g/yocto/message/661=
+80">https://lists.yoctoproject.org/g/yocto/message/66180</a><br></div><div>=
+Mute This Topic: <a href=3D"https://lists.yoctoproject.org/mt/117397331/544=
+3093">https://lists.yoctoproject.org/mt/117397331/5443093</a><br></div><div=
+>Group Owner: <a href=3D"mailto:yocto+owner@lists.yoctoproject.org">yocto+o=
+wner@lists.yoctoproject.org</a><br></div><div>Unsubscribe: <a href=3D"https=
+://lists.yoctoproject.org/g/yocto/unsub">https://lists.yoctoproject.org/g/y=
+octo/unsub</a>&nbsp;[<a href=3D"mailto:thomas.perrot@bootlin.com">thomas.pe=
+rrot@bootlin.com</a>]<br></div><div>-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-<br></div><div><br></div></blockquote><div><br></div><div><span><pr=
+e>-- <br></pre><pre>Thomas Perrot, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+</pre></span></div></body></html>
+
+--=-ABscI0Fc7iuZdwvnAqED--
+
+--=-e6rral5v7LeCyHAD+aiZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCAAdFiEEh0B3xqajCiMDqBIhn8ALBXH+Cu0FAmmCImgACgkQn8ALBXH+
+Cu0aHQv/TV3qUt4ODQdFVW11LDpSdzNnUYB3PAZP+VNMfsC6H0ZTwdBCM+ARjpKH
+I739FjCz/mItAiXBHkT/+sQtwrndQ1kjVSjfbM54P2dLs9wUyAffCfcKpUMDaA4b
+H2N6vDaTKVwyL+/5s3VO27nP6m9F1A0dLShIZWD9KA//4v++QPC7Mp057O5HG52d
+I9hJcDzrpaXOIuTL/T9wlqsVmVqhzq0R2AwhSvoS8QgP7tm0orXmOZU2psSs6ebh
+QHpqXZket1drMoqeR3GaTm+INgr5IC8ctBvb2r1Zp3SiVabrE7tow3bfuJZOBfbY
+Lhew2OyNN/s26kJepDekyipuanW/CCOvzYtJMh+yDet4S4YqgLCEQSXNopDmi5CU
+6loMcLA9+cEWwLR4LvjE6jJ1ixqEyieXNuUT8JxxZnUFiamoegF9JethtnmwEqtx
+oa0drxj/E0nWxtoddZIF1gUBi3WaGfTSyRwrokW2YIOT9mQqsIIGr17sc/OnRUuu
+EYKEqAct
+=jIyD
+-----END PGP SIGNATURE-----
+
+--=-e6rral5v7LeCyHAD+aiZ--
 
