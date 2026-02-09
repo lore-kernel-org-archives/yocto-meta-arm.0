@@ -1,305 +1,226 @@
-Return-Path: <johannes.schneider@leica-geosystems.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCF3EF06E3
-	for <webhook@archiver.kernel.org>; Sun,  8 Feb 2026 04:01:26 +0000 (UTC)
-Received: from DU2PR03CU002.outbound.protection.outlook.com (DU2PR03CU002.outbound.protection.outlook.com [52.101.65.10])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.20053.1770523283709912850
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D239EE81BA7
+	for <webhook@archiver.kernel.org>; Mon,  9 Feb 2026 11:59:18 +0000 (UTC)
+Received: from GVXPR05CU001.outbound.protection.outlook.com (GVXPR05CU001.outbound.protection.outlook.com [52.101.83.20])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.46012.1770638353289766285
  for <meta-arm@lists.yoctoproject.org>;
- Sat, 07 Feb 2026 20:01:24 -0800
+ Mon, 09 Feb 2026 03:59:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@leica-geosystems.com header.s=selector1 header.b=pKhBJZho;
- spf=permerror, err=parse error for token &{10 18 %{i}._ip.%{h}._ehlo.%{d}._spf.vali.email}: invalid domain name (domain: leica-geosystems.com, ip: 52.101.65.10, mailfrom: johannes.schneider@leica-geosystems.com)
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=YOmgn7n5;
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=YOmgn7n5;
+ spf=pass (domain: arm.com, ip: 52.101.83.20, mailfrom: ross.burton@arm.com)
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=HCk9z5cM8DnrDikRajp1XfuSvT0+bHyIn8oE7PMrkSwBpDznU/zOexgo/fQae465EO4Kbs3ndtYh61ZX+mcmf1q00cHX1KHeQxl0I1x2lQ9eURQufuFc98gNhTAdunhGt9wijCU0Lel/T456bU8U6OBEOF+lQ7vn80LNEYUt2kXu/P4ixihHm0C3P0baYX9FSnA3VGnHxYWwl5frIk3GvUracbntEY0RqF3RDzvnTjOaJDAcBf9JbOKjzGszI+vFXV4Vhe2u+TgDFOial/FG0W9/zs4h/x3Rroathqa0yeii4IEDl1pwVW0cEbgW8t3vNQlmCeNQZPLbcG9UcVpTHw==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ugU/8e6VJeEJm9WYKD2Jq8dnPaysQDj1jbcAI174nWM=;
+ b=n7YIhhfUbmbzD8/o3y/Wbb4FyrlMBy2LWyED1YcC5whjiAYKac5cIIJ3o31GffhxqA3/+c7uHRiitJdvwzh9kVY5itHmyRFx7doDGUsI7Hpds/FCibO+T8ib/dRXi48TAX5X6L+y3RBBhO3WFHcJ48sjqRP32Dp+iyrplAeqzKB17CtwxUGvVGiKCMuEAy03WAqgmuSFbrdQfX5tXsyenciT96oWOPyOpOrHPCXhbGf0sn+ESfdBS5I9v0xR1Dov57RbrQlDq90WmFk/P0ofeFOinUpJJiGcdHjM3DT2xulCheZwftEQ2eFGKXTZpaWenhbC35KnzF+KbsGV7XBbZg==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=denix.org smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ugU/8e6VJeEJm9WYKD2Jq8dnPaysQDj1jbcAI174nWM=;
+ b=YOmgn7n5rhfFTZmJE6F3UwMLzkcez6YpLXqNjnD5eA9paco1VCbsGjVRrUiQ8Zk85BuV6AHrol8pzIbtMSEHQTNhPsEnDIAThYEo9uAwky+If6Ld+IUvdoXmn8Xp0qeiSBZ1t78dzDiZEcXP83NdBjAxBXFyhG2AIh1tOU82OF4=
+Received: from CWLP265CA0351.GBRP265.PROD.OUTLOOK.COM (2603:10a6:401:5a::27)
+ by PA4PR08MB6222.eurprd08.prod.outlook.com (2603:10a6:102:e9::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.18; Mon, 9 Feb
+ 2026 11:59:04 +0000
+Received: from AM2PEPF0001C708.eurprd05.prod.outlook.com
+ (2603:10a6:401:5a:cafe::c) by CWLP265CA0351.outlook.office365.com
+ (2603:10a6:401:5a::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9587.18 via Frontend Transport; Mon,
+ 9 Feb 2026 11:58:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ AM2PEPF0001C708.mail.protection.outlook.com (10.167.16.196) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9587.10
+ via Frontend Transport; Mon, 9 Feb 2026 11:59:03 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b09gIjRlis1UP5PEurfZt/R4TGVQK/FqBJ+Xd3d3TMm0+th6qUnHDBVBNRnIR0KX/Gq2XKR243ZgdB/4ctkY51RhSR04nHGoAWO6nsHDQ8HaJwofcjGFoko3AnFVpy2dl/LGzTy8qPzJg252jDvgqVVDaW8lQHeqgJLGEvEqre5r669ZLxychwIewn80Dx5yc94ATym3O97J8rJSPXab5tdszx62v3SksvS7EAeJRGxbIKKjCxZStiHMyUt7mpC1nUanR0cK9vCMlL2qjjIVBS58X8j3rBdjzhvD+KYP//qsA/VZMn/NSgSCwtPxTA3dR0GzKPzNOHAs8DiFXgjOoQ==
+ b=dMpiCIv0bXP02pOvhRI8mY+zP3BvpfBjUFMuSiza/RrGmKJeVcJX0YCyP0MLNZEkxtH5nO3dQa1Rm/XCEQKYBGS5TototjxKjsq8B6SiAL8HIUB/eWsx/qz9qCUzKajNCDgidupwY4MD41PFgNJGAe9mfr1jzG54Xhkx96OXnmayGbUbrblV6Z4Ced0sDWhVbEGbaC/Zp/LVg4lv8QVhHaLaF7vlI7laCG1mZM6oTpjXVgwxwi4L2uxWIxl5bvzfOSVK0y8NX1+osYKNSn91wDA0iAWJDZiyx0X+8tvMJyc3mLaG5O3QUSo6ipaq90OSlixifigCjzl1vJMT5uHQxA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5QBT6NJKQyKhrkFHK4qi4YjpmtZ+07aujr4RWr3cavM=;
- b=xDaQR4AUh5YGd7ICa7mqitQmgj2NWhJd4YbPo2SyFo4c/gentkPXKQQ11DVm96CQKWpvuxyW1rRdzhDolbTYiOObccPZ5Puw1wVBHQ9bqcZgaaLsUcGwuVQfQM3g6uVUrP/w65gxXmsUGNOqPLNYPwerAn8Aq4ehvZ+vkGmT6jeph+JGajDAnNel21e6ODibU65z8MrwfjY8oQkFS6p1Z7iyJPQetXnCj/g/KI5X1fdgI/SvUzkMn7bZno4Q0wyzjQEFbfEDl7b/UBDlG02Kh9WJ58TaVWY4AMWJMdcFxn09QZaAgmgByyO3xSaHVeid0Vf5fWJfo3JZrrzjEZ5uRg==
+ bh=ugU/8e6VJeEJm9WYKD2Jq8dnPaysQDj1jbcAI174nWM=;
+ b=jIDjBzjPwTpRNSqMVxXk1RtVAJSLoH2u9+3c7oSCPDWhMHrxhWvBYl56Pp3V25dLia2h+ZgJgTHr3sO+rJeXiWRXjO6PvjJ1Zyxb/bOiTFKHPQrTvwCIiQpXi1iIU7IkUCoH0P8GxpKbe2dud7jwe504dxZqecaD1wCWbVsjiCAn6m7yLsHHDF8EAIKRNKJEKzRpv7nhvTOC7hE4BIX9GU5s/mQqtABhDlJnscPTGffOeWz0c7j7d0MxdU/NAlIW+dWdwPsfiM60gs1AtL0hOt9ytzgB2bb+pmFKYzelJ22sZReSLP9EC0LcO5/1MoEiQeNBqUIG1HUJrYFjQV9uHQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=leica-geosystems.com; dmarc=pass action=none
- header.from=leica-geosystems.com; dkim=pass header.d=leica-geosystems.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
- s=selector1;
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5QBT6NJKQyKhrkFHK4qi4YjpmtZ+07aujr4RWr3cavM=;
- b=pKhBJZhoIuvb1xNlShy6qM9QrQYoK1wera8gqHUpazMg5rVimA57zWbaTOAmTLEDzNzSUAwlEGg38Tf3NEkds53Unmi1t5tXopD2J1EqirE/nDDPKD9QyPXlUAxqnaKTIESyH9xqchcCa+pK6c3yrnJzun2aMjxd3tpOYEkYe4Y=
-Received: from AM6PR06MB6326.eurprd06.prod.outlook.com (2603:10a6:20b:d8::19)
- by AS5PR06MB10101.eurprd06.prod.outlook.com (2603:10a6:20b:6c8::8) with
+ bh=ugU/8e6VJeEJm9WYKD2Jq8dnPaysQDj1jbcAI174nWM=;
+ b=YOmgn7n5rhfFTZmJE6F3UwMLzkcez6YpLXqNjnD5eA9paco1VCbsGjVRrUiQ8Zk85BuV6AHrol8pzIbtMSEHQTNhPsEnDIAThYEo9uAwky+If6Ld+IUvdoXmn8Xp0qeiSBZ1t78dzDiZEcXP83NdBjAxBXFyhG2AIh1tOU82OF4=
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com (2603:10a6:102:2a3::12)
+ by GVXPR08MB11423.eurprd08.prod.outlook.com (2603:10a6:150:2e2::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.14; Sun, 8 Feb
- 2026 04:01:19 +0000
-Received: from AM6PR06MB6326.eurprd06.prod.outlook.com
- ([fe80::2b51:92ba:768b:fae]) by AM6PR06MB6326.eurprd06.prod.outlook.com
- ([fe80::2b51:92ba:768b:fae%5]) with mapi id 15.20.9587.016; Sun, 8 Feb 2026
- 04:01:19 +0000
-From: SCHNEIDER Johannes <johannes.schneider@leica-geosystems.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9587.18; Mon, 9 Feb
+ 2026 11:57:51 +0000
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::7f73:806a:3493:7d50]) by PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::7f73:806a:3493:7d50%6]) with mapi id 15.20.9587.017; Mon, 9 Feb 2026
+ 11:57:51 +0000
+From: Ross Burton <Ross.Burton@arm.com>
 To: Denys Dmytriyenko <denis@denix.org>
-CC: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
-	"jon.mason@arm.com" <jon.mason@arm.com>
-Subject: Re: [meta-arm] [PATCH] meta-arm: fixup new override syntax usage
-Thread-Topic: [meta-arm] [PATCH] meta-arm: fixup new override syntax usage
-Thread-Index: AQHcl8p2j8lpQyVEMEiHm9ZcRlH8DbV3Rk0AgADlUU0=
-Date: Sun, 8 Feb 2026 04:01:19 +0000
-Message-ID: 
- <AM6PR06MB6326588D31E9C466EAFB2C7CBC64A@AM6PR06MB6326.eurprd06.prod.outlook.com>
-References: <20260207004109.2880231-1-johannes.schneider@leica-geosystems.com>
- <20260207140624.GF11121@denix.org>
-In-Reply-To: <20260207140624.GF11121@denix.org>
-Accept-Language: en-US
+CC: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+Subject: Re: [meta-arm] [PATCH] arm-bsp/external-system: remove redundant
+ DEBUG_PREFIX_MAP fiddling
+Thread-Topic: [meta-arm] [PATCH] arm-bsp/external-system: remove redundant
+ DEBUG_PREFIX_MAP fiddling
+Thread-Index: AQHcl4SEShDPNfAf1UKxuxMwwKEWLrV6R4sA
+Date: Mon, 9 Feb 2026 11:57:51 +0000
+Message-ID: <95D55B48-57F9-4820-8F05-43C8CA8902FB@arm.com>
+References: <20260206144402.1583348-1-ross.burton@arm.com>
+ <20260206162025.GD11121@denix.org>
+In-Reply-To: <20260206162025.GD11121@denix.org>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=leica-geosystems.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AM6PR06MB6326:EE_|AS5PR06MB10101:EE_
-x-ms-office365-filtering-correlation-id: ef63a8ca-2339-4fdc-8b40-08de66c6b710
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: 
- BCL:0;ARA:13230040|1800799024|376014|10070799003|366016|38070700021;
-x-microsoft-antispam-message-info: 
- =?iso-8859-1?Q?iekCUFO06feOlmqGzV39DwlSOEjBhkrPj7X/Zpq5kT4ADKgX7WAOMuSEnj?=
- =?iso-8859-1?Q?kTImCtcAIYJVDGZJLDY6duilrQ0mEwVqQuQ7xiqF6KEIT8NPHlMKnoEea9?=
- =?iso-8859-1?Q?cBqRMg9cIAJokXPk/Z8LzbTgMQ/lnkkyGa2Ue2OKF66XGEFKDn20xIIfm0?=
- =?iso-8859-1?Q?+16JvC0SUoBl0z0Fe5n09ju3u5GrHfLezrO+xzdlqSA8RM7pCc65at3Iax?=
- =?iso-8859-1?Q?9o6ruYuFcDvHtbAiiZ2O2JFIQ0/X+c+0tOgG9accZZOo2tjdGj9wIYARmE?=
- =?iso-8859-1?Q?WYzi09zip82xizWZ3gDmXP36x5cQL7514Hi08R4XWLOusosAkcMg20aS0+?=
- =?iso-8859-1?Q?BI+4UPQp7w2EFIGTb8Mk9oS0vAoqV5e2tQ5IpHZCbghyJ2rOOxphnXg6P/?=
- =?iso-8859-1?Q?HFMc36kPP77hf3m10O5Gxa0okj4gcHKrobxQ8JAOdg6HN6nSImymNxJmD/?=
- =?iso-8859-1?Q?TS0RpX6eCB7kwpTU4w+1cLtO8uNS5phrpPcuT/2Cfd5WQScKtAbThOe9XA?=
- =?iso-8859-1?Q?Hx13i0txI/V891E5FnERzyCnr6KeIPTs1PmCG9+BSJKCKP2oor7wUmczih?=
- =?iso-8859-1?Q?m0Y28jCPuXc4/qX5YVl/EaXOmyvJnAJqcvGhGErLDNkuuZ6Yzakb1DOCXY?=
- =?iso-8859-1?Q?vcjqm91mSuGimT2jTMrzRoAgNBJrvPFKkY8ReUuFzexejtOJ6sN0H7txTb?=
- =?iso-8859-1?Q?dfsX/eilIYPFxdcU4Lsry9KVemBuvLhc9HI06FXtur5jTY7zcPi93/D4NU?=
- =?iso-8859-1?Q?aTan/YDGrFxEoacki0wpNAoCWRudoNPZWTaoqCHPbhEn/Jd35LNVbUlgkW?=
- =?iso-8859-1?Q?ug2r7uGbU4QkRRreo+0YtOrDAJDqJ73ZH7vNYI4LjohpP+jE8GtlpP9nEO?=
- =?iso-8859-1?Q?kdvW98+YgEMnnN/tjM/CtjJJj3lR6kw209PDr/HdjRxeDopfJ6XCGZH2Xd?=
- =?iso-8859-1?Q?S4WSdOmra6hNNPm+aLEJNVWBCydRHj3PQaGBwrQyNXHFt9ANfihNl5x9kP?=
- =?iso-8859-1?Q?mSv1HWXBfPOBB8hWk+rJxcX3abetBlD/8Roph7Gt5cJOmzw9nSTMEMDnHC?=
- =?iso-8859-1?Q?vrlzx5P2BQVT39aNd6FIf0gSREWqP67m8B7F8rTb/ss2y74lEpik4A3v1/?=
- =?iso-8859-1?Q?RIbivOluspdYH6pFV3Zkwz0aAG40xNQyq6VLQ7a7Bh3oRCqzhCdZIOnor/?=
- =?iso-8859-1?Q?ghzipJUdj27D6YAHY/Z5NHumylwgFFydmnF8U6Ky0l3TMUR3BOPP6XNN9U?=
- =?iso-8859-1?Q?tRCIn4ch3j+24V37p6Rc2C/p3K5tybWnQR+0hvDrX+iF3dVCR8P6mzLLSx?=
- =?iso-8859-1?Q?Y5xsytktWDN/KGnHKHL9gFlXnOedYCnllR/QCdZpuonY2I3/qOqvWLrCVL?=
- =?iso-8859-1?Q?oD5oKjG2Si5j/f59hxnyqKhFh2/GMeODQE2qkKsMSFtHW+sz7nmax38WYz?=
- =?iso-8859-1?Q?zEYs19AZXwOvGJMjI9COaEOkydijq1UuGgk7KitHJ5YYLtWQGZyJERny3+?=
- =?iso-8859-1?Q?7oIjIz6afhVlc4iod1dOJLpsRMM1TOs/qyMAepW2e64OhOPNQNVjLxzNTD?=
- =?iso-8859-1?Q?BGmIsUYJzAW0Acp7YlzPXilC5VhsDsZJWAiVRs+LA1bNua1btlqA+KUQ3n?=
- =?iso-8859-1?Q?SC7c0iOTb+Wis6Sm0Rxnm2MKJgWNtaHu0HpK1FM+yOOh122xx2+FHOI0lV?=
- =?iso-8859-1?Q?VKtC0f+saYCGvvanBMs=3D?=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR06MB6326.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(10070799003)(366016)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 2
-x-ms-exchange-antispam-messagedata-0: 
- =?iso-8859-1?Q?wXfRh5FUI1kcvv/Tgk3yjppE6N7rt8fJsCY+7q203VezvZk0vK3RdhU33E?=
- =?iso-8859-1?Q?qPc+G14sPo7jj+nOC1KKl7Blv+6tQpvdJCGH0M8xoSrPr7NHYk9U6BUiuH?=
- =?iso-8859-1?Q?aaqKHqbG/llM8Q2iaYRKrF7U4ngXRC66R/wu5ddnEAkvHz0bOzLQppdmOQ?=
- =?iso-8859-1?Q?SgdwSf+0FtSmszV5Tfx6iXK9V2HKwRtiArImwDnFbdSes2vX/P3o5o0VYr?=
- =?iso-8859-1?Q?2K2WxC76Uzaoa7xGsO6jjzji+HDvmdFGanwAi3VenNyFJL+C6SIqVSy/Cb?=
- =?iso-8859-1?Q?ENlP2n6D3HoneCJtWB4ZWPO03uNvw/leNyayt/JVIJxy/Tu860MdrQXHPF?=
- =?iso-8859-1?Q?TUfz38CCKvowJSSIJALAgNjvbgylZ8DtIQ3ILMxBsG1qL9EMIDJmQLtAyZ?=
- =?iso-8859-1?Q?gfNj10xlh9OtyuVXh5sNL0rK6P9VfcBhm7wLslyBZytkqSOO1gh6GT1lRP?=
- =?iso-8859-1?Q?wVprTrvk8Ny2U1FVxFYIQC2jt3Sz8aDvw3kpKBSU9oYyYxEDWZAjgysrqe?=
- =?iso-8859-1?Q?Glmomwv/GxSTWvcJCNmbhPZv9Dq5szEfyeWATYrcOhBaZZje/84GWNOI+U?=
- =?iso-8859-1?Q?aQG+I92ab/tmnetDMfHoPDW5mrnYA+7OmA7JMzkidUBVOZfKelHg7vwFUE?=
- =?iso-8859-1?Q?wu9+GLOwpSrZcsZEYyW1Vp2KcqzZml4dtUoml2QUhUefyHgHc324v/3M7U?=
- =?iso-8859-1?Q?wqsNX82btTzkizloj8y3aUXc7YlYurN1Kezo5lwfDXUGuwb4r73d5Gt0tf?=
- =?iso-8859-1?Q?/1Ly7sLK50Y9fWycODAUBMnRP+xGv1shMbBJ8+JBGwFw5fRO6PIqDL280s?=
- =?iso-8859-1?Q?zpC6aBPWUga2NjJnxB/6oQFskwKyxFA2A3XkR/1ocFIjXA4A4wv+LqBilV?=
- =?iso-8859-1?Q?4KjCcZvXftbBZWm4w+7fmOC5isI0s1hDucshYI5v4hnQk5fuobfJx3wYl1?=
- =?iso-8859-1?Q?SFpFPBPoDg5HbWDj1W+PgUfZxsD0NFwdUZTjI1I6qzVVOnIKN884rxKHCa?=
- =?iso-8859-1?Q?uSE0qD8raB69UJUCeYwzOKyBEpyiCsRQwrTWx71+3VfecqoAW/KlKwuS9S?=
- =?iso-8859-1?Q?+K2lN/8D8OI2Z2hH7trZ3fxKyYHezn8kE80ZSSqutVdZDYXq2WbVf8PKTF?=
- =?iso-8859-1?Q?8Vjh4lhI61WAtyP+5PoUDREQLbt5ZsG3IULojVqIc3EXGhFytwWqs1Pc4t?=
- =?iso-8859-1?Q?bBoH9SejQALIoEE0103eK2u+PmYHJzKJ2G+a2tyw+LB8/g3zBL/AATTQ7q?=
- =?iso-8859-1?Q?SwgBiukiePYf/Aj9E2q6b0WzWuG9V1eFUy6PRlHmVZ3QF26AEi32YCc86d?=
- =?iso-8859-1?Q?I2bkEFnXNlA38fspgtf4j4+IzZYrYTSBBsm1EwNhvr61htm1XIspHdHWIX?=
- =?iso-8859-1?Q?SraBRtRp5fOGfBV6UHaUhoA0WPx94rjg2WN0F3KsBeJ/lj4MlDttiMMvE9?=
- =?iso-8859-1?Q?NXyNpRjCcZNnpR82Rk61H/nSah35psnbyoAfaNm+N/4+1sTRPt1cBgBizY?=
- =?iso-8859-1?Q?AAzxRRR5374+4PLLU4Q+Rao2uNADIMy4DkxSzpI4Bi9771Q8Mppn8Zk4v9?=
- =?iso-8859-1?Q?SBtOcu1m422zY8jiF/yZWBzDlOnMP2gq/tbDGc5Ho9TesqBMXXWCtJApoX?=
- =?iso-8859-1?Q?dYRLKy7SEDeD+s0uDT61VfyZ13lDglESRHS5vzIJ3GzsAKVtpmo9TgSo5k?=
- =?iso-8859-1?Q?1uLKFqgVFsniViNK7ECY6rq4JOCRyaiC8kkD71WIzNYuCIXjObwL98vlEe?=
- =?iso-8859-1?Q?bpq+2AWbPkYdnR8BeTtXZiJYctbYVurUZoAmVGb0W3HY7UpCFauAUgPp1e?=
- =?iso-8859-1?Q?eJ2z/5ZvdZKOF0eadigwVO2liDRPpP00BczOBtC0qzoBOuW+JHKj+GcBd4?=
- =?iso-8859-1?Q?e0?=
-x-ms-exchange-antispam-messagedata-1: 
- lw1gSEve9+SMab8buZWARgmn0Ep0GtUG6KkKiSNIgIt4NQgMGuhN/okg
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+x-mailer: Apple Mail (2.3826.700.81.1.4)
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic: 
+	PA4PR08MB7411:EE_|GVXPR08MB11423:EE_|AM2PEPF0001C708:EE_|PA4PR08MB6222:EE_
+X-MS-Office365-Filtering-Correlation-Id: 270db097-327c-4239-6d43-08de67d29e65
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: 
+ BCL:0;ARA:13230040|1800799024|366016|376014|38070700021;
+X-Microsoft-Antispam-Message-Info-Original: 
+ =?utf-8?B?UWZKRWtmb1Rxd2doZFJ1Zk5ZNW9nRkZHY1EwWTdEK01xWHNlMHY0TlpTazFL?=
+ =?utf-8?B?dkVRNHVRMGdaT002am1ic1phZE5ldUtWaGYvSjZwcU5tRU1MRVpxVllHd1Va?=
+ =?utf-8?B?Zng5aVpYR21lelJoOGg4Sm40bCtxYzVhK3pHSFZHcEtEVytwZzZYSDR2bVRx?=
+ =?utf-8?B?emw5NVpPbHVMdmx2Qkl4RmZhdTRaSEJYeWsvY0w3TkUyMURmYnNLN0tkLzR0?=
+ =?utf-8?B?dDlqaUszQ3p6MVJQdWFpRGp0SW5BM2Q4SVpaUHBWeXVYOUV6MVQrcjNHUThs?=
+ =?utf-8?B?dXhkUU9va2NsL0Y3WkxjMmVrYTU2OVZoek0wZU53SHVkVFZDV3U0bGJvcmky?=
+ =?utf-8?B?MDk5MUU4VmhjUzVYL1lldWVjRFV0VjZJSEE1MUp0dVRTcVdCVXUzSGNBOVhS?=
+ =?utf-8?B?R1Q1d2hzQXo0UVV1ODhMUVNsbHgrbElmNlNob1k0STBTR2x2TGQ0MU9DK1Bv?=
+ =?utf-8?B?RmVQVkkwNERvUEVldThyRWNDZ21NVWhZOGxRejFiU1p1OXdvMUsydjJ3cFU3?=
+ =?utf-8?B?cWo2V1V2WTh4Q2xiOEtxRTdOdktUTGt5b1gxa2lFY1dzbDZQRnlZdW8rQkNV?=
+ =?utf-8?B?RzZBTk5ILzd6OUFFcklZeW1sWFllRk5ZMFk5WUxoUjFHRm1BM3VKZm16VUY4?=
+ =?utf-8?B?bVpmUWp6NjhuaW9vME92U0VXK0tCTmk2NWNFazEzSnBsR0FOeHlMdEVqdXda?=
+ =?utf-8?B?REd1Wmxyc2xhNHRualdQWUo2ajUvLzhGSEZlMVVqYkVjNVVyeXJ4eU9ja1FY?=
+ =?utf-8?B?NnZSRkY5K1dPdXRDNnQxWFkvYkxKOFZ0NHl0aFhvaWMvQVJjem1QU0I5T3RU?=
+ =?utf-8?B?aXkwOHJmazhxUW9sRmNCTEVlWUR0RExNSUlVa3ZWMHhPSDNIeE5uc1JVRER2?=
+ =?utf-8?B?cTNRb2hOYTdqZzNjN3BhVWJHajJCZlVHak1hdHNzV3dhT0FLTkl5dm9GdnVK?=
+ =?utf-8?B?K3N3Mnk5TitnWEhRT2tTUDZRdC9DbTRHTVhYcWZKOFBsc3FqK25pZ0xjZ3VH?=
+ =?utf-8?B?WGxlQUlRM3FRd3U3SGlRTFMrM2NWalBMWTA2a2h4RG9GSUppRElEQ3RHWWtU?=
+ =?utf-8?B?eHdzOWZOaXk0Wkk0ang1TEpRaHVyei9QdXBXSlNkN1Ezb1NPcHdQaDNMT3FV?=
+ =?utf-8?B?MU1TNVdUZGJEZFJGUVViZmNwS2RZTlloVUlWUFpxdFFIYnpSV0dOaDBHSEFZ?=
+ =?utf-8?B?OFByamFSdHN1WmdvTVFIUlpuQ3crUnUrNVRac0tzWHdHRmRsVS9ZWTI0NTBw?=
+ =?utf-8?B?dFdFNmZCdGdZOGxESGxoc3lYbS9wQnN3VlViSytuVlpmMm9JWkphRFZna0xC?=
+ =?utf-8?B?aUoxR1FTZURDV3BMY0dWM1luUkRydmZFeDVGbjZUQmNLK0YxdVBwWWE3VS9K?=
+ =?utf-8?B?UlZTUEZ1VTcwajBJblFCMlRnZ3ZNQ0xuTkxHS2d6SHhhZWJiSkE5T1M3Ullz?=
+ =?utf-8?B?aDZ2anlOQ2pERUJSQjIxaFRBUkpYUkp0cHFnNWNMbG90M2tQcUpwZ0FVMkNM?=
+ =?utf-8?B?U1l1UmVTNVkzdUxoQ2xneDBzZGt2Y0ZaWktQMnlKenU4Rk01RjBvUTdxTEd6?=
+ =?utf-8?B?TE5QU2dDemdKa3NaNGt4ODNmSFZSSDZNUWpqWXIxM21ZZmFCbGIxZ1g3WWRi?=
+ =?utf-8?B?bG85UUVCUERKNlNaYUdQemovbG94bDZqaU8rOGpvcTBVdW1OMitsK0NSVU1L?=
+ =?utf-8?B?M1pETndnSkY0STRsckNBVVJUS21MN2FZMVY0WTg3Vy9vcEppWEVlSFdCbU5Y?=
+ =?utf-8?B?NXozdDJKSzBQbytCSjdPS3dmZ0hubVo0Y0JDd0ZEUzlRRGtyL3BpMmZpdVdT?=
+ =?utf-8?B?UWlpZzdzNEtpRmxtWk9kSEdCajNQSUc4cFM4dTYvdGlHdWIrYmJOL29WcFJJ?=
+ =?utf-8?B?SUpETVBPVEEreXFnV2lUVnNjcHdkVmJjMkRkRm9DZ25Ca2tBdkh5ZFpLRTNX?=
+ =?utf-8?B?ZFBMT3doaWtTekRFSmJiQjBaOXFlYm01c2lMcDJVYjMyVldyUlY1bVVMZ0Zl?=
+ =?utf-8?B?RGpTd3VLSkxKVjNIcmwrZEFUcjVZWWxBQXhjRmUwUEczSXliRXhkOFVFWG1C?=
+ =?utf-8?B?MVNoSWV4TTM0TS9YLzlMcmNIWHNqV1ZLVGlIdFo0SXMzWnBkY25GWENNazEz?=
+ =?utf-8?B?Y012cm9WZzNuSjl2MjIzWEZ4SlFwUzYrdHB2VzJqUFFiMER5UlkzUy84Q2xW?=
+ =?utf-8?Q?mkGdmVFx9S4BOT+Nafq04fo=3D?=
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR08MB7411.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700021);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <237C528F7870AF4287FDEB5016F19583@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: leica-geosystems.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR06MB6326.eurprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef63a8ca-2339-4fdc-8b40-08de66c6b710
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Feb 2026 04:01:19.3220
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR08MB11423
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ AM2PEPF0001C708.eurprd05.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	35e52ad6-0a55-4777-777a-08de67d27390
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|36860700013|14060799003|1800799024|82310400026|376014|35042699022|7053199007;
+X-Microsoft-Antispam-Message-Info: 
+	=?utf-8?B?SXBRb1JINmlmaEs3M0w1Yk9kZ05KQXdlNFdkdlFJSHd1U3VUNTlMZHg0TXFQ?=
+ =?utf-8?B?bzFGU3J6Q2gvUnJML0pBZ1NtS08yai92RkN0K1RTOGU2WXV6VHIzTnNvK0Ns?=
+ =?utf-8?B?dncrWDh1OTY5c2U3YWxyMVZmQ1JlVU54eTREUW5uKzE4WncyTjJrbjZyM0NG?=
+ =?utf-8?B?aFZ1dklMcWJsbGZtZWQzcFFnS3dBdlNTTndvVGd3WWUrckxsZXVaTE1RSFJa?=
+ =?utf-8?B?bksxZm5XLzl0OTVDelNhakdtYU9EbjdCYXUzMUtYTHRaVWV5dU5yd21mbjJk?=
+ =?utf-8?B?dTFNeUtiVU04LzhCTjEwblRIVlg2cElqZGQ1RjVSVWlXb2oyRFd2eGVGRFRj?=
+ =?utf-8?B?eDN4Z3ZWOGxDL1Rqbm5NL09ZVkIwbExqV2ZudXNlNmJZd0VvK04wb3RkaFNP?=
+ =?utf-8?B?SVZQSitWUG1VTnJ2dWJvRmVYaXJLc3FJUHJEMUNkaXlKdjdyckxoVFRjUTdB?=
+ =?utf-8?B?VmNmR1pjNVhZaFJEUU1LK0d5aUhUR3pSb2szUXVWeDZFUlc1T2VJd3lnc0ZV?=
+ =?utf-8?B?SU4vL1QwbC9ucWRRUHZpYWRkQnExVnNFV0c4Q3YzUzJCNStZUmRjbkIxNnY3?=
+ =?utf-8?B?UVJOelpnT1VDTTZkWms4SW15N21HUU5mdTkwQU9iZFFIS0JJaGg1YXMxZHFW?=
+ =?utf-8?B?YkVoUEI5Mkg5UkhiR1dQS2JlbU1rKzZyL0RQbzlsSkJlTElOVDZpTUp0bWtT?=
+ =?utf-8?B?SHdiUWtGL0ZNSUFSMVhTSDcrb3F2SWJXMUNlREhXUVNHZlpaVjk1dWtKRG0r?=
+ =?utf-8?B?VVNOVzV3L3BUZXJoUHkzcHR2RzBXY1RhWUptQmxtS014ZlRIQUhxdVBLZHJk?=
+ =?utf-8?B?WEp4eUJVeURDcEkrQktxL09va0FHUUpHZmczd0YxL0RTMnFrWnYwRnhGeWpL?=
+ =?utf-8?B?cG1hK2FpamxHanptTFR3T0U2QnB0bGZuMm56WC94bXp0ZDh0Nk5EbkRRaUNp?=
+ =?utf-8?B?Z0kxaGp1TTJ5NllRZlJqZmtaUFlFU0VlbncwVVVZM3N1ck51WG1JUmFZRkt0?=
+ =?utf-8?B?c2JUMlc5NTYwV25zK0RDWGlVYk8zK0JXRUxmaHdlMXlzcVU4RlJ4MnV2OW5u?=
+ =?utf-8?B?T3JVemRMdXYyVGlodXNwcVR1dGJGS21ncDVmRjNFVm0wUk44ZlErNXFGTENn?=
+ =?utf-8?B?WGhSeHFkNS9oZHp5dkQ1ck8xa25xZGVtNmRtUEZobGZSb0d4R3AvMG9acXdw?=
+ =?utf-8?B?Mm1mK3V4ZXIzT0dQdkVLRDJVSjNIWXRxczgwYzY1bzZNcDFqeUYwRi8yMFZv?=
+ =?utf-8?B?djZPVEtyTEFIY0lNUjFQd1phTExRNk1VOTd4cFdrUDlCVUZ5Z3FFOHZpZEMy?=
+ =?utf-8?B?SmIwSERvRjFPOFg2d0k4a1E3OFBNeHZmNzNKUzYrcHVuTUNscm9IKzZMVmpu?=
+ =?utf-8?B?cWUyVjJrWGpSRTVpWmY2UmJ2UnFjd3VydnkzR2RaSHN2Ri9jdjVMTUR1WGdG?=
+ =?utf-8?B?T3JML1FUbkhhRUU0YzdlRHJIRjRsd0VkZTI4eitIYkpleTlsOWx3eU1kWVFi?=
+ =?utf-8?B?NjF5NS9SRjk3dXZDOGlJc1VsN3Bad3hvMzNtRDFSZ2NZRlpuenM3cWRDdDd2?=
+ =?utf-8?B?cGUxTUlvcDRzWGdFaDg1Z1JTWUdYbmJPQVd3Y2JHTytOcE5sZ3JOemJjNURV?=
+ =?utf-8?B?TE0xNDJNRjh4RE1KanJlMEJROUZ6Yk5MbElsNHVFanhqVGZQbDRGUXVRTk5D?=
+ =?utf-8?B?WUYrbHhIdTdzYlVXN01iSXViWVg0NzcxcGxRQy9xSW5nRmtYNWhSK0V5S0kz?=
+ =?utf-8?B?R2k2SUU0blZwczFHZnhJV0I2STNJcWpQQjJxM1FFbnB2Z0YwbGpCc2M5dHJi?=
+ =?utf-8?B?QlMrQXlUSy8rek1RNzQ0SllEUEJCbWlua2tCUjFrZm1BS3ZTZVNTQ1BlSGFn?=
+ =?utf-8?B?ZEJiMTcxN01zeVZlaWdNWG4zT1ZFaVJXK1FKd1Q0QjIxUnBVdkZTblJKMGZO?=
+ =?utf-8?B?UW5XUVphOW16RW8xRW01cCt4MU5YcEV2T0V4K1FPZkZwT2V1OFVLTTdvb2ZX?=
+ =?utf-8?B?dzNPK3dMMU5WYjdpWm1mYmQ3SlFRU0YraUE4UFRCZDNqYW9laHhWS0RSNWxL?=
+ =?utf-8?B?eTVBRms2RmRlcUVONEs3eVIwY21JaGQyRGtzWEVMekdYSjQyc0xVZ2x5OHZG?=
+ =?utf-8?B?UGhEK2RtWkd2U2VRVzFtcWU2UXEycjhMbTY3KzhPazAyS1BoY1FvNUdyR002?=
+ =?utf-8?B?NFZXaFVCM2xrTGE1SHhSRkVXcDZ0R1A1b1JjclVkTXNIVkdNL2l3UThRZU45?=
+ =?utf-8?B?b0pDeDNDYlBOTDJTaGtzUDUvTUVnPT0=?=
+X-Forefront-Antispam-Report: 
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(14060799003)(1800799024)(82310400026)(376014)(35042699022)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	1RfZEhntEM8HlgW8tloyso65UYSyytLtjNkHluUtAUtyJPMuAYjus7L3Gb+B3JnpqeXQeVPYyfrx7bgFHZHJbqN37Cfhbbgd9SjUlEKj1iB74S1GCwDFeGSBGwJWTAlksKOW4PrAiJVYCBdWOX+ysu8E1PcK3Ps40NAToibJNjCEpmxGjSYbx9HPNbp0xe6Gr2hGw/w1XlyUXdf0NCDmtOuhv/Ixwmp5wYhX+jtRsfGNB+OwD/g6DyCaE2vWWF5zsQ36I5+fOjPNBVQBYNK8h01YKjHczJEWqzZE/zWkCpAjCDzS5qVyX5GFPcjKHJ2nJ4ap9Q0l4DNMEOdqpb9vae/7pSdNAGCQqY4hXppgdhinY061GfofxXxc+QY0PmAG03/MgRJKNjW+jKkqtxvQc/cTKrGqNWDZVPMXL4ai9N8Qov83WdoSyrNOGfTsY+sj
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2026 11:59:03.1109
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aIfX5k/6cnlYCpDQ7yA7NddHRVJVsKnrydJ4yqOIuNM3sE4oTkBAJ4ekXKqFQiRjf3u5HMtLxHlyIfLfBseeCpJGfvKU9vEZSwX/tWxSbgyAIRaAeOhcdm9uK8BQanhD
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR06MB10101
+X-MS-Exchange-CrossTenant-Network-Message-Id: 270db097-327c-4239-6d43-08de67d29e65
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	AM2PEPF0001C708.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR08MB6222
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sun, 08 Feb 2026 04:01:26 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6893
+ <meta-arm@lists.yoctoproject.org>; Mon, 09 Feb 2026 11:59:18 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6894
 
-Hoi Denys,=0A=
-=0A=
->=0A=
->=0A=
-> On Sat, Feb 07, 2026 at 12:41:09AM +0000, Johannes Schneider via lists.yo=
-ctoproject.org wrote:=0A=
-> > The placing of ' ' in combination with inline python variable=0A=
-> > expansion can lead to missing/skipping the license file checksum=0A=
-> > verification.=0A=
->=0A=
-> This technique is relied upon in so many places, the issue would have bee=
-n=0A=
-> noticed long ago, if it was the case.=0A=
->=0A=
-=0A=
-True, but as i've learned now: do_populate_lic is not always executed.=0A=
-=0A=
-What actually masked the issue with a wrong LIC_FILES_CHKSUM in the tfa rec=
-ipe=0A=
-was that it was pulled in indirectly into the bootloader build - but not th=
-e=0A=
-rootfs build where the licenses get collected. Only when bitbake-building t=
-he=0A=
-tfa explicitly does bitbake also run the do_populate_lic task - and throw a=
-n=0A=
-error.=0A=
-=0A=
->=0A=
-> > Fix this by using '+=3D' (which itself adds a space) instead of :append=
-=0A=
-> > (which concatenates strings without inserting a space)=0A=
-> >=0A=
-> > Fixes: 8dfdacd75c6c ("meta-arm: Convert to new override syntax")=0A=
-> > Signed-off-by: Johannes Schneider <johannes.schneider@leica-geosystems.=
-com>=0A=
-> >=0A=
-> > ---=0A=
-> >=0A=
-> > By chance we had an incorrect checksum set as=0A=
-> > meta-geosurv-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-leic=
-a_2.13.bb=0A=
-> > LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3D83b7626b8c7a37263c=
-6a58af8d19bee1"=0A=
-> >=0A=
-> > Which 'bitbake -e' would resolve correctly:=0A=
-> >=0A=
-> >  # $LIC_FILES_CHKSUM [3 operations]=0A=
-> >  #   set /workspace/layers/openembedded-core/meta/conf/documentation.co=
-nf:268=0A=
-> >  #     [doc] "Checksums of the license text in the recipe source code."=
-=0A=
-> >  #   :append /workspace/layers/meta-arm/meta-arm/recipes-bsp/trusted-fi=
-rmware-a/trusted-firmware-a.inc:57=0A=
-> >  #     "${@bb.utils.contains('TFA_MBEDTLS', '1', ' ${LIC_FILES_CHKSUM_M=
-BEDTLS}', '', d)}"=0A=
-> >  #   append /workspace/layers/meta-geosurv-bsp/recipes-bsp/trusted-firm=
-ware-a/trusted-firmware-a-leica_2.13.bb:41=0A=
-> >  #     "file://docs/license.rst;md5=3D83b7626b8c7a37263c6a58af8d19bee1"=
-=0A=
-> >  # pre-expansion value:=0A=
-> >  #   " file://docs/license.rst;md5=3D83b7626b8c7a37263c6a58af8d19bee1${=
-@bb.utils.contains('TFA_MBEDTLS', '1', ' ${LIC_FILES_CHKSUM_MBEDTLS}', '', =
-d)}"=0A=
-> >  LIC_FILES_CHKSUM=3D" file://docs/license.rst;md5=3D83b7626b8c7a37263c6=
-a58af8d19bee1"=0A=
-> >=0A=
-> > Note the missing space in the pre-expansion value.=0A=
->=0A=
-> The space is not missing, it is embedded in the ' ${LIC_FILES_CHKSUM_MBED=
-TLS}'=0A=
-> You should be able to check it by setting TFA_MBEDTLS=3D1 and running bit=
-bake -e=0A=
->=0A=
->=0A=
-> > But the oe-core/meta/classes-global/license.bbclass check would miss.=
-=0A=
-> >=0A=
-> > This went unnoticed for a long time and over many clean-builds, as=0A=
-> > it would only very rarily raise the QA error.=0A=
-> >=0A=
-> > Sidenote:=0A=
-> > I've looked over the meta-layer, but didn't spot any similar problems.=
-=0A=
-> >=0A=
-> > ---=0A=
-> >  .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc     | 4 ++--=
-=0A=
-> >  1 file changed, 2 insertions(+), 2 deletions(-)=0A=
-> >=0A=
-> > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a=
-.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc=0A=
-> > index 6a2c0da9..987b7a66 100644=0A=
-> > --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc=0A=
-> > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc=0A=
-> > @@ -49,10 +49,10 @@ SRC_URI_MBEDTLS ??=3D ""=0A=
-> >  # This should be set to MBEDTLS LIC FILES checksum=0A=
-> >  LIC_FILES_CHKSUM_MBEDTLS ??=3D ""=0A=
-> >  # add MBEDTLS to our sources if activated=0A=
-> > -SRC_URI:append =3D " ${@bb.utils.contains('TFA_MBEDTLS', '1', '${SRC_U=
-RI_MBEDTLS}', '', d)}"=0A=
->=0A=
-> Here the space is always appended, as it's outside of the inline code sec=
-tion.=0A=
->=0A=
->=0A=
-> > +SRC_URI +=3D "${@bb.utils.contains('TFA_MBEDTLS', '1', '${SRC_URI_MBED=
-TLS}', '', d)}"=0A=
-> >  # Update license variables=0A=
-> >  LICENSE:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' & Apach=
-e-2.0', '', d)}"=0A=
-> > -LIC_FILES_CHKSUM:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', =
-' ${LIC_FILES_CHKSUM_MBEDTLS}', '', d)}"=0A=
->=0A=
-> And here the space only gets appended, if the inline code returns true ^^=
-^=0A=
->=0A=
-=0A=
-I see - thnx for the rundown :-)=0A=
-=0A=
-What tripped me up was that in that trusted-firmware-a.inc file the variabl=
-e=0A=
-assignments above/below do it differently - e.g. use '+=3D' instead of appe=
-nd.=0A=
-=0A=
-IMHO we could align all of them, to avoid someone else stumbling over that =
-too (-:=0A=
-shall i send another patch that does this?=0A=
-(or a v2 of this one, dropping the wrong assumption in the commit message)=
-=0A=
-=0A=
-=0A=
-Bottom line: i'm wrong / am barking up the wrong tree:=0A=
-the issue was hidden in our CI setup, not the recipe=0A=
--> sorry for the noise :-S=0A=
-=0A=
-=0A=
-Gru=DF=0A=
-Johannes=0A=
-=0A=
->=0A=
-> > +LIC_FILES_CHKSUM +=3D "${@bb.utils.contains('TFA_MBEDTLS', '1', '${LIC=
-_FILES_CHKSUM_MBEDTLS}', '', d)}"=0A=
-> >  # add mbed TLS to version=0A=
-> >  SRCREV_FORMAT:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', '_m=
-bedtls', '', d)}"=0A=
-> >=0A=
-> >=0A=
-> > base-commit: be599f9523c5784904274cec12596ae31e20121f=0A=
-> > --=0A=
-> > 2.43.0=0A=
->=
+T24gNiBGZWIgMjAyNiwgYXQgMTY6MjAsIERlbnlzIERteXRyaXllbmtvIDxkZW5pc0BkZW5peC5v
+cmc+IHdyb3RlOg0KPiANCj4gT24gRnJpLCBGZWIgMDYsIDIwMjYgYXQgMDI6NDQ6MDJQTSArMDAw
+MCwgUm9zcyBCdXJ0b24gdmlhIGxpc3RzLnlvY3RvcHJvamVjdC5vcmcgd3JvdGU6DQo+PiBXZSBo
+YXZlIGEgbmV3ZXIgZ2NjLWFybS1ub25lLWVhYmkgbm93LCBzbyB0aGlzIGNhbiBiZSByZW1vdmVk
+Lg0KPiANCj4gU3RpbGwgbm8gcGxhbnMgZm9yIGEgcHJvcGVyIGJhcmVtZXRhbCBtdWx0aWNvbmZp
+Zz8gUHJvbWlzZXMsIHByb21pc2VzLi4uIDspDQoNClBsYW5zLCBhYnNvbHV0ZWx5ISAgUHJvYmFi
+bHkgdGhlIGZpcnN0IGppcmEgdGlja2V0IEkgc2VsZi1hc3NpZ25lZCB3aGVuIEkgc3RhcnRlZCBh
+dCBBcm3igKYNCg0KUGF0Y2hlcyB3ZWxjb21lIDopDQoNClJvc3M=
 
