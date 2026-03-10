@@ -1,99 +1,76 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87F5F33A65
-	for <webhook@archiver.kernel.org>; Thu,  5 Mar 2026 13:56:23 +0000 (UTC)
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.44586.1772718974607340351
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BDDEB1058
+	for <webhook@archiver.kernel.org>; Tue, 10 Mar 2026 14:19:58 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.41101.1773152388632402877
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 05 Mar 2026 05:56:14 -0800
+ Tue, 10 Mar 2026 07:19:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=01uWz54m;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.174, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-8cbad8e6610so872059385a.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 05 Mar 2026 05:56:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1772718973; x=1773323773; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MI3TUsruokyOUgJn79P0fxuQ+uOeJbwt/hxApq9lltk=;
-        b=01uWz54mLfk75LKYEdi97EZpcK6/m4OEMurrMiEZMAJqoDPIAAQn3frbr4qGHCmoFW
-         x1PBKMY4dOJHfGIbH6IQ5aa3b1ZHYgRCwobItwXx61Ma3C+tx943HGJ/20S57XATF6w9
-         Djzi+o3Ufli3EfrNAZwoivxyF1LFlzhjc8Kvo4nOecw7Oy3umEXr4tseych0jkpCdeeb
-         zSevPcwiild3Ve0wm0MpXUmTRnizPbbY2dwYRu0tQXqxQh0mhxzQr5renoYf1PAtHMDk
-         D9CuckE8vMXfgRNwBOf2xbaFSHatTWKcmxkyi+GkaZjS9HoeXMSFF8Ze/G/5vMEa4M9v
-         kYUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772718973; x=1773323773;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=MI3TUsruokyOUgJn79P0fxuQ+uOeJbwt/hxApq9lltk=;
-        b=cgcRAvX51wnw2Fk2WOFJbSml6apglphW2eLgqxWDb+hZD+aUb6uClC10FuvmZ+DtHE
-         eCIwCZWB2P9CpdfSKf4qsojJTyJJ3YFcI+D/aT6paN+VcmfVgPwH0VVOtPAO+Xawz+qf
-         /2MhIAumVLLSGQGFymVUsRhS8HjGyUhrLIAGDV0IRF+057ijthuba5l9WKq+2Knwpllp
-         Pr8X6GWaONwrPViRKZVScV9Lx6A8UTfYBRCAgOQdZ32OWFFKx33dTHANjYqW6G/fbZvx
-         ms0ANybDX37LGo7RSGGesaIZxVa3mgintZemWYxByinHse0xcd2vIry3Ki88Gd9F9bFo
-         G7AA==
-X-Gm-Message-State: AOJu0YyebkAX/l4sraAKzFNHQf0aNyNRw5JMetEWO3EfYGOL9AaXctRL
-	nqyV49uH0JduWmqKbrGpW4vo/M9oi2Ko8WFi4KMG6+Z2lFCh9YDnfN6O5kkJY038rk9q3vu94If
-	1II4=
-X-Gm-Gg: ATEYQzxgdrXuCYNDJhyqBU7M7nlsKA+k+93GcYY+znTG5Ux1f17CVBTY1oIAG9AhMp6
-	b/zOKS+sIqchIBAY4kA1jBBzxG/Gj4BmebqQWGimOpOocw1PZKoPpOwUctoV5YZ3ZeFV6y8xgx4
-	8piA6A6nsXDWCYyXvny40es4TqNRpxN/V5Wo0wJ12R04PgAEd26fBGSFzV/ubZRkE+BFYAD958/
-	nB5P2l2XEonUsrDlYs0Q7B9NOuJIHyFRxrIZ/X+D94FxNuV52whUnp962dJllTc6kQM3pNepHA1
-	2GsqXPsX7zSG6mY8Mht2hVpgo0KWQHDpGF/IFlU1ROHeE3zczDndnFIf/uSLu7JPH/JTkCU2nq+
-	OAmCBE5hXvvLj6TJSsbuTm20Cjd7SfF0qvuTaxxmuJA0fxgrHXBLYJtVA5v7M0ekp9hjkGMfOIA
-	by8W0Hc0AaVxDc
-X-Received: by 2002:a05:620a:318f:b0:8c7:1119:2994 with SMTP id af79cd13be357-8cd5afa9ecfmr703938885a.64.1772718973227;
-        Thu, 05 Mar 2026 05:56:13 -0800 (PST)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89a09ffa5e1sm64260946d6.21.2026.03.05.05.56.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2026 05:56:13 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH 1/2] arm/trusted-firmware-a: update LTSes
-Date: Thu,  5 Mar 2026 08:55:53 -0500
-Message-Id: <177271895366.2989959.1892122106133855668.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260302160634.41221-1-jon.mason@arm.com>
-References: <20260302160634.41221-1-jon.mason@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB61F169C
+	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Mar 2026 07:19:41 -0700 (PDT)
+Received: from cesw-amp-gbt-1s-m12830-04.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9180D3F7BD
+	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Mar 2026 07:19:47 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/2] arm/trusted-services: upgrade in-tree nanopb
+Date: Tue, 10 Mar 2026 14:19:42 +0000
+Message-ID: <20260310141943.1590585-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 05 Mar 2026 13:56:23 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6943
+ <meta-arm@lists.yoctoproject.org>; Tue, 10 Mar 2026 14:19:58 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6944
 
+Trusted Services uses nanopb 0.4.8 but this imports pkg_resources from
+setuptools, which has been deprecated since 2023[1] and was finally
+removed in setuptools 82.
 
-On Mon, 02 Mar 2026 11:06:33 -0500, Jon Mason wrote:
-> Update the TF-A recipes to the latest stables/LTS versions.  Not all of
-> the versions updated the version of mbedtls being used (and even the
-> updates didn't update to the latest stable version of mbedtls).  We're
-> using the mbedtls version specified in
-> docs/getting_started/prerequisites.rst, not the latest available.
-> 
-> Also, update the related fiptools and tf-a-tests (which don't map to the
-> same releases, but were all verified to be at the latest versions).
-> No real change in cot-dt2c code, but updating the SHA to the latest.
-> 
-> [...]
+This was fixed in nanopb some time ago[2] so upgrade the recipe from
+nanopb 0.48 to 0.49.1.
 
-Applied, thanks!
+[1] https://setuptools.pypa.io/en/latest/deprecated/pkg_resources.html
+[2] https://github.com/nanopb/nanopb/commit/7961a939ebeeb27631c6def44f345=
+2522264c64b
 
-[1/2] arm/trusted-firmware-a: update LTSes
-      commit: b5207f77a62f9116f4affbf41670cd4b42d6ebaa
-[2/2] CI: add LTS versions for testing
-      commit: dcc34c19febcadf17730cf64c87d3c13f540a3e3
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ .../trusted-services/trusted-services-src.inc               | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+diff --git a/meta-arm/recipes-security/trusted-services/trusted-services-=
+src.inc b/meta-arm/recipes-security/trusted-services/trusted-services-src=
+.inc
+index 7638a3ea67..22cc76ef25 100644
+--- a/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
++++ b/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
+@@ -22,9 +22,9 @@ SRC_URI_TRUSTED_SERVICES_MBEDTLS =3D "gitsm://github.co=
+m/Mbed-TLS/mbedtls;protocol
+ SRCREV_mbedtls =3D "e185d7fd85499c8ce5ca2a54f5cf8fe7dbe3f8df"
+ LIC_FILES_CHKSUM +=3D "file://ts-external/mbedtls/LICENSE;md5=3D379d5819=
+937a6c2f1ef1630d341e026d"
+=20
+-# Nanopb, tag "nanopb-0.4.8" plus some further fixes
+-SRC_URI_TRUSTED_SERVICES_NANOPB =3D "git://github.com/nanopb/nanopb.git;=
+protocol=3Dhttps;branch=3Dmaster"
+-SRCREV_nanopb =3D "6cfe48d6f1593f8fa5c0f90437f5e6522587745e"
++# Nanopb, tag "nanopb-0.4.9.1"
++SRC_URI_TRUSTED_SERVICES_NANOPB =3D "git://github.com/nanopb/nanopb.git;=
+protocol=3Dhttps;branch=3Dmaintenance_0.4"
++SRCREV_nanopb =3D "cad3c18ef15a663e30e3e43e3a752b66378adec1"
+ LIC_FILES_CHKSUM +=3D "file://ts-external/nanopb/LICENSE.txt;md5=3D9db4b=
+73a55a3994384112efcdb37c01f"
+=20
+ # qcbor, tag "v1.0.0"
+--=20
+2.43.0
+
 
