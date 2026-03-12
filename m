@@ -1,269 +1,96 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA3D1062884
-	for <webhook@archiver.kernel.org>; Wed, 11 Mar 2026 12:12:53 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.19948.1773231166476663320
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FB91067044
+	for <webhook@archiver.kernel.org>; Thu, 12 Mar 2026 15:20:42 +0000 (UTC)
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.24319.1773328838502314358
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 11 Mar 2026 05:12:46 -0700
+ Thu, 12 Mar 2026 08:20:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA6FF22BE
-	for <meta-arm@lists.yoctoproject.org>; Wed, 11 Mar 2026 05:12:39 -0700 (PDT)
-Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E54183F7BD
-	for <meta-arm@lists.yoctoproject.org>; Wed, 11 Mar 2026 05:12:45 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 5/5] arm/qemuarm64-secureboot: get edk2 and trusted-firmware a working
-Date: Wed, 11 Mar 2026 08:12:43 -0400
-Message-ID: <20260311121244.72838-5-jon.mason@arm.com>
-X-Mailer: git-send-email 2.50.1
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=LwTrSV3R;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.175, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-8cd7ecedf2cso115763285a.3
+        for <meta-arm@lists.yoctoproject.org>; Thu, 12 Mar 2026 08:20:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1773328837; x=1773933637; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/e373weG+GTx8W3aOTl94f07cFkSKBK0EGO9VLcUAkQ=;
+        b=LwTrSV3R4dYe6TBXAUs60tw8EOzb2vCSiOkcyjofCMws4WiCvurzysIP4EJ+Ipntyj
+         qgLAPohSAqBGDkuI0dZpq81ovuLCmGqS3XX32AslnJJ1kvWRLCo8Fnb2KD/putG72/ha
+         /7zJR1kCVK8m9kmuosaeDueE01t51IgK5cO2i4jMYEhNj3MYbJhtDX3GgiMoEUCm0pam
+         b83XX/YzKj+s8VCdftAAfP/difsEWd1AkVfqdRS3jXVQ9RrN4wF6cLc7tdFf86KEGDt7
+         Zu/O9T2rCO8RBCghzxviwFOcZ1Cc8bahWfO069JAFz3qQha92JxIgGiPTSjIYXgAd2Nv
+         OPXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773328837; x=1773933637;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/e373weG+GTx8W3aOTl94f07cFkSKBK0EGO9VLcUAkQ=;
+        b=tirehEvO7qOzmIPWf0Ae0u8nenQiIFP/QkMeBclAcFyEOmPmTBhXfVhW71s9aprIWY
+         eJGL/eCV61OjPfSAk3BCAvnkKoW9HXXD5cXB9lhKSXHgiZjTGK6fgvkUsKzIPJDoQpEN
+         tVR9n4HnTaP+91iF+t20fS/bfKMuK5adnJtuZuG+46GrHh6YEftitr3zdeD5z5e4rNxq
+         TeZHS7i11c1hDM09r9ZQ5On/MYdXjfwt9DJyc4YvEz/QHXvtPDb3iZ7kpun56IVePDAN
+         p4n7HJ3+Wen3zLokxeMHnkItmSN2ekRfpRQIZmoqxosqyNUWdrwtpYZnjd2jwJvg8m3Q
+         KrmQ==
+X-Gm-Message-State: AOJu0YwjnLVIA7Y6g7h4ChBmgLcmv2mwqN6wZSOmXpB+b+YyHz2vtYAx
+	C+tskfDaQxM5YrdiwhYWYSAA2xNI9DOgFOqPCgi73eiE5TG9uGXOmI3fwbdfjVsMb0Ow7tqUGjE
+	X/M8=
+X-Gm-Gg: ATEYQzwbibH1hvFP6zJDh9URf0Nn9o28BnV3eu5nblMRbhqvuDEO2RXTEkIpK+x8Fe1
+	tIeWL4HaiWktkFwNvAq/whMG5r7ftGKIVc+YXvIGCllEuTPRyH2cqdPMuo58i/6DFQf7ihu/Cp0
+	bq8T2jzIXiO96G6dQJU9FPItKhJck9pZvr2+eiwRMQ15XBRDpSizzrD8lulPLZkiFfJGSc2/WLz
+	8JYD9gjn58NOpQP7PH1EfVthw7+pR/mIky7iX8sVKYAx9xq1AEDg8eQOI0J4wLPXVTL3P5R0ngP
+	KMeKGMDP5Pw1+YyL6ppQ4+W/E0RK5BSJrxA6nBpd6+peQo2RWg3QfDQcFN7+Fi/u/Xw0cOk+JYn
+	WSHUB4/mySdeZMOpRD9wUbICvU72o/pL+AO5txym8xmEeS5Zl5ahPQqmnHsT/limsk4KCx+vqBN
+	Dv5LPf34bv96On
+X-Received: by 2002:ac8:4546:0:b0:509:4109:4ba with SMTP id d75a77b69052e-50941091206mr54091871cf.70.1773328836850;
+        Thu, 12 Mar 2026 08:20:36 -0700 (PDT)
+Received: from localhost ([136.56.27.188])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5094665cd2bsm21437481cf.25.2026.03.12.08.20.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2026 08:20:36 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/5] CI/uefi-secureboot: remove duplicate entry
+Date: Thu, 12 Mar 2026 11:20:27 -0400
+Message-Id: <177332882772.389493.13613737732165361651.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260311121244.72838-1-jon.mason@arm.com>
 References: <20260311121244.72838-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 11 Mar 2026 12:12:53 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6950
+ <meta-arm@lists.yoctoproject.org>; Thu, 12 Mar 2026 15:20:42 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6951
 
-Do the changes necessary to get qemuarm64-secureboot to work with edk2
-firmware, and add it to CI.  The CI changes needed to make it dynamic
-based on edk2.yml or u-boot.yml required moving the relevant parts into
-inc files.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- .gitlab-ci.yml                                |  1 +
- ci/edk2.yml                                   |  2 +-
- .../trusted-firmware-a-qemuarm-secureboot.inc | 19 +++++++
- ...rusted-firmware-a-qemuarm64-secureboot.inc | 36 ++++++++++++
- .../trusted-firmware-a_%.bbappend             | 55 ++-----------------
- .../recipes-bsp/uefi/edk2-firmware_%.bbappend |  6 ++
- 6 files changed, 68 insertions(+), 51 deletions(-)
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmw=
-are-a-qemuarm-secureboot.inc
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmw=
-are-a-qemuarm64-secureboot.inc
+On Wed, 11 Mar 2026 08:12:39 -0400, Jon Mason wrote:
+> 
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index 048366bd46a3..a93a0f1e0dec 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -258,6 +258,7 @@ qemuarm64-secureboot:
-   parallel:
-     matrix:
-       - TOOLCHAINS: [gcc, clang]
-+        FIRMWARE: [u-boot, edk2]
-         TCLIBC: [glibc, musl]
-         TS: [none, qemuarm64-secureboot-ts]
-         TESTING: testimage
-diff --git a/ci/edk2.yml b/ci/edk2.yml
-index cf2f5851b85d..e14c16e1df27 100644
---- a/ci/edk2.yml
-+++ b/ci/edk2.yml
-@@ -13,5 +13,5 @@ local_conf_header:
-     EXTRA_IMAGEDEPENDS +=3D "edk2-firmware"
-     EFI_PROVIDER ?=3D "grub-efi"
-=20
--    QB_DEFAULT_BIOS =3D "QEMU_EFI.fd"
-+    QB_DEFAULT_BIOS ??=3D "QEMU_EFI.fd"
-     WKS_FILE ?=3D "efi-disk.wks.in"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-q=
-emuarm-secureboot.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-f=
-irmware-a-qemuarm-secureboot.inc
-new file mode 100644
-index 000000000000..6227d1882924
---- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-qemuarm-=
-secureboot.inc
-@@ -0,0 +1,19 @@
-+COMPATIBLE_MACHINE =3D "qemuarm-secureboot"
-+
-+TFA_PLATFORM =3D "qemu"
-+
-+# EDK2 dropped support for 32bit Arm, so u-boot only
-+TFA_UBOOT =3D "1"
-+TFA_INSTALL_TARGET =3D "flash.bin"
-+
-+do_compile:append() {
-+    # Create a secure flash image for booting AArch64 Qemu. See:
-+    # https://trustedfirmware-a.readthedocs.io/en/latest/plat/qemu.html
-+    dd if=3D${BUILD_DIR}/bl1.bin of=3D${BUILD_DIR}/flash.bin bs=3D4096 c=
-onv=3Dnotrunc
-+    dd if=3D${BUILD_DIR}/fip.bin of=3D${BUILD_DIR}/flash.bin seek=3D64 b=
-s=3D4096 conv=3Dnotrunc
-+}
-+
-+do_deploy:append(){
-+    # runqemu requires flash.bin to be in the deploy directory
-+    ln -srn ${DEPLOYDIR}/${PN}/flash.bin ${DEPLOYDIR}/flash.bin
-+}
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-q=
-emuarm64-secureboot.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted=
--firmware-a-qemuarm64-secureboot.inc
-new file mode 100644
-index 000000000000..9bfe52c5b44d
---- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-qemuarm6=
-4-secureboot.inc
-@@ -0,0 +1,36 @@
-+COMPATIBLE_MACHINE =3D "qemuarm64-secureboot"
-+
-+# Enable passing TOS_FW_CONFIG from FIP package to Trusted OS.
-+FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files:"
-+SRC_URI:append =3D " file://0001-Add-spmc_manifest-for-qemu.patch"
-+
-+TFA_PLATFORM =3D "qemu"
-+
-+# Trusted Services secure partitions require arm-ffa machine feature.
-+# Enabling Secure-EL1 Payload Dispatcher (SPD) in this case
-+TFA_SPD =3D "${@bb.utils.contains('MACHINE_FEATURES', 'arm-ffa', 'spmd',=
- 'opteed', d)}"
-+# Configure tf-a accordingly to TS requirements if included
-+EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'arm-f=
-fa', ' CTX_INCLUDE_EL2_REGS=3D0 SPMC_OPTEE=3D1 ', '' , d)}"
-+# Cortex-A57 supports Armv8.0 (no S-EL2 execution state).
-+# The SPD SPMC component should run at the S-EL1 execution state.
-+TFA_SPMD_SPM_AT_SEL2 =3D "0"
-+
-+TFA_UBOOT ?=3D "1"
-+
-+TFA_INSTALL_TARGET =3D "flash.bin"
-+
-+# When using OP-TEE SPMC specify the SPMC manifest file.
-+EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'arm-f=
-fa', \
-+    'QEMU_TOS_FW_CONFIG_DTS=3D${S}/plat/qemu/fdts/optee_spmc_manifest.dt=
-s', '', d)}"
-+
-+do_compile:append() {
-+    # Create a secure flash image for booting AArch64 Qemu. See:
-+    # https://trustedfirmware-a.readthedocs.io/en/latest/plat/qemu.html
-+    dd if=3D${BUILD_DIR}/bl1.bin of=3D${BUILD_DIR}/flash.bin bs=3D4096 c=
-onv=3Dnotrunc
-+    dd if=3D${BUILD_DIR}/fip.bin of=3D${BUILD_DIR}/flash.bin seek=3D64 b=
-s=3D4096 conv=3Dnotrunc
-+}
-+
-+do_deploy:append(){
-+    # runqemu requires flash.bin to be in the deploy directory
-+    ln -srn ${DEPLOYDIR}/${PN}/flash.bin ${DEPLOYDIR}/flash.bin
-+}
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%=
-.bbappend b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.=
-bbappend
-index 679f6f222fa0..a230a0c73fd3 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappe=
-nd
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappe=
-nd
-@@ -1,32 +1,14 @@
--COMPATIBLE_MACHINE:qemuarm64-secureboot =3D "qemuarm64-secureboot"
--COMPATIBLE_MACHINE:qemuarm-secureboot =3D "qemuarm-secureboot"
-+# Machine specific TFAs
-=20
--# Enable passing TOS_FW_CONFIG from FIP package to Trusted OS.
--FILESEXTRAPATHS:prepend:qemuarm64-secureboot :=3D "${THISDIR}/files:"
--SRC_URI:append:qemuarm64-secureboot =3D " \
--            file://0001-Add-spmc_manifest-for-qemu.patch \
--        "
-+QEMU_TFA_REQUIRE ?=3D ""
-+QEMU_TFA_REQUIRE:qemuarm-secureboot =3D "trusted-firmware-a-qemuarm-secu=
-reboot.inc"
-+QEMU_TFA_REQUIRE:qemuarm64-secureboot =3D "trusted-firmware-a-qemuarm64-=
-secureboot.inc"
-=20
--TFA_PLATFORM:qemuarm64-secureboot =3D "qemu"
--TFA_PLATFORM:qemuarm-secureboot =3D "qemu"
-+require ${QEMU_TFA_REQUIRE}
-=20
--# Trusted Services secure partitions require arm-ffa machine feature.
--# Enabling Secure-EL1 Payload Dispatcher (SPD) in this case
--TFA_SPD:qemuarm64-secureboot =3D "${@bb.utils.contains('MACHINE_FEATURES=
-', 'arm-ffa', 'spmd', 'opteed', d)}"
--# Configure tf-a accordingly to TS requirements if included
--EXTRA_OEMAKE:append:qemuarm64-secureboot =3D "${@bb.utils.contains('MACH=
-INE_FEATURES', 'arm-ffa', ' CTX_INCLUDE_EL2_REGS=3D0 SPMC_OPTEE=3D1 ', ''=
- , d)}"
--# Cortex-A57 supports Armv8.0 (no S-EL2 execution state).
--# The SPD SPMC component should run at the S-EL1 execution state.
--TFA_SPMD_SPM_AT_SEL2:qemuarm64-secureboot =3D "0"
--
--TFA_UBOOT:qemuarm64-secureboot =3D "1"
--TFA_UBOOT:qemuarm-secureboot =3D "1"
- TFA_BUILD_TARGET:aarch64:qemuall =3D "all fip"
- TFA_BUILD_TARGET:arm:qemuall =3D "all fip"
-=20
--TFA_INSTALL_TARGET:qemuarm64-secureboot =3D "flash.bin"
--TFA_INSTALL_TARGET:qemuarm-secureboot =3D "flash.bin"
--
- DEPENDS:append:aarch64:qemuall =3D " optee-os"
- DEPENDS:append:arm:qemuall =3D " optee-os"
-=20
-@@ -46,30 +28,3 @@ EXTRA_OEMAKE:append:arm:qemuall =3D " \
-     BL32_RAM_LOCATION=3Dtdram \
-     AARCH32_SP=3Doptee \
-     "
--# When using OP-TEE SPMC specify the SPMC manifest file.
--EXTRA_OEMAKE:append:qemuarm64-secureboot =3D "${@bb.utils.contains('MACH=
-INE_FEATURES', 'arm-ffa', \
--    'QEMU_TOS_FW_CONFIG_DTS=3D${S}/plat/qemu/fdts/optee_spmc_manifest.dt=
-s', '', d)}"
--
--do_compile:append:qemuarm64-secureboot() {
--    # Create a secure flash image for booting AArch64 Qemu. See:
--    # https://trustedfirmware-a.readthedocs.io/en/latest/plat/qemu.html
--    dd if=3D${BUILD_DIR}/bl1.bin of=3D${BUILD_DIR}/flash.bin bs=3D4096 c=
-onv=3Dnotrunc
--    dd if=3D${BUILD_DIR}/fip.bin of=3D${BUILD_DIR}/flash.bin seek=3D64 b=
-s=3D4096 conv=3Dnotrunc
--}
--
--do_compile:append:qemuarm-secureboot() {
--    # Create a secure flash image for booting AArch64 Qemu. See:
--    # https://trustedfirmware-a.readthedocs.io/en/latest/plat/qemu.html
--    dd if=3D${BUILD_DIR}/bl1.bin of=3D${BUILD_DIR}/flash.bin bs=3D4096 c=
-onv=3Dnotrunc
--    dd if=3D${BUILD_DIR}/fip.bin of=3D${BUILD_DIR}/flash.bin seek=3D64 b=
-s=3D4096 conv=3Dnotrunc
--}
--
--do_deploy:append:qemuarm64-secureboot(){
--    # runqemu requires flash.bin to be in the deploy directory
--    ln -srn ${DEPLOYDIR}/${PN}/flash.bin ${DEPLOYDIR}/flash.bin
--}
--
--do_deploy:append:qemuarm-secureboot(){
--    # runqemu requires flash.bin to be in the deploy directory
--    ln -srn ${DEPLOYDIR}/${PN}/flash.bin ${DEPLOYDIR}/flash.bin
--}
-diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend b/meta-ar=
-m/recipes-bsp/uefi/edk2-firmware_%.bbappend
-index 063136242bef..9f75e0a954a3 100644
---- a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-+++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-@@ -5,6 +5,12 @@ EDK2_BIN_NAME:qemuarm64      =3D "QEMU_EFI.fd"
- # No need for PXE booting in qemu, disable to reduce unnecessary noise
- EDK2_EXTRA_BUILD:qemuarm64 +=3D " -D NETWORK_PXE_BOOT_ENABLE=3DFALSE "
-=20
-+COMPATIBLE_MACHINE:qemuarm64-secureboot =3D "qemuarm64-secureboot"
-+EDK2_PLATFORM:qemuarm64-secureboot      =3D "ArmVirtQemuKernel-AArch64"
-+EDK2_PLATFORM_DSC:qemuarm64-secureboot  =3D "ArmVirtPkg/ArmVirtQemuKerne=
-l.dsc"
-+EDK2_BIN_NAME:qemuarm64-secureboot      =3D "QEMU_EFI.fd"
-+#EDK2_BUILD_RELEASE:qemuarm64-secureboot =3D "0"
-+
- do_install:append:qemuarm64() {
-     install ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILE=
-R}/FV/${EDK2_BIN_NAME} ${D}/firmware/
- }
---=20
-2.50.1 (Apple Git-155)
 
+Applied, thanks!
+
+[1/5] CI/uefi-secureboot: remove duplicate entry
+      commit: 696c1482e67b0bd3eadec3a4db996768f0c397fd
+[2/5] arm-bsp/trusted-firmware-a: remove unnecessary FILESEXTRAPATHS
+      commit: eac46f4c5eff66e298a23f2c0b1ed8866600ff8e
+[3/5] arm-bsp/sbsa-ref: fix qemu warning
+      commit: 0ec2763f339284630e3da37abaeabf744808f061
+[4/5] arm/qemuarm64: fix edk2 and test it
+      commit: 9b1bde435ebcee50177b5173de17fd29d060205e
+[5/5] arm/qemuarm64-secureboot: get edk2 and trusted-firmware a working
+      commit: ae2af2b852ec5b6e8019ee7b00a2628cd593afb2
+
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
