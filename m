@@ -1,193 +1,159 @@
-Return-Path: <igor.opaniuk@foundries.io>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE5F1075276
-	for <webhook@archiver.kernel.org>; Thu, 19 Mar 2026 08:23:34 +0000 (UTC)
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.6237.1773908611763809173
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFF81090233
+	for <webhook@archiver.kernel.org>; Thu, 19 Mar 2026 14:11:41 +0000 (UTC)
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.12139.1773929494524415242
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 19 Mar 2026 01:23:31 -0700
+ Thu, 19 Mar 2026 07:11:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@foundries.io header.s=google header.b=TVjZxkEf;
- spf=permerror, err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}: invalid domain name (domain: foundries.io, ip: 205.220.168.131, mailfrom: igor.opaniuk@foundries.io)
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62J73vBY2544601
-	for <meta-arm@lists.yoctoproject.org>; Thu, 19 Mar 2026 08:23:31 GMT
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d0957rt7e-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <meta-arm@lists.yoctoproject.org>; Thu, 19 Mar 2026 08:23:31 +0000 (GMT)
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-b97b6ccf166so77071166b.2
-        for <meta-arm@lists.yoctoproject.org>; Thu, 19 Mar 2026 01:23:30 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=PiH//yrK;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.210.48, mailfrom: jdmason@kudzu.us)
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-7d75371d873so1113970a34.3
+        for <meta-arm@lists.yoctoproject.org>; Thu, 19 Mar 2026 07:11:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773929494; cv=none;
+        d=google.com; s=arc-20240605;
+        b=kHV+KKQF/h/7a4SIjMtdu56ItFc0am6aCUoKuQFVrnlQqXF0Q5iP7//SMRQiExIIy2
+         TP2beCsbU9X4Y2KWia5nt1/arEx5ycdJjdYvOeY/CkfUcyyKEjkLPep8+YWOOdJkaLMo
+         WU/S069lwjVR2n0RaKWHyI6Tp46E2nCobObMnqaT6NM2fy1cpI7lWsZTR1jUpToJ3MXB
+         D0DP7+arrCcA+VMdMdLobOcHocJVT+AVt6L3Z/Og8ofJihGnQ31puTwJ8tObg2hOZGWC
+         Qtivp6oqUxAvwUIgTaYU7v8uLafh+PSjq40jskOixbc+pb2VwSBrUAKPFgl9a5rGcDFR
+         VDqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=2YOfviUPVkIMfVlf1Cfq++an2MzFcKQyk/6JNy1r9Ag=;
+        fh=CNtzBQdTrBaWN/2tTb2OjhpHSUuk/liWQySmN8Hroh8=;
+        b=aYwQgDDPc7jd2P/FUKoQAVBcHbdBOrAcS+JbKppFBUIUz69lOru00QHf/2sxbJ72vT
+         p7dzfSG2BGwaLm26hnRvZ6vvEp4oEbrcWuaw9VQSDC6J3kxkUzj59rvfZrFPXk/n6+i5
+         Uv2AwegBKBGrqslsUO3HYWV/Dt9f/AvChgast+Q6lvxgMb8vRIPGMBg4wUwjebF1HEF2
+         zuiceUTI2jzrvcszy/ia4Q0VtRXetsjHs0Vyf5vQsV0wlaZXs2yidW/rFil+M8G1i2WO
+         jL+QrFewq158yN/1CVVoaj3Ibb/eoECEYBJV8/xFBzY6deyirlSrMWevzV/+TgqHIK5G
+         djPw==;
+        darn=lists.yoctoproject.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=foundries.io; s=google; t=1773908609; x=1774513409; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EGi8d9Lw8gWVfjzmftVNJ+qjScJ6fO088FgKWCrbUjM=;
-        b=TVjZxkEfaHNBti7JstTjM6ieLaG2z0gjFxAxttBKC8Xq1ciuUYIl8VEIyzKjJM31h3
-         rlhW58/DkfobsA7Aahl+zGXB06deSkXoID5mKbg/KW3lkzXTgTumJSFcF5H5GNZjq/aK
-         b9UzGwFC7w2An2t6j5yNwVz2VCt1/lhmPlKOkWxW/Mzv2lO+DspzV1Fc6kme37ml6jgm
-         M7pVC6rNlBvcpEIT8EUWD8CQ7hk+IJ6GiFaxtp/qlV4LlLfI3pbbBlXIaVEonq24Fy29
-         Fi1LAxPicNDKNiHftLdbD7kqkj8UdG6bSbkrTvOjRIq2M64Rz0aagTJj3S87DMGGy02x
-         SPJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773908609; x=1774513409;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1773929494; x=1774534294; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EGi8d9Lw8gWVfjzmftVNJ+qjScJ6fO088FgKWCrbUjM=;
-        b=tZ2dGDxGoIMyHzJqnjEXXFgMK4kJuss8K4HiKkBZfafjz3wc0xPjPHNAQxjEuViwLh
-         dDaT6t16shA7+UZmEj6XMvaWV4Umnhm98OhKLgj+pjvTSckATj11x/MUPdjH8EtryQFU
-         YLNvUYMQqRZba17KLSZOQ2SLTB+QPMEGxC0VqcEeCEGQjcg5aFut3ygARO3QywtY8B+9
-         EpNbJ6+NFHSrkriNzar5w+4rB0hC742jvzv0ziREDEb55MlqGwYJGgoJts/33k5jsclE
-         TAyPHkyzSF6f6gCkS4Y250hNJSs8EZpZGmR9ZgAoMX/YJaNPdTQgtteVukOy6RnjQn8K
-         5zsQ==
-X-Gm-Message-State: AOJu0YwrZ95g/iJzS5EsoFrDwegXAVjSB1rOgDs4a5w3dSsyNNGdRBsC
-	lRq6WmcocPTgui2ALKfi+uQtptT2tg6u1JQe/w6YPUb3tXw3V1RbywAz6sbUXsHqIbF/siORhdz
-	kESDLRNeoUjKvVvl4PmxghUgumTIJyqdK0sij22uJ3qfZlxH6B7tL/WIA1L6aqdk8gdvAWbWiX6
-	j4l8Lj
-X-Gm-Gg: ATEYQzxD1G22tTR4CNnK3OiTEdYJPYjBJ1vkevfYByMYU22wTi59fudn3Tw4Ua6Qa1+
-	+3YA3+FvriHjplwWWXAxf1m7+Si3tngxAM7UJVRWpvPUNbfe4PtFOZmxpqYKOXZI8HCHtwgkQ+i
-	tGjDyy1K1TViZnJUIG4P0tUzJZ7m8BQpedHPWAeU2h3JudHdFNpNzFk1eg9gC4TVJ65q6xSCu6G
-	cwWlxkYUZiMsikvJR5Wd2AlWhXv/dSaH+YuwRz+4dODKo4Qr2+MF9HiLuaWBxdoBSnknXzTZlNW
-	67Z5YmQwneKdAoU3enHYONAXTZrOyZnW9OHOCROdoXZjMf0YBvOSAgVZ2PpT8nY0cnYe8c9ExOI
-	xu1N5E/xr1xckQEI+VuPf7JBMrZH7xhpRdTUQdt63IEG25EL8V1LNJtjiWKR6
-X-Received: by 2002:a17:907:3f1f:b0:b98:d53:4f50 with SMTP id a640c23a62f3a-b980d5350b0mr198631266b.46.1773908608906;
-        Thu, 19 Mar 2026 01:23:28 -0700 (PDT)
-X-Received: by 2002:a17:907:3f1f:b0:b98:d53:4f50 with SMTP id a640c23a62f3a-b980d5350b0mr198629666b.46.1773908607995;
-        Thu, 19 Mar 2026 01:23:27 -0700 (PDT)
-Received: from igor-t14.. (185-72-184-225.cgnat.inetia.pl. [185.72.184.225])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b97f13e83c8sm406891166b.2.2026.03.19.01.23.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2026 01:23:27 -0700 (PDT)
-From: Igor Opaniuk <igor.opaniuk@foundries.io>
-To: meta-arm@lists.yoctoproject.org
-Cc: Jon Mason <jon.mason@arm.com>, Ricardo Salveti <ricardo@foundries.io>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Jose Quaresma <jose.quaresma@foundries.io>,
-        Igor Opaniuk <igor.opaniuk@foundries.io>
-Subject: [PATCH v1] arm/edk2-basetools-native: build C host tools (GenFfs, GenFv)
-Date: Thu, 19 Mar 2026 09:23:23 +0100
-Message-ID: <20260319082323.3673789-1-igor.opaniuk@foundries.io>
-X-Mailer: git-send-email 2.43.0
+        bh=2YOfviUPVkIMfVlf1Cfq++an2MzFcKQyk/6JNy1r9Ag=;
+        b=PiH//yrKRR9HlcWqqlx+gDvHNHUFfN8pIecDQByB4wmJGag22t2PBhjUiYVyRM+aKb
+         9P4/EZjELA6oLff9pHR+1MDNwhv4yMo4WXH5kJQXARXbiW2G11Pyk0+b9tcNexU2NUui
+         1xA82RX3i9pkb2Iy/bAnv8sikoFuJDabNr1kMWhHWOs+JjsKfi93gPQMkxwGCTloe+ji
+         aZgPSJX9E/g/y5Ea/07EibHffDRxOfd0GCLuBThtLRPFd9PNQHY7xzhRrEmHHfxoXlvu
+         28Mtnj+WzZUbktfrw9uZlDAIjAJPoJLEGKE/cv/8GwOJg99RhP4j9JCK6Jsvj9EW+jae
+         uz0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1773929494; x=1774534294;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=2YOfviUPVkIMfVlf1Cfq++an2MzFcKQyk/6JNy1r9Ag=;
+        b=DY5p0ZcSCTESlBFNSGPaWEg0eR+0ULtwWbMfHJdVJ7Ob0I1yItf9dvl4ZAgI/eJQQ/
+         XVlVxQIZNU+vx+zjUikXY7yCiY8V9m7qoNqrg8qUcCd6EMdkCFR4wxcpqf2ee2ox894+
+         BkSQGw415Lx/frKmeBcXWH03xD3eM7oTHn8i2oLBm9dH5yoeUdhzsaAkKsxPo7CHYISP
+         N87fLkM1ZaRDJcOI36rd6gwinJ+ua6hLU+sOUVOGBl4R1M1ZTAW0CHUzdGYDHcc94ENQ
+         tYVixrmV6cyi2QBmfYXEDgkSytfZ2NSPD3J4SJuPNeXZ8fbxbIPbi9QJ+tkJXh948a7a
+         i/rw==
+X-Gm-Message-State: AOJu0Yz4HTvyya+11sVmOrk/yh7/igYIyCh6nkzn0qwaZR1NLfbG62Fb
+	jFkKsxnvD6VmwnPCXhsafk77ronG5fx0O3f/oOyqm+nM/5KNtqGa0D5Xqq2W0FV3dvQgvAJLL+0
+	v2vcnFLsP6eswppjbCam5YHdT2qAo5a9Tw5HitdNM
+X-Gm-Gg: ATEYQzynHMcLjRsK4a46etNc0D77gV1oe9ewN7JHNgkdj/K3iYUwCDRS7vOpiLf3rtF
+	58aa7/6iXZxPWQE5fda7JkQjBMXIYBg8pZrDxJzuehlMi645/T4RsPmegFgLeyPwfvSeTbr9C1B
+	mdiQ226crFjh6+P2DWgLP7vFRUdcdcIwfl/of9er94C4vZegrZx5SdWXmwgAO0SxvOq4EBv8zvC
+	0ssQQUXrpRWysiFnGiYJcLRzgZwBPLmaJiQ5DKbGwN/0zWtKBvbYzDaz23ZWuIgP3QnV69DlICM
+	CAQJfzEb
+X-Received: by 2002:a05:6830:f94:b0:7d7:5959:946f with SMTP id
+ 46e09a7af769-7d7ca56fc0amr4401516a34.7.1773929493610; Thu, 19 Mar 2026
+ 07:11:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: kM3-mdxanlHi0d-MdLSLsEEdFogsk7Wp
-X-Proofpoint-GUID: kM3-mdxanlHi0d-MdLSLsEEdFogsk7Wp
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE5MDA2NSBTYWx0ZWRfX1BwVAL/u0Sm0
- p9yYk9Hf+foxgYUvBSETh056E0tI4KmtQmcZ1bumY4gBWE1fWvkElInsSTWhFxtq9yJ7LuiXcHL
- k93y59NuWyLAOTSbTNg2hAug/oZoIx+v2lwjTIeFvtM/osvBk/jiw4sZXz5z3ZpvYtYOxxtBqKB
- REEw8Ka0BHA/adjRkB3vHIx5nl4e765WmszX/JXcN+SW446f7nDrHpAc3w/lTt4Z/AjUhh3tGwT
- H845+52s0zyRc2xc3KrPFvaNVv68bbynMt8emdZPpB8GWbWa7MJKy3F087D/oh+Q6sijij8gp0E
- 9JO+yDLhil5wDQ6WtSwvCzC70XZVSicQ/DiYEnTBK2MQEqpSNDK9x1xTJdwjmde1igx29X1hOGj
- MpQWwqZ1tOxcyjVnfqGRO+83aKcApyMJh7pcj6iFKCnCHOjjUeobePc9YnSOcuDuuCmMzKeX/4l
- uozCzkQIIcNsI+hyprQ==
-X-Authority-Analysis: v=2.4 cv=RZedyltv c=1 sm=1 tr=0 ts=69bbb283 cx=c_pps
- a=D+UBI74RbQA8i2EYnbuvxw==:117 a=nUgIwBcamMGg/yQZQzpXgQ==:17
- a=Yq5XynenixoA:10 a=9UA2AVYIz8kA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=Um2Pa8k9VHT-vaBCBUpS:22 a=NEAV23lmAAAA:8
- a=YHFpd-ZClzWf5nr6Y90A:9 a=PsfoTyiJ_72bb7xyA04f:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-19_01,2026-03-17_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 priorityscore=1501 impostorscore=0 suspectscore=0 adultscore=0
- spamscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603190065
+References: <20260318122948.3511335-2-jose.quaresma@oss.qualcomm.com>
+In-Reply-To: <20260318122948.3511335-2-jose.quaresma@oss.qualcomm.com>
+From: Jon Mason <jdmason@kudzu.us>
+Date: Thu, 19 Mar 2026 10:11:22 -0400
+X-Gm-Features: AaiRm50YrYFX5FbI-e3c79oDviZATZxfeFY4M4q2Vj3rHP3jty89UvkuqfUStBw
+Message-ID: <CAPoiz9wiA7yLLBycGkd4BAk4Lw1wnJTfgw5ABwzcVfece=D_Ww@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH] layers: update for wrynose release series
+To: quaresma.jose@gmail.com
+Cc: meta-arm@lists.yoctoproject.org, 
+	Jose Quaresma <jose.quaresma@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 19 Mar 2026 08:23:34 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6963
+ <meta-arm@lists.yoctoproject.org>; Thu, 19 Mar 2026 14:11:41 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6964
 
-The recipe previously only copied the Python BaseTools into the native
-sysroot, which was sufficient for capsule signing but not for Firmware
-Volume (FV) creation. Downstream recipes that build UEFI capsule
-update images for embedded platforms need GenFfs and GenFv to assemble
-FV images - a key component of the UEFI Capsule Update format used for
-system firmware updates.
+Thanks for the patch, but we pushed a quick patch to get our CI
+working before we saw yours on the list.
 
-Add the brotli submodule source (build-time dependency of both tools),
-build the C BaseTools (Common, BrotliCompress, GenFfs, GenFv) and
-install the binaries into ${bindir} together with GenerateCapsule.py
-and the Common Python library so that capsule-generating recipes can
-consume them from the native sysroot.
+Thanks,
+Jon
 
-Signed-off-by: Igor Opaniuk <igor.opaniuk@foundries.io>
----
- .../uefi/edk2-basetools-native_202602.bb      | 43 ++++++++++++++++---
- 1 file changed, 38 insertions(+), 5 deletions(-)
-
-diff --git a/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202602.bb b/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202602.bb
-index c26a3473..e2d927e2 100644
---- a/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202602.bb
-+++ b/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202602.bb
-@@ -1,16 +1,25 @@
--# Install EDK2 Base Tools in native sysroot. Currently the BaseTools are not
--# built, they are just copied to native sysroot. This is sufficient for
--# generating UEFI capsules as it only depends on some python scripts. Other
--# tools need to be built first before adding to sysroot.
-+# Install EDK2 Base Tools in native sysroot. The Python BaseTools are copied
-+# wholesale, and the C host tools (GenFfs, GenFv) are built so that downstream
-+# recipes can generate UEFI FV images and capsules.
-+#
-+# SRCREV_brotli must be kept in sync with the brotli submodule commit that
-+# the pinned edk2 SRCREV declares in its .gitmodules. Update it whenever
-+# the edk2 SRCREV is bumped.
-+#   edk2-stable202602 (b7a715f7): brotli e230f474
- 
- SUMMARY = "EDK2 Base Tools"
- LICENSE = "BSD-2-Clause-Patent"
- 
- # EDK2
--SRC_URI = "git://github.com/tianocore/edk2.git;branch=master;protocol=https"
-+SRC_URI = " \
-+    git://github.com/tianocore/edk2.git;branch=master;protocol=https \
-+    git://github.com/google/brotli.git;protocol=https;nobranch=1;name=brotli;destsuffix=${BPN}-${PV}/BaseTools/Source/C/BrotliCompress/brotli \
-+"
- LIC_FILES_CHKSUM = "file://License.txt;md5=2b415520383f7964e96700ae12b4570a"
- 
- SRCREV = "b7a715f7c03c45c6b4575bf88596bfd79658b8ce"
-+SRCREV_brotli = "e230f474b87134e8c6c85b630084c612057f253e"
-+SRCREV_FORMAT = "default_brotli"
- 
- UPSTREAM_CHECK_GITTAGREGEX = "^edk2-stable(?P<pver>\d+)$"
- 
-@@ -18,7 +27,31 @@ inherit native
- 
- RDEPENDS:${PN} += "python3-core"
- 
-+do_compile() {
-+    BASE_C="${S}/BaseTools/Source/C"
-+
-+    oe_runmake -C "${BASE_C}/Common"
-+    oe_runmake -C "${BASE_C}/BrotliCompress"
-+    oe_runmake -C "${BASE_C}/GenFfs"
-+    oe_runmake -C "${BASE_C}/GenFv"
-+}
-+
- do_install () {
-     mkdir -p ${D}${bindir}/edk2-BaseTools
-     cp -r ${S}/BaseTools/* ${D}${bindir}/edk2-BaseTools/
-+
-+    # Install compiled binaries to bindir so downstream recipes can reference
-+    # them via ${STAGING_BINDIR_NATIVE}/GenFfs and GenFv.
-+    install -d "${D}${bindir}"
-+    install -m 0755 "${S}/BaseTools/Source/C/bin/GenFfs" "${D}${bindir}/"
-+    install -m 0755 "${S}/BaseTools/Source/C/bin/GenFv"  "${D}${bindir}/"
-+
-+    # Install GenerateCapsule.py and Common/ Python library under a
-+    # well-known datadir path.
-+    install -d "${D}${datadir}/edk2-basetools"
-+    install -m 0644 \
-+        "${S}/BaseTools/Source/Python/Capsule/GenerateCapsule.py" \
-+        "${D}${datadir}/edk2-basetools/"
-+    cp -r "${S}/BaseTools/Source/Python/Common" \
-+        "${D}${datadir}/edk2-basetools/"
- }
--- 
-2.43.0
-
+On Wed, Mar 18, 2026 at 8:30=E2=80=AFAM Jose Quaresma via
+lists.yoctoproject.org
+<quaresma.jose=3Dgmail.com@lists.yoctoproject.org> wrote:
+>
+> Signed-off-by: Jose Quaresma <jose.quaresma@oss.qualcomm.com>
+> ---
+>  meta-arm-bsp/conf/layer.conf       | 2 +-
+>  meta-arm-toolchain/conf/layer.conf | 2 +-
+>  meta-arm/conf/layer.conf           | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
+> index ecb91b08..58ab6b87 100644
+> --- a/meta-arm-bsp/conf/layer.conf
+> +++ b/meta-arm-bsp/conf/layer.conf
+> @@ -9,7 +9,7 @@ BBFILE_COLLECTIONS +=3D "meta-arm-bsp"
+>  BBFILE_PATTERN_meta-arm-bsp =3D "^${LAYERDIR}/"
+>  BBFILE_PRIORITY_meta-arm-bsp =3D "5"
+>
+> -LAYERSERIES_COMPAT_meta-arm-bsp =3D "whinlatter"
+> +LAYERSERIES_COMPAT_meta-arm-bsp =3D "whinlatter wrynose"
+>
+>  LAYERDEPENDS_meta-arm-bsp =3D "core meta-arm"
+>  # This won't be used by layerindex-fetch, but works everywhere else
+> diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf=
+/layer.conf
+> index 8bffff41..b51fc107 100644
+> --- a/meta-arm-toolchain/conf/layer.conf
+> +++ b/meta-arm-toolchain/conf/layer.conf
+> @@ -9,4 +9,4 @@ BBFILE_PATTERN_arm-toolchain :=3D "^${LAYERDIR}/"
+>  BBFILE_PRIORITY_arm-toolchain =3D "5"
+>
+>  LAYERDEPENDS_arm-toolchain =3D "core"
+> -LAYERSERIES_COMPAT_arm-toolchain =3D "whinlatter"
+> +LAYERSERIES_COMPAT_arm-toolchain =3D "whinlatter wrynose"
+> diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+> index 9d18c7c4..bfcd569d 100644
+> --- a/meta-arm/conf/layer.conf
+> +++ b/meta-arm/conf/layer.conf
+> @@ -13,7 +13,7 @@ LAYERDEPENDS_meta-arm =3D " \
+>      core \
+>      arm-toolchain \
+>  "
+> -LAYERSERIES_COMPAT_meta-arm =3D "whinlatter"
+> +LAYERSERIES_COMPAT_meta-arm =3D "whinlatter wrynose"
+>
+>  # runfvp --console needs telnet, so pull this in for testimage.
+>  HOSTTOOLS_NONFATAL +=3D "telnet"
+> --
+> 2.53.0
+>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#6961): https://lists.yoctoproject.org/g/meta-arm/mess=
+age/6961
+> Mute This Topic: https://lists.yoctoproject.org/mt/118381496/3616920
+> Group Owner: meta-arm+owner@lists.yoctoproject.org
+> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [jdmason@kud=
+zu.us]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
 
