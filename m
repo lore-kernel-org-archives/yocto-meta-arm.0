@@ -2,95 +2,95 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0257410AB83F
-	for <webhook@archiver.kernel.org>; Fri, 27 Mar 2026 01:48:39 +0000 (UTC)
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.63293.1774576114431846350
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EF210AB83C
+	for <webhook@archiver.kernel.org>; Fri, 27 Mar 2026 01:48:38 +0000 (UTC)
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.63290.1774576109395309228
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 26 Mar 2026 18:48:34 -0700
+ Thu, 26 Mar 2026 18:48:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=XdiMze52;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.177, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-506251815a3so14228411cf.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 26 Mar 2026 18:48:34 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=LW92etHb;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.46, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-89c6f61020cso26506516d6.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 26 Mar 2026 18:48:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1774576113; x=1775180913; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1774576108; x=1775180908; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=L7AdYM/W2/1p2eYIcQYuOQMlo2KesxOhti9y1ha9wOo=;
-        b=XdiMze52/+PLnKM1dSXFTqLZ0XfM2e/pjSl1ScIg6ItyaA2uHGYpgOvh2OYZQWf/KU
-         8UCEfvaQbjrVMQzkzXp2kQJ18LiXniZfrvlmpqgxrZPyM/95VmqYDK9CX97KtnIC/3YC
-         ExnDEhlQDcCTqTx+r5pfFaaeG/mNyF1HpISgMdSroYdR0KBGwm0g2u5WvSIKojV91jih
-         q6cT15LUJtYEXaic1xk06qwZ9EANVv/OobXOawAxT9FE1zK71kAulrYn71s4CFDzI/WU
-         v0yfq0pcrSvII4qzrgfKLc38i97486HT2FlQmKTwXotICh+VhLzbeYMBygDB6kZebcpk
-         FXnw==
+        bh=/+u6vGp6aW3zfqa316u+WlB+zzAz3PU1UPjj8yD10f4=;
+        b=LW92etHbl9dM+/JX4RkSw9oCdaW912FdtyZ7CjqI64912NKl5rQQ++qeVIanwRffHS
+         2jTzSsmK2R5GlY0/GC6CiTwR7D2Cfj12Srr95RVR/mqefgHsR83mFyvGpF3i/fGu3uuv
+         ChGdybBpz/F0xprGHUIPIOeRrDBzpcPlwL9B7GVpASYcOsUeHmSr94NtaKzrsLHfSe3l
+         lUYwy3AUK09LjzsVmhknPWS7bi3AuZf4wWy89H9NAqhPmb5ri+Cu6u/6tcJUbyuJyRjZ
+         KFn4A8y8GIhV8fHIEhVz2kmwJmIkkB2q2nIICetC5/XE9VquUkE+JHlfynBUPOA0EbgB
+         oyhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774576113; x=1775180913;
+        d=1e100.net; s=20251104; t=1774576108; x=1775180908;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=L7AdYM/W2/1p2eYIcQYuOQMlo2KesxOhti9y1ha9wOo=;
-        b=PQzjBcAVddpKQNWqlvgA/ADIMgz3phjLBOP7+0Iv5m4hJp0eUvSDUE+dMCT7anN0hE
-         YSSDLjjQqO/C1FonBItpjbpNLE5fAHS6MbYQBOKR6Ja+MVaodQXkR6tHaLGMD2PbZFwO
-         Z0wAGCnbY4yTUvv+gnqejgTS7DkkcnMlZ8HuQkvpeC32m+WKiwDqmVhqemxwxltamw+B
-         7ui5L4smBmqB4Ys9KqIwcw/AgU0HFlGOdx0XhYpNpDdEkNWlDr1jS4sRRUAr5YnDhW7M
-         517pP6NyAIH9Gcq7JL21t/HYhceqPwNF66J6PuaW1ehJb9uQWM9/WgWf9VQuhV2QOhHf
-         TLuA==
-X-Gm-Message-State: AOJu0YxnuVweEvTbRIsEKEo0oDQAewYbvuR1DuG2HSF93ClwR9HbAen1
-	SPFm/tTRry/84OoBcCJbha6ENyGH4OIgqEDZGVE1VUZwJHmF8UFq+aRrPEbNssqdf+UjIEU1pwM
-	+eqw=
-X-Gm-Gg: ATEYQzzGlV8jZ3Dhi1NJSaz7nOfhiPrisAdWwUFpnYO0P+Qc9BooUePiafZtk43ZDu7
-	IaUUTBmwdET9My1V9q4BZuR898Vg3k0innWduwapbmpuEPlQejeyX7V0Tx/Ko7VjzhNh/ZFKZp9
-	YgycNomUDpYyEzbJQjtbv9EcQOym3OppPqrzsAyfCRIN5UYFwyVE7swAYxCILSaDb9j4AZRuT9s
-	nkxc5DuOsP3xaP+j6S7IMl+4eiKN8YjMZ5VLusLPV3jI1DQp28xNvb1y0Ri4qJ9+9RgsqIWwzMQ
-	p3f/0e+dfz1vWCbz7SzWjEbBUNVBtvEzNqHhat9XKXZwk7AY8+OZKiXTB267EdXIszWUGlQWrue
-	R/WcoB1puZSjEKRzsGI80s2ZbhWtikcXCTlDnaB1PrPk84BXz1grobIqsfhog/1YS5TEiLokS2M
-	IOSOoI6mhTjuAC
-X-Received: by 2002:a05:622a:90a:b0:50b:3ec7:ed16 with SMTP id d75a77b69052e-50ba3809d75mr12707061cf.13.1774576113178;
-        Thu, 26 Mar 2026 18:48:33 -0700 (PDT)
+        bh=/+u6vGp6aW3zfqa316u+WlB+zzAz3PU1UPjj8yD10f4=;
+        b=HsAYTiWSKA8WH+zTvUl17XJtzTFu8tR4yDC83cvWX0GEVbmS8w3OvBie+Ak1AsnHEh
+         BESWIaEn0hsOzBEJeqPFKeibZrmLRJpbFvUIP3lyj13YYzf4NKcG4xgPiA/7EQPa6Ul3
+         ngA/OtWLK3wyks+XUdpdHkmu1f4bh6LhcwVU+Oh1o3GgPTPPTKx4KcN4dLLdMEphJjUg
+         AnJqFYACgtbhj5Pz205wNMv1tOw8xQK9Ur+MBMMr3mxQhFopWpwr1hCoWjQ5uSRpF6hi
+         8pKT8iIkB1MpoU80COz6kMsyk/6/2KuLqbog0bG8wNUF3ceoDABrEx9nPmEdROjknsCZ
+         UoeQ==
+X-Gm-Message-State: AOJu0YzV5A79FmZJ97Qv7oR5jyH0xRUqZ5bVFYDOadrylKz4Q2GrmQ/h
+	nXTRFQzprhXz1pG0lsaOCU7LSvq/ZVeAVfvQCFnZSeS6QqWoXxyi/vS2BChW8tHp3OHhAbWSyqZ
+	xk2A=
+X-Gm-Gg: ATEYQzxdrQsVYAWNICEC5lx0V9iZDVPzbYPqSA4Vg8TLbsiyDgC4aexMG6+n4+nS72I
+	etw0lto8ynzNqp9QGV1msrPTIL9t8OFKKCfwXe2pzdqsc4etsWOMHDRRt3KVhyoqmUFDFEVDeig
+	hnFbDhREU9N8roSBZauvUcEYdn+z9zN5h0XEVFbNHRr0wpHuTTSKe6jxxFSPZfShOad4hyY0xSM
+	+GRi+TRge1qs8G+jaAt++gPg4MOYQVPq/aEI1aNBrP/rHTBOpuq0QwyUxfQbzEmXUzInOvejOLt
+	t0KR99e/6JK6l4Tag7if6pBJkjN73IYxtG4lucQubZcjuA8qWIADVnvKvzVKJXQS01T82SjEONr
+	MHfhgx55L9RDd+IjX02vv5qtg+kCPVMCl8d1jwq0iqn3n1K515SFefUMm+5aw6TEHElA/M1at/q
+	R0ZNpl+u82JknxvH358aam9EY=
+X-Received: by 2002:a05:6214:d81:b0:89c:866d:243d with SMTP id 6a1803df08f44-89cddf63383mr52272036d6.35.1774576108077;
+        Thu, 26 Mar 2026 18:48:28 -0700 (PDT)
 Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89cd58b5801sm44534716d6.20.2026.03.26.18.48.32
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89cd5855280sm37280096d6.1.2026.03.26.18.48.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2026 18:48:32 -0700 (PDT)
+        Thu, 26 Mar 2026 18:48:27 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH 1/2] arm/fvp-base-a-aem: update to 11.31.28
-Date: Thu, 26 Mar 2026 21:48:20 -0400
-Message-Id: <177457610090.1782542.4607118643131152475.b4-ty@arm.com>
+	Frazer Carsley <frazer.carsley@arm.com>
+Subject: Re: [PATCH 0/2] Corstone1000 GPT Library
+Date: Thu, 26 Mar 2026 21:48:19 -0400
+Message-Id: <177457610090.1782542.16140448211501995250.b4-ty@arm.com>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260325152555.84335-1-jon.mason@arm.com>
-References: <20260325152555.84335-1-jon.mason@arm.com>
+In-Reply-To: <20260326132857.1590256-1-frazer.carsley@arm.com>
+References: <20260326132857.1590256-1-frazer.carsley@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 27 Mar 2026 01:48:39 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6977
+ <meta-arm@lists.yoctoproject.org>; Fri, 27 Mar 2026 01:48:38 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6976
 
 
-On Wed, 25 Mar 2026 11:25:54 -0400, Jon Mason wrote:
-> Massive layout changes inside the FVP tarball.  The files are not
-> located in *_FVP anymore, including the license files, which were in 2
-> locations in previous releases.  The tarball changed from
-> Linux64/Linux64_armv8l to Linux_x86/Linux_armv8.  It hchanged extention
-> from tgz to tar.gz
+On Thu, 26 Mar 2026 13:28:38 +0000, Frazer Carsley wrote:
+> Adds to Corstone1000 the GPT library from TF-M. This is used to
+> dynamically provision partitions, and remove them, during a firmware
+> update. This way, there is no need to provision the second bank at build
+> time.
 > 
-> Also, adding skip of dev-so, due to libstdc++.so and libsystemc.so being
-> symlinks and fvps being a binary.
+> All patches added in these commits are either submitted or backports,
+> and can be removed when Corstone1000 upgrades to a version of TF-M that
+> contains them.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] arm/fvp-base-a-aem: update to 11.31.28
-      commit: e9b1f3bbbd58a3f451c93166f639ddc8ce262eac
-[2/2] arm/fvps: update to newer versions
-      commit: 0d6405b26808d72ad9bbb4b5aa504334120193a1
+[1/2] arm-bsp/tf-m:cs1k: Add GPT library
+      commit: 5fc4c29db9a0ac5eb937d008e8f5adbb52684480
+[2/2] arm-bsp/tf-m:cs1k: modified mcuboot to use GPT library
+      commit: 1778b36d666e5c990778bac8abe503175149b451
 
 Best regards,
 -- 
