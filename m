@@ -1,98 +1,100 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E689F10F92EB
-	for <webhook@archiver.kernel.org>; Tue, 31 Mar 2026 18:42:20 +0000 (UTC)
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.1150.1774982540204595542
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F52D35175
+	for <webhook@archiver.kernel.org>; Wed,  1 Apr 2026 10:29:59 +0000 (UTC)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.9983.1775039393957116609
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 31 Mar 2026 11:42:20 -0700
+ Wed, 01 Apr 2026 03:29:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=bBDtMcTx;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.175, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-8cfc085395fso625072585a.2
-        for <meta-arm@lists.yoctoproject.org>; Tue, 31 Mar 2026 11:42:20 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=Y0FKXAil;
+ spf=pass (domain: linaro.org, ip: 209.85.208.181, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-38a67221fe8so53288381fa.3
+        for <meta-arm@lists.yoctoproject.org>; Wed, 01 Apr 2026 03:29:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1774982539; x=1775587339; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1775039392; x=1775644192; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1HJwpvfDNN+5KdeD9eC9IIUnfegtrFhQ6HWUEcdPHCY=;
-        b=bBDtMcTx9oxJqrmXYXRMfQsJjC6lEbEQ4ZwCVOhuex7JvPT/RA2HR6IUbOAYKzOHGN
-         K+O0Fcj4e919h8ch+Afe9KBX199nWlDaNK6C145RyUaZKqceXZmb9LyD4+mFoCK1oPRH
-         rgYJ4PDCzTmZdOf1FdqEINouXey/lMbplYqG6yWzHnHkEztEYoc+/NHqA89sw1C5lLoE
-         fEXCoekigRp9+o2zxSSR+01+6rhcYUtIfX3fc2MCQDgk6mgOm08EJf+hZ3Oq+TLKC5Yy
-         VL6N667Tg2uy2dbbqVClXD96HcHaGANDR55vgDJKGM0Z5zHSjXkpdPI1xPoigyM+qAtm
-         IVKw==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YKAuf1AdXyKCLV6q3zDaxG4qFwL9mM/cRIq29ZC2r/c=;
+        b=Y0FKXAil663WQsm90k1uVsvwhroQUOLv5gYBOOlKipqF9POwprn1j2PI5MwjEl6B13
+         dEkroUAeQsQ1C47ngitnqur3u4UTx1AH/TGPA9cfDdiOK52FL4mEHLr3ixCmuUs4rO2u
+         JrZ4KHzxGkO70TRm5J9Ju+vHUVNPAwFC6jdGnfuWJvTc1F+ht61QcjrtoyaWw49dAGbs
+         PT6GcVtbPO+qAoiy+VYpfa2JEOuUDpyIks3ysArPKBmkcatx/MxX0VYUvPfl1FmswrUX
+         gcn5sroww07i/SEY9vo3pHUkHNRBdKbcaKW3uclBWdrAULV1ToPzoykZj9nVv4m4+t7Z
+         8dDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774982539; x=1775587339;
+        d=1e100.net; s=20251104; t=1775039392; x=1775644192;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1HJwpvfDNN+5KdeD9eC9IIUnfegtrFhQ6HWUEcdPHCY=;
-        b=Lr8jDauzrbeniOnDFOplSTvm62027CLc5aHh+ACGDNsEoy0J21DJbkk+wp8LH5+G1d
-         HxdKmyv/ZrCPbOgx8XLmcLpCUtystVw+Q2sTkpKyhcCX3wsdkERgeDyzwAY1z9RidPx2
-         LBcjNEmUMZP04nOwWuG3AeXALe0XstN4cHL2L5cfygpDs4XxntBSShraFszyS9F+LZM+
-         CGeksGZQ9lTjFiSpEnu3f0wtlK6f8Uc3f1zRvl5VFZd/0DHuzdqC4xJmdWRLnRURifkv
-         OIFFs7HBg39ZZFFmmIRdLlpK9U1Enp4qACS7GzvXvfpjtJVCAvYjdDHQCvwGxgUrnqRJ
-         txOQ==
-X-Gm-Message-State: AOJu0Yy86nfg4jdF8lhybz8/7Wj6Pizxb6tqLm14ax4h+uEMX4qxrq4j
-	ZxHLbIpF6TJBRFP8CrjNAufFJsFlMjeVJmtnxNbrSCDYVRpREyFmD4i00juGFh8GpCSK5NveHqf
-	WhDQ=
-X-Gm-Gg: ATEYQzyWIKKJD6YI6NGRFknZuLwofUFt/N4keZcrPqKl9SGiqK1WEoy5c5huR2WrYb5
-	mP19HsVH+J/Uc4wFqkFOWgHBFsfCoyiYtrg3NoxdR+xhAlMAxzA0eDYAxe5t9ZA/csKZQZtqsuk
-	Bbz6Vg2L8GT26E5r9Wwy9B2tLtpcfmWtqshPluzGqPB7scrGGS1J3e36sLbLsKbEcrBtHtsCgpr
-	gaM5fy+jflKRyyOdpAUAcaIp2kLA0xxx6LSMgVkAEd9S/qWhjHZcyeOHyHmAvqCyFzC2OXpz2bD
-	LQTUct0xL7fWF0yESQtfM7JWhgYZV7NupUTaiP6z9F7KY/pPr+CkV++aSt/pMGACPtKIKOkEFf+
-	cCj3I45s6OrRqsDVbOMx04+fl+GVrmGR0RsG+8Nx4NlPuAIX87/Tg5g0bf546pyGdJE9Hf9TUlL
-	ICYXRlTiHxyx7XceaRS/oTAFk=
-X-Received: by 2002:a05:620a:1a05:b0:8cf:c4d7:de3 with SMTP id af79cd13be357-8d1b5afcefamr122712285a.30.1774982538744;
-        Tue, 31 Mar 2026 11:42:18 -0700 (PDT)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8d027edbfaesm1063863585a.1.2026.03.31.11.42.18
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=YKAuf1AdXyKCLV6q3zDaxG4qFwL9mM/cRIq29ZC2r/c=;
+        b=I3CFl2K+03tsgpOr1nCd7iyVMpl29NGRr4BTJgCBkGBOLBL9bCyYvplxMWFg7SODk7
+         n0ZqhhlDQ80wkdhqx3XSdqShZCZ6sYPEOkOKIIGBPDjcfuBgcnTmxptb8pOAhIRJ+Qdw
+         cC4v2pC6X9d4lPW37gife/Y3G7B51DGhQBws5UR/e9n5LtsB4IWSjNVr1oMrwFGrF+f+
+         43FuO31dTNvON+e4CvOgUOBPH8EHidrNFT/KpRRwxHfIioLlhPFnXTnOOS2lOp1gUSD2
+         ikK+mNXyolvmsAczbbrHW4LHBvqVoD2/H5oGbCi6uBjDsZU5KHYk4ONKfZ16V54nUGYp
+         jFgw==
+X-Gm-Message-State: AOJu0Yxk2juP1/ibBFmNGheU8gBqJMCwDXC07LpSHyVszAsJ+m7kJFPX
+	zR+xmeu+aAXT5rlPIUOMX5gIlJnLMlKKHUXdiyu79h6PQ5CYBQ3mzECDcbrHQv015e73qwPgfls
+	Q461o
+X-Gm-Gg: ATEYQzzJNi1q0vVkQXf2VedXVLQLhy9Tp6qGZQRbud697rdKBXfbAc6y06vgwWwJ1OS
+	R11o4ZOECqa0YTNmq+7elr19yJz6ZeUSdUaEcvIn6U7ztwZKe2HDs09Ibj2TFsoYTzuNQ+0UU84
+	bU23QR4+8DIKDH+FqFiU6Tg4nhpCmdrAZdoeQ91WSvdqRtJFSXeHNrO9p9sYC3YNUTK8ekZigHQ
+	l290XZX41QoSivfdUd2k47pkrP+3mo4U4z897Q1Rsf8PNb+HaBc3WBc8r7pWfSpHjtOxoDnNEJB
+	gcjwcvxpb5D56n37QVU3Vwt1tywgmIPrGhICzC6wVUMhMshNZLUQW6gHLuZSvHSPauXDjcRZ9kV
+	9ghjjfC7MNuKw7/FnH5FqPp3Oq79j12QGWxvq3xJNxgC6baaGLNSgMBhk0TEoiFwBiEZxhZiJ7B
+	QUqhM9wqTW28o7RArvkeznOicygJ95t+8k8VgLrWsN1jQx9yNmCqm1Y12aUniiJ7KUUB4=
+X-Received: by 2002:a2e:9243:0:b0:38a:8c44:75a1 with SMTP id 38308e7fff4ca-38cc2f6bef5mr7957701fa.8.1775039391663;
+        Wed, 01 Apr 2026 03:29:51 -0700 (PDT)
+Received: from nuoska (87-100-249-247.bb.dnainternet.fi. [87.100.249.247])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-38c83730f7csm26337651fa.16.2026.04.01.03.29.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 11:42:18 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH 1/6] CI: use core-image-base for faster boot
-Date: Tue, 31 Mar 2026 14:42:09 -0400
-Message-Id: <177498252919.209741.9201600398741840996.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260331130702.56223-1-jon.mason@arm.com>
-References: <20260331130702.56223-1-jon.mason@arm.com>
+        Wed, 01 Apr 2026 03:29:51 -0700 (PDT)
+From: Mikko Rapeli <mikko.rapeli@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
+Subject: [PATCH 2/2] u-boot: enable tf-a support for genericarm64
+Date: Wed,  1 Apr 2026 13:29:31 +0300
+Message-ID: <20260401102931.781169-2-mikko.rapeli@linaro.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20260401102931.781169-1-mikko.rapeli@linaro.org>
+References: <20260401102931.781169-1-mikko.rapeli@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 31 Mar 2026 18:42:20 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6996
+ <meta-arm@lists.yoctoproject.org>; Wed, 01 Apr 2026 10:29:59 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6998
 
+genericarm64 target HW uses separate vendor specific
+UEFI firmware but for qemu testing tf-a support can
+be enabled just like for qemuarm64. genericarm64
+has the benefit that the same wic images will work on qemu
+and on many Arm System Ready compatible devices from
+different vendors.
 
-On Tue, 31 Mar 2026 09:06:57 -0400, Jon Mason wrote:
-> 
+Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
+---
+ meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-Applied, thanks!
-
-[1/6] CI: use core-image-base for faster boot
-      commit: 4379b78bd6a8302e0a55823cb15b62d57678b3f4
-[2/6] Revert "arm/execstack: remove, no longer needed"
-      commit: 4eec974baed18d4321cf9ca37c1da0b7cd624a26
-[3/6] arm/fvps: rename rdv3-r1
-      commit: f86d9c4f227de4419f7147fa9f3a94f258b1c323
-[4/6] arm-bsp/rdv1: add support
-      commit: b5f3f7a6e2062464ab91f48ec81a90b9184d1188
-[5/6] arm-bsp/rdn2: add support
-      commit: f9d0ecbe25341c35b01e1319b3b0a36c033d5f32
-[6/6] arm-bsp/rdv2: add support
-      commit: 43c2bcfed58878613044ee424542cc0067893e1c
-
-Best regards,
+diff --git a/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
+index 8ddc53619560..403260a2bc2f 100644
+--- a/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
++++ b/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -2,6 +2,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+ 
+ SRC_URI:append:qemuarm64-secureboot = " file://qemuarm64.cfg"
+ SRC_URI:append:qemuarm-secureboot = " file://qemuarm.cfg"
++SRC_URI:append:genericarm64 = " file://qemuarm64.cfg"
+ 
+ require ${@bb.utils.contains('MACHINE_FEATURES', 'uefi-secureboot', 'u-boot-uefi-secureboot.inc', '', d)}
+ 
 -- 
-Jon Mason <jon.mason@arm.com>
+2.34.1
+
 
