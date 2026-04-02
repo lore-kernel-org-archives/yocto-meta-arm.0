@@ -1,159 +1,99 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6E3D6AAF4
-	for <webhook@archiver.kernel.org>; Thu,  2 Apr 2026 16:43:20 +0000 (UTC)
-Received: from DUZPR83CU001.outbound.protection.outlook.com (DUZPR83CU001.outbound.protection.outlook.com [52.101.66.32])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.897.1775148191770624725
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD9DD6AAF7
+	for <webhook@archiver.kernel.org>; Thu,  2 Apr 2026 17:56:21 +0000 (UTC)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.2550.1775152575102383179
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 02 Apr 2026 09:43:13 -0700
+ Thu, 02 Apr 2026 10:56:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@arm.com header.s=selector1 header.b=AcFyO00q;
- dkim=pass header.i=@arm.com header.s=selector1 header.b=AcFyO00q;
- spf=pass (domain: arm.com, ip: 52.101.66.32, mailfrom: ross.burton@arm.com)
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=qEi2gMAlyoASTwyJXQks3nhlf0Hk4fkswNIxbEtq1opEg9bESEMR65K9WH6qOW5YIHD8IEInk1bbrpEXuEZuc7VZ/JqFzi/w6fq8nPTl9su8aFyeP5Y1zJVIU9lShboqiAFiknXUloKwGTvqEHhqkvMK/IVejzXvjZu/qTqIyYFiHLogbx4ZLLtplWHGv8scrd8kQHKie0PnAVe31u9oD2EifmnFCU3zgJS2DRmiEW7IV/6FHLS0rp6+wEXiyvzPjo5Rugxdptm9Fkza0JyXR3k1qhCt2MAhWQS8NmyqPSqIxKpOQQop8G+ahe88Kex0+loj4zPw4r9VC2WK//5ulg==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cR6/gxshT2z1VM3i27/RokG6CyLUCRjaG/m4+n9Y55k=;
- b=PteDIwoqrqMaqzuw/znVx4zeQGeo5H0D7r/Rmess57Qr2PfqavHUxpbYnlkXUkZvCh84X725Zi2UZYuYU47hG1t+6Db138lits9/bbTpQ9WSSq+TXUHiR8FzEaQueNcVXcUI3nOA7+HRFopm9jcq57xka7O4g0A2Vyw/nkeC5W7/XxX2W2yYNAXwfxcFwIOOQxjEhGoQqCGrP0IudRBGeRI3UMfiF2nBchNMSjmwkG9g2bimMGt3uUJCRFmAVuxVfGwR/vUjOnN1RqcMawJMrrsydSMy/ilSsZ1gPO7aM2cR0eHtgRncIiA/KA8FDNzX42v+sw5XVE/ZrwYcL//74g==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=linaro.org smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cR6/gxshT2z1VM3i27/RokG6CyLUCRjaG/m4+n9Y55k=;
- b=AcFyO00qAp4xrIuA1KiPV5NiGSQOGnjoGPUso/sBUbJzaJJnytB1Mm7+WvSLeRcMts4WEKKFaHiPfdaKvY0Kg+owVzQqTkGHAWgm/vBKbMs4x6TM7DvoYVWIj1+o+c13T6mky6xrYf4LE9764oxeg3F8Wa6chmjPaJtiX8rhluk=
-Received: from CWLP265CA0535.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:18d::7)
- by GVXPR08MB10964.eurprd08.prod.outlook.com (2603:10a6:150:1fd::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Thu, 2 Apr
- 2026 16:43:06 +0000
-Received: from AM3PEPF0000A78E.eurprd04.prod.outlook.com
- (2603:10a6:400:18d:cafe::e3) by CWLP265CA0535.outlook.office365.com
- (2603:10a6:400:18d::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9745.30 via Frontend Transport; Thu,
- 2 Apr 2026 16:43:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- AM3PEPF0000A78E.mail.protection.outlook.com (10.167.16.117) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.17
- via Frontend Transport; Thu, 2 Apr 2026 16:43:05 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M/IkxEpzTGVAUiDOsLIPK1Ox8vdQXlmRWCI1x2J9Bx+DdJHnZii+QMRTgKUZ43WnCEKUal8D95ErgsIcPYfvYTCMDvV9xIdStKjafQFfyjxMizBTsJuzhB7/+tuPQ+2HVv0BpkZZq93CdSprx49NrIBnFyO2RCY+6gndsZ15TfXpahd7hguUH+cYSS7jTlooImFkdc4491LFYminZ9gg6pjUosmEIwbHlNlnn6RZZwI3ZH62KmiLqf8611oEVywWr+lKAuQeVCZX4LB+2DfQn5qINt4dOvcW94CeuAY87f9x/HguYBnOqae6tcOynoxJhUdMTPISbP7hcxzf/U1OCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cR6/gxshT2z1VM3i27/RokG6CyLUCRjaG/m4+n9Y55k=;
- b=aHoUjzidBICpr/XuENgAzjlk7tJRG+naXL3LuwbgalXEkBfkwgyadz03omr87pIntS1aaaPn6exRrfQqWCp2rYVDdOkvY32pXeRkyGZs4dDQnBmSW7J85gJ7ITivOGYbc5Id8NGFafdeGsrbFjL24GyS1mGCl5VqxTJnpD88hzNEPE/dTYLyV5/pEoH3HetsgY6rhhVDHnfKqNG1jNfpGdtAsTKd8B3xgVImW/jinra+hjBwEaNmi9ZkwU+2ASBxcWvZi+dnhuH9KMLdr+mRQmleL5Ry9SYZ0QV3aPFMRSfk0I8GeYO5lmcoX9+Ag/POOQl0V/XkygHrGIHsRVZ9pA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cR6/gxshT2z1VM3i27/RokG6CyLUCRjaG/m4+n9Y55k=;
- b=AcFyO00qAp4xrIuA1KiPV5NiGSQOGnjoGPUso/sBUbJzaJJnytB1Mm7+WvSLeRcMts4WEKKFaHiPfdaKvY0Kg+owVzQqTkGHAWgm/vBKbMs4x6TM7DvoYVWIj1+o+c13T6mky6xrYf4LE9764oxeg3F8Wa6chmjPaJtiX8rhluk=
-Received: from PA4PR08MB7411.eurprd08.prod.outlook.com (2603:10a6:102:2a3::12)
- by AS8PR08MB8297.eurprd08.prod.outlook.com (2603:10a6:20b:537::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.18; Thu, 2 Apr
- 2026 16:42:02 +0000
-Received: from PA4PR08MB7411.eurprd08.prod.outlook.com
- ([fe80::7f73:806a:3493:7d50]) by PA4PR08MB7411.eurprd08.prod.outlook.com
- ([fe80::7f73:806a:3493:7d50%6]) with mapi id 15.20.9769.016; Thu, 2 Apr 2026
- 16:42:02 +0000
-From: Ross Burton <Ross.Burton@arm.com>
-To: "mikko.rapeli@linaro.org" <mikko.rapeli@linaro.org>
-CC: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+ dkim=pass header.i=@linaro.org header.s=google header.b=ETehJ53n;
+ spf=pass (domain: linaro.org, ip: 209.85.167.51, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5a2beddab48so1254764e87.1
+        for <meta-arm@lists.yoctoproject.org>; Thu, 02 Apr 2026 10:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1775152573; x=1775757373; darn=lists.yoctoproject.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wlHlu2p2S3942KUXDAa9Ht1BzQ2YRyFxREAAv/SpHV4=;
+        b=ETehJ53nzvejhNr0JyPtKvn98sPLik81V6mmhapvVNWSLhIlJeavmXv7DoSzt9dZs1
+         4l8pFA7zl3TGLI8ntfdXap5W4hK4YBPkXN3+x3NuduAVK0TsgEZSKpxCKvDZLN08p78N
+         8h0lTzXe9fGmdPfueNaU6jqylC6yWuGPVYOzu+OfY+Tsr/mjRp2DtouHHxMVvj1ELk2f
+         4ox2C13uYi/xlhaIu2Gsde/thDLMLv3bZrX1TadziL2PXxGKDNHr/N58vDvcPGH9/iXD
+         LLt4Xs+nOOOHgUAitAjp3w6QRTmW6XCkKUhmyE8SndMn47w1hEFZ0sMqyr1PmMuEDSxZ
+         uwYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775152573; x=1775757373;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wlHlu2p2S3942KUXDAa9Ht1BzQ2YRyFxREAAv/SpHV4=;
+        b=iLTqu7GnnG7Netmz+Gnean487DgZW1H56JPPJKzNl+AJxaV1owt8eS/s1f9SKO4nHI
+         Dm3G7PMpTIYGJOfDG5XRx5macwoo2ttyvJphOi7/m7DvtiVYLDyY6Zh+fjXfo9m5kqCL
+         H1CeOrwLm51p8JZhi+vpicW/ylrnnUHRmMEQvHtWeJZrXkMHhjH0pCytXXLbxvdGnh8m
+         cFd+qdic75ov1ZrfTmfp7Y8c34X5GI0ArcMbyTlwtxyPnrFt9zgbp2wgzWZuaftA52v9
+         Xj9XMQQ5OXkT0kcpZqtOgDekDZK1nObXwac7k/JnQXW502i5wH5AJSLu1z2knOgH7r/c
+         OO9g==
+X-Gm-Message-State: AOJu0YzLvHx63DgZfsNzj8JxSzsqWSadnmLcoZ7+c3UsYyLgiYlgBtQf
+	idMFXnVGnMAdfcaT2jxiKbZJHmjzq0yb9a7N/9esKb9LKMYclLpTJurDC8uBzJEMmZY=
+X-Gm-Gg: ATEYQzx2+j2WxydxA0DnIf+tjgjMh1tmwRdOYwQMR7SyDCN9wAg0Dp12GXPnk8JZD/K
+	b69dglZyxgvDbOWLuJ6/jf/7GLh7gMZeZN7d1KXJ43s/ajNYkb2gFFO9YIfepMJpkdi4UQar67O
+	/78shWzO6aqhvY9NUcoCK9p/jXBa/gouYn6oThVct1BYkUO4no/Wqd7ONHmKu61n9T7zftUfakO
+	xd+/48ZTSPjushyG88eURHzMR4GcbbTc8ZScm/kPt8f+S1xAC1vd1830WzxtlXrPk4EFqh9vnDo
+	87BRm+7V3c207oixopvwPEO2+8m2TGAen/xXRT/dIJLMZbOq6A5/39jHGQmGTB+oNNJ3V3kUawT
+	AlpEubyO1fLevBuGb/4x811bvECGbFsDI3wC5uKA3H0OjvsFLB8OWKf8jMs7nyfoR/eVph2masi
+	/kFGciwjRcKDtInAjXJjEVqUk3JvQ+3eWC4atLnZ7cQEn71QiVIxk+3Q==
+X-Received: by 2002:a05:6512:2253:b0:5a2:792f:b836 with SMTP id 2adb3069b0e04-5a2c1f2ac30mr2959169e87.30.1775152573050;
+        Thu, 02 Apr 2026 10:56:13 -0700 (PDT)
+Received: from nuoska (37-33-177-132.bb.dnainternet.fi. [37.33.177.132])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5a2c6c9d04fsm838796e87.34.2026.04.02.10.56.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2026 10:56:12 -0700 (PDT)
+Date: Thu, 2 Apr 2026 20:56:10 +0300
+From: Mikko Rapeli <mikko.rapeli@linaro.org>
+To: Ross Burton <Ross.Burton@arm.com>
+Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
 Subject: Re: [meta-arm] [PATCH 2/2] u-boot: enable tf-a support for
  genericarm64
-Thread-Topic: [meta-arm] [PATCH 2/2] u-boot: enable tf-a support for
- genericarm64
-Thread-Index: AQHcwcKrDDSeAlyCvk2Gs5A4sjfSDLXL+7CA
-Date: Thu, 2 Apr 2026 16:42:02 +0000
-Message-ID: <0810276D-F3CA-4C31-B9DB-41016EAC973A@arm.com>
+Message-ID: <ac6tunq9rpv6IfPA@nuoska>
 References: <20260401102931.781169-1-mikko.rapeli@linaro.org>
  <20260401102931.781169-2-mikko.rapeli@linaro.org>
-In-Reply-To: <20260401102931.781169-2-mikko.rapeli@linaro.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3826.700.81.1.4)
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-x-ms-traffictypediagnostic: 
-	PA4PR08MB7411:EE_|AS8PR08MB8297:EE_|AM3PEPF0000A78E:EE_|GVXPR08MB10964:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1bb0e0fa-2d83-4486-f3d3-08de90d6ea00
-x-checkrecipientrouted: true
-nodisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: 
- BCL:0;ARA:13230040|366016|376014|1800799024|38070700021|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info-Original: 
- THdaW5PBKzXJ6LSaON05lDm1fkkmW+e5gmy2PrBEglAPQe2mNHQBziXITAAZxTxViTStW+PyzsDrMk2dZJDHOLtVQFb4VHxJ9/jYfgK1anXrl7JtSX9df7OuySXiu2XiWqSC4oRjsfZRJ0TtKCxkIW5gpMTw3Di942pmW5W8325iU9eKkpAYNpEPm/sHdA8JWPOsI40iUHwoQqVpzc5pGDGhxpXRQOpAJ1AJkCfaeiIx0aY32bq51l9AyD1c+R8ah3Gz6t5JEDY6XS7I3xUtT2fFcjHpSBN6wpGdK38t322/xCOxzxizVodWXKYOl4treQ7ObEzbEzVnwZmJgTRw2O0opRV7W2TVKLvvlrhcACTN6oXTdPv9DxUhe0rXqrcWF+eLfAPdMyyemFejSPV26Z1QN+9TTjlIT9wGpMCd4BTYO5ZK4l6qVfHg7N+whhoELxYJDmSYqx0lxa1klC09xUlY99koWa8R7c4H2E26lZpc1uzCEJmPCJ5YCLxOWNE84zq+pRA37zG/1KAj4Alml/dQVXT0aRJTuZD/RSGHEjTrqWNKfpfsPJjgjg2pmiuVjv9rNQml4OJ2aOi/gui7yZf9j+2wnuaktgsQ4rGwgN5aw2B/A0bsyClo/4YRfP8c1TG/OpfGElp3lNGf2skbY+ho9YMPUV98oYNfiHaQ8872YYod6SrchvzUonFVUxzanigqP/f1e97f92yZ2BKmVafBjkMYKPaa+6uyObcYSMe3jQZuteiJEGenfdv1UA7RbXDQsVcVMz/JzkhGUfTwPpzJmDSFNI/HmrokYQMDblw=
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR08MB7411.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700021)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <497ABB0ED9F7724D833D1F84E9960CB7@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <0810276D-F3CA-4C31-B9DB-41016EAC973A@arm.com>
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked: 
- QHAsi2c9Z/cKGHWwq/VkAIgXpihuAtBtU7ZdosWgOD+HcMUULd/H3jojc7XWntD8PAUTcYNU6S0SugU/4CeJm+7OOEwo1MUnXsSvU/jZ4V264INANf+DY05Rmcrel+PE/k+iyh3efJSWtvImrx5Xj14wNfCR5ZfIkWGyZhhhdD6W8NQ7hm5uRoAjauAS1qWI89QyKqKLKMInpFTTpySDOyQ/UziA7FfhPy+D1Upc9MsxL5swlVPVbbjQNyDUo8s1HivJvYUb6HfRN4rPbh9xwtoh0efTDlKK8OYzhyHqRJ/f6D7KwizKEpA22gL/NxFO6C7/W6cHw2gVm16IIzIG0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB8297
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM3PEPF0000A78E.eurprd04.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	131636a8-0d01-49a8-235a-08de90d6c433
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|36860700016|1800799024|376014|82310400026|14060799003|35042699022|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info: 
-	n4cvZA6gg0nXAdKZCwpdiwKKzbnDFGFRYYaLxUOK9xva3IXw7l1YPzIYaO/7PWYfXaUi407Lu4gSDuqyeBVAPv2/6bsAirxyv6FcRaXmGNF84RFXdSvSBgn3UL3Q8ZEasxlB19vHG+ppsmdZ/gSnvinrk1hGTPPh1QYcIaVG7Wxz9+O8WT7OmORFezW2sUZ9FZpYEwqJgHz9L6sZufSyidQAQ/sRGfud1zcXs0f4yxRvBHpIG874pCyItzQLI/55XfI6SD0iW290Sczy9p/k1n8lOr52VoLdzHv6rmMzqEqBjAUMOPPSuBU1JGLo6YlOzGWwRjJ1LGN4+D+kXsNLl1Qam1h2FsqwH5vX/T/Y7Ws0sQ/ejE+qFHPH+D8HeDFzVEu4rw884f+U7Hm4y+eGd99z38wzCH9o/1NEK9dhfN0up7Q6m+OVWFKbGoY/K3xLQHAUJZ2X6LttPrvg+M63J/514Arktp/DFQfSkyAjrXJi58uZ3HGdkLqpzYbjlkaxiZg9mSbkTyRiv5YAmleXJ/xLnBdErU0q/sXSbjZml646oyS257wqrZvwDRGRrZwLqFQkeWJuJZ25SN8nrPzBTezUTXhrbgrVN7n3TBzAWN7wzTGYMmeW76Bn3YTj7PBVfiJ+HlZeTmQJT1TZsmYrnykUyICx82fcx+MdC94ReHreNlX7q4MEOSXJtIGbG/J534J+BeHMEb2LE3SWzoQDarFXK9N2oS2S0XKSjvweXWrRzDukdAOWEhHYHZo74uKhGqRtIyiZrPslDobKC9k/LA==
-X-Forefront-Antispam-Report: 
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(1800799024)(376014)(82310400026)(14060799003)(35042699022)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	sxjFfNHlkHr8mfjonnGKBUuh1MeyVwLRy3nAHL76J8GEF9SA1QwWTZEHcNWDW7P0dhHed4u0IDZILRXUnL5ySQ6zX0HkbRiwAWzacUKfj/uh4KXmHk2khEkI5RfMsklLC86N0XT2byFsSCmqko78wWRhZWhItN7fBBfrL7Z+3RzLPdzXYVXumNi67hLQYJsAQd9qJs8Loa9/j6uTsCtHIxFXPAiXTuJPocJF7Vm3FHth/go0yjpDytNAecDtXsywBSdHIHQ0pMuuWTPkikf7sL1F+54QdQqsO1W+LsftTjF2nUSxVa/aKHPJz2y+mSkMmE6h9QzE3aO/tvXXs+Rrnpdi4lCvoubVUsYmzEl4Rrvs7RpCTVfCH15P7pO7q0FZKMp5WjvqyQUGLnqvT7BKgKtsVPHzkCRTidta/DEueYB1u3WetWAfI2p7L9AJIsRh
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2026 16:43:05.6140
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1bb0e0fa-2d83-4486-f3d3-08de90d6ea00
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	AM3PEPF0000A78E.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR08MB10964
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0810276D-F3CA-4C31-B9DB-41016EAC973A@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 02 Apr 2026 16:43:20 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/6999
+ <meta-arm@lists.yoctoproject.org>; Thu, 02 Apr 2026 17:56:21 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7000
 
-T24gMSBBcHIgMjAyNiwgYXQgMTE6MjksIE1pa2tvIFJhcGVsaSB2aWEgbGlzdHMueW9jdG9wcm9q
-ZWN0Lm9yZyA8bWlra28ucmFwZWxpPWxpbmFyby5vcmdAbGlzdHMueW9jdG9wcm9qZWN0Lm9yZz4g
-d3JvdGU6DQo+IA0KPiArU1JDX1VSSTphcHBlbmQ6Z2VuZXJpY2FybTY0ID0gIiBmaWxlOi8vcWVt
-dWFybTY0LmNmZ+KAnQ0KDQpXaGlsc3QgSSBkb27igJl0IGRpc2FncmVlIHdpdGggdGhlIHByaW5j
-aXBsZSBvZiB0aGUgc2VyaWVzLCB0aGlzIGxpbmUgbWVhbnMgd2XigJlkIGZhaWwgdGhlIGNvbXBh
-dGliaWxpdHkgdGVzdGluZyAoYW5kIGlmIHdlIGRpZG7igJl0LCB0aGF04oCZcyBhIHByb2JsZW0g
-d2l0aCB0aGUgdGVzdGluZykuDQoNClNpbXBseSBhZGRpbmcgbGF5ZXJzIHNob3VsZG7igJl0IGlt
-cGFjdCB0aGluZ3Mgb3V0c2lkZSBvZiB0aGVtLCBhbmQgdGhpcyB3aWxsIG1lYW4gdGhhdCBhZGRp
-bmcgbWV0YS1hcm0gYXV0b21hdGljYWxseSBwdWxscyBpbiBURi1BIHRvIGdlbmVyaWNhcm02NCBi
-dWlsZHMuDQoNCknigJltIG5vdCBzdXJlIHdoYXQgdGhlIHJpZ2h0IHNvbHV0aW9uIGhlcmUgaXMu
-IE1heWJlIGxpdGVyYWxseSBndWFyZGluZyB0aGUgU1JDX1VSSSBjaGFuZ2Ugd2l0aCBhIHZhcmlh
-YmxlICh0aGF0IGRlZmF1bHRzIHRvIG9mZikgd291bGQgYmUgc3VmZmljaWVudC4NCg0KUm9zcw==
+Hi,
+
+On Thu, Apr 02, 2026 at 04:42:02PM +0000, Ross Burton wrote:
+> On 1 Apr 2026, at 11:29, Mikko Rapeli via lists.yoctoproject.org <mikko.rapeli=linaro.org@lists.yoctoproject.org> wrote:
+> > 
+> > +SRC_URI:append:genericarm64 = " file://qemuarm64.cfg”
+> 
+> Whilst I don’t disagree with the principle of the series, this line means we’d fail the compatibility testing (and if we didn’t, that’s a problem with the testing).
+> 
+> Simply adding layers shouldn’t impact things outside of them, and this will mean that adding meta-arm automatically pulls in TF-A to genericarm64 builds.
+> 
+> I’m not sure what the right solution here is. Maybe literally guarding the SRC_URI change with a variable (that defaults to off) would be sufficient.
+
+True. I did not want another machine variant which enables these. Maybe
+MACHINE_FEATURE like "tf-a", which then for genericarm64 adds these
+qemuarm64 configs. Using other custom variables doesn't feel right either.
+
+These do not impact anything in systemd-boot, kernel or userspace
+or in the wic image which is compatible with a lot of HW.
+
+Cheers,
+
+-Mikko 
 
