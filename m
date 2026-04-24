@@ -2,33 +2,33 @@ Return-Path: <frazer.carsley@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 296E4FED3E9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4A1FED3EA
 	for <webhook@archiver.kernel.org>; Fri, 24 Apr 2026 15:38:20 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.25734.1777045096772931335
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.25306.1777045094481639254
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 24 Apr 2026 08:38:16 -0700
+ Fri, 24 Apr 2026 08:38:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=F1jSHulL;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=fdqRD2oP;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: frazer.carsley@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD58C358D;
-	Fri, 24 Apr 2026 08:38:10 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57653358A;
+	Fri, 24 Apr 2026 08:38:08 -0700 (PDT)
 Received: from e138143.arm.com (unknown [10.57.18.238])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 939A73F7B4;
-	Fri, 24 Apr 2026 08:38:15 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD4D03F7B4;
+	Fri, 24 Apr 2026 08:38:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1777045096; bh=6fnzVeUgBkxHvUripBXif+wg/0GrDBpvCONjpjH1otE=;
+	t=1777045093; bh=RH7UIUhaEinv7fSL/1CT9MxOXStMGHDRK/j/NbGSFws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=F1jSHulLJ20+mILV5mKPShaqQOVrJmIgqLiDXis6RwIJgb2B1VYk4YwBbwd40ha5o
-	 hVFTC9NajPutmmlNekxPGJpX8z1cAkQMRekwSRx90XFLR9kwk0JoLLpVZUXotkYms9
-	 8sPPLcx6geC2D3aTqVXhFIOB7Fle6rSrnNNw5Ii0=
+	b=fdqRD2oPu8HMbBCWjrHjDeooJeTZ9h2Kwj/AN1dKAUFUE8dV0T8AXOWve/+FYZDtH
+	 PJPGhmTjurrFBcKUUZmLssGgritW+f9K8GUX6q1fyP5Cu104dsUp/dhrc4wXVytu7y
+	 Ar4SOhPVy5Hvj3qjCr7xq3bCCSN1U6BwQhKbwjoc=
 From: Frazer Carsley <frazer.carsley@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Frazer Carsley <frazer.carsley@arm.com>
-Subject: [PATCH 3/3] arm-bsp/trusted-firmware-m:cs1k: Use new GPT duplicate functionality
-Date: Fri, 24 Apr 2026 16:36:56 +0100
-Message-ID: <20260424153656.774555-4-frazer.carsley@arm.com>
+Subject: [PATCH 1/3] arm-bsp/trusted-firmware-m:cs1k: Add fixes for GPT library
+Date: Fri, 24 Apr 2026 16:36:54 +0100
+Message-ID: <20260424153656.774555-2-frazer.carsley@arm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260424153656.774555-1-frazer.carsley@arm.com>
 References: <20260424153656.774555-1-frazer.carsley@arm.com>
@@ -38,637 +38,1061 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 24 Apr 2026 15:38:20 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7026
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7024
 
-Uses the new GPT duplicate operation during a firmware update. This also
-adds flash erase protections so that the operation is not too slow and
-erasing flash multiple times redundantly.
+These patches backport bug fixes for the GPT library in TF-M.
 
 Signed-off-by: Frazer Carsley <frazer.carsley@arm.com>
 ---
- ...plat-cs1k-Add-flash-erase-protection.patch |  98 ++++++++
- ...-unused-FWU-partitions-upon-version-.patch | 153 ++++++++++++
- ...lat-cs1k-Duplicate-old-images-in-FWU.patch | 217 ++++++++++++++++++
- .../trusted-firmware-m-corstone1000.inc       |   3 +
- 4 files changed, 471 insertions(+)
+ ...pt-Fix-final-entry-not-being-removed.patch | 114 ++++++
+ ...lib-gpt-Replace-warnings-with-errors.patch |  37 ++
+ ...-gpt-Enforce-entry-size-of-128-bytes.patch | 268 +++++++++++++
+ ...Ensure-block-size-complies-with-spec.patch |  38 ++
+ ...0050-lib-gpt-Expand-table-validation.patch | 352 ++++++++++++++++++
+ .../trusted-firmware-m-corstone1000.inc       |   5 +
+ 6 files changed, 814 insertions(+)
  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
-stone1000/0057-plat-cs1k-Add-flash-erase-protection.patch
+stone1000/0046-lib-gpt-Fix-final-entry-not-being-removed.patch
  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
-stone1000/0058-plat-cs1k-Remove-unused-FWU-partitions-upon-version-.patch
+stone1000/0047-lib-gpt-Replace-warnings-with-errors.patch
  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
-stone1000/0059-plat-cs1k-Duplicate-old-images-in-FWU.patch
+stone1000/0048-lib-gpt-Enforce-entry-size-of-128-bytes.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0049-lib-gpt-Ensure-block-size-complies-with-spec.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0050-lib-gpt-Expand-table-validation.patch
 
 diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
-00/0057-plat-cs1k-Add-flash-erase-protection.patch b/meta-arm-bsp/recipes=
--bsp/trusted-firmware-m/files/corstone1000/0057-plat-cs1k-Add-flash-erase=
--protection.patch
+00/0046-lib-gpt-Fix-final-entry-not-being-removed.patch b/meta-arm-bsp/re=
+cipes-bsp/trusted-firmware-m/files/corstone1000/0046-lib-gpt-Fix-final-en=
+try-not-being-removed.patch
 new file mode 100644
-index 00000000..3bca1d90
+index 00000000..f7e7179d
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0057=
--plat-cs1k-Add-flash-erase-protection.patch
-@@ -0,0 +1,98 @@
-+From 60277832aa6d4a205a5b1180f0513de0eb7c84c6 Mon Sep 17 00:00:00 2001
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0046=
+-lib-gpt-Fix-final-entry-not-being-removed.patch
+@@ -0,0 +1,114 @@
++From 4f11567a0152f1ecd98159ca555d8663ee8e5ce0 Mon Sep 17 00:00:00 2001
 +From: Frazer Carsley <frazer.carsley@arm.com>
-+Date: Tue, 17 Mar 2026 11:05:45 +0000
-+Subject: [PATCH] plat: cs1k: Add flash erase protection
++Date: Fri, 10 Apr 2026 17:20:39 +0100
++Subject: [PATCH] lib: gpt: Fix final entry not being removed
 +
-+The GPT library deals in blocks, whereas flash deals in sectors. On
-+cs1k, eight blocks make up a sector. So, when the GPT library requests a
-+block erase from the platform driver, it actually erases the entire
-+sector, and then rewrites the data that was there for the blocks that
-+weren't being erased.
++The final entry would not be removed due to the removals being hidden
++behind a check on whether the removed entry was not the final entry,
++causing it to be a no-op. Removal operation is no longer hidden behind
++that condition.
 +
-+This means that if all eight blocks in a sector were erased in a row,
-+then the same sector would be erased eight times, which is both slow and
-+also redundant, wearing out the flash device without need. These
-+protections prevent flash erasure if the data is already equal to the
-+erased value.
-+
-+Change-Id: Id8efe515647f45ac8e65cc95ef1bf58f9160aca2
++Change-Id: Ib264d988d57cb39098f2783c4a001fcf3b004270
 +Signed-off-by: Frazer Carsley <frazer.carsley@arm.com>
-+Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TF-M/tr=
-usted-firmware-m/+/50259/1]
++Upstream-Status: Backport [f3cf6bda1534b8893620c7b7c0d9ff647b44603e]
 +---
-+ .../ext/target/arm/corstone1000/io/io_gpt.c   | 42 +++++++++++++++++--
-+ 1 file changed, 39 insertions(+), 3 deletions(-)
++ lib/gpt/src/gpt.c | 64 +++++++++++++++++++++++------------------------
++ 1 file changed, 32 insertions(+), 32 deletions(-)
 +
-+diff --git a/platform/ext/target/arm/corstone1000/io/io_gpt.c b/platform=
-/ext/target/arm/corstone1000/io/io_gpt.c
-+index 513c77016..f7c3d79d2 100644
-+--- a/platform/ext/target/arm/corstone1000/io/io_gpt.c
-++++ b/platform/ext/target/arm/corstone1000/io/io_gpt.c
-+@@ -53,6 +53,32 @@ static uint8_t sector_buf[FLASH_SECTOR_SIZE];
-+ /* From io_gpt.h - the driver given to the GPT library */
-+ struct gpt_flash_driver_t io_gpt_flash_driver =3D {0};
-+=20
-++/* Read the bytes that need to be erased. If they are already erased_va=
-lue,
-++ * report that an erase is not required. This is to reduce the number o=
-f flash
-++ * erase cyles. If the read fails in any way, report erase required.
-++ */
-++static bool erase_required(uint32_t erase_addr,
-++                           size_t   num_bytes)
-++{
-++    if (num_bytes > FLASH_SECTOR_SIZE) {
-++        return true;
-++    }
-++
-++    int32_t ret =3D flash_driver->ReadData(erase_addr, sector_buf, num_=
-bytes);
-++    if (ret < 0 || (uint32_t)ret !=3D num_bytes) {
-++        return true;
-++    }
-++
-++    uint8_t erased_value =3D flash_driver->GetInfo()->erased_value;
-++    for (size_t offset =3D 0; offset < num_bytes; ++offset) {
-++        if (sector_buf[offset] !=3D erased_value) {
-++            return true;
-++        }
-++    }
-++
-++    return false;
-++}
-++
-+ /* Erases TFM_GPT_BLOCK_SIZE bytes from offset within the sector beginn=
-ing at
-+  * sector_addr. This is done via a read-erase-write pattern whereby dat=
-a is read,
-+  * the sector is erased, and data written back to the parts of the sect=
-or that
-+@@ -61,6 +87,10 @@ struct gpt_flash_driver_t io_gpt_flash_driver =3D {0}=
-;
-+ static gpt_flash_err_t partially_erase_sector(uint32_t sector_addr,
-+                                               uint32_t offset)
-+ {
-++    if (!erase_required(sector_addr + offset, TFM_GPT_BLOCK_SIZE)) {
-++        return GPT_FLASH_SUCCESS;
-++    }
-++
-+     if (flash_driver->ReadData(
-+                 sector_addr,
-+                 sector_buf,
-+@@ -139,6 +169,10 @@ static ssize_t flash_erase(uint64_t lba, size_t num=
-_blocks)
-+=20
-+     /* Whole sector erases until last sector */
-+     for (size_t i =3D 0; i < num_sectors - 1; ++i) {
-++        if (!erase_required(erase_addr + i * FLASH_SECTOR_SIZE, FLASH_S=
-ECTOR_SIZE)) {
-++            continue;
-++        }
-++
-+         int32_t ret =3D flash_driver->EraseSector(erase_addr + i * FLAS=
-H_SECTOR_SIZE);
-+         if (ret !=3D ARM_DRIVER_OK) {
-+             return i;
-+@@ -146,9 +180,11 @@ static ssize_t flash_erase(uint64_t lba, size_t num=
-_blocks)
-+     }
-+=20
-+     if (num_blocks % LBAS_PER_SECTOR =3D=3D 0 && lba % LBAS_PER_SECTOR =
-=3D=3D 0) {
-+-        /* Fully erase final sector */
-+-        if (flash_driver->EraseSector(last_erase_addr) !=3D ARM_DRIVER_=
-OK) {
-+-            return (num_sectors - 1) * LBAS_PER_SECTOR;
-++        /* Fully erase final sector if required */
-++        if (erase_required(last_erase_addr, FLASH_SECTOR_SIZE)) {
-++            if (flash_driver->EraseSector(last_erase_addr) !=3D ARM_DRI=
-VER_OK) {
-++                return (num_sectors - 1) * LBAS_PER_SECTOR;
-++            }
-+         }
-+     } else {
-+         /* Partial erase of final sector */
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
-00/0058-plat-cs1k-Remove-unused-FWU-partitions-upon-version-.patch b/meta=
--arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0058-plat-cs1k=
--Remove-unused-FWU-partitions-upon-version-.patch
-new file mode 100644
-index 00000000..69719044
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0058=
--plat-cs1k-Remove-unused-FWU-partitions-upon-version-.patch
-@@ -0,0 +1,153 @@
-+From 281f6799d6de19e63cbcf175ad848b8c8f2cc220 Mon Sep 17 00:00:00 2001
-+From: Frazer Carsley <frazer.carsley@arm.com>
-+Date: Fri, 10 Apr 2026 17:15:36 +0100
-+Subject: [PATCH] plat: cs1k: Remove unused FWU partitions upon version
-+ rejection
-+
-+If a firmware update (FWU) is attempted and the version of any image is
-+lower or equal to the current version, the entire capsule is rejected
-+and the previous bank used to continue booting. The partitions created
-+during staging for the to-be images therefore can be removed and the
-+space free'd up.
-+
-+Change-Id: I9b74c2ed5efee938c14dbdd0380d8d094e71c10e
-+Signed-off-by: Frazer Carsley <frazer.carsley@arm.com>
-+Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TF-M/tr=
-usted-firmware-m/+/50260/1]
-+---
-+ .../bootloader/mcuboot/tfm_mcuboot_fwu.c      | 108 ++++++++++++------
-+ 1 file changed, 75 insertions(+), 33 deletions(-)
-+
-+diff --git a/platform/ext/target/arm/corstone1000/bootloader/mcuboot/tfm=
-_mcuboot_fwu.c b/platform/ext/target/arm/corstone1000/bootloader/mcuboot/=
-tfm_mcuboot_fwu.c
-+index d85590c71..557e48d07 100644
-+--- a/platform/ext/target/arm/corstone1000/bootloader/mcuboot/tfm_mcuboo=
-t_fwu.c
-++++ b/platform/ext/target/arm/corstone1000/bootloader/mcuboot/tfm_mcuboo=
-t_fwu.c
-+@@ -1105,6 +1105,54 @@ static psa_status_t erase_image(uint32_t image_of=
-fset, uint32_t image_size)
-+     return PSA_SUCCESS;
-+ }
-+=20
-++#ifndef BL1_BUILD
-++/* stale index is the index of the partition to remove within the parti=
-tion entry
-++ * array, which could be representing either bank 0 or bank 1. name_ind=
-ex is the
-++ * index of partition to remove within the fwu_images image_names index=
-, which is
-++ * fixed at compile time in the structure
-++ */
-++static psa_status_t remove_all_stale_partitions(const uint32_t stale_in=
-dex,
-++                                                const uint32_t name_ind=
-ex)
-++{
-++    psa_status_t ret;
-++
-++    for (int i =3D 0; i < NR_OF_IMAGES_IN_FW_BANK; ++i) {
-++        struct partition_entry_t part;
-++        ret =3D gpt_entry_read_by_type(&(fwu_image[i].image_type), stal=
-e_index, &part);
-++
-++        if (ret =3D=3D PSA_ERROR_DOES_NOT_EXIST) {
-++            FWU_LOG_MSG("%s: Unable to find partition '%s', skipping re=
-moval\r\n",
-++                    __func__, fwu_image[i].image_names[name_index]);
-++            continue;
-++        } else if (ret =3D=3D PSA_ERROR_STORAGE_FAILURE) {
-++            FWU_LOG_MSG("%s: Flash error whilst reading GPT partition '=
-%s'\r\n",
-++                    __func__, fwu_image[i].image_names[name_index]);
-++            return ret;
-++        } else if (ret < 0) {
-++            FWU_LOG_MSG("%s: Unable to read partition '%s'\r\n",
-++                    __func__, fwu_image[i].image_names[name_index]);
-++            return ret;
-++        }
-++
-++        ret =3D gpt_entry_remove(&(part.partition_guid));
-++        if (ret =3D=3D PSA_ERROR_STORAGE_FAILURE) {
-++            FWU_LOG_MSG("%s: Flash error whilst removing GPT partition =
-'%s'\r\n",
-++                    __func__, fwu_image[i].image_names[name_index]);
-++            return ret;
-++        } else if (ret < 0) {
-++            FWU_LOG_MSG("%s: Unable to remove partition '%s'\r\n",
-++                    __func__, fwu_image[i].image_names[name_index]);
-++            return ret;
-++        }
-++
-++        FWU_LOG_MSG("%s: Removed GPT partition '%s'\r\n",
-++                    __func__, fwu_image[i].image_names[name_index]);
-++    }
-++
-++    return ret;
-++}
-++#endif
-++
-+ static psa_status_t fwu_select_previous(
-+         struct fwu_metadata *metadata,
-+         struct fwu_private_metadata *priv_metadata)
-+@@ -1162,40 +1210,12 @@ static psa_status_t fwu_select_previous(
-+=20
-+ #ifndef BL1_BUILD
-+     /* Remove the GPT partitions for the rejected images. It is always =
-the newer
-+-     * (second) partitions that are rejected, as they are created durin=
-g the
-+-     * fwu process
-++     * (previous active) partitions that are rejected, as they are crea=
-ted during
-++     * the fwu process
++diff --git a/lib/gpt/src/gpt.c b/lib/gpt/src/gpt.c
++index a9dbb918e..e4e7fde32 100644
++--- a/lib/gpt/src/gpt.c
+++++ b/lib/gpt/src/gpt.c
++@@ -648,6 +648,7 @@ psa_status_t gpt_entry_remove(const struct efi_guid_=
+t *guid)
++      * to be modified if the last entry in the array was moved or if it=
+ is
++      * the only LBA used by the partition array
 +      */
-+-    for (int i =3D 0; i < NR_OF_IMAGES_IN_FW_BANK; ++i) {
-+-        struct partition_entry_t part;
-+-        ret =3D gpt_entry_read_by_type(&(fwu_image[i].image_type), 1, &=
-part);
-+-
-+-        if (ret =3D=3D PSA_ERROR_DOES_NOT_EXIST) {
-+-            FWU_LOG_MSG("%s: Unable to find partition '%s'\r\n",
-+-                    __func__, fwu_image[i].image_names[index]);
-+-            return ret;
-+-        } else if (ret =3D=3D PSA_ERROR_STORAGE_FAILURE) {
-+-            FWU_LOG_MSG("%s: Flash error whilst reading GPT partition '=
-%s'\r\n",
-+-                    __func__, fwu_image[i].image_names[index]);
-+-            return ret;
-+-        } else if (ret < 0) {
-+-            FWU_LOG_MSG("%s: Unable to read partition '%s'\r\n",
-+-                    __func__, fwu_image[i].image_names[index]);
-+-            return ret;
-+-        }
-+-
-+-        ret =3D gpt_entry_remove(&(part.partition_guid));
-+-        if (ret =3D=3D PSA_ERROR_STORAGE_FAILURE) {
-+-            FWU_LOG_MSG("%s: Flash error whilst removing GPT partition =
-'%s'\r\n",
-+-                    __func__, fwu_image[i].image_names[index]);
-+-            return ret;
-+-        } else if (ret < 0) {
-+-            FWU_LOG_MSG("%s: Unable to remove partition '%s'\r\n",
-+-                    __func__, fwu_image[i].image_names[index]);
-+-            return ret;
-+-        }
-+-
-+-        FWU_LOG_MSG("%s: Removed GPT partition '%s'\r\n",
-+-                    __func__, fwu_image[i].image_names[index]);
-++    ret =3D remove_all_stale_partitions(1, metadata->previous_active_in=
-dex);
-++    if (ret !=3D PSA_SUCCESS) {
-++        return ret;
-+     }
-+ #endif /* BL1_BUILD */
+++    const uint64_t array_end_lba =3D partition_array_last_lba(&primary_=
+gpt);;
++     if (cached_index !=3D primary_gpt.num_used_partitions - 1 ||
++             cached_index < gpt_entry_per_lba_count())
++     {
++@@ -669,7 +670,6 @@ psa_status_t gpt_entry_remove(const struct efi_guid_=
+t *guid)
++          * Use a second buffer to read each consecutive LBA and copy th=
+at to
++          * the global LBA buffer to then write afterwards.
++          */
++-        const uint64_t array_end_lba =3D partition_array_last_lba(&prim=
+ary_gpt);
++         for (uint64_t i =3D partition_entry_lba(&primary_gpt, cached_in=
+dex) + 1;
++                 i <=3D array_end_lba;
++                 ++i)
++@@ -705,45 +705,45 @@ psa_status_t gpt_entry_remove(const struct efi_gui=
+d_t *guid)
++                     sizeof(array_buf) - primary_gpt.header.entry_size);
++             memcpy(lba_buf, array_buf, TFM_GPT_BLOCK_SIZE);
++         }
+++    }
 +=20
-+@@ -1971,6 +1991,28 @@ psa_status_t fwu_bootloader_load_image(psa_fwu_co=
-mponent_t component,
-+                 priv_metadata.fmp_last_attempt_status[fwu_image_index])=
-;
-+=20
-+         FWU_LOG_MSG("ERROR: %s: version error\n\r",__func__);
-++
-++#ifndef BL1_BUILD
-++        /* The FWU process short circuits at this point, so remove all =
-images,
-++         * effecitvely treating them all as rejected. Ignore return cod=
-e and
-++         * in order to return PSA_OPERATION_INCOMPLETE as per PSA FWU A=
-PI.
++-        /* What was the final LBA is now cached and may be empty or par=
+tially-filled */
++-        cached_lba =3D array_end_lba;
++-        write_buffered =3D false;
++-        uint32_t entries_in_last_lba =3D (--primary_gpt.num_used_partit=
+ions) % gpt_entry_per_lba_count();
++-        if (entries_in_last_lba =3D=3D 0) {
++-            /* There's nothing left in this LBA, so zero it all and wri=
+te it out.
++-             * There is also no need to do an erase just to zero afterw=
+ards.
++-             */
++-            memset(lba_buf, 0, TFM_GPT_BLOCK_SIZE);
++-            if (backup_gpt_array_lba !=3D 0) {
++-                int write_ret =3D plat_flash_driver->write(
++-                        backup_gpt_array_lba + array_end_lba - PRIMARY_=
+GPT_ARRAY_LBA,
++-                        lba_buf);
++-                if (write_ret !=3D TFM_GPT_BLOCK_SIZE) {
++-                    return PSA_ERROR_STORAGE_FAILURE;
++-                }
++-            }
++-            int write_ret =3D plat_flash_driver->write(array_end_lba, l=
+ba_buf);
+++    /* What was the final LBA is now cached and may be empty or partial=
+ly-filled */
+++    cached_lba =3D array_end_lba;
+++    write_buffered =3D false;
+++    uint32_t entries_in_last_lba =3D (--primary_gpt.num_used_partitions=
+) % gpt_entry_per_lba_count();
+++    if (entries_in_last_lba =3D=3D 0) {
+++        /* There's nothing left in this LBA, so zero it all and write i=
+t out.
+++         * There is also no need to do an erase just to zero afterwards=
+.
 ++         */
-++        uint32_t previous_active_index;
-++        if (active_index =3D=3D BANK_0) {
-++            previous_active_index =3D BANK_1;
-++        } else if (active_index =3D=3D BANK_1) {
-++            previous_active_index =3D BANK_0;
-++        } else {
-++            FWU_LOG_MSG("ERROR: %s: active_index %d\n\r",__func__,activ=
-e_index);
-++            ret =3D PSA_ERROR_DATA_INVALID;
-++            goto out;
+++        memset(lba_buf, 0, TFM_GPT_BLOCK_SIZE);
+++        if (backup_gpt_array_lba !=3D 0) {
+++            int write_ret =3D plat_flash_driver->write(
+++                    backup_gpt_array_lba + array_end_lba - PRIMARY_GPT_=
+ARRAY_LBA,
+++                    lba_buf);
++             if (write_ret !=3D TFM_GPT_BLOCK_SIZE) {
++                 return PSA_ERROR_STORAGE_FAILURE;
++             }
++-        } else {
++-            /* Zero what is not needed anymore */
++-            memset(
++-                    lba_buf + primary_gpt.header.entry_size * entries_i=
+n_last_lba,
++-                    0,
++-                    (gpt_entry_per_lba_count() - entries_in_last_lba) *=
+ primary_gpt.header.entry_size);
++-            if (backup_gpt_array_lba !=3D 0) {
++-                ret =3D write_to_flash(backup_gpt_array_lba + array_end=
+_lba - PRIMARY_GPT_ARRAY_LBA);
++-                if (ret !=3D PSA_SUCCESS) {
++-                    return ret;
++-                }
++-            }
++-            ret =3D write_to_flash(array_end_lba);
 ++        }
-++
-++        /* The newer index should be removed as that was just created i=
-n the
-++         * staging phase.
-++         */
-++        (void)remove_all_stale_partitions(1, previous_active_index);
-++#endif
-+         ret =3D PSA_OPERATION_INCOMPLETE;
-+         goto out;
-+     }
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
-00/0059-plat-cs1k-Duplicate-old-images-in-FWU.patch b/meta-arm-bsp/recipe=
-s-bsp/trusted-firmware-m/files/corstone1000/0059-plat-cs1k-Duplicate-old-=
-images-in-FWU.patch
-new file mode 100644
-index 00000000..3fcf8560
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0059=
--plat-cs1k-Duplicate-old-images-in-FWU.patch
-@@ -0,0 +1,217 @@
-+From 3c7cb3432084df3b75b6382e543f3fc2352e32cf Mon Sep 17 00:00:00 2001
-+From: Frazer Carsley <frazer.carsley@arm.com>
-+Date: Fri, 13 Mar 2026 13:42:16 +0000
-+Subject: [PATCH] plat: cs1k: Duplicate old images in FWU
-+
-+When copying existing partitions during a partial firmware update, the
-+GPT library is now used to duplicate the old partitions and then rename
-+them accordingly. This streamlines the steps of
-+    1. creating a new partition for the image to be copied into and
-+    2. the copying itself
-+into a single library call.
-+
-+Change-Id: Ibd169dcc14ed1c946bbd6c30b6962c89055d0e8e
-+Signed-off-by: Frazer Carsley <frazer.carsley@arm.com>
-+Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TF-M/tr=
-usted-firmware-m/+/50261/1]
-+---
-+ .../bootloader/mcuboot/tfm_mcuboot_fwu.c      | 144 +++++++++---------
-+ 1 file changed, 68 insertions(+), 76 deletions(-)
-+
-+diff --git a/platform/ext/target/arm/corstone1000/bootloader/mcuboot/tfm=
-_mcuboot_fwu.c b/platform/ext/target/arm/corstone1000/bootloader/mcuboot/=
-tfm_mcuboot_fwu.c
-+index 557e48d07..c48d51b32 100644
-+--- a/platform/ext/target/arm/corstone1000/bootloader/mcuboot/tfm_mcuboo=
-t_fwu.c
-++++ b/platform/ext/target/arm/corstone1000/bootloader/mcuboot/tfm_mcuboo=
-t_fwu.c
-+@@ -39,7 +39,6 @@
-+  * This is used when bank consistency is maintained during partial caps=
-ule update
-+  */
-+ #define FLASH_CHUNK_SIZE                512
-+-static uint8_t flash_data_buf[FLASH_CHUNK_SIZE];
-+=20
-+ /* Possible states of the bank.
-+  * Naming convention here matches the implementation in U-Boot=20
-+@@ -2171,94 +2170,24 @@ out:
-+     return ret;
-+ }
-+=20
-++#ifdef BL1_BUILD
-+ static psa_status_t copy_image_from_other_bank(int image_index,
-+                                                uint32_t active_index,
-+                                                uint32_t previous_active=
-_index)
-+ {
-+     FWU_LOG_FUNC_ENTER;
-+=20
-++    /* Use offsets directly */
-+     uint32_t bank_offset[NR_OF_FW_BANKS] =3D {BANK_0_PARTITION_OFFSET, =
-BANK_1_PARTITION_OFFSET};
-+     psa_status_t ret;
-+=20
-+-#ifdef BL1_BUILD
-+     /* Use offsets directly */
-++    uint8_t data[FLASH_CHUNK_SIZE];
-+     size_t remaining_size =3D fwu_image[image_index].image_size;
-+     size_t data_size;
-+     size_t offset_read =3D bank_offset[active_index] + fwu_image[image_=
-index].image_offset;
-+     size_t offset_write =3D bank_offset[previous_active_index] + fwu_im=
-age[image_index].image_offset;
-+     int data_transferred_count;
-+-#else
-+-    /* Use GPT to find the correct image */
-+-    struct partition_entry_t active_part;
-+-    ret =3D gpt_entry_read_by_type(
-+-            &(fwu_image[image_index].image_type),
-+-            0,
-+-            &active_part);
-+-    if (ret =3D=3D PSA_ERROR_DOES_NOT_EXIST) {
-+-        FWU_LOG_MSG("%s: Unable to find partition '%s'\r\n",
-+-                __func__, fwu_image[image_index].image_names[active_ind=
-ex]);
-+-        return ret;
-+-    } else if (ret =3D=3D PSA_ERROR_STORAGE_FAILURE) {
-+-        FWU_LOG_MSG("%s: Flash error whilst reading GPT partition '%s'\=
-r\n",
-+-                __func__, fwu_image[image_index].image_names[active_ind=
-ex]);
-+-        return ret;
-+-    } else if (ret < 0) {
-+-        FWU_LOG_MSG("%s: Unable to read partition '%s'\r\n",
-+-                __func__, fwu_image[image_index].image_names[active_ind=
-ex]);
-+-        return ret;
-+-    }
-+-
-+-    struct partition_entry_t prev_active_part;
-+-    ret =3D gpt_entry_read_by_type(
-+-            &(fwu_image[image_index].image_type),
-+-            1,
-+-            &prev_active_part);
-+-
-+-    if (ret =3D=3D PSA_ERROR_DOES_NOT_EXIST) {
-+-        /* Create the partition in the expected space */
-+-        struct efi_guid_t new_guid =3D {0};
-+-        char unicode_name[GPT_ENTRY_NAME_LENGTH] =3D {'\0'};
-+-        ascii_to_unicode(fwu_image[image_index].image_names[previous_ac=
-tive_index], unicode_name);
-+-
-+-        ret =3D gpt_entry_create(&(fwu_image[image_index].image_type),
-+-                               (bank_offset[previous_active_index] + fw=
-u_image[image_index].image_offset) / TFM_GPT_BLOCK_SIZE,
-+-                               1 + ((fwu_image[image_index].image_size =
-- 1) / TFM_GPT_BLOCK_SIZE),
-+-                               0,
-+-                               unicode_name,
-+-                               &new_guid);
-+-        if (ret =3D=3D PSA_ERROR_INSUFFICIENT_STORAGE) {
-+-            FWU_LOG_MSG("%s: No space left on device!\r\n", __func__);
-+-            return ret;
-+-        } else if (ret =3D=3D PSA_ERROR_STORAGE_FAILURE) {
-+-            FWU_LOG_MSG("%s: Flash error whilst creating GPT partition =
-'%s'!\r\n",
-+-                    __func__, fwu_image[image_index].image_names[previo=
-us_active_index]);
-+-            return ret;
-+-        } else if (ret < 0) {
-+-            return ret;
-+-        }
-+-
-+-        ret =3D gpt_entry_read(&new_guid, &prev_active_part);
-+-        if (ret =3D=3D PSA_ERROR_STORAGE_FAILURE) {
-+-            FWU_LOG_MSG("%s: Flash error whilst reading GPT partition '=
-%s'\r\n",
-+-                    __func__, fwu_image[image_index].image_names[previo=
-us_active_index]);
-+-            return ret;
-+-        } else if (ret < 0) {
-+-            return ret;
-+-        }
-+-    } else if (ret =3D=3D PSA_ERROR_STORAGE_FAILURE) {
-+-        FWU_LOG_MSG("%s: Flash error whilst reading GPT partition '%s'\=
-r\n",
-+-                __func__, fwu_image[image_index].image_names[previous_a=
-ctive_index]);
-+-        return ret;
-+-    } else if (ret < 0) {
-+-        return ret;
-+-    }
-+-
-+-    size_t remaining_size =3D prev_active_part.size * TFM_GPT_BLOCK_SIZ=
-E;
-+-    size_t data_size;
-+-    size_t offset_read =3D active_part.start * TFM_GPT_BLOCK_SIZE;
-+-    size_t offset_write =3D prev_active_part.start * TFM_GPT_BLOCK_SIZE=
-;
-+-    int data_transferred_count;
-+-#endif /* BL1_BUILD */
-+=20
-+     ret =3D erase_image(offset_write, remaining_size);
-+     if (ret !=3D PSA_SUCCESS) {
-+@@ -2270,7 +2199,7 @@ static psa_status_t copy_image_from_other_bank(int=
- image_index,
-+         data_size =3D (remaining_size > FLASH_CHUNK_SIZE) ? FLASH_CHUNK=
-_SIZE : remaining_size;
-+=20
-+         /* read image data from flash */
-+-        data_transferred_count =3D FWU_METADATA_FLASH_DEV.ReadData(offs=
-et_read, flash_data_buf, data_size);
-++        data_transferred_count =3D FWU_METADATA_FLASH_DEV.ReadData(offs=
-et_read, data, data_size);
-+         if (data_transferred_count < 0) {
-+             FWU_LOG_MSG("%s: ERROR - Flash read failed (ret =3D %d)\n\r=
-", __func__, data_transferred_count);
-+             return PSA_ERROR_STORAGE_FAILURE;
-+@@ -2285,7 +2214,7 @@ static psa_status_t copy_image_from_other_bank(int=
- image_index,
-+         offset_read +=3D data_size;
-+=20
-+         /* write image data to flash */
-+-        data_transferred_count =3D FWU_METADATA_FLASH_DEV.ProgramData(o=
-ffset_write, flash_data_buf, data_size);
-++        data_transferred_count =3D FWU_METADATA_FLASH_DEV.ProgramData(o=
-ffset_write, data, data_size);
-+         if (data_transferred_count < 0) {
-+             FWU_LOG_MSG("%s: ERROR - Flash read failed (ret =3D %d)\n\r=
-", __func__, data_transferred_count);
-+             return PSA_ERROR_STORAGE_FAILURE;
-+@@ -2304,6 +2233,69 @@ static psa_status_t copy_image_from_other_bank(in=
-t image_index,
-+     FWU_LOG_MSG("%s: exit \n\r", __func__);
-+     return PSA_SUCCESS;
-+ }
-++#else
-++static psa_status_t copy_image_from_other_bank(int image_index,
-++                                               uint32_t active_index,
-++                                               uint32_t previous_active=
-_index)
-++{
-++    FWU_LOG_FUNC_ENTER;
-++
-++    /* Use GPT to find and copy the correct image */
-++    uint32_t bank_offset[NR_OF_FW_BANKS] =3D {BANK_0_PARTITION_OFFSET, =
-BANK_1_PARTITION_OFFSET};
-++    uint64_t new_lba =3D
-++        (bank_offset[previous_active_index] + fwu_image[image_index].im=
-age_offset) / TFM_GPT_BLOCK_SIZE;
-++
-++    struct partition_entry_t active_part;
-++    psa_status_t ret =3D gpt_entry_read_by_type(
-++            &(fwu_image[image_index].image_type),
-++            0,
-++            &active_part);
-++    if (ret =3D=3D PSA_ERROR_DOES_NOT_EXIST) {
-++        FWU_LOG_MSG("%s: Unable to find partition '%s'\r\n",
-++                __func__, fwu_image[image_index].image_names[active_ind=
-ex]);
-++        return ret;
-++    } else if (ret =3D=3D PSA_ERROR_STORAGE_FAILURE) {
-++        FWU_LOG_MSG("%s: Flash error whilst reading GPT partition '%s'\=
-r\n",
-++                __func__, fwu_image[image_index].image_names[active_ind=
-ex]);
-++        return ret;
-++    } else if (ret < 0) {
-++        FWU_LOG_MSG("%s: Unable to read partition '%s'\r\n",
-++                __func__, fwu_image[image_index].image_names[active_ind=
-ex]);
-++        return ret;
-++    }
-++
-++    struct efi_guid_t new_guid;
-++    ret =3D gpt_entry_duplicate(&(active_part.partition_guid), new_lba,=
- &new_guid);
-++    if (ret =3D=3D PSA_ERROR_STORAGE_FAILURE) {
-++        FWU_LOG_MSG("%s: Flash error whilst creating GPT partition '%s'=
-\r\n",
-++                __func__, fwu_image[image_index].image_names[previous_a=
-ctive_index]);
-++        return ret;
-++    } else if (ret < 0) {
-++        FWU_LOG_MSG("%s: Unable to create partition '%s'\r\n",
-++                __func__, fwu_image[image_index].image_names[previous_a=
-ctive_index]);
-++        return ret;
-++    }
-++
-++    char unicode_name[GPT_ENTRY_NAME_LENGTH] =3D {'\0'};
-++    ascii_to_unicode(fwu_image[image_index].image_names[previous_active=
-_index], unicode_name);
-++    ret =3D gpt_entry_rename(&new_guid, unicode_name);
-++    if (ret !=3D PSA_SUCCESS) {
-++        FWU_LOG_MSG("%s: Unable to rename partition to '%s'\r\n",
-++                __func__, fwu_image[image_index].image_names[previous_a=
-ctive_index]);
-++
-++        /* Delete the newly created partition as there is code that rel=
-ies on the naming */
-++        ret =3D gpt_entry_remove(&new_guid);
+++        int write_ret =3D plat_flash_driver->write(array_end_lba, lba_b=
+uf);
+++        if (write_ret !=3D TFM_GPT_BLOCK_SIZE) {
+++            return PSA_ERROR_STORAGE_FAILURE;
+++        }
+++    } else {
+++        /* Zero what is not needed anymore */
+++        memset(
+++                lba_buf + primary_gpt.header.entry_size * entries_in_la=
+st_lba,
+++                0,
+++                (gpt_entry_per_lba_count() - entries_in_last_lba) * pri=
+mary_gpt.header.entry_size);
+++        if (backup_gpt_array_lba !=3D 0) {
+++            ret =3D write_to_flash(backup_gpt_array_lba + array_end_lba=
+ - PRIMARY_GPT_ARRAY_LBA);
++             if (ret !=3D PSA_SUCCESS) {
++                 return ret;
++             }
++         }
+++        ret =3D write_to_flash(array_end_lba);
 ++        if (ret !=3D PSA_SUCCESS) {
-++            FWU_LOG_MSG("%s: Catastrophic failure: unable to remove dup=
-licate partition '%s'\r\n",
-++                    __func__, fwu_image[image_index].image_names[active=
-_index]);
+++            return ret;
 ++        }
-++        return ret;
++     }
++=20
++     /* Update the header after flash changes */
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0047-lib-gpt-Replace-warnings-with-errors.patch b/meta-arm-bsp/recipes=
+-bsp/trusted-firmware-m/files/corstone1000/0047-lib-gpt-Replace-warnings-=
+with-errors.patch
+new file mode 100644
+index 00000000..93b1fb3f
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0047=
+-lib-gpt-Replace-warnings-with-errors.patch
+@@ -0,0 +1,37 @@
++From 68874e58811c5d4004492f15b3ac46d2cca186c0 Mon Sep 17 00:00:00 2001
++From: Frazer Carsley <frazer.carsley@arm.com>
++Date: Thu, 16 Apr 2026 09:54:55 +0100
++Subject: [PATCH] lib: gpt: Replace warnings with errors
++
++These warnings return errors, so it makes more sense to output an error
++message.
++
++Change-Id: I589e24ba8aba2502a3fc86d2aeb648d125c022bd
++Signed-off-by: Frazer Carsley <frazer.carsley@arm.com>
++Upstream-Status: Backport [68874e58811c5d4004492f15b3ac46d2cca186c0]
++---
++ lib/gpt/src/gpt.c | 4 ++--
++ 1 file changed, 2 insertions(+), 2 deletions(-)
++
++diff --git a/lib/gpt/src/gpt.c b/lib/gpt/src/gpt.c
++index 16bda8aba..32c7277bd 100644
++--- a/lib/gpt/src/gpt.c
+++++ b/lib/gpt/src/gpt.c
++@@ -830,7 +830,7 @@ psa_status_t gpt_defragment(void)
++      */
++     psa_status_t ret =3D sort_partition_array(&primary_gpt);
++     if (ret !=3D PSA_SUCCESS) {
++-        WARN("Unable to defragment flash!\n");
+++        ERROR("Unable to defragment flash!\n");
++         return ret;
++     }
++=20
++@@ -926,7 +926,7 @@ psa_status_t gpt_init(struct gpt_flash_driver_t *fla=
+sh_driver, uint64_t max_part
++     if (mbr.partitions[0].os_type =3D=3D MBR_TYPE_GPT) {
++         ret =3D read_table_from_flash(&primary_gpt, true);
++     } else {
++-        WARN("Unsupported legacy MBR in use\n");
+++        ERROR("Unsupported legacy MBR in use\n");
++         ret =3D PSA_ERROR_NOT_SUPPORTED;
++     }
++=20
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0048-lib-gpt-Enforce-entry-size-of-128-bytes.patch b/meta-arm-bsp/reci=
+pes-bsp/trusted-firmware-m/files/corstone1000/0048-lib-gpt-Enforce-entry-=
+size-of-128-bytes.patch
+new file mode 100644
+index 00000000..4cba9e32
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0048=
+-lib-gpt-Enforce-entry-size-of-128-bytes.patch
+@@ -0,0 +1,268 @@
++From ff08a9d998c545a6152789f8ce55bd4200a937cf Mon Sep 17 00:00:00 2001
++From: Frazer Carsley <frazer.carsley@arm.com>
++Date: Wed, 15 Apr 2026 10:59:28 +0100
++Subject: [PATCH] lib: gpt: Enforce entry size of 128 bytes
++
++Previous to this, the entry size could have been set to any number, even
++those deemed illegal by the UEFI spec 2.10 [1], as the library did not
++validate it. 128 bytes is the minimum size for a partition entry and
++most standard tools that create GPTs will use this.
++
++[1] https://uefi.org/specs/UEFI/2.10/05_GUID_Partition_Table_Format.html
++
++Change-Id: Ib6c436353a4b8e00e6c6e63b933a49f11c0a7340
++Signed-off-by: Frazer Carsley <frazer.carsley@arm.com>
++Upstream-Status: Backport [ff08a9d998c545a6152789f8ce55bd4200a937cf]
++---
++ lib/gpt/inc/gpt.h                |  2 +
++ lib/gpt/src/gpt.c                | 65 +++++++++++++++++++++-----------
++ lib/gpt/unittests/gpt/test_gpt.c | 40 ++++++++++++++++++++
++ 3 files changed, 85 insertions(+), 22 deletions(-)
++
++diff --git a/lib/gpt/inc/gpt.h b/lib/gpt/inc/gpt.h
++index baf4767f9..34ce67580 100644
++--- a/lib/gpt/inc/gpt.h
+++++ b/lib/gpt/inc/gpt.h
++@@ -214,6 +214,7 @@ psa_status_t gpt_entry_remove(const struct efi_guid_=
+t *guid);
++  *
++  * \retval PSA_SUCCESS GPT is valid.
++  * \retval PSA_ERROR_STORAGE_FAILURE I/O error.
+++ * \retval PSA_ERROR_NOT_SUPPORTED Entry size is not 128 bytes
++  * \retval PSA_ERROR_INVALID_SIGNATURE GPT is invalid.
++  */
++ psa_status_t gpt_validate(bool is_primary);
++@@ -249,6 +250,7 @@ psa_status_t gpt_defragment(void);
++  *                                    functions defined by \p flash_dri=
+ver is NULL. The init
++  *                                    and uninit functions may be NULL =
+if not required.
++  * \retval PSA_ERROR_NOT_SUPPORTED Legacy MBR is used and not GPT.
+++ * \retval PSA_ERROR_NOT_SUPPORTED Entry size is not 128 bytes
++  */
++ __attribute__((nonnull(1)))
++ psa_status_t gpt_init(struct gpt_flash_driver_t *flash_driver,
++diff --git a/lib/gpt/src/gpt.c b/lib/gpt/src/gpt.c
++index 32c7277bd..200e21599 100644
++--- a/lib/gpt/src/gpt.c
+++++ b/lib/gpt/src/gpt.c
++@@ -459,7 +459,7 @@ psa_status_t gpt_entry_move(const struct efi_guid_t =
+*guid,
++=20
++     /* Cached LBA */
++     for (uint32_t i =3D 0; i < num_entries_in_cached_lba; ++i) {
++-        memcpy(&entry, lba_buf + (i * primary_gpt.header.entry_size), G=
+PT_ENTRY_SIZE);
+++        memcpy(&entry, lba_buf + (i * GPT_ENTRY_SIZE), GPT_ENTRY_SIZE);
++=20
++         const struct efi_guid_t ent_guid =3D entry.unique_guid;
++         if (efi_guid_cmp(&ent_guid, guid) =3D=3D 0) {
++@@ -658,9 +658,9 @@ psa_status_t gpt_entry_remove(const struct efi_guid_=
+t *guid)
++         const uint32_t lba_index =3D cached_index % gpt_entry_per_lba_c=
+ount();
++         if (lba_index + 1 !=3D gpt_entry_per_lba_count()) {
++             memmove(
++-                    lba_buf + lba_index * primary_gpt.header.entry_size=
+,
++-                    lba_buf + (lba_index + 1) * primary_gpt.header.entr=
+y_size,
++-                    (gpt_entry_per_lba_count() - lba_index - 1) * prima=
+ry_gpt.header.entry_size);
+++                    lba_buf + lba_index * GPT_ENTRY_SIZE,
+++                    lba_buf + (lba_index + 1) * GPT_ENTRY_SIZE,
+++                    (gpt_entry_per_lba_count() - lba_index - 1) * GPT_E=
+NTRY_SIZE);
++         }
++=20
++         /* If this is not the last LBA, then read the next LBA into mem=
+ory and
++@@ -683,7 +683,7 @@ psa_status_t gpt_entry_remove(const struct efi_guid_=
+t *guid)
++             }
++=20
++             memcpy(
++-                    lba_buf + primary_gpt.header.entry_size * (gpt_entr=
+y_per_lba_count() - 1),
+++                    lba_buf + GPT_ENTRY_SIZE * (gpt_entry_per_lba_count=
+() - 1),
++                     array_buf,
++                     GPT_ENTRY_SIZE);
++=20
++@@ -701,8 +701,8 @@ psa_status_t gpt_entry_remove(const struct efi_guid_=
+t *guid)
++=20
++             memmove(
++                     array_buf,
++-                    array_buf + primary_gpt.header.entry_size,
++-                    sizeof(array_buf) - primary_gpt.header.entry_size);
+++                    array_buf + GPT_ENTRY_SIZE,
+++                    sizeof(array_buf) - GPT_ENTRY_SIZE);
++             memcpy(lba_buf, array_buf, TFM_GPT_BLOCK_SIZE);
++         }
++     }
++@@ -731,9 +731,9 @@ psa_status_t gpt_entry_remove(const struct efi_guid_=
+t *guid)
++     } else {
++         /* Zero what is not needed anymore */
++         memset(
++-                lba_buf + primary_gpt.header.entry_size * entries_in_la=
+st_lba,
+++                lba_buf + GPT_ENTRY_SIZE * entries_in_last_lba,
++                 0,
++-                (gpt_entry_per_lba_count() - entries_in_last_lba) * pri=
+mary_gpt.header.entry_size);
+++                (gpt_entry_per_lba_count() - entries_in_last_lba) * GPT=
+_ENTRY_SIZE);
++         if (backup_gpt_array_lba !=3D 0) {
++             ret =3D write_to_flash(backup_gpt_array_lba + array_end_lba=
+ - PRIMARY_GPT_ARRAY_LBA);
++             if (ret !=3D PSA_SUCCESS) {
++@@ -934,6 +934,14 @@ psa_status_t gpt_init(struct gpt_flash_driver_t *fl=
+ash_driver, uint64_t max_part
++         goto fail_load;
++     }
++=20
+++    /* Ensure entry size is supported. */
+++    if (primary_gpt.header.entry_size !=3D GPT_ENTRY_SIZE) {
+++        ERROR("Unsupported entry size 0x%08x, must be 0x%08x\n",
+++                primary_gpt.header.entry_size, GPT_ENTRY_SIZE);
+++        ret =3D PSA_ERROR_NOT_SUPPORTED;
+++        goto fail_load;
 ++    }
 ++
-++    FWU_LOG_MSG("%s: exit \n\r", __func__);
++     /* Count the number of used entries, assuming the array is not spar=
+ese */
++     ret =3D count_used_partitions(&primary_gpt, &primary_gpt.num_used_p=
+artitions);
++     if (ret !=3D PSA_SUCCESS) {
++@@ -948,6 +956,12 @@ psa_status_t gpt_init(struct gpt_flash_driver_t *fl=
+ash_driver, uint64_t max_part
++         if (ret !=3D PSA_SUCCESS) {
++             goto fail_load;
++         }
+++        if (backup_gpt.header.entry_size !=3D GPT_ENTRY_SIZE) {
+++            ERROR("Unsupported entry size 0x%08x, must be 0x%08x\n",
+++                    backup_gpt.header.entry_size, GPT_ENTRY_SIZE);
+++            ret =3D PSA_ERROR_NOT_SUPPORTED;
+++            goto fail_load;
+++        }
++         backup_gpt_array_lba =3D backup_gpt.header.array_lba;
++     } else {
++         WARN("Backup GPT location is unknown!\n");
++@@ -999,11 +1013,7 @@ psa_status_t gpt_uninit(void)
++ /* Returns the number of partition entries in each LBA */
++ static inline uint64_t gpt_entry_per_lba_count(void)
++ {
++-    static uint64_t num_entries =3D 0;
++-    if (num_entries =3D=3D 0) {
++-        num_entries =3D TFM_GPT_BLOCK_SIZE / primary_gpt.header.entry_s=
+ize;
++-    }
++-    return num_entries;
+++    return TFM_GPT_BLOCK_SIZE / GPT_ENTRY_SIZE;
++ }
++=20
++ /* Copies information from the entry to the user visible structure */
++@@ -1129,15 +1139,15 @@ static psa_status_t update_header(uint32_t num_p=
+artitions)
++     /* Take the CRC of the partition array */
++     uint32_t crc =3D 0;
++     for (uint32_t i =3D 0; i < header->num_partitions; ++i) {
++-        uint8_t entry_buf[header->entry_size];
++-        memset(entry_buf, 0, header->entry_size);
+++        uint8_t entry_buf[GPT_ENTRY_SIZE];
+++        memset(entry_buf, 0, GPT_ENTRY_SIZE);
++         struct gpt_entry_t *entry =3D (struct gpt_entry_t *)entry_buf;
++=20
++         psa_status_t ret =3D read_entry_from_flash(&primary_gpt, i, ent=
+ry);
++         if (ret !=3D PSA_SUCCESS) {
++             return ret;
++         }
++-        crc =3D efi_soft_crc32_update(crc, entry_buf, header->entry_siz=
+e);
+++        crc =3D efi_soft_crc32_update(crc, entry_buf, GPT_ENTRY_SIZE);
++     }
++     header->array_crc =3D crc;
++=20
++@@ -1268,7 +1278,7 @@ static psa_status_t read_entry_from_flash(const st=
+ruct gpt_t *table,
++=20
++     memcpy(
++             entry,
++-            lba_buf + ((array_index % gpt_entry_per_lba_count()) * tabl=
+e->header.entry_size),
+++            lba_buf + ((array_index % gpt_entry_per_lba_count()) * GPT_=
+ENTRY_SIZE),
++             GPT_ENTRY_SIZE);
++=20
++     return PSA_SUCCESS;
++@@ -1415,7 +1425,7 @@ static psa_status_t write_entry(uint32_t          =
+        array_index,
++=20
++     /* Copy into buffer */
++     uint32_t index_in_lba =3D array_index % gpt_entry_per_lba_count();
++-    memcpy(lba_buf + index_in_lba * primary_gpt.header.entry_size, entr=
+y, GPT_ENTRY_SIZE);
+++    memcpy(lba_buf + index_in_lba * GPT_ENTRY_SIZE, entry, GPT_ENTRY_SI=
+ZE);
++=20
++     /* Write on every nth operation. */
++     if (++num_writes =3D=3D gpt_entry_per_lba_count()) {
++@@ -1519,18 +1529,29 @@ static psa_status_t validate_table(struct gpt_t =
+*table, bool is_primary)
++         return PSA_ERROR_INVALID_SIGNATURE;
++     }
++=20
+++    /* Check the entry size. This is not a part of the spec but ensures=
+ the
+++     * library only supports entry sizes equal to 128. Otherwise, the b=
+ackup
+++     * could be used to restore the primary with an entry size that is =
+different
+++     * and break that assumption, or vise-versa
+++     */
+++    if (header->entry_size !=3D GPT_ENTRY_SIZE) {
+++        ERROR("Unsupported entry size 0x%08x, must be 0x%08x\n",
+++                header->entry_size, GPT_ENTRY_SIZE);
+++        return PSA_ERROR_NOT_SUPPORTED;
+++    }
+++
++     /* Check the CRC of the partition array */
++     calc_crc =3D 0;
++     for (uint32_t i =3D 0; i < header->num_partitions; ++i) {
++-        uint8_t entry_buf[header->entry_size];
++-        memset(entry_buf, 0, header->entry_size);
+++        uint8_t entry_buf[GPT_ENTRY_SIZE];
+++        memset(entry_buf, 0, GPT_ENTRY_SIZE);
++         struct gpt_entry_t *entry =3D (struct gpt_entry_t *)entry_buf;
++=20
++         psa_status_t ret =3D read_entry_from_flash(table, i, entry);
++         if (ret !=3D PSA_SUCCESS) {
++             return ret;
++         }
++-        calc_crc =3D efi_soft_crc32_update(calc_crc, (uint8_t *)entry, =
+header->entry_size);
+++        calc_crc =3D efi_soft_crc32_update(calc_crc, (uint8_t *)entry, =
+GPT_ENTRY_SIZE);
++     }
++=20
++     if (calc_crc !=3D header->array_crc) {
++diff --git a/lib/gpt/unittests/gpt/test_gpt.c b/lib/gpt/unittests/gpt/te=
+st_gpt.c
++index 2f05a6b4a..db897b967 100644
++--- a/lib/gpt/unittests/gpt/test_gpt.c
+++++ b/lib/gpt/unittests/gpt/test_gpt.c
++@@ -351,6 +351,30 @@ void test_gpt_init_should_failWhenMbrTypeInvalid(vo=
+id)
++     TEST_ASSERT_EQUAL(PSA_ERROR_NOT_SUPPORTED, setup_test_gpt());
++ }
++=20
+++void test_gpt_init_should_failWhenEntrySizeBad(void)
+++{
+++    test_header.entry_size--;
+++    /* Expect first a valid MBR read */
+++    register_mocked_read(&test_mbr, sizeof(test_mbr));
+++
+++    /* Expect a GPT header read second */
+++    register_mocked_read(&test_header, sizeof(test_header));
+++
+++    TEST_ASSERT_EQUAL(PSA_ERROR_NOT_SUPPORTED, gpt_init(&mock_driver, T=
+EST_MAX_PARTITIONS));
+++    test_header.entry_size =3D default_header.entry_size;
+++
+++    /* Now do the backup. */
+++    register_mocked_read(&test_mbr, sizeof(test_mbr));
+++    register_mocked_read(&test_header, sizeof(test_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++
+++    /* Expect fourth the backup to be read. Make the entry size bad */
+++    test_header.entry_size =3D 0;
+++    setup_backup_gpt();
+++
+++    TEST_ASSERT_EQUAL(PSA_ERROR_NOT_SUPPORTED, gpt_init(&mock_driver, T=
+EST_MAX_PARTITIONS));
+++}
+++
++ void test_gpt_init_should_failWhenFlashDriverNotFullyDefined(void)
++ {
++     gpt_flash_read_t read_fn =3D mock_driver.read;
++@@ -433,6 +457,22 @@ void test_gpt_validate_should_failWhenLbaPointerBad=
+(void)
++     TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
++ }
++=20
+++void test_gpt_validate_should_failWhenBackupEntrySizeInvalid(void)
+++{
+++    /* The entry size for the primary GPT is validated on gpt_init and =
+kept
+++     * in memory. Therefore, the entry size can only be validated on gp=
+t_validate
+++     * for the backup table, which is read
+++     */
+++    setup_test_gpt();
+++    struct gpt_header_t backup_header;
+++    MAKE_BACKUP_HEADER(backup_header, test_header);
+++    backup_header.entry_size--;
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++
+++    TEST_ASSERT_EQUAL(PSA_ERROR_NOT_SUPPORTED, gpt_validate(false));
+++}
+++
++ void test_gpt_validate_should_failWhenArrayCrcBad(void)
++ {
++     test_header.array_crc--;
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0049-lib-gpt-Ensure-block-size-complies-with-spec.patch b/meta-arm-bsp=
+/recipes-bsp/trusted-firmware-m/files/corstone1000/0049-lib-gpt-Ensure-bl=
+ock-size-complies-with-spec.patch
+new file mode 100644
+index 00000000..d2258fba
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0049=
+-lib-gpt-Ensure-block-size-complies-with-spec.patch
+@@ -0,0 +1,38 @@
++From c07da31be4551ee9b3ce546a1f6adccb19bc3b59 Mon Sep 17 00:00:00 2001
++From: Frazer Carsley <frazer.carsley@arm.com>
++Date: Wed, 15 Apr 2026 11:17:25 +0100
++Subject: [PATCH] lib: gpt: Ensure block size complies with spec
++
++The UEFI spec 2.10 [1] implicitly requires a block size of at least 512
++in order to fit a legacy Master Boot Record.
++
++[1] https://uefi.org/specs/UEFI/2.10/05_GUID_Partition_Table_Format.html=
+#legacy-master-boot-record-mbr
++
++Change-Id: I8218ef3d883b51d8fa14835e0ed884139fdebc7d
++Signed-off-by: Frazer Carsley <frazer.carsley@arm.com>
++Upstream-Status: Backport [c07da31be4551ee9b3ce546a1f6adccb19bc3b59]
++---
++ lib/gpt/src/gpt.c | 6 +++++-
++ 1 file changed, 5 insertions(+), 1 deletion(-)
++
++diff --git a/lib/gpt/src/gpt.c b/lib/gpt/src/gpt.c
++index 200e21599..cda9fe358 100644
++--- a/lib/gpt/src/gpt.c
+++++ b/lib/gpt/src/gpt.c
++@@ -20,11 +20,15 @@
++ #include "efi_soft_crc.h"
++=20
++ /* This needs to be defined by the platform and is used by the GPT libr=
+ary as
++- * the number of bytes in a Logical Block Address (LBA)
+++ * the number of bytes in a Logical Block Address (LBA). It also must b=
+e at least
+++ * 512.
++  */
++ #ifndef TFM_GPT_BLOCK_SIZE
++ #error "TFM_GPT_BLOCK_SIZE must be defined if using GPT library!"
++ #endif
+++#if TFM_GPT_BLOCK_SIZE < 512
+++#error "TFM_GPT_BLOCK_SIZE must be at least 512!"
+++#endif
++=20
++ /* Where Master Boot Record (MBR) is on flash */
++ #define MBR_LBA 0ULL
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0050-lib-gpt-Expand-table-validation.patch b/meta-arm-bsp/recipes-bsp/=
+trusted-firmware-m/files/corstone1000/0050-lib-gpt-Expand-table-validatio=
+n.patch
+new file mode 100644
+index 00000000..aefd898b
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0050=
+-lib-gpt-Expand-table-validation.patch
+@@ -0,0 +1,352 @@
++From bcce0ce881817b36ad52df550bcbf41b4f0d4938 Mon Sep 17 00:00:00 2001
++From: Frazer Carsley <frazer.carsley@arm.com>
++Date: Wed, 15 Apr 2026 15:09:03 +0100
++Subject: [PATCH] lib: gpt: Expand table validation
++
++It is implied by the UEFI spec 2.10 [1] that the backup GPT must be
++located at the end of storage. To this effect, ensure that it is the
++largest known LBA value.
++
++Additionally, it is also implied that the partition entry arrays, both
++primary and backup, must be before or after usable space respectively.
++
++[1] https://uefi.org/specs/UEFI/2.10/05_GUID_Partition_Table_Format.html
++
++Change-Id: I5042836822f990a21fbf48b19422879384a844aa
++Signed-off-by: Frazer Carsley <frazer.carsley@arm.com>
++Upstream-Status: Backport [bcce0ce881817b36ad52df550bcbf41b4f0d4938]
++---
++ lib/gpt/src/gpt.c                | 115 ++++++++++++++++++++
++ lib/gpt/unittests/gpt/test_gpt.c | 179 +++++++++++++++++++++++++++++++
++ 2 files changed, 294 insertions(+)
++
++diff --git a/lib/gpt/src/gpt.c b/lib/gpt/src/gpt.c
++index cda9fe358..0335befa7 100644
++--- a/lib/gpt/src/gpt.c
+++++ b/lib/gpt/src/gpt.c
++@@ -229,6 +229,12 @@ static psa_status_t mbr_load(struct mbr_t *mbr);
++ static bool gpt_entry_cmp_guid(const struct gpt_entry_t *entry, const v=
+oid *guid);
++ static bool gpt_entry_cmp_name(const struct gpt_entry_t *entry, const v=
+oid *name);
++ static bool gpt_entry_cmp_type(const struct gpt_entry_t *entry, const v=
+oid *type);
+++static psa_status_t validate_backup_gpt_lba(const uint64_t backup_lba,
+++                                            const uint64_t primary_lba,
+++                                            const uint64_t partition_ar=
+ray_end,
+++                                            const struct gpt_header_t *=
+header);
+++static psa_status_t validate_array_lba(const uint64_t partition_array_e=
+nd,
+++                                       const uint64_t usable_lba_start)=
+;
++ static psa_status_t validate_table(struct gpt_t *table, bool is_primary=
+);
++ static psa_status_t restore_table(struct gpt_t *restore_from, bool is_p=
+rimary);
++ static psa_status_t sort_partition_array(const struct gpt_t *table);
++@@ -1498,6 +1504,73 @@ static inline void swap_headers(const struct gpt_=
+header_t *src, struct gpt_heade
++             primary_gpt.header.array_lba);
++ }
++=20
+++/* Validate that the backup GPT LBA is greater than all other LBAs in t=
+he header
+++ */
+++static psa_status_t validate_backup_gpt_lba(const uint64_t backup_lba,
+++                                            const uint64_t primary_lba,
+++                                            const uint64_t partition_ar=
+ray_end,
+++                                            const struct gpt_header_t *=
+header)
+++{
+++    if (backup_lba <=3D primary_lba) {
+++        ERROR("Backup LBA (0x%08x%08x) must be final LBA on flash, "
+++              "primary LBA at 0x%08x%08x\n",
+++              (uint32_t)(backup_lba >> 32),
+++              (uint32_t)(backup_lba),
+++              (uint32_t)(primary_lba >> 32),
+++              (uint32_t)(primary_lba));
+++        return PSA_ERROR_INVALID_SIGNATURE;
+++    }
+++
+++    if (backup_lba <=3D header->first_lba) {
+++        ERROR("Backup LBA (0x%08x%08x) must be final LBA on flash, "
+++              "first usable LBA at 0x%08x%08x\n",
+++              (uint32_t)(backup_lba >> 32),
+++              (uint32_t)(backup_lba),
+++              (uint32_t)(header->first_lba >> 32),
+++              (uint32_t)(header->first_lba));
+++        return PSA_ERROR_INVALID_SIGNATURE;
+++    }
+++
+++    if (backup_lba <=3D header->last_lba) {
+++        ERROR("Backup LBA (0x%08x%08x) must be final LBA on flash, "
+++              "last usable LBA at 0x%08x%08x\n",
+++              (uint32_t)(backup_lba >> 32),
+++              (uint32_t)(backup_lba),
+++              (uint32_t)(header->last_lba >> 32),
+++              (uint32_t)(header->last_lba));
+++        return PSA_ERROR_INVALID_SIGNATURE;
+++    }
+++
+++    if (backup_lba <=3D partition_array_end) {
+++        ERROR("Backup LBA (0x%08x%08x) must be final LBA on flash, "
+++              "partition array ends at LBA at 0x%08x%08x\n",
+++              (uint32_t)(backup_lba >> 32),
+++              (uint32_t)(backup_lba),
+++              (uint32_t)(partition_array_end >> 32),
+++              (uint32_t)(partition_array_end));
+++        return PSA_ERROR_INVALID_SIGNATURE;
+++    }
+++
 ++    return PSA_SUCCESS;
 ++}
-++#endif /* BL1_BUILD */
-+=20
-+ static psa_status_t maintain_bank_consistency(void)
+++
+++/* Validate partition array is outside the area of usable flash */
+++static psa_status_t validate_array_lba(const uint64_t partition_array_e=
+nd,
+++                                       const uint64_t usable_lba_start)
+++{
+++    if (partition_array_end >=3D usable_lba_start) {
+++        ERROR("GPT partition array must not be in usable space: "
+++              "0x%08x%08x >=3D 0x%08x%08x\n",
+++              (uint32_t)(partition_array_end >> 32),
+++              (uint32_t)partition_array_end,
+++              (uint32_t)(usable_lba_start >> 32),
+++              (uint32_t)usable_lba_start);
+++        return PSA_ERROR_INVALID_SIGNATURE;
+++    }
+++
+++    return PSA_SUCCESS;
+++}
+++
++ /* Validates a specific GPT. */
++ static psa_status_t validate_table(struct gpt_t *table, bool is_primary=
+)
 + {
++@@ -1564,6 +1637,48 @@ static psa_status_t validate_table(struct gpt_t *=
+table, bool is_primary)
++         return PSA_ERROR_INVALID_SIGNATURE;
++     }
++=20
+++    /* Check the backup LBA is greater than all other LBAs. Check also
+++     * the partition array cannot be overritten by data by ensuring
+++     * that it is not between the first and last usable LBAs
+++     */
+++    if (is_primary) {
+++        psa_status_t ret =3D validate_backup_gpt_lba(
+++                header->backup_lba,
+++                header->current_lba,
+++                partition_entry_lba(table, header->num_partitions - 1),
+++                header);
+++        if (ret !=3D PSA_SUCCESS) {
+++            return ret;
+++        }
+++
+++        /* Go to the final LBA of the partition array, including unused=
+ entries */
+++        ret =3D validate_array_lba(
+++                partition_entry_lba(table, header->num_partitions - 1),
+++                header->first_lba);
+++        if (ret !=3D PSA_SUCCESS) {
+++            return ret;
+++        }
+++    } else {
+++        psa_status_t ret =3D validate_backup_gpt_lba(
+++                header->current_lba,
+++                header->backup_lba,
+++                partition_entry_lba(table, header->num_partitions - 1),
+++                header);
+++        if (ret !=3D PSA_SUCCESS) {
+++            return ret;
+++        }
+++
+++        /* To flip the condition, negate the parameters passed: it beco=
+mes
+++         * -array_lba >=3D -last_lba (equivalent to) array_lba < last_l=
+ba
+++         * (equivalent to) last_lba >=3D array_lba. This is because the=
+ backup array is
+++         * after the last_lba
+++         */
+++        ret =3D validate_array_lba(~(header->array_lba), ~(header->last=
+_lba));
+++        if (ret !=3D PSA_SUCCESS) {
+++            return ret;
+++        }
+++    }
+++
++     if (is_primary) {
++         /* Any time the primary table is considered valid, cache the ba=
+ckup
++          * LBA field
++diff --git a/lib/gpt/unittests/gpt/test_gpt.c b/lib/gpt/unittests/gpt/te=
+st_gpt.c
++index db897b967..bd161ec74 100644
++--- a/lib/gpt/unittests/gpt/test_gpt.c
+++++ b/lib/gpt/unittests/gpt/test_gpt.c
++@@ -493,6 +493,185 @@ void test_gpt_validate_should_failWhenArrayCrcBad(=
+void)
++     TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
++ }
++=20
+++void test_gpt_validate_should_failWhenBackupLbaNotAtEndOfDisk(void)
+++{
+++    /* First test when the backup lba is before usable disk */
+++    test_header.backup_lba =3D test_header.first_lba - 1;
+++    setup_test_gpt();
+++
+++    /* Each entry will be read in order to check the partition array CR=
+C */
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(true));
+++
+++    /* Then test when the backup is before in usable disk space */
+++    test_header.backup_lba =3D test_header.first_lba;
+++    setup_test_gpt();
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(true));
+++
+++    test_header.backup_lba =3D test_header.first_lba + 1;
+++    setup_test_gpt();
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(true));
+++
+++    test_header.backup_lba =3D test_header.last_lba - 1;
+++    setup_test_gpt();
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(true));
+++
+++    test_header.backup_lba =3D test_header.last_lba;
+++    setup_test_gpt();
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(true));
+++
+++    /* Finally, test when the backup is before the end of the partition=
+ entry array */
+++    test_header.backup_lba =3D test_header.array_lba - 1;
+++    setup_test_gpt();
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(true));
+++
+++    /* For this scenario, manually setup the backup header so that the =
+array LBA
+++     * (also the backup header LBA) is valid on init and can then be va=
+lidated
+++     * with gpt_validate
+++     */
+++    test_header.backup_lba =3D test_header.array_lba;
+++
+++    /* Expect first a valid MBR read */
+++    register_mocked_read(&test_mbr, sizeof(test_mbr));
+++
+++    /* Expect a GPT header read second */
+++    register_mocked_read(&test_header, sizeof(test_header));
+++
+++    /* Expect third each partition is read to find the number in use. T=
+his is
+++     * also the backup header, which will be cached
+++     */
+++    setup_backup_gpt();
+++
+++    TEST_ASSERT_EQUAL(PSA_SUCCESS, gpt_init(&mock_driver, TEST_MAX_PART=
+ITIONS));
+++
+++    /* Backup partition array read for crc */
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(true));
+++
+++    /* Now do the backup gpt header */
+++    struct gpt_header_t backup_header;
+++    test_header.backup_lba =3D test_header.first_lba - 1;
+++    MAKE_BACKUP_HEADER(backup_header, test_header);
+++
+++    setup_test_gpt();
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
+++
+++    test_header.backup_lba =3D backup_header.first_lba;
+++    backup_header.current_lba =3D backup_header.first_lba;
+++    setup_test_gpt();
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
+++
+++    test_header.backup_lba =3D backup_header.first_lba + 1;
+++    backup_header.current_lba =3D backup_header.first_lba + 1;
+++    setup_test_gpt();
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
+++
+++    test_header.backup_lba =3D backup_header.last_lba - 1;
+++    backup_header.current_lba =3D backup_header.last_lba - 1;
+++    setup_test_gpt();
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
+++
+++    test_header.backup_lba =3D backup_header.last_lba;
+++    backup_header.current_lba =3D backup_header.last_lba;
+++    setup_test_gpt();
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
+++
+++    test_header.backup_lba =3D backup_header.array_lba - 1;
+++    backup_header.current_lba =3D backup_header.array_lba - 1;
+++    setup_test_gpt();
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
+++
+++    test_header.backup_lba =3D backup_header.array_lba;
+++    backup_header.current_lba =3D backup_header.array_lba;
+++    setup_test_gpt();
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
+++}
+++
+++void test_gpt_validate_should_failWhenPartitionArrayInUsableDiskSpace(v=
+oid)
+++{
+++    /* First test when the primary partition array is in usable disk sp=
+ace */
+++    test_header.array_lba =3D test_header.first_lba;
+++    setup_test_gpt();
+++
+++    /* Each entry will be read in order to check the partition array CR=
+C */
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(true));
+++
+++    test_header.array_lba =3D test_header.first_lba + 1;
+++    setup_test_gpt();
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(true));
+++
+++    test_header.array_lba =3D test_header.last_lba - 1;
+++    setup_test_gpt();
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(true));
+++
+++    test_header.array_lba =3D test_header.last_lba;
+++    setup_test_gpt();
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(true));
+++
+++    /* Then test when the primary partition array is after usable disk =
+space */
+++    test_header.array_lba =3D test_header.last_lba + 1;
+++    setup_test_gpt();
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(true));
+++
+++    /* Now do the backup gpt header, ensuring it is always after usable=
+ space */
+++    struct gpt_header_t backup_header;
+++    MAKE_BACKUP_HEADER(backup_header, test_header);
+++
+++    backup_header.array_lba =3D test_header.first_lba - 1;
+++    setup_test_gpt();
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
+++
+++    /* Then test that the backup partition array is after usable disk s=
+pace */
+++    backup_header.array_lba =3D test_header.first_lba;
+++    setup_test_gpt();
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
+++
+++    backup_header.array_lba =3D test_header.first_lba + 1;
+++    setup_test_gpt();
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
+++
+++    backup_header.array_lba =3D test_header.last_lba - 1;
+++    setup_test_gpt();
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
+++
+++    backup_header.array_lba =3D test_header.last_lba;
+++    setup_test_gpt();
+++    register_mocked_read(&backup_header, sizeof(backup_header));
+++    register_mocked_read(&test_partition_array, sizeof(test_partition_a=
+rray));
+++    TEST_ASSERT_EQUAL(PSA_ERROR_INVALID_SIGNATURE, gpt_validate(false))=
+;
+++}
+++
++ void test_gpt_restore_should_restorePrimaryFromBackup(void)
++ {
++     /* Start with a valid GPT */
 diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware=
 -m-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted=
 -firmware-m-corstone1000.inc
-index 4a8ec99b..6ee13b30 100644
+index 55f48a3c..2bfea84b 100644
 --- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
 tone1000.inc
 +++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
 tone1000.inc
-@@ -88,6 +88,9 @@ SRC_URI:append:corstone1000 =3D " \
-     file://0054-lib-gpt-Consecutively-erase-blocks-when-moving-parti.pat=
+@@ -77,6 +77,11 @@ SRC_URI:append:corstone1000 =3D " \
+     file://0043-plat-cs1k-Create-and-remove-FWU-image-partitions.patch \
+     file://0044-plat-cs1k-Derive-host-base-addresses-from-offsets.patch =
+\
+     file://0045-plat-cs1k-Drive-NPU-via-external-system-reset-contro.pat=
 ch \
-     file://0055-lib-gpt-Clarify-API-operation.patch \
-     file://0056-lib-gpt-Add-metadata-only-API-operations.patch \
-+    file://0057-plat-cs1k-Add-flash-erase-protection.patch \
-+    file://0058-plat-cs1k-Remove-unused-FWU-partitions-upon-version-.pat=
-ch \
-+    file://0059-plat-cs1k-Duplicate-old-images-in-FWU.patch \
++    file://0046-lib-gpt-Fix-final-entry-not-being-removed.patch \
++    file://0047-lib-gpt-Replace-warnings-with-errors.patch \
++    file://0048-lib-gpt-Enforce-entry-size-of-128-bytes.patch \
++    file://0049-lib-gpt-Ensure-block-size-complies-with-spec.patch \
++    file://0050-lib-gpt-Expand-table-validation.patch \
      "
 =20
  SRCREV_tfm-psa-adac:corstone1000 =3D "f2809ae231be33a1afcd7714f40756c67d=
