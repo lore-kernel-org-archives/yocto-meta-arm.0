@@ -2,138 +2,173 @@ Return-Path: <Michael.safwat@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55987FF885E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF2BFF8860
 	for <webhook@archiver.kernel.org>; Mon, 27 Apr 2026 12:43:53 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.44346.1777293824301876772
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.44343.1777293823554476644
  for <meta-arm@lists.yoctoproject.org>;
  Mon, 27 Apr 2026 05:43:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=Vw6BaYVq;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=cDdRaDt2;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: michael.safwat@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43BFF1FC7;
-	Mon, 27 Apr 2026 05:43:38 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 798D71684;
+	Mon, 27 Apr 2026 05:43:37 -0700 (PDT)
 Received: from e142473.cambridge.arm.com (e142473.arm.com [10.1.198.48])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 46F023F62B;
-	Mon, 27 Apr 2026 05:43:43 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 771603F62B;
+	Mon, 27 Apr 2026 05:43:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1777293823; bh=CJ93hBjVvtXhNwxfJGJSO2JWpPrVpkFPwtryahry7Wc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vw6BaYVq8FnTorcVS1QPtc4rsJcAMNaM5xre/HvAPwhO4LTDoOHUjLbdRvKHFpPJN
-	 xy1WgxokFjpHXKQ8vIoaAhZrFKr9lyZ+eZClAKvQpTKEovWRwKIWINjC/T7HRyEKft
-	 8pjF7ozPFCQ9r/F/S6za0ruKchvHeeeuvf0a6hEc=
+	t=1777293822; bh=0Pez7voCKU4Vlb6k04RnOrKOSnoN1eXpU3WD3I502XM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cDdRaDt2YgQ9nXu9H5a+RTRbMjNnegzS5DA0OUr3msoLiuoHcCEL5NcW2ua27biCi
+	 +0cP6Gvha7i1eIg5W2hGJXjJ2O2u/epVw3wYXwcEhOC/kwVUaEv72boztx2KsoWumm
+	 XX6f2n9BxmwFA+vrdg8206INxQ0U897WedvLbMOM=
 From: Michael Safwat <michael.safwat@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Michael Safwat <michael.safwat@arm.com>
-Subject: [PATCH 2/2] arm-bsp/u-boot: corstone1000: disable EFI debug support
-Date: Mon, 27 Apr 2026 13:43:38 +0100
-Message-ID: <20260427124338.2280651-2-michael.safwat@arm.com>
+Subject: [PATCH 1/2] arm-bsp/u-boot: fix Corstone1000 FVP detection in patch set
+Date: Mon, 27 Apr 2026 13:43:37 +0100
+Message-ID: <20260427124338.2280651-1-michael.safwat@arm.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260427124338.2280651-1-michael.safwat@arm.com>
-References: <20260427124338.2280651-1-michael.safwat@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 27 Apr 2026 12:43:53 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7028
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7027
 
-Add a U-Boot patch to disable CONFIG_EFI_DEBUG_SUPPORT in the
-Corstone1000 defconfigs.
+Update the Corstone1000 U-Boot patches to detect FVP platforms
+by matching "fvp" in the device tree name instead of relying on
+the exact arm/corstone1000-fvp string.
 
-EFI debug support is now enabled by default and changes the EFI memory
-layout. On Corstone1000 this can cause a boot failure after
-ExitBootServices(), reproduced on the Cortex-A320 FVP path with MTE
-enabled.
+This fixes FVP-specific handling for Corstone1000 variants,
+including capsule image selection and virtio setup.
+
+Also restore CONFIG_BOARD_LATE_INIT in the Corstone1000
+defconfigs, since the virtio probing runs from
+board_late_init() and would otherwise never execute.
 
 Signed-off-by: Michael Safwat <michael.safwat@arm.com>
 ---
- .../u-boot/u-boot-corstone1000.inc            |  5 ++
- ...rstone1000-disable-EFI-debug-support.patch | 46 +++++++++++++++++++
- 2 files changed, 51 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
-040-configs-corstone1000-disable-EFI-debug-support.patch
+ ...corstone1000-Enable-virtio-net-support.patch | 17 +++++++++++++----
+ ...00-a320-Add-Corstone1000-board-variant.patch | 15 ++++++++-------
+ 2 files changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc b/me=
-ta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc
-index 9660fbc6..e3dec3c0 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc
-@@ -81,6 +81,11 @@ SRC_URI:append =3D " \
-     file://0039-corstone1000-a320-Add-Corstone1000-board-variant.patch \
- "
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-cor=
+stone1000-Enable-virtio-net-support.patch b/meta-arm-bsp/recipes-bsp/u-bo=
+ot/u-boot/corstone1000/0030-corstone1000-Enable-virtio-net-support.patch
+index b9007b7c..f166633c 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-corstone10=
+00-Enable-virtio-net-support.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-corstone10=
+00-Enable-virtio-net-support.patch
+@@ -7,12 +7,13 @@ Add virtio-net support in Corstone1000 FVP
 =20
-+# Disable the debug feature
-+SRC_URI:append =3D " \
-+    file://0040-configs-corstone1000-disable-EFI-debug-support.patch \
-+"
-+
- uboot_configure_config:append() {
-    openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=3DCRT/ -keyout $=
-{B}/CRT.key -out ${S}/CRT.crt -nodes -days 365
- }
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0040-con=
-figs-corstone1000-disable-EFI-debug-support.patch b/meta-arm-bsp/recipes-=
-bsp/u-boot/u-boot/corstone1000/0040-configs-corstone1000-disable-EFI-debu=
-g-support.patch
-new file mode 100644
-index 00000000..efd44bfd
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0040-configs-co=
-rstone1000-disable-EFI-debug-support.patch
-@@ -0,0 +1,46 @@
-+From e43e45860f3aecac1a58836c14ec9e961c284ad7 Mon Sep 17 00:00:00 2001
-+From: Michael Safwat <michael.safwat@arm.com>
-+Date: Thu, 23 Apr 2026 18:16:45 +0100
-+Subject: [PATCH] configs: corstone1000: disable EFI debug support
-+
-+CONFIG_EFI_DEBUG_SUPPORT was recently enabled by default and introduces =
-an
-+early EFI_RUNTIME_SERVICES_DATA allocation for the EFI system table poin=
-ter.
-+
-+On Corstone1000, this shifts the EFI memory layout enough to trigger a b=
-oot
-+hang on the Cortex-A320 FVP path when Linux boots with MTE enabled throu=
-gh the
-+EFI flow. The failure happens after ExitBootServices().
-+
-+Disable CONFIG_EFI_DEBUG_SUPPORT in the Corstone1000 defconfigs so the
-+platform keeps the previous EFI memory layout and avoids the issue.
-+
+ Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
+ Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 +Signed-off-by: Michael Safwat <michael.safwat@arm.com>
-+Upstream-Status: Pending
-+---
-+ configs/corstone1000-a320_defconfig | 1 +
-+ configs/corstone1000_defconfig      | 1 +
-+ 2 files changed, 2 insertions(+)
-+
-+diff --git a/configs/corstone1000-a320_defconfig b/configs/corstone1000-=
-a320_defconfig
-+index c7636bf45f8..290c6223bb1 100644
-+--- a/configs/corstone1000-a320_defconfig
-++++ b/configs/corstone1000-a320_defconfig
-+@@ -13,6 +13,7 @@ CONFIG_SYS_LOAD_ADDR=3D0x82100000
-+ CONFIG_IDENT_STRING=3D" corstone1000-a320 aarch64 "
-+ CONFIG_FWU_NUM_IMAGES_PER_BANK=3D4
-+ CONFIG_EFI_SECURE_BOOT=3Dy
-++# CONFIG_EFI_DEBUG_SUPPORT is not set
-+ CONFIG_EFI_SET_TIME=3Dy
-+ CONFIG_EFI_MM_COMM_TEE=3Dy
-+ CONFIG_FFA_SHARED_MM_BUF_SIZE=3D4096
-+diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
+ Upstream-Status: Pending [Not submitted to upstream yet]
+ ---
+  arch/arm/dts/corstone1000-fvp.dts        |  6 ++++
+  board/armltd/corstone1000/corstone1000.c | 42 ++++++++++++++++++++----
+- configs/corstone1000_defconfig           |  2 ++
+- 3 files changed, 44 insertions(+), 6 deletions(-)
++ configs/corstone1000_defconfig           |  3 ++
++ 3 files changed, 45 insertions(+), 6 deletions(-)
+=20
+ diff --git a/arch/arm/dts/corstone1000-fvp.dts b/arch/arm/dts/corstone10=
+00-fvp.dts
+ index 3076fb9f344..cd8a132271e 100644
+@@ -97,10 +98,18 @@ index 9189640ef75..39fd10ed653 100644
+ +	return 0;
+ +}
+ diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
 nfig
-+index 6ff855e7ce9..8448925e46a 100644
-+--- a/configs/corstone1000_defconfig
-++++ b/configs/corstone1000_defconfig
-+@@ -13,6 +13,7 @@ CONFIG_SYS_LOAD_ADDR=3D0x82100000
-+ CONFIG_IDENT_STRING=3D" corstone1000 aarch64 "
-+ CONFIG_FWU_NUM_IMAGES_PER_BANK=3D4
-+ CONFIG_EFI_SECURE_BOOT=3Dy
-++# CONFIG_EFI_DEBUG_SUPPORT is not set
-+ CONFIG_EFI_SET_TIME=3Dy
-+ CONFIG_EFI_MM_COMM_TEE=3Dy
-+ CONFIG_FFA_SHARED_MM_BUF_SIZE=3D4096
+-index 00c3bb5f557..450d69762ab 100644
++index 00c3bb5f557..4ec23b4af1c 100644
+ --- a/configs/corstone1000_defconfig
+ +++ b/configs/corstone1000_defconfig
+-@@ -78,6 +78,8 @@ CONFIG_TEE=3Dy
++@@ -37,6 +37,7 @@ CONFIG_LOGLEVEL=3D7
++ # CONFIG_DISPLAY_CPUINFO is not set
++ # CONFIG_DISPLAY_BOARDINFO is not set
++ CONFIG_BOARD_INIT=3Dy
+++CONFIG_BOARD_LATE_INIT=3Dy
++ CONFIG_SYS_PROMPT=3D"corstone1000# "
++ # CONFIG_CMD_CONSOLE is not set
++ CONFIG_CMD_FWU_METADATA=3Dy
++@@ -78,6 +79,8 @@ CONFIG_TEE=3Dy
+  CONFIG_OPTEE=3Dy
+  CONFIG_USB=3Dy
+  CONFIG_USB_ISP1760=3Dy
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0039-cor=
+stone1000-a320-Add-Corstone1000-board-variant.patch b/meta-arm-bsp/recipe=
+s-bsp/u-boot/u-boot/corstone1000/0039-corstone1000-a320-Add-Corstone1000-=
+board-variant.patch
+index 59bf7aa2..5b2240ce 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0039-corstone10=
+00-a320-Add-Corstone1000-board-variant.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0039-corstone10=
+00-a320-Add-Corstone1000-board-variant.patch
+@@ -50,9 +50,9 @@ Signed-off-by: Michael Safwat <michael.safwat@arm.com>
+  board/armltd/corstone1000-a320/Kconfig        |  12 +
+  board/armltd/corstone1000-a320/MAINTAINERS    |   7 +
+  board/armltd/corstone1000/corstone1000.c      |   6 +-
+- configs/corstone1000-a320_defconfig           |  89 ++++++++
++ configs/corstone1000-a320_defconfig           |  90 ++++++++
+  .../arm/arm,corstone1000-a320.yml             |  31 +++
+- 9 files changed, 405 insertions(+), 3 deletions(-)
++ 9 files changed, 406 insertions(+), 3 deletions(-)
+  create mode 100644 arch/arm/dts/corstone1000-a320-fvp.dts
+  create mode 100644 arch/arm/dts/corstone1000-a320.dtsi
+  create mode 100644 board/armltd/corstone1000-a320/Kconfig
+@@ -400,7 +400,7 @@ index 00000000000..e62978b487e
+ +F:	board/armltd/corstone1000-a320/
+ +F:	configs/corstone1000-a320_defconfig
+ diff --git a/board/armltd/corstone1000/corstone1000.c b/board/armltd/cor=
+stone1000/corstone1000.c
+-index db8919298e1..0557865f59b 100644
++index db8919298e1..2f65eac7bf4 100644
+ --- a/board/armltd/corstone1000/corstone1000.c
+ +++ b/board/armltd/corstone1000/corstone1000.c
+ @@ -1,6 +1,6 @@
+@@ -416,7 +416,7 @@ index db8919298e1..0557865f59b 100644
+  {
+  #if IS_ENABLED(CONFIG_EFI_HAVE_CAPSULE_SUPPORT)
+ -	if (!strcmp(DEVICE_TREE, "arm/corstone1000-fvp"))
+-+	if (!strstr(DEVICE_TREE, "fvp"))
+++	if (strstr(DEVICE_TREE, "fvp"))
+  		update_info.images =3D fw_fvp_images;
+  	else
+  		update_info.images =3D fw_mps3_images;
+@@ -425,16 +425,16 @@ index db8919298e1..0557865f59b 100644
+  	int ret;
+ =20
+ -	if (!strcmp(cmp_dtb, "arm/corstone1000-fvp")) {
+-+	if (!strstr(cmp_dtb, "fvp")) {
+++	if (strstr(cmp_dtb, "fvp")) {
+  		ret =3D uclass_first_device_err(UCLASS_VIRTIO, &virtio_bus);
+  		if (!virtio_bus) {
+  			log_err("Cannot find virtio device, err (%d)\n", ret);
+ diff --git a/configs/corstone1000-a320_defconfig b/configs/corstone1000-=
+a320_defconfig
+ new file mode 100644
+-index 00000000000..d0ae1e745db
++index 00000000000..c7636bf45f8
+ --- /dev/null
+ +++ b/configs/corstone1000-a320_defconfig
+-@@ -0,0 +1,89 @@
++@@ -0,0 +1,90 @@
+ +CONFIG_ARM=3Dy
+ +CONFIG_SKIP_LOWLEVEL_INIT=3Dy
+ +CONFIG_TARGET_CORSTONE1000=3Dy
+@@ -474,6 +474,7 @@ index 00000000000..d0ae1e745db
+ +# CONFIG_DISPLAY_CPUINFO is not set
+ +# CONFIG_DISPLAY_BOARDINFO is not set
+ +CONFIG_BOARD_INIT=3Dy
+++CONFIG_BOARD_LATE_INIT=3Dy
+ +CONFIG_SYS_PROMPT=3D"corstone1000# "
+ +# CONFIG_CMD_CONSOLE is not set
+ +CONFIG_CMD_FWU_METADATA=3Dy
 
