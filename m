@@ -1,96 +1,142 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8691CD3424
-	for <webhook@archiver.kernel.org>; Sun,  3 May 2026 14:32:10 +0000 (UTC)
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.24870.1777818726431625570
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BB8CD3427
+	for <webhook@archiver.kernel.org>; Tue,  5 May 2026 12:34:15 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.37733.1777984449735020549
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 03 May 2026 07:32:06 -0700
+ Tue, 05 May 2026 05:34:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20251104.gappssmtp.com header.s=20251104 header.b=f8aVHlNl;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.172, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-50d6b9bca48so48930401cf.2
-        for <meta-arm@lists.yoctoproject.org>; Sun, 03 May 2026 07:32:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20251104.gappssmtp.com; s=20251104; t=1777818724; x=1778423524; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LSr9IlSEe1ufJmsr2Do7E28ZhArEE/ZXOXTCwty0TOk=;
-        b=f8aVHlNlZ8QoaBETcuCv9W0sBcABUrhqXVqlUDdKy/OC5T1KEFeD1TZC0BRiDdjfIv
-         JgyQ8gAbco7lmGgG7uRWn5MYTJWyxYO65d9INaNRgUQKhjH8/DG6suN4PPeB39zsMu7T
-         iLundMXYGh3im1gfR6rxVouhxJM3Uzlvh6m+BiTLPxQkdknluMoWtg/nqDdoyqb5Fitf
-         xX4fJrexh3XQavoHV7cw7Bqxvm+y5iYZy3NTmYmgwsXaRcSM9dnE/jOm6CuBElipn6QA
-         5LJ94Qtec+eA9nwP/zBayJPWkbPEuQHQkLJGukgnVfH8nKMMBVeU5hM0xf8Mah5y80VN
-         /QFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777818724; x=1778423524;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=LSr9IlSEe1ufJmsr2Do7E28ZhArEE/ZXOXTCwty0TOk=;
-        b=XXFSLOR5v9emmVD5sSmRgCiayMb2EHwwH32FuGd7JVnlpGOxD5zhEUYUaxzcvc6Ne6
-         XqoKtFzjF3d/iVBHr2Fex5L3qBUIhQGc9Ne9caP7JlgG984pvtXCXhZnxXdWTDcNbPQM
-         /uBqR59AQ92VfOBuq0QbhZ+QM5Vi8FXpN+MytpiDN93L442QyfpKzVGXY20w7/0sFkL2
-         A/vkojX0El9JFXovEaAsJYXyesX6jkZRc8T/4zCqH40lQJi1ctGvi9lAe+kt4RnABMaM
-         OSbhcJ45F7ZAnBtP231HQ/Tkd7Zwn/SyVfhoIov3wtWTWmEsxJo8i+FMT7+DVumHvGVp
-         3f3g==
-X-Gm-Message-State: AOJu0Yz6KBv7f0Q3WnxrrdlxGff4kEkLlPZ7bWFcDGCftX1nM5jQtkzb
-	KMDEE6JY6niFWRUhPTd6USPzwPw/vK0e2HGMCHCK5O2q0xLPqrYf3SN8Jpzzs29sbRGYd5xukoE
-	VGR8=
-X-Gm-Gg: AeBDieukc0E5p+xT4HLa/gOk5DY8HIIXfjS0o1pyN5yMpTyrRYheMKZumBek+ilzP6X
-	7kwfzzExZFnAGYzS+2a4qHO+I1H9t6lhmMiEzuyLN8Dwc0he1iQ1ffgkLsuj6lR2F1Gk/SNgKkv
-	msX68Z34Rz3Vg2/Pj5JWDtQkwOCD8ZPYuvNqrAWYEBBrzO1ueEgvUk7oqjw+7/v0N4tP+Kp1DqV
-	93ekUTtBXtVr6zKX1vkYG1esEHWcnF2Pw/K0WLWRKNdRI2ZNALhB4GIea1UWiLu7RXUGWrV/Jx5
-	znZ2wP4CrjR7XP47aAphrK/8/ZXlKft34ndpOgedIercmFNn3udkZ7zfk1M4P2suqSCJKU+Kogw
-	Y5W2nWVmqGbztSg0di/7gkrpGetZZrV4JMsqE2SfeWkSb20F62+OnntguDKTfahpus4lYrLURUU
-	e82EjPMrmQmJjkuHgTcEj133M=
-X-Received: by 2002:ac8:7d85:0:b0:50d:3e1e:7998 with SMTP id d75a77b69052e-5104bf3b42dmr85560931cf.37.1777818723869;
-        Sun, 03 May 2026 07:32:03 -0700 (PDT)
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8b539aa6f5fsm90873016d6.21.2026.05.03.07.32.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 May 2026 07:32:03 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Michael Safwat <michael.safwat@arm.com>
-Subject: Re: [PATCH 1/2] arm-bsp/u-boot: fix Corstone1000 FVP detection in patch set
-Date: Sun,  3 May 2026 10:31:51 -0400
-Message-Id: <177781871146.1774488.262926738892302388.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260427124338.2280651-1-michael.safwat@arm.com>
-References: <20260427124338.2280651-1-michael.safwat@arm.com>
+ dkim=pass header.i=@arm.com header.s=foss header.b=EzRtQ3qA;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90A912308
+	for <meta-arm@lists.yoctoproject.org>; Tue,  5 May 2026 05:34:03 -0700 (PDT)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DED023F763
+	for <meta-arm@lists.yoctoproject.org>; Tue,  5 May 2026 05:34:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1777984449; bh=Fn3h08rMv33NFey4iavWWxcCf0lHozlLdcj/Q4FLm0w=;
+	h=From:To:Subject:Date:From;
+	b=EzRtQ3qAeCjqQoDKyExU/rTwDhCsMSWJPeymhUlc9bym/bNKt7ZsZwojAIfuAP8Ke
+	 hb447xclBt5ZGFYbqVJyrernw97uUq5F5MEOBiKa/B5RlfzYF+7PZ7eyy2tEUtLrCR
+	 bKqv2jMS5jwSZxSxIX2MKHr0I2cYKnl8o0oR3Bkk=
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm-bsp/edk2-firmware: workaround apcica changes
+Date: Tue,  5 May 2026 08:34:08 -0400
+Message-ID: <20260505123408.41657-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.50.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sun, 03 May 2026 14:32:10 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7034
+ <meta-arm@lists.yoctoproject.org>; Tue, 05 May 2026 12:34:15 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7035
 
+With the latest version of acpica (20260408), the following error is
+being encountered in edk2 platforms for Arm SGI
 
-On Mon, 27 Apr 2026 13:43:37 +0100, Michael Safwat wrote:
-> Update the Corstone1000 U-Boot patches to detect FVP platforms
-> by matching "fvp" in the device tree name instead of relying on
-> the exact arm/corstone1000-fvp string.
-> 
-> This fixes FVP-specific handling for Corstone1000 variants,
-> including capsule image selection and virtio setup.
-> 
-> [...]
+| "iasl"  -p/builder/meta-arm/build/tmp/work/rdn2-poky-linux/edk2-firmware/=
+202602/build/Build/RdN2/DEBUG_GCC5/AARCH64/Platform/ARM/SgiPkg/AcpiTables/R=
+dN2AcpiTables/OUTPUT/./SsdtEvents.aml /builder/meta-arm/build/tmp/work/rdn2=
+-poky-linux/edk2-firmware/202602/build/Build/RdN2/DEBUG_GCC5/AARCH64/Platfo=
+rm/ARM/SgiPkg/AcpiTables/RdN2AcpiTables/OUTPUT/./SsdtEvents.iiii
+| /builder/meta-arm/build/tmp/work/rdn2-poky-linux/edk2-firmware/202602/bui=
+ld/Build/RdN2/DEBUG_GCC5/AARCH64/Platform/ARM/SgiPkg/AcpiTables/RdN2AcpiTab=
+les/OUTPUT/./SsdtEvents.iiii     61:       Printf ("GPIO0 Pin0 Toggled")
+| Error    6010 -                                                          =
+                                                                           =
+                                             Internal compiler error ^  (In=
+valid parse opcode in OpcGenerateAmlOpcode)
 
-Applied, thanks!
+Since this appears to be a debug message, and the relevant platforms are
+a work in progress.  Work around this issue by removing the printf.
 
-[1/2] arm-bsp/u-boot: fix Corstone1000 FVP detection in patch set
-      commit: 325134ea69f74df439d56ee00b97947a3a4dce77
-[2/2] arm-bsp/u-boot: corstone1000: disable EFI debug support
-      commit: eb9b2afff9e2f5136274c9bbbf6b711716db1098
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ .../recipes-bsp/uefi/edk2-firmware-rdn2.inc   |  3 +++
+ .../recipes-bsp/uefi/edk2-firmware-rdv2.inc   |  3 +++
+ ...a-20260408-are-now-causing-issues-wi.patch | 24 +++++++++++++++++++
+ 3 files changed, 30 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/uefi/files/0001-Changes-in-acp=
+ica-20260408-are-now-causing-issues-wi.patch
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-rdn2.inc b/meta-ar=
+m-bsp/recipes-bsp/uefi/edk2-firmware-rdn2.inc
+index ef069c789055..e020c5d87b29 100644
+--- a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-rdn2.inc
++++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-rdn2.inc
+@@ -9,6 +9,9 @@ COMPATIBLE_MACHINE =3D "rdn2"
+ SRC_URI_EDK2 =3D "gitsm://gitlab.arm.com/infra-solutions/reference-design/=
+platsw/edk2.git;protocol=3Dhttps"
+ SRC_URI_EDK2_PLATFORMS =3D "git://gitlab.arm.com/infra-solutions/reference=
+-design/platsw/edk2-platforms.git;protocol=3Dhttps"
+=20
++FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files:"
++SRC_URI:append =3D " file://0001-Changes-in-acpica-20260408-are-now-causin=
+g-issues-wi.patch;patchdir=3Dedk2-platforms"
++
+ SRCBRANCH_edk2 =3D "refinfra"
+ SRCBRANCH_edk2_platforms =3D "refinfra"
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-rdv2.inc b/meta-ar=
+m-bsp/recipes-bsp/uefi/edk2-firmware-rdv2.inc
+index c2fd6fecfd32..89126c5fdcff 100644
+--- a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-rdv2.inc
++++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-rdv2.inc
+@@ -9,6 +9,9 @@ COMPATIBLE_MACHINE =3D "rdv2"
+ SRC_URI_EDK2 =3D "gitsm://gitlab.arm.com/infra-solutions/reference-design/=
+platsw/edk2.git;protocol=3Dhttps"
+ SRC_URI_EDK2_PLATFORMS =3D "git://gitlab.arm.com/infra-solutions/reference=
+-design/platsw/edk2-platforms.git;protocol=3Dhttps"
+=20
++FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files:"
++SRC_URI:append =3D " file://0001-Changes-in-acpica-20260408-are-now-causin=
+g-issues-wi.patch;patchdir=3Dedk2-platforms"
++
+ SRCBRANCH_edk2 =3D "refinfra"
+ SRCBRANCH_edk2_platforms =3D "refinfra"
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/0001-Changes-in-acpica-202=
+60408-are-now-causing-issues-wi.patch b/meta-arm-bsp/recipes-bsp/uefi/files=
+/0001-Changes-in-acpica-20260408-are-now-causing-issues-wi.patch
+new file mode 100644
+index 000000000000..67faa7e025ee
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/uefi/files/0001-Changes-in-acpica-20260408-a=
+re-now-causing-issues-wi.patch
+@@ -0,0 +1,24 @@
++From 075fc90da4636b8bca9c21b8527364b31498eeaf Mon Sep 17 00:00:00 2001
++From: Jon Mason <jon.mason@arm.com>
++Date: Mon, 4 May 2026 14:40:05 -0400
++Subject: [PATCH] Changes in acpica 20260408 are now causing issues with the
++ Printf in SsdrEvents.asl.  Since this is probably for debug, remove it.
++
++Upstream-Status: Inappropriate
++Signed-off-by: Jon Mason <jon.mason@arm.com>
++---
++ Platform/ARM/SgiPkg/AcpiTables/SsdtEvents.asl | 1 -
++ 1 file changed, 1 deletion(-)
++
++diff --git a/Platform/ARM/SgiPkg/AcpiTables/SsdtEvents.asl b/Platform/ARM/=
+SgiPkg/AcpiTables/SsdtEvents.asl
++index 58efe62c93ea..61489513f61b 100644
++--- a/Platform/ARM/SgiPkg/AcpiTables/SsdtEvents.asl
+++++ b/Platform/ARM/SgiPkg/AcpiTables/SsdtEvents.asl
++@@ -56,7 +56,6 @@ DefinitionBlock("SsdtEvent.aml", "SSDT", 2, "ARMLTD", "A=
+RMSGI", EFI_ACPI_ARM_OEM
++ =0D
++     /* Event handler for pin0 */=0D
++     Method (_L00) {=0D
++-      Printf ("GPIO0 Pin0 Toggled")=0D
++       Store (1, INC0)=0D
++     }=0D
++ =0D
+--=20
+2.50.1 (Apple Git-155)
+
 
