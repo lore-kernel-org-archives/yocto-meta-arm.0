@@ -1,46 +1,46 @@
 Return-Path: <hugues.kambampiana@arm.com>
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE8ACD4F50
-	for <webhook@archiver.kernel.org>; Mon, 18 May 2026 18:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71641CD4F50
+	for <webhook@archiver.kernel.org>; Mon, 18 May 2026 18:52:10 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.4432.1779129880541035388
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.4589.1779130320078140046
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 18 May 2026 11:44:40 -0700
+ Mon, 18 May 2026 11:52:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=FaQC6EqX;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=BYKhiaGq;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: hugues.kambampiana@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE3DE302D;
-	Mon, 18 May 2026 11:44:34 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2640302D;
+	Mon, 18 May 2026 11:51:53 -0700 (PDT)
 Received: from LXKV206JHX.arm.com (unknown [10.57.25.80])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08AD23F85F;
-	Mon, 18 May 2026 11:44:37 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09B4A3F85F;
+	Mon, 18 May 2026 11:51:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1779129879; bh=mBDK6eccKfE+G5vu5/8J25IhT07xXSsLZZbcVm2xML0=;
+	t=1779130318; bh=mBDK6eccKfE+G5vu5/8J25IhT07xXSsLZZbcVm2xML0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FaQC6EqX660YwF4Yw3gkpU3ChwuoNjCoOEoAOxEMpfF/l22YhAuEForwJr30Go2jf
-	 bnzReEhetBA4sWBOaMR0WvRWAnAE7oeHfbGFn2At2OgP2SALq/fXMqdu1uemqTkEPB
-	 9zTv3ovhnosG6RP4j3m5yv2HxBtKUc1su23dMpEA=
+	b=BYKhiaGqSr3cDE3zAV0b+xK2lRbMQcmdPBvaPFWP6rNXEIKXxeK+XPWnVZRD+SAXR
+	 HKJy2aNISZi/DhTOSzTZJ5ZALCeEZKnMSXCap/jVtuSlUcqD/GeZrK87hdxmmgtaLd
+	 c3re2pyrpt4vZ/xSf9zGE/PLIrE2GHNjzKw3gRXE=
 From: Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Michael Safwat <michael.safwat@arm.com>,
 	Lisa Durbin <lisa.durbin@arm.com>,
 	Alex Chapman <alex.chapman@arm.com>,
 	Hugues KAMBA MPIANA <hugues.kambampiana@arm.com>
-Subject: [PATCH 5/6] arm-bsp/docs: corstone1000-a320: Add standalone A320 documentation
-Date: Mon, 18 May 2026 19:44:08 +0100
-Message-ID: <20260518184425.10215-6-hugues.kambampiana@arm.com>
+Subject: [PATCH wrynose 5/6] arm-bsp/docs: corstone1000-a320: Add standalone A320 documentation
+Date: Mon, 18 May 2026 19:51:40 +0100
+Message-ID: <20260518185146.11634-6-hugues.kambampiana@arm.com>
 X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260518184425.10215-1-hugues.kambampiana@arm.com>
-References: <20260518184425.10215-1-hugues.kambampiana@arm.com>
+In-Reply-To: <20260518185146.11634-1-hugues.kambampiana@arm.com>
+References: <20260518185146.11634-1-hugues.kambampiana@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 18 May 2026 18:44:49 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7047
+ <meta-arm@lists.yoctoproject.org>; Mon, 18 May 2026 18:52:10 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7055
 
 From: Michael Safwat <michael.safwat@arm.com>
 
