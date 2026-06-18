@@ -2,548 +2,265 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576B9CD98F2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0CDCD98FB
 	for <webhook@archiver.kernel.org>; Thu, 18 Jun 2026 12:59:29 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.18806.1781787560816973533
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.18999.1781787561741591774
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 18 Jun 2026 05:59:21 -0700
+ Thu, 18 Jun 2026 05:59:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=a95N1k3l;
+ dkim=pass header.i=@arm.com header.s=foss header.b=i+BPQ3nq;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EAE12936
-	for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jun 2026 05:59:15 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14EF22936
+	for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jun 2026 05:59:17 -0700 (PDT)
 Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EF82E3F915
-	for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jun 2026 05:59:19 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9B0EE3F915
+	for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jun 2026 05:59:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1781787560; bh=8kBwbuL+Y7/crI7Hs67bEtK82cUp9X+4IuBVZ0+DOb4=;
-	h=From:To:Subject:Date:From;
-	b=a95N1k3lv9EhL47FbhEamElQtOnc4GAfKKC/Ro2qalPovF5vHjzo5p20K8WZL8ahJ
-	 Hva+pv3TB6vSgsSJkAKEaBaoisJwe/ClTC5QOvEakMQolISC1HpE7KibSMa73TaRFb
-	 BCLkJPt2cQ5ufGW7nIDf0fwswwxVU+Ma8851XyFs=
+	t=1781787561; bh=Xiv7QUQGUorOlYL2XBWpgd2tJztHtV8gzW4/CS6hicg=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=i+BPQ3nqd0SXVETqcb7kD8tYjDhQyEQp1w9b+VnDjPsM8go6vPDt4A4ESw8L081ec
+	 RQz6riiR0gvqPHSuw8GlnOlv6/yDmlTnm7VmWFm0OjEx7YJCN7g6IlHfKNapnv5Cyq
+	 6HjEfcFFeH/ffpsF0brSrNzaPmnbxhfceK+84uiI=
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/7] arm/trusted-firmware-a: Add support for v2.15.0
-Date: Thu, 18 Jun 2026 08:59:12 -0400
-Message-ID: <20260618125918.62619-1-jon.mason@arm.com>
+Subject: [PATCH 5/7] arm/uefi: update edk2-firmware to 202605
+Date: Thu, 18 Jun 2026 08:59:16 -0400
+Message-ID: <20260618125918.62619-5-jon.mason@arm.com>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260618125918.62619-1-jon.mason@arm.com>
+References: <20260618125918.62619-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 18 Jun 2026 12:59:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7085
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7089
 
-Add support for the newest release of TF-A.
-mbedtls was made a git submodule.  Given that this is no longer needed
-for the generic inc file, I've moved the relevant parts to the LTS
-recipe and others using the older way of building.
-
-Also, seeing some weird behavior with CPUs not coming on line in
-sbsa-ref and qemuarm-secureboot.  So, pinning those back to the LTS
-until they can be sorted out.
+Update edk2-firmware to the latest release.
+Of note, GCC5 make variable has been removed.  Use the GCC make variable
+instead.  Also, these changes caused the need to modify the sbsa-acs
+patches.
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm-bsp/conf/machine/sbsa-ref.conf       |  2 +
- .../trusted-firmware-a-corstone1000.inc       |  1 +
- .../trusted-firmware-a-fvp-base.inc           |  3 -
- .../trusted-firmware-a-juno.inc               |  1 -
- .../trusted-firmware-a-rdn2.inc               | 26 +++++++++
- .../trusted-firmware-a-rdv2.inc               | 26 +++++++++
- meta-arm/conf/machine/qemuarm-secureboot.conf |  2 +
- .../trusted-firmware-a/cot-dt2c_0.1.0.bb      |  6 +-
- .../fiptool-native_2.15.0.bb                  | 33 +++++++++++
- .../trusted-firmware-a/tf-a-tests_2.15.0.bb   | 56 +++++++++++++++++++
- .../trusted-firmware-a/trusted-firmware-a.inc | 19 -------
- .../trusted-firmware-a_2.10.30.bb             |  2 +
- .../trusted-firmware-a_2.12.10.bb             |  2 +
- .../trusted-firmware-a_2.14.1.bb              | 20 +++++++
- .../trusted-firmware-a_2.15.0.bb              |  8 +++
- 15 files changed, 181 insertions(+), 26 deletions(-)
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/fiptool-nativ=
-e_2.15.0.bb
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.=
-15.0.bb
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmw=
-are-a_2.15.0.bb
+ ...602.bb =3D> edk2-basetools-native_202605.bb} |  2 +-
+ meta-arm/recipes-bsp/uefi/edk2-firmware.inc   |  6 +--
+ .../recipes-bsp/uefi/edk2-firmware_202602.bb  |  6 ---
+ .../recipes-bsp/uefi/edk2-firmware_202605.bb  |  4 ++
+ ...-C-VfrCompile-Fix-parallel-make-fail.patch | 46 -------------------
+ ...02-Enforce-using-good-old-BFD-linker.patch | 22 ++++-----
+ meta-arm/recipes-bsp/uefi/sbsa-acs_7.2.2.bb   |  2 +-
+ 7 files changed, 20 insertions(+), 68 deletions(-)
+ rename meta-arm/recipes-bsp/uefi/{edk2-basetools-native_202602.bb =3D> edk=
+2-basetools-native_202605.bb} (97%)
+ delete mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware_202602.bb
+ create mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware_202605.bb
+ delete mode 100644 meta-arm/recipes-bsp/uefi/files/0001-BaseTools-Source-C=
+-VfrCompile-Fix-parallel-make-fail.patch
 
-diff --git a/meta-arm-bsp/conf/machine/sbsa-ref.conf b/meta-arm-bsp/conf/=
-machine/sbsa-ref.conf
-index 1f86cdb6e0e7..82d55c9b3d7a 100644
---- a/meta-arm-bsp/conf/machine/sbsa-ref.conf
-+++ b/meta-arm-bsp/conf/machine/sbsa-ref.conf
-@@ -26,6 +26,8 @@ EFI_PROVIDER ?=3D "${@bb.utils.contains("DISTRO_FEATURE=
-S", "systemd", "systemd-boo
- SERIAL_CONSOLES ?=3D "115200;ttyAMA0 115200;hvc0"
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202602.bb b/me=
+ta-arm/recipes-bsp/uefi/edk2-basetools-native_202605.bb
+similarity index 97%
+rename from meta-arm/recipes-bsp/uefi/edk2-basetools-native_202602.bb
+rename to meta-arm/recipes-bsp/uefi/edk2-basetools-native_202605.bb
+index 28bd0dbade71..e10b85cbcb84 100644
+--- a/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202602.bb
++++ b/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202605.bb
+@@ -17,7 +17,7 @@ SRC_URI =3D " \
+ "
+ LIC_FILES_CHKSUM =3D "file://License.txt;md5=3D2b415520383f7964e96700ae12b=
+4570a"
 =20
- EXTRA_IMAGEDEPENDS +=3D "edk2-firmware"
-+#FIXME - in 2.15.0, new logic for pen hold the SMP cores was added, whic=
-h breaks this platform.  Hold this back until it can be resolved.
-+PREFERRED_VERSION_trusted-firmware-a ?=3D "2.14.%"
+-SRCREV =3D "b7a715f7c03c45c6b4575bf88596bfd79658b8ce"
++SRCREV =3D "b03a21a63e3bd001f52c527e5a57feddb53a690b"
+ SRCREV_brotli =3D "e230f474b87134e8c6c85b630084c612057f253e"
+ SRCREV_FORMAT =3D "default_brotli"
 =20
- QB_SYSTEM_NAME =3D "qemu-system-aarch64"
- QB_MACHINE =3D "-machine sbsa-ref"
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted=
--firmware-a-corstone1000.inc
-index 4979f29477f3..86522d1b88ef 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
-tone1000.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
-tone1000.inc
-@@ -11,6 +11,7 @@ SRC_URI:append =3D " \
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes=
+-bsp/uefi/edk2-firmware.inc
+index 8b6f153a836c..e12a490fa018 100644
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+@@ -74,9 +74,9 @@ export CONF_PATH           =3D "${S}/Conf"
 =20
- TFA_DEBUG =3D "1"
- TFA_UBOOT ?=3D "1"
-+#FIXME - this can be removed after moving to 2.15.0
- TFA_MBEDTLS =3D "1"
- TFA_BUILD_TARGET =3D "bl2 bl31 fip"
+ export BTOOLS_PATH =3D "${EDK_TOOLS_PATH}/BinWrappers/PosixLike"
 =20
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-fvp-base.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a-fvp-base.inc
-index c87cbb726ec8..8b06eace2012 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-=
-base.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-=
-base.inc
-@@ -55,9 +55,6 @@ TFA_PLATFORM =3D "fvp"
- # Disable debug build if measured boot is enabled.
- TFA_DEBUG :=3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-attestation=
-', '0',\
-               d.getVar('TFA_DEBUG'), d)}"
--# Add mbedtls if measured boot is enabled
--TFA_MBEDTLS :=3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-attestati=
-on',\
--               '1', d.getVar('TFA_MBEDTLS'), d)}"
- TFA_UBOOT ?=3D "1"
- TFA_BUILD_TARGET =3D "bl1 bl2 bl31 dtbs fip"
+-EDK_COMPILER ?=3D "GCC5"
+-export GCC5_AARCH64_PREFIX =3D "${TARGET_PREFIX}"
+-export GCC5_ARM_PREFIX =3D "${TARGET_PREFIX}"
++EDK_COMPILER ?=3D "GCC"
++export GCC_AARCH64_PREFIX =3D "${TARGET_PREFIX}"
++export GCC_ARM_PREFIX =3D "${TARGET_PREFIX}"
 =20
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-juno.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmwar=
-e-a-juno.inc
-index a3a35ab4e501..c69e2ec3662e 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-juno=
-.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-juno=
-.inc
-@@ -3,7 +3,6 @@
- COMPATIBLE_MACHINE =3D "juno"
- TFA_PLATFORM =3D "juno"
- TFA_DEBUG =3D "1"
--TFA_MBEDTLS =3D "1"
- TFA_UBOOT ?=3D "1"
- TFA_BUILD_TARGET =3D "bl1 bl2 bl31 dtbs fip"
-=20
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-rdn2.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmwar=
-e-a-rdn2.inc
-index 0c09818c9024..d761a7ae639d 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdn2=
-.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdn2=
-.inc
-@@ -27,3 +27,29 @@ SRCREV_tfa =3D "a4b376b128bb5b91771002f7808566f53c8d9f=
-3a"
- SRC_URI:remove =3D "file://0001-feat-build-add-HOSTLDFLAGS-to-pass-flags=
--to-host-lin.patch"
- LIC_FILES_CHKSUM:remove =3D "file://docs/license.rst;md5=3D6ed7bace7b0bc=
-63021c6eba7b524039e"
- LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3D1118e32884721c0be33=
-267bd7ae11130"
-+
-+# sub-directory in which mbedtls will be downloaded
-+# Only needed for legacy versions, as v2.15.0 added this as a git submod=
-ule
-+TFA_MBEDTLS_DIR ?=3D "mbedtls"
-+# This should be set to MBEDTLS download URL if MBEDTLS is needed
-+SRC_URI_MBEDTLS ??=3D ""
-+# This should be set to MBEDTLS LIC FILES checksum
-+LIC_FILES_CHKSUM_MBEDTLS ??=3D ""
-+# add MBEDTLS to our sources if activated
-+SRC_URI:append =3D " ${@bb.utils.contains('TFA_MBEDTLS', '1', '${SRC_URI=
-_MBEDTLS}', '', d)}"
-+# Update license variables
-+LICENSE:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' & Apache-=
-2.0', '', d)}"
-+LIC_FILES_CHKSUM:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' =
-${LIC_FILES_CHKSUM_MBEDTLS}', '', d)}"
-+# add mbed TLS to version
-+SRCREV_FORMAT:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbe=
-dtls', '', d)}"
-+
-+# Handle MBEDTLS
-+EXTRA_OEMAKE +=3D "${@bb.utils.contains('TFA_MBEDTLS', '1', 'MBEDTLS_DIR=
-=3D${TFA_MBEDTLS_DIR}', '', d)}"
-+
-+# in TF-A src, docs/getting_started/prerequisites.rst lists the expected=
- version mbedtls
-+# mbedtls-3.6.5
-+SRCBRANCH_MBEDTLS =3D "mbedtls-3.6"
-+SRC_URI_MBEDTLS =3D "gitsm://github.com/Mbed-TLS/mbedtls;name=3Dmbedtls;=
-protocol=3Dhttps;destsuffix=3D${BB_GIT_DEFAULT_DESTSUFFIX}/mbedtls;branch=
-=3D${SRCBRANCH_MBEDTLS}"
-+SRCREV_mbedtls =3D "e185d7fd85499c8ce5ca2a54f5cf8fe7dbe3f8df"
-+
-+LIC_FILES_CHKSUM_MBEDTLS =3D "file://mbedtls/LICENSE;md5=3D379d5819937a6=
-c2f1ef1630d341e026d"
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-rdv2.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmwar=
-e-a-rdv2.inc
-index 796011576e1d..8010c523e144 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdv2=
-.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdv2=
-.inc
-@@ -27,3 +27,29 @@ SRCREV_tfa =3D "a4b376b128bb5b91771002f7808566f53c8d9f=
-3a"
- SRC_URI:remove =3D "file://0001-feat-build-add-HOSTLDFLAGS-to-pass-flags=
--to-host-lin.patch"
- LIC_FILES_CHKSUM:remove =3D "file://docs/license.rst;md5=3D6ed7bace7b0bc=
-63021c6eba7b524039e"
- LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3D1118e32884721c0be33=
-267bd7ae11130"
-+
-+# sub-directory in which mbedtls will be downloaded
-+# Only needed for legacy versions, as v2.15.0 added this as a git submod=
-ule
-+TFA_MBEDTLS_DIR ?=3D "mbedtls"
-+# This should be set to MBEDTLS download URL if MBEDTLS is needed
-+SRC_URI_MBEDTLS ??=3D ""
-+# This should be set to MBEDTLS LIC FILES checksum
-+LIC_FILES_CHKSUM_MBEDTLS ??=3D ""
-+# add MBEDTLS to our sources if activated
-+SRC_URI:append =3D " ${@bb.utils.contains('TFA_MBEDTLS', '1', '${SRC_URI=
-_MBEDTLS}', '', d)}"
-+# Update license variables
-+LICENSE:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' & Apache-=
-2.0', '', d)}"
-+LIC_FILES_CHKSUM:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' =
-${LIC_FILES_CHKSUM_MBEDTLS}', '', d)}"
-+# add mbed TLS to version
-+SRCREV_FORMAT:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbe=
-dtls', '', d)}"
-+
-+# Handle MBEDTLS
-+EXTRA_OEMAKE +=3D "${@bb.utils.contains('TFA_MBEDTLS', '1', 'MBEDTLS_DIR=
-=3D${TFA_MBEDTLS_DIR}', '', d)}"
-+
-+# in TF-A src, docs/getting_started/prerequisites.rst lists the expected=
- version mbedtls
-+# mbedtls-3.6.5
-+SRCBRANCH_MBEDTLS =3D "mbedtls-3.6"
-+SRC_URI_MBEDTLS =3D "gitsm://github.com/Mbed-TLS/mbedtls;name=3Dmbedtls;=
-protocol=3Dhttps;destsuffix=3D${BB_GIT_DEFAULT_DESTSUFFIX}/mbedtls;branch=
-=3D${SRCBRANCH_MBEDTLS}"
-+SRCREV_mbedtls =3D "e185d7fd85499c8ce5ca2a54f5cf8fe7dbe3f8df"
-+
-+LIC_FILES_CHKSUM_MBEDTLS =3D "file://mbedtls/LICENSE;md5=3D379d5819937a6=
-c2f1ef1630d341e026d"
-diff --git a/meta-arm/conf/machine/qemuarm-secureboot.conf b/meta-arm/con=
-f/machine/qemuarm-secureboot.conf
-index f08b84fe5e76..2787472bfdbf 100644
---- a/meta-arm/conf/machine/qemuarm-secureboot.conf
-+++ b/meta-arm/conf/machine/qemuarm-secureboot.conf
-@@ -18,6 +18,8 @@ IMAGE_FSTYPES +=3D "wic wic.qcow2"
-=20
- WKS_FILE ?=3D "qemuarm.wks"
- WKS_FILE_DEPENDS =3D "trusted-firmware-a"
-+#FIXME - in 2.15.0, new logic for pen hold the SMP cores was added, whic=
-h breaks this platform.  Hold this back until it can be resolved.
-+PREFERRED_VERSION_trusted-firmware-a ?=3D "2.14.%"
- IMAGE_BOOT_FILES =3D "${KERNEL_IMAGETYPE}"
-=20
- MACHINE_FEATURES +=3D "optee-ftpm"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/cot-dt2c_0.1.0.bb b/=
-meta-arm/recipes-bsp/trusted-firmware-a/cot-dt2c_0.1.0.bb
-index 2cffb46c417d..a4e72b0052f7 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/cot-dt2c_0.1.0.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/cot-dt2c_0.1.0.bb
-@@ -6,9 +6,9 @@ SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://review.trustedfirm=
-ware.org/TF-A/trusted-fir
- SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A};branch=3D${SRCBRANCH}"
- LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3D6ed7bace7b0bc63021c6=
-eba7b524039e"
-=20
--# Use cot-dt2c from TF-A v2.14.1
--SRCREV =3D "e82c7ced9e76aea35b176e608d67dfe5ebe1c569"
--SRCBRANCH =3D "lts-v2.14"
-+# Use cot-dt2c from TF-A v2.15.0
-+SRCREV =3D "da738d5eae93af342fdc4995dd3c05acb4c9d757"
-+SRCBRANCH =3D "master"
-=20
- inherit python_poetry_core
-=20
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.15.=
-0.bb b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.15.0.bb
-new file mode 100644
-index 000000000000..11e54fbf06e6
---- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.15.0.bb
-@@ -0,0 +1,33 @@
-+# Firmware Image Package (FIP)
-+# It is a packaging format used by TF-A to package the
-+# firmware images in a single binary.
-+
-+DESCRIPTION =3D "fiptool - Trusted Firmware tool for packaging"
-+LICENSE =3D "BSD-3-Clause"
-+
-+SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://review.trustedfirmware.org/TF-A/t=
-rusted-firmware-a;protocol=3Dhttps"
-+SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A};destsuffix=3Dfiptool-${PV};br=
-anch=3D${SRCBRANCH}"
-+LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3D6ed7bace7b0bc63021c6=
-eba7b524039e"
-+
-+# Use fiptool from TF-A v2.15.0
-+SRCREV =3D "da738d5eae93af342fdc4995dd3c05acb4c9d757"
-+SRCBRANCH =3D "master"
-+
-+DEPENDS +=3D "openssl-native"
-+
-+inherit native
-+
-+EXTRA_OEMAKE =3D "V=3D1 HOSTCC=3D'${BUILD_CC}' OPENSSL_DIR=3D${STAGING_D=
-IR_NATIVE}/${prefix_native}"
-+
-+do_compile () {
-+    # This is still needed to have the native fiptool executing properly=
- by
-+    # setting the RPATH
-+    sed -i '/^LDOPTS/ s,$, \$\{BUILD_LDFLAGS},' ${S}/tools/fiptool/Makef=
-ile
-+    sed -i '/^INCLUDE_PATHS/ s,$, \$\{BUILD_CFLAGS},' ${S}/tools/fiptool=
-/Makefile
-+
-+    oe_runmake fiptool
-+}
-+
-+do_install () {
-+    install -D -p -m 0755 tools/fiptool/fiptool ${D}${bindir}/fiptool
-+}
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.15.0.bb=
- b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.15.0.bb
-new file mode 100644
-index 000000000000..8bd5dd564334
---- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.15.0.bb
-@@ -0,0 +1,56 @@
-+DESCRIPTION =3D "Trusted Firmware-A tests(aka TFTF)"
-+LICENSE =3D "BSD-3-Clause & NCSA"
-+
-+LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3D6175cc0aa2e63b6d21a=
-32aa0ee7d1b4a"
-+
-+inherit deploy
-+
-+COMPATIBLE_MACHINE ?=3D "invalid"
-+
-+SRC_URI_TRUSTED_FIRMWARE_A_TESTS ?=3D "git://review.trustedfirmware.org/=
-TF-A/tf-a-tests;protocol=3Dhttps"
-+SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A_TESTS};branch=3D${SRCBRANCH}"
-+SRCBRANCH =3D "master"
-+SRCREV =3D "bd08278493028d3c33936f61f406169a7f0deb9f"
-+
-+SRC_URI +=3D "file://0001-Fix-GCC-errors-in-test_psci_stat.c.patch"
-+
-+EXTRA_OEMAKE +=3D "USE_NVM=3D0"
-+EXTRA_OEMAKE +=3D "SHELL_COLOR=3D1"
-+EXTRA_OEMAKE +=3D "DEBUG=3D1"
-+
-+# Modify mode based on debug or release mode
-+TFTF_MODE ?=3D "debug"
-+
-+# Platform must be set for each machine
-+TFA_PLATFORM ?=3D "invalid"
-+
-+EXTRA_OEMAKE +=3D "ARCH=3Daarch64"
-+EXTRA_OEMAKE +=3D "LOG_LEVEL=3D50"
-+
-+B =3D "${WORKDIR}/build"
-+
-+# Add platform parameter
-+EXTRA_OEMAKE +=3D "BUILD_BASE=3D${B} PLAT=3D${TFA_PLATFORM}"
-+
-+# Requires CROSS_COMPILE set by hand as there is no configure script
-+export CROSS_COMPILE =3D "${TARGET_PREFIX}"
-+
-+LDFLAGS[unexport] =3D "1"
-+do_compile() {
-+    oe_runmake -C ${S} tftf
-+}
-+
-+do_compile[cleandirs] =3D "${B}"
-+
-+FILES:${PN} =3D "/firmware/tftf.bin"
-+SYSROOT_DIRS +=3D "/firmware"
-+
-+do_install() {
-+    install -d -m 755 ${D}/firmware
-+    install -m 0644 ${B}/${TFA_PLATFORM}/${TFTF_MODE}/tftf.bin ${D}/firm=
-ware/tftf.bin
-+}
-+
-+do_deploy() {
-+    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
-+}
-+addtask deploy after do_install
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.i=
-nc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index 62204042cbab..c8717c3f6e28 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -43,22 +43,6 @@ TFA_LTO ?=3D ""
-=20
- B =3D "${WORKDIR}/build"
-=20
--# mbed TLS support (set TFA_MBEDTLS to 1 to activate)
--TFA_MBEDTLS ?=3D "0"
--# sub-directory in which mbedtls will be downloaded
--TFA_MBEDTLS_DIR ?=3D "mbedtls"
--# This should be set to MBEDTLS download URL if MBEDTLS is needed
--SRC_URI_MBEDTLS ??=3D ""
--# This should be set to MBEDTLS LIC FILES checksum
--LIC_FILES_CHKSUM_MBEDTLS ??=3D ""
--# add MBEDTLS to our sources if activated
--SRC_URI:append =3D " ${@bb.utils.contains('TFA_MBEDTLS', '1', '${SRC_URI=
-_MBEDTLS}', '', d)}"
--# Update license variables
--LICENSE:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' & Apache-=
-2.0', '', d)}"
--LIC_FILES_CHKSUM:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' =
-${LIC_FILES_CHKSUM_MBEDTLS}', '', d)}"
--# add mbed TLS to version
--SRCREV_FORMAT:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbe=
-dtls', '', d)}"
+ EDK_COMPILER:toolchain-clang =3D "CLANGDWARF"
+ export CLANG38_AARCH64_PREFIX =3D "${TARGET_PREFIX}"
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_202602.bb b/meta-arm/r=
+ecipes-bsp/uefi/edk2-firmware_202602.bb
+deleted file mode 100644
+index de739f37b12b..000000000000
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware_202602.bb
++++ /dev/null
+@@ -1,6 +0,0 @@
+-require recipes-bsp/uefi/edk2-firmware.inc
 -
- # U-boot support (set TFA_UBOOT to 1 to activate)
- # When U-Boot support is activated BL33 is activated with u-boot.bin fil=
-e
- TFA_UBOOT ??=3D "0"
-@@ -131,9 +115,6 @@ EXTRA_OEMAKE +=3D "${@'SPMD_SPM_AT_SEL2=3D${TFA_SPMD_=
-SPM_AT_SEL2}' if d.getVar('TFA_
- # Handle TFA_DEBUG parameter
- EXTRA_OEMAKE +=3D "${@bb.utils.contains('TFA_DEBUG', '1', 'DEBUG=3D${TFA=
-_DEBUG}', '', d)}"
-=20
--# Handle MBEDTLS
--EXTRA_OEMAKE +=3D "${@bb.utils.contains('TFA_MBEDTLS', '1', 'MBEDTLS_DIR=
-=3D${TFA_MBEDTLS_DIR}', '', d)}"
+-SRCREV_edk2           ?=3D "b7a715f7c03c45c6b4575bf88596bfd79658b8ce"
+-SRCREV_edk2-platforms ?=3D "75024f5aa54cf4d975d024768604b28c754db338"
 -
- # Uboot support
- DEPENDS +=3D " ${@bb.utils.contains('TFA_UBOOT', '1', 'u-boot', '', d)}"
- do_compile[depends] +=3D " ${@bb.utils.contains('TFA_UBOOT', '1', 'u-boo=
-t:do_deploy', '', d)}"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
-.10.30.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.=
-10.30.bb
-index fd19ac911089..72dd4b09cc7c 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.30.=
-bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.30.=
-bb
-@@ -11,6 +11,8 @@ LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3Db2=
-c740efedc159745b9b31f88ff03dd
- SRCBRANCH_MBEDTLS =3D "mbedtls-3.6"
- SRC_URI_MBEDTLS =3D "git://github.com/Mbed-TLS/mbedtls;name=3Dmbedtls;pr=
-otocol=3Dhttps;destsuffix=3D${BB_GIT_DEFAULT_DESTSUFFIX}/mbedtls;branch=3D=
-${SRCBRANCH_MBEDTLS}"
- SRCREV_mbedtls =3D "c765c831e5c2a0971410692f92f7a81d6ec65ec2"
-+# The default value changed in v2.15.0 and later.  Given this is a legac=
-y version, change it here to keep future versions simplier
-+TFA_MBEDTLS_DIR =3D "mbedtls"
-=20
- LIC_FILES_CHKSUM_MBEDTLS =3D "file://mbedtls/LICENSE;md5=3D379d5819937a6=
-c2f1ef1630d341e026d"
-=20
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
-.12.10.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.=
-12.10.bb
-index 20fc5a7d70bc..737a90a70e15 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.12.10.=
-bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.12.10.=
-bb
-@@ -11,6 +11,8 @@ LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3D83=
-b7626b8c7a37263c6a58af8d19bee
- SRCBRANCH_MBEDTLS =3D "mbedtls-3.6"
- SRC_URI_MBEDTLS =3D "git://github.com/Mbed-TLS/mbedtls;name=3Dmbedtls;pr=
-otocol=3Dhttps;destsuffix=3D${BB_GIT_DEFAULT_DESTSUFFIX}/mbedtls;branch=3D=
-${SRCBRANCH_MBEDTLS}"
- SRCREV_mbedtls =3D "22098d41c6620ce07cf8a0134d37302355e1e5ef"
-+# The default value changed in v2.15.0 and later.  Given this is a legac=
-y version, change it here to keep future versions simplier
-+TFA_MBEDTLS_DIR =3D "mbedtls"
-=20
- LIC_FILES_CHKSUM_MBEDTLS =3D "file://mbedtls/LICENSE;md5=3D379d5819937a6=
-c2f1ef1630d341e026d"
-=20
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
-.14.1.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1=
-4.1.bb
-index 2f69d054a3f8..de29941b2c8d 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.14.1.b=
-b
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.14.1.b=
-b
-@@ -7,6 +7,26 @@ SRCBRANCH =3D "lts-v2.14"
-=20
- LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3D6ed7bace7b0bc63021c=
-6eba7b524039e"
-=20
-+# mbed TLS support (set TFA_MBEDTLS to 1 to activate)
-+TFA_MBEDTLS ?=3D "0"
-+# sub-directory in which mbedtls will be downloaded
-+# Only needed for legacy versions, as v2.15.0 added this as a git submod=
-ule
-+TFA_MBEDTLS_DIR ?=3D "mbedtls"
-+# This should be set to MBEDTLS download URL if MBEDTLS is needed
-+SRC_URI_MBEDTLS ??=3D ""
-+# This should be set to MBEDTLS LIC FILES checksum
-+LIC_FILES_CHKSUM_MBEDTLS ??=3D ""
-+# add MBEDTLS to our sources if activated
-+SRC_URI:append =3D " ${@bb.utils.contains('TFA_MBEDTLS', '1', '${SRC_URI=
-_MBEDTLS}', '', d)}"
-+# Update license variables
-+LICENSE:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' & Apache-=
-2.0', '', d)}"
-+LIC_FILES_CHKSUM:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' =
-${LIC_FILES_CHKSUM_MBEDTLS}', '', d)}"
-+# add mbed TLS to version
-+SRCREV_FORMAT:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbe=
-dtls', '', d)}"
-+
-+# Handle MBEDTLS
-+EXTRA_OEMAKE +=3D "${@bb.utils.contains('TFA_MBEDTLS', '1', 'MBEDTLS_DIR=
-=3D${TFA_MBEDTLS_DIR}', '', d)}"
-+
- # in TF-A src, docs/getting_started/prerequisites.rst lists the expected=
- version mbedtls
- # mbedtls-3.6.5
- SRCBRANCH_MBEDTLS =3D "mbedtls-3.6"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
-.15.0.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1=
-5.0.bb
+-SRC_URI +=3D "file://0001-BaseTools-Source-C-VfrCompile-Fix-parallel-make-=
+fail.patch"
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_202605.bb b/meta-arm/r=
+ecipes-bsp/uefi/edk2-firmware_202605.bb
 new file mode 100644
-index 000000000000..f780ab59bf5c
+index 000000000000..8f1afe133a4e
 --- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.15.0.b=
-b
-@@ -0,0 +1,8 @@
-+require recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_202605.bb
+@@ -0,0 +1,4 @@
++require recipes-bsp/uefi/edk2-firmware.inc
 +
-+# TF-A v2.15.0
-+SRC_URI_TRUSTED_FIRMWARE_A =3D "gitsm://review.trustedfirmware.org/TF-A/=
-trusted-firmware-a;protocol=3Dhttps"
-+SRCREV =3D "da738d5eae93af342fdc4995dd3c05acb4c9d757"
-+SRCBRANCH =3D "master"
-+
-+LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3D6ed7bace7b0bc63021c=
-6eba7b524039e"
++SRCREV_edk2           ?=3D "b03a21a63e3bd001f52c527e5a57feddb53a690b"
++SRCREV_edk2-platforms ?=3D "04470160f67192c53ec9192e0e8460d183fe49ec"
+diff --git a/meta-arm/recipes-bsp/uefi/files/0001-BaseTools-Source-C-VfrCom=
+pile-Fix-parallel-make-fail.patch b/meta-arm/recipes-bsp/uefi/files/0001-Ba=
+seTools-Source-C-VfrCompile-Fix-parallel-make-fail.patch
+deleted file mode 100644
+index 7e7353fbb73c..000000000000
+--- a/meta-arm/recipes-bsp/uefi/files/0001-BaseTools-Source-C-VfrCompile-Fi=
+x-parallel-make-fail.patch
++++ /dev/null
+@@ -1,46 +0,0 @@
+-From 5f8c99d9a7fe88301b01a7015375a827eecc7985 Mon Sep 17 00:00:00 2001
+-From: Michael D Kinney <michael.d.kinney@intel.com>
+-Date: Thu, 26 Feb 2026 11:48:11 -0500
+-Subject: [PATCH] BaseTools/Source/C/VfrCompile: Fix parallel make failures
+-
+-Update makefile rules to run antlr and dlg to completion
+-before compiling any of the generated cpp files.
+-
+-Without this change, parallel make may start compiling some
+-of the cpp files before both antlr and dlg have finished
+-which produces syntax errors from compilation with partially
+-generated files.
+-
+-Also use &: so the targets are treated as a group and the
+-rule is only executed once for the entire group. Without
+-this change, parallel make may run the rule actions more
+-than once and modify the output while it is being used by
+-another rule.
+-
+-Signed-off-by: Michael D Kinney <michael.d.kinney@intel.com>
+-
+-Upstream-Status: Backport [2f75effb93999adadeead511dd76f86833649b45]
+-Signed-off-by: Jon Mason <jon.mason@arm.com>
+----
+- BaseTools/Source/C/VfrCompile/GNUmakefile | 7 ++++---
+- 1 file changed, 4 insertions(+), 3 deletions(-)
+-
+-diff --git a/BaseTools/Source/C/VfrCompile/GNUmakefile b/BaseTools/Source/=
+C/VfrCompile/GNUmakefile
+-index b469bd3f303f..4f10b1d9338b 100644
+---- a/BaseTools/Source/C/VfrCompile/GNUmakefile
+-+++ b/BaseTools/Source/C/VfrCompile/GNUmakefile
+-@@ -54,10 +54,11 @@ VfrCompiler.o: ../Include/Common/BuildVersion.h
+- =0D
+- include $(MAKEROOT)/Makefiles/footer.makefile=0D
+- =0D
+--VfrSyntax.cpp EfiVfrParser.cpp EfiVfrParser.h VfrParser.dlg VfrTokens.h: =
+Pccts/antlr/antlr VfrSyntax.g=0D
+--	Pccts/antlr/antlr -CC -e3 -ck 3 -k 2 -fl VfrParser.dlg -ft VfrTokens.h -=
+o . VfrSyntax.g=0D
+-+ANTLR_GEN =3D VfrSyntax.cpp EfiVfrParser.cpp EfiVfrParser.h VfrParser.dlg=
+ VfrTokens.h=0D
+-+DLG_GEN =3D VfrLexer.cpp VfrLexer.h=0D
+- =0D
+--VfrLexer.cpp VfrLexer.h: Pccts/dlg/dlg VfrParser.dlg=0D
+-+$(ANTLR_GEN) $(DLG_GEN) &: Pccts/antlr/antlr Pccts/dlg/dlg VfrSyntax.g=0D
+-+	Pccts/antlr/antlr -CC -e3 -ck 3 -k 2 -fl VfrParser.dlg -ft VfrTokens.h -=
+o . VfrSyntax.g=0D
+- 	Pccts/dlg/dlg -C2 -i -CC -cl VfrLexer -o . VfrParser.dlg=0D
+- =0D
+- Pccts/antlr/antlr:=0D
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Enforce-using-good-old=
+-BFD-linker.patch b/meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Enforce-using-g=
+ood-old-BFD-linker.patch
+index 42523d0e9a1c..7c02100d7218 100644
+--- a/meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Enforce-using-good-old-BFD-li=
+nker.patch
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Enforce-using-good-old-BFD-li=
+nker.patch
+@@ -1,4 +1,4 @@
+-From af134611c744322e1d159794c426fbdd02e151cc Mon Sep 17 00:00:00 2001
++From 8509abdab8ad75d59d6bc2478bba78b50c59ad82 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Wed, 7 Apr 2021 00:16:07 -0400
+ Subject: [PATCH] Enforce using good old BFD linker
+@@ -25,15 +25,15 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  1 file changed, 1 insertion(+), 1 deletion(-)
+=20
+ diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.=
+template
+-index 90a389bdff07..93f7b5cde437 100755
++index eca4cb82d059..ec4e30f3df84 100644
+ --- a/BaseTools/Conf/tools_def.template
+ +++ b/BaseTools/Conf/tools_def.template
+-@@ -839,7 +839,7 @@ DEFINE GCC_LOONGARCH64_CC_FLAGS    =3D DEF(GCC_ALL_CC_=
+FLAGS) -mabi=3Dlp64d -fno-asyn
+- DEFINE GCC_AARCH64_CC_FLAGS        =3D DEF(GCC_ALL_CC_FLAGS) -mlittle-end=
+ian -fno-short-enums -fverbose-asm -funsigned-char  -ffunction-sections -fd=
+ata-sections -Wno-address -fno-asynchronous-unwind-tables -fno-unwind-table=
+s -fno-pic -fno-pie -ffixed-x18 -mstack-protector-guard=3Dglobal=0D
+- DEFINE GCC_AARCH64_CC_XIPFLAGS     =3D -mstrict-align -mgeneral-regs-only=
+=0D
+- DEFINE GCC_RISCV64_CC_XIPFLAGS     =3D -mstrict-align -mgeneral-regs-only=
+=0D
+--DEFINE GCC_DLINK2_FLAGS_COMMON     =3D -Wl,--script=3D$(EDK_TOOLS_PATH)/S=
+cripts/GccBase.lds=0D
+-+DEFINE GCC_DLINK2_FLAGS_COMMON     =3D -fuse-ld=3Dbfd -Wl,--script=3D$(ED=
+K_TOOLS_PATH)/Scripts/GccBase.lds=0D
+- DEFINE GCC_LOONGARCH64_DLINK_COMMON=3D -Wl,--emit-relocs -nostdlib -Wl,--=
+gc-sections -u $(IMAGE_ENTRY_POINT) -Wl,-e,$(IMAGE_ENTRY_POINT),-Map,$(DEST=
+_DIR_DEBUG)/$(BASE_NAME).map=0D
+- DEFINE GCC_AARCH64_DLINK_FLAGS     =3D -Wl,--emit-relocs -nostdlib -Wl,--=
+gc-sections -u $(IMAGE_ENTRY_POINT) -Wl,-e,$(IMAGE_ENTRY_POINT),-Map,$(DEST=
+_DIR_DEBUG)/$(BASE_NAME).map -z common-page-size=3D0x20=0D
+- DEFINE GCC_LOONGARCH64_DLINK_FLAGS =3D DEF(GCC_LOONGARCH64_DLINK_COMMON) =
+-z common-page-size=3D0x20=0D
++@@ -931,7 +931,7 @@ DEFINE GCC_LOONGARCH64_CC_FLAGS        =3D DEF(GCC_ALL=
+_CC_COMMON) -mabi=3Dlp64d -fno
++ DEFINE GCC_AARCH64_CC_COMMON           =3D DEF(GCC_ALL_CC_COMMON) -mlittl=
+e-endian -fno-short-enums -fverbose-asm -funsigned-char  -ffunction-section=
+s -fdata-sections -Wno-address -fno-asynchronous-unwind-tables -fno-unwind-=
+tables -fno-pic -fno-pie -ffixed-x18 -mstack-protector-guard=3Dglobal=0D
++ DEFINE GCC_AARCH64_CC_XIPCOMMON        =3D -mstrict-align -mgeneral-regs-=
+only=0D
++ DEFINE GCC_RISCV64_CC_XIPFLAGS         =3D -mstrict-align -mgeneral-regs-=
+only=0D
++-DEFINE GCC_DLINK2_FLAGS_COMMON         =3D -Wl,--script=3D$(EDK_TOOLS_PAT=
+H)/Scripts/GccBase.lds=0D
+++DEFINE GCC_DLINK2_FLAGS_COMMON         =3D -fuse-ld=3Dbfd -Wl,--script=3D=
+$(EDK_TOOLS_PATH)/Scripts/GccBase.lds=0D
++ DEFINE GCC_AARCH64_DLINK_COMMON        =3D -Wl,--emit-relocs -nostdlib -W=
+l,--gc-sections -u $(IMAGE_ENTRY_POINT) -Wl,-e,$(IMAGE_ENTRY_POINT),-Map,$(=
+DEST_DIR_DEBUG)/$(BASE_NAME).map=0D
++ DEFINE GCC_LOONGARCH64_DLINK_COMMON    =3D -Wl,--emit-relocs -nostdlib -W=
+l,--gc-sections -u $(IMAGE_ENTRY_POINT) -Wl,-e,$(IMAGE_ENTRY_POINT),-Map,$(=
+DEST_DIR_DEBUG)/$(BASE_NAME).map -z common-page-size=3D0x20=0D
++ DEFINE GCC_AARCH64_ASLDLINK_COMMON     =3D DEF(GCC_AARCH64_DLINK_COMMON) =
+-Wl,--entry,ReferenceAcpiTable -u $(IMAGE_ENTRY_POINT) -Wl,--defsym=3DPECOF=
+F_HEADER_SIZE=3D0 DEF(GCC_DLINK2_FLAGS_COMMON) -z common-page-size=3D0x20=0D
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs_7.2.2.bb b/meta-arm/recipes=
+-bsp/uefi/sbsa-acs_7.2.2.bb
+index bc8187ebeb10..6d4422f99a99 100644
+--- a/meta-arm/recipes-bsp/uefi/sbsa-acs_7.2.2.bb
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs_7.2.2.bb
+@@ -1,4 +1,4 @@
+-require recipes-bsp/uefi/edk2-firmware_202602.bb
++require recipes-bsp/uefi/edk2-firmware_202605.bb
+ PROVIDES:remove =3D "virtual/bootloader"
+=20
+ LICENSE +=3D "& Apache-2.0"
 --=20
 2.50.1 (Apple Git-155)
 
