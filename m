@@ -1,154 +1,90 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA66CDE00E
-	for <webhook@archiver.kernel.org>; Thu, 25 Jun 2026 21:00:27 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.21546.1782421222381370617
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B676C43458
+	for <webhook@archiver.kernel.org>; Mon, 29 Jun 2026 03:54:40 +0000 (UTC)
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.30465.1782705271445335101
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 25 Jun 2026 14:00:22 -0700
+ Sun, 28 Jun 2026 20:54:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=E7DxMHvm;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 186F83535
-	for <meta-arm@lists.yoctoproject.org>; Thu, 25 Jun 2026 14:00:17 -0700 (PDT)
-Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 820083F836
-	for <meta-arm@lists.yoctoproject.org>; Thu, 25 Jun 2026 14:00:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1782421221; bh=M9QJ8Ll3Srhd9DlJ8lm7Vt2jap2zPL9IQjNqSlBGSM4=;
-	h=From:To:Subject:Date:From;
-	b=E7DxMHvmRdS3LyUdaOy/OsxJf8FDC/mUvQuN+RDQk/X6Cz3/K1G92dJ2h6xT1lyrH
-	 OSrCwkDEEA1ViVf6VII+J604FvVnjzbpHJOsy8W5XhmldQUK5rlfosonknIjAVXFl9
-	 fwRexFnix5KqvLx0niwQjvWb7v7XzIasgwyfLtCw=
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm/u-boot: fix uefi-secureboot on u-boot v2026.04
-Date: Thu, 25 Jun 2026 17:00:20 -0400
-Message-ID: <20260625210020.29112-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.50.1
+ dkim=pass header.i=@kudzu-us.20251104.gappssmtp.com header.s=20251104 header.b=tXqty08s;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.180, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-92dd78e97cbso157768785a.1
+        for <meta-arm@lists.yoctoproject.org>; Sun, 28 Jun 2026 20:54:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20251104.gappssmtp.com; s=20251104; t=1782705270; x=1783310070; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AEkQbV+Q8OfbjKIKkkWmWcRmW83uGNXa4FLbmUvgCrU=;
+        b=tXqty08stWfRGKIImaLb+iA7Q/TdMw9HSGVb0gHfePuJk6Js5wYiqYNFnM6Par3yTZ
+         uaUWdyzMnq6+/6Em5XRhjr59Vrp3GjkDMo6Xox4Ytwwvq3SQP6iWkK14hFG5/o7ecBEh
+         CfxNGahLhUu6aXBU1FLhcSgVZ0KdcMCOf44MUN5hJR4Cwzkt0Zk2dCWNOJv6YCLWny5S
+         auliDJIhc3jdfq/b6Y7xANk2R0y+VJ0lmmSXEn6pl9rwaiqjM243SUzAfFWcAU9EEkrl
+         OYqTZBHXxxY8rIpFDnZI7JstipoLM3DcncWVzmlEzat7TVPKD9T5dxgV77wzdssFH+FE
+         IJNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782705270; x=1783310070;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=AEkQbV+Q8OfbjKIKkkWmWcRmW83uGNXa4FLbmUvgCrU=;
+        b=B9o/VQtavdrBWlCGxDXhk3oQg43gR/rfP8cDyVqXD2uxzWqoAA+RCeE4RN5r33KFqU
+         mf7hq0KLi5Z5TPxkPfGfIJaHnBCW/TLqzoG4fmfBaf5Suc1viUsaOoPhA/T5ryjT62aU
+         XHxz6aOARrDwSOM/ZJpzm29O/nScyWBZVT7uBgkZrWdP1EUMg6BxtpsxAoKh9hRlfAzR
+         iKoTvapVBUCc2ImhF9C34njbSojBGC9vyPCrwly0lPor83z5ewehqsNz0AZehcBhOT7U
+         ddgyMrYxY/nQ4GBAHywjlX6RoixXwQnt1Vmly4KsKShdm88yJ9APss69daBCqn9dGdMg
+         4gDQ==
+X-Gm-Message-State: AOJu0Yz8XsSuZKsrg/udxmKL7xncJo0R4dS8FvDEizIKjpsPzLUsucX8
+	l65cN+QCilpTJ8kHocCtZv/7ISiv6gd8/zIstRyJuHc2pdN+RDk7vQoSOacAhm6pwjaulQasaX/
+	xKDNCPQ==
+X-Gm-Gg: AfdE7cn8aTYIR2EzSx08RkBKudE7amhLLpJrnYXv6ykrFmSHjnyLFD5riMD257UKHh9
+	tBry9mLiiXCwvGbrwFpUisjLr+Q0l/k2VwrJlo/Bh0LbZl79B+bGUDjA+VphtCIa/1118OSlJCb
+	w7t8IbWqd2L3kGYKCj8TtbkZAe8cQeyZYpXAeAX5h2OcpmvzdCTZXTNQZ3h/q6idLselasvORBf
+	9ZtHn7Vv+rB6FLKA4Wrxwd8oe/6N10nfyeRvPIrI4hpUIZZElQMKkKatCmObjw6l/JI2An59mNK
+	jeQKD4lu9nbjJyHOFd24hCTu2IYR+5FbF5T/v8LQoKWsUSMsAFa9N2ytBOBqkSoMC4MFL0zviJV
+	+xsPI5dln4bU/Ckf5HHzD8FTqvB0iXOsxOSiSNcIZou4QhIuCm5wDxxXILAuwRRtmMAT30wvBGm
+	r8tqRgtgA5IEw5
+X-Received: by 2002:a05:620a:a11c:b0:92a:e474:92eb with SMTP id af79cd13be357-92ae4749eaemr1185628685a.55.1782705270021;
+        Sun, 28 Jun 2026 20:54:30 -0700 (PDT)
+Received: from localhost ([136.56.27.188])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92e53434e85sm161651185a.21.2026.06.28.20.54.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2026 20:54:29 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] arm/u-boot: fix uefi-secureboot on u-boot v2026.04
+Date: Sun, 28 Jun 2026 23:54:08 -0400
+Message-Id: <178270524877.1308166.1058837502324162437.b4-ty@arm.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260625210020.29112-1-jon.mason@arm.com>
+References: <20260625210020.29112-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 25 Jun 2026 21:00:27 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7096
+ <meta-arm@lists.yoctoproject.org>; Mon, 29 Jun 2026 03:54:40 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7097
 
-u-boot v2026.04 changed to kbuild 6.1, which broke how ubootefi.var is
-used.  Apply patch from u-boot mailing list to address the issue.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- .../u-boot/u-boot-uefi-secureboot.inc         |  4 +-
- ...uilding-with-CONFIG_EFI_VARIABLES_PR.patch | 67 +++++++++++++++++++
- 2 files changed, 70 insertions(+), 1 deletion(-)
- create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot/0001-efi_loader-fi=
-x-building-with-CONFIG_EFI_VARIABLES_PR.patch
+On Thu, 25 Jun 2026 17:00:20 -0400, Jon Mason wrote:
+> u-boot v2026.04 changed to kbuild 6.1, which broke how ubootefi.var is
+> used.  Apply patch from u-boot mailing list to address the issue.
+> 
+> 
 
-diff --git a/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc b/met=
-a-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
-index cb2fed1573f9..af641278e06e 100644
---- a/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
-+++ b/meta-arm/recipes-bsp/u-boot/u-boot-uefi-secureboot.inc
-@@ -1,6 +1,8 @@
- FILESEXTRAPATHS:prepend :=3D "${THISDIR}/${PN}:"
-=20
--SRC_URI +=3D "file://uefi-secureboot.cfg"
-+SRC_URI +=3D "file://uefi-secureboot.cfg \
-+            file://0001-efi_loader-fix-building-with-CONFIG_EFI_VARIABLE=
-S_PR.patch \
-+           "
-=20
- inherit sbsign
-=20
-diff --git a/meta-arm/recipes-bsp/u-boot/u-boot/0001-efi_loader-fix-build=
-ing-with-CONFIG_EFI_VARIABLES_PR.patch b/meta-arm/recipes-bsp/u-boot/u-bo=
-ot/0001-efi_loader-fix-building-with-CONFIG_EFI_VARIABLES_PR.patch
-new file mode 100644
-index 000000000000..f6df099a4ffe
---- /dev/null
-+++ b/meta-arm/recipes-bsp/u-boot/u-boot/0001-efi_loader-fix-building-wit=
-h-CONFIG_EFI_VARIABLES_PR.patch
-@@ -0,0 +1,67 @@
-+From 8f5501a6118a8b889bac710560d2ba6ed420dab3 Mon Sep 17 00:00:00 2001
-+From: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-+Date: Wed, 24 Jun 2026 07:48:19 +0200
-+Subject: [PATCH] efi_loader: fix building with CONFIG_EFI_VARIABLES_PRES=
-EED=3Dy
-+
-+Since commit bd3f9ee679b4 ("kbuild: Bump the build system to 6.1")
-+out-of-tree builds with CONFIG_EFI_VARIABLES_PRESEED=3Dy fail with error=
-s
-+like:
-+
-+    ../lib/efi_loader/efi_var_seed.S:14: Error: file not found:
-+    ubootefi.var
-+
-+For out-of-tree build we cannot use CONFIG_EFI_VAR_SEED_FILE in the
-+.incbin statement of file efi_var_seed.S.
-+
-+* We have to prepend $(srctree) if the path is relative.
-+* We must not prepend $(srctree) if the path is absolute.
-+
-+Fixes: bd3f9ee679b4 ("kbuild: Bump the build system to 6.1")
-+Reported-by: Jon Mason <jon.mason@arm.com>
-+Closes: https://lore.kernel.org/u-boot/CAPoiz9zg4OXgHo5J3WtJHKOEuWOdCDru=
-gWfAt6Z+d71j=3D+q8oA@mail.gmail.com/T/#mffaca10a9e812d03eceafad59999a02e5=
-7258b9a
-+Signed-off-by: Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-+
-+Upstream-Status: Submitted [https://lists.denx.de/pipermail/u-boot/2026-=
-June/622729.html]
-+Signed-off-by: Jon Mason <jon.mason@arm.com>
-+---
-+ lib/efi_loader/Makefile       | 7 +++++--
-+ lib/efi_loader/efi_var_seed.S | 4 +---
-+ 2 files changed, 6 insertions(+), 5 deletions(-)
-+
-+diff --git a/lib/efi_loader/Makefile b/lib/efi_loader/Makefile
-+index f490081f6542..d28db04b8709 100644
-+--- a/lib/efi_loader/Makefile
-++++ b/lib/efi_loader/Makefile
-+@@ -73,8 +73,11 @@ obj-$(CONFIG_EFI_SIGNATURE_SUPPORT) +=3D efi_signatur=
-e.o
-+ obj-$(CONFIG_EFI_ECPT) +=3D efi_conformance.o
-+ obj-$(CONFIG_EFI_DEBUG_SUPPORT) +=3D efi_debug_support.o
-+=20
-+-EFI_VAR_SEED_FILE :=3D $(subst $\",,$(CONFIG_EFI_VAR_SEED_FILE))
-+-$(obj)/efi_var_seed.o: $(srctree)/$(EFI_VAR_SEED_FILE)
-++TMP_VAR_SEED :=3D $(subst $\",,$(CONFIG_EFI_VAR_SEED_FILE))
-++EFI_VAR_SEED_FILE :=3D $(if $(filter /% ,$(TMP_VAR_SEED)) \
-++  ,$(TMP_VAR_SEED),$(srctree)/$(TMP_VAR_SEED))
-++AFLAGS_efi_var_seed.o :=3D -DEFI_VAR_SEED_FILE=3D\"$(EFI_VAR_SEED_FILE)=
-\"
-++$(obj)/efi_var_seed.o: $(EFI_VAR_SEED_FILE)
-+=20
-+ ifeq ($(CONFIG_EFI_CAPSULE_AUTHENTICATE),y)
-+ capsule_crt_path=3D($(subst $(quote),,$(CONFIG_EFI_CAPSULE_CRT_FILE)))
-+diff --git a/lib/efi_loader/efi_var_seed.S b/lib/efi_loader/efi_var_seed=
-.S
-+index e0a40cf46c8d..008a505d19ef 100644
-+--- a/lib/efi_loader/efi_var_seed.S
-++++ b/lib/efi_loader/efi_var_seed.S
-+@@ -5,13 +5,11 @@
-+  * Copyright (c) 2020, Heinrich Schuchardt <xypron.glpk@gmx.de>
-+  */
-+=20
-+-#include <config.h>
-+-
-+ .section .rodata.efi_seed.init,"a"
-+ .balign 16
-+ .global __efi_var_file_begin
-+ __efi_var_file_begin:
-+-.incbin CONFIG_EFI_VAR_SEED_FILE
-++.incbin EFI_VAR_SEED_FILE
-+ .global __efi_var_file_end
-+ __efi_var_file_end:
-+ .balign 16
---=20
-2.50.1 (Apple Git-155)
+Applied, thanks!
 
+[1/1] arm/u-boot: fix uefi-secureboot on u-boot v2026.04
+      commit: 9977e1abf2f379716427f51fb27d68b94133d26e
+
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
