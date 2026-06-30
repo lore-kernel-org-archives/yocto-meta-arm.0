@@ -2,33 +2,33 @@ Return-Path: <harsimransingh.tungal@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BF3C44500
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C40C43638
 	for <webhook@archiver.kernel.org>; Tue, 30 Jun 2026 12:50:30 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.20137.1782823826920478077
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.20138.1782823827815123390
  for <meta-arm@lists.yoctoproject.org>;
  Tue, 30 Jun 2026 05:50:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=NRZDCHD0;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=AIu744a8;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: harsimransingh.tungal@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0379A2ED2;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D363B2EDF;
 	Tue, 30 Jun 2026 05:50:22 -0700 (PDT)
 Received: from e132995.cambridge.arm.com (e132995.arm.com [10.1.29.35])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3AAF3F905;
-	Tue, 30 Jun 2026 05:50:25 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA67B3F905;
+	Tue, 30 Jun 2026 05:50:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1782823826; bh=x3+nUcQxLQfxQ60DYhzQUHsgaiiyyUYbZTOM9LJfDq8=;
+	t=1782823827; bh=g3SHgyzizQJgNIMUuSfBos2bYY5F/mvFwU/dYchQNdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NRZDCHD0RePwgGSXZD7EZEwawT+ZVbbkVZc02Uj+3yqmyOFVrMTV1teTHMzvVrQky
-	 fHe/UmptVYiJnQcg/8n3TBglgK3Fona3ccfwnuLriJiooocMcnRhqIkpnQoCY7Czj1
-	 fjXkxPc2Qvz5j7AEVQf+Td0nxH8kH5yYGiS/3EiY=
+	b=AIu744a8WmxPcDHpHxUbK0Q/1BjNAPBO4vWG6fUMCU28b+RNr0sIqKGyC8tMh1cNy
+	 /LB+zBLpOLpR+U4EmtAh6LJxcIA0k7jzMM4Q6YCNYBIgaskhnsFosOLU/5Y97UOavk
+	 vD5tRUZTcyAZU7Xo7BnzAcb9MhtF5sReH+9aMEqY=
 From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-Subject: [PATCH 1/4] arm-bsp/documentation: corstone1000: update 2026.05 wrynose release documentation
-Date: Tue, 30 Jun 2026 13:50:11 +0100
-Message-Id: <20260630125014.312288-2-harsimransingh.tungal@arm.com>
+Subject: [PATCH 2/4] arm-bsp/documentation: corstone1000-a320: update 2026.05 wrynose release documentation
+Date: Tue, 30 Jun 2026 13:50:12 +0100
+Message-Id: <20260630125014.312288-3-harsimransingh.tungal@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260630125014.312288-1-harsimransingh.tungal@arm.com>
 References: <20260630125014.312288-1-harsimransingh.tungal@arm.com>
@@ -38,703 +38,1148 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 30 Jun 2026 12:50:30 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7106
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7107
 
-Update the Corstone-1000 changelog, release notes and user guide for
-the 2026.05 wrynose release.
+Update the Corstone-1000 with Cortex-A320 changelog, release notes,
+user guide, tests documentation and metadata for the 2026.05 release.
 
-Add the new 2026.05 changelog entry and capture the main release work,
-including the component upgrades, TF-M GPT and PSA FWU changes, and the
-updated SSH-enabled build flow.
-Refresh the component version tables and Yocto distribution component
-versions in changelog for the new release.
+Add the new 2026.05 changelog entry for the Corstone-1000 with
+Cortex-A320 specific updates and align the component version tables and
+Yocto distribution component versions with the current release content.
 
-Update the user guide to align with the 2026.05 release branch and
-documentation state, including the Yocto release name, recipe version
-references, release tag references, and related asset and report links.
+Refresh the user guide and tests documentation to align with the
+2026.05 release state, including release tag references, recipe version
+references, report links
 
 Signed-off-by: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 ---
- .../documentation/corstone1000/change-log.rst |  65 ++++++
- .../corstone1000/release-notes.rst            |   6 +
- .../documentation/corstone1000/user-guide.rst | 190 +++++++++++-------
- 3 files changed, 188 insertions(+), 73 deletions(-)
+ .../corstone-a320_metadata.yaml               |   4 +-
+ .../corstone1000-a320/topics/change-log.md    |  70 +++++
+ .../corstone1000-a320/topics/release-notes.md |  12 +
+ .../corstone1000-a320/topics/tests.md         | 267 ++++++++++--------
+ .../corstone1000-a320/topics/user-guide.md    |  38 +--
+ 5 files changed, 253 insertions(+), 138 deletions(-)
 
-diff --git a/meta-arm-bsp/documentation/corstone1000/change-log.rst b/met=
-a-arm-bsp/documentation/corstone1000/change-log.rst
-index 7bab9e21..0c79ad1b 100644
---- a/meta-arm-bsp/documentation/corstone1000/change-log.rst
-+++ b/meta-arm-bsp/documentation/corstone1000/change-log.rst
-@@ -10,6 +10,71 @@ Change Log
- This document contains a summary of the new features, changes and
- fixes in each release of Corstone-1000 software stack.
+diff --git a/meta-arm-bsp/documentation/corstone1000-a320/corstone-a320_m=
+etadata.yaml b/meta-arm-bsp/documentation/corstone1000-a320/corstone-a320=
+_metadata.yaml
+index 718232f7..11f31235 100644
+--- a/meta-arm-bsp/documentation/corstone1000-a320/corstone-a320_metadata=
+.yaml
++++ b/meta-arm-bsp/documentation/corstone1000-a320/corstone-a320_metadata=
+.yaml
+@@ -1,5 +1,5 @@
+ ---
+-title: Corstone-1000 Armv9-A Edge-AI
++title: Corstone-1000 with Cortex-A320
+ subtitle: ""
+ abstract: Arm Corstone-1000 with Cortex-A320 is a reference solution for=
+ IoT devices. It is part of Total Solution for IoT which consists of hard=
+ware and software reference implementation.
+ author: Arm
+@@ -97,7 +97,7 @@ variables:
+ - name: secure_debug_manager_armds_integration
+   value: 'https://github.com/ARM-software/secure-debug-manager?tab=3Drea=
+dme-ov-file#arm-development-studio-integration'
+ - name: meta_arm_repository_release_branch
+-  value: 'https://docs.yoctoproject.org/next/migration-guides/migration-=
+5.3.html'
++  value: 'https://docs.yoctoproject.org/next/migration-guides/migration-=
+6.0.html'
+ - name: arm_ulink_pro_website
+   value: 'https://www.arm.com/products/development-tools/debug-probes/ul=
+ink-pro'
+ - name: arm_ds_website
+diff --git a/meta-arm-bsp/documentation/corstone1000-a320/topics/change-l=
+og.md b/meta-arm-bsp/documentation/corstone1000-a320/topics/change-log.md
+index e891fd5c..02f9629e 100644
+--- a/meta-arm-bsp/documentation/corstone1000-a320/topics/change-log.md
++++ b/meta-arm-bsp/documentation/corstone1000-a320/topics/change-log.md
+@@ -2,6 +2,76 @@
 =20
-+***************
-+Version 2026.05
-+***************
+ This document contains a summary of the new features, changes and fixes =
+in each release of the Corstone-1000 with Cortex-A320 software stack.
+=20
++## Version 2026.05 {.reference}
 +
-+Changes
-+=3D=3D=3D=3D=3D=3D=3D
++The following changes are present in this release:
 +
-+- Upgraded key Corstone-1000 components to U-Boot 2025.10, TF-A 2.14.1, =
-TF-M 2.2.2, OP-TEE 4.9.0, Trusted Services 1.3.0, and Linux 6.19.
-+- Added GPT support in TF-M and updated MCUboot to use the GPT library f=
-or firmware-update partitions.
-+- Extended the TF-M firmware update flow with GPT fixes, partition creat=
-e/remove/duplicate operations, metadata-only handling, flash erase protec=
-tion, stale partition cleanup, and better handling of older images during=
- PSA FWU.
-+- Added SSH-enabled build overlay for FVP mass-storage images.
-+- Removed GRUB from the initramfs boot package set.
++- Continued Corstone-1000 with Cortex-A320 enablement across U-Boot, TF-=
+A, TF-M, OP-TEE, and Linux with the split A320 device tree, GIC-700 suppo=
+rt, Ethos-U85 DT alignment, and NPU reset via the external-system control=
+ler.
++- Enabled and documented FVP SMP builds and platform-agnostic multicore =
+support, including the errata override fixes for Corstone-1000 with Corte=
+x-A320 and removal of the reboot workaround note.
++- Split Corstone-1000 with Cortex-A320 FVP support into a dedicated mach=
+ine configuration and standalone documentation.
 +
-+Corstone-1000 components versions
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
++### Corstone-1000 with Cortex-A320 components versions {.reference}
 +
-++-------------------------------------------+-------------------+
-+| linux-yocto                               | 6.19              |
-++-------------------------------------------+-------------------+
-+| u-boot                                    | 2025.10           |
-++-------------------------------------------+-------------------+
-+| external-system                           | 0.1.0             |
-++-------------------------------------------+-------------------+
-+| optee-client                              | 4.9.0             |
-++-------------------------------------------+-------------------+
-+| optee-os                                  | 4.9.0             |
-++-------------------------------------------+-------------------+
-+| trusted-firmware-a                        | 2.14.1            |
-++-------------------------------------------+-------------------+
-+| trusted-firmware-m                        | 2.2.2             |
-++-------------------------------------------+-------------------+
-+| libts                                     | v1.3.0            |
-++-------------------------------------------+-------------------+
-+| ts-sp-{se-proxy, smm-gateway}             | v1.3.0            |
-++-------------------------------------------+-------------------+
-+| ts-psa-{crypto, iat, its. ps}-api-test    | 74dc6646ff        |
-++-------------------------------------------+-------------------+
++The following component versions are available:
 +
-+Yocto distribution components versions
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++Table: Corstone-1000 with Cortex-A320 component versions
 +
-++-------------------------------------------+----------------+
-+| meta-arm                                  | wrynose        |
-++-------------------------------------------+----------------+
-+| bitbake                                   | 22021758e6     |
-++-------------------------------------------+----------------+
-+| meta-openembedded                         | 9af4488d46     |
-++-------------------------------------------+----------------+
-+| openembedded-core                         | 06dd66e622     |
-++-------------------------------------------+----------------+
-+| meta-yocto                                | 8251bdad5f     |
-++-------------------------------------------+----------------+
-+| meta-secure-core                          | 07a99ae241     |
-++-------------------------------------------+----------------+
-+| busybox                                   | 1.37.0         |
-++-------------------------------------------+----------------+
-+| musl                                      | 1.2.6          |
-++-------------------------------------------+----------------+
-+| gcc-arm-none-eabi                         | 15.2.rel1      |
-++-------------------------------------------+----------------+
-+| gcc-cross-aarch64                         | 15.2.0         |
-++-------------------------------------------+----------------+
-+| openssl                                   | 3.5.6          |
-++-------------------------------------------+----------------+
+++----------------------------------------+------------------------------=
+-----+
++| Component                              | Version                      =
+     |
+++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D+
++| linux-yocto                            | 6.19                         =
+     |
+++----------------------------------------+------------------------------=
+-----+
++| u-boot                                 | 2025.10                      =
+     |
+++----------------------------------------+------------------------------=
+-----+
++| external-system                        | 0.1.0                        =
+     |
+++----------------------------------------+------------------------------=
+-----+
++| optee-client                           | 4.9.0                        =
+     |
+++----------------------------------------+------------------------------=
+-----+
++| optee-os                               | 4.9.0                        =
+     |
+++----------------------------------------+------------------------------=
+-----+
++| trusted-firmware-a                     | 2.14.1                       =
+     |
+++----------------------------------------+------------------------------=
+-----+
++| trusted-firmware-m                     | 2.2.2                        =
+     |
+++----------------------------------------+------------------------------=
+-----+
++| libts                                  | v1.3.0                       =
+     |
+++----------------------------------------+------------------------------=
+-----+
++| ts-sp-{se-proxy, smm-gateway}          | v1.3.0                       =
+     |
+++----------------------------------------+------------------------------=
+-----+
++| ts-psa-{crypto, iat, its. ps}-api-test | 74dc6646ff                   =
+     |
+++----------------------------------------+------------------------------=
+-----+
 +
- ***************
- Version 2025.12
- ***************
-diff --git a/meta-arm-bsp/documentation/corstone1000/release-notes.rst b/=
-meta-arm-bsp/documentation/corstone1000/release-notes.rst
-index 1a7e312a..7757e749 100644
---- a/meta-arm-bsp/documentation/corstone1000/release-notes.rst
-+++ b/meta-arm-bsp/documentation/corstone1000/release-notes.rst
-@@ -19,6 +19,12 @@ intended for safety-critical applications. Should Your=
- Software or Your Hardware
++### Yocto distribution components versions {.reference}
++
++The following Yocto distribution components versions are available:
++
++Table: Yocto distribution component versions
++
+++-------------------+------------+
++| Component         | Version    |
+++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D+
++| meta-arm          | wrynose    |
+++-------------------+------------+
++| bitbake           | 22021758e6 |
+++-------------------+------------+
++| meta-openembedded | 9af4488d46 |
+++-------------------+------------+
++| openembedded-core | 06dd66e622 |
+++-------------------+------------+
++| meta-yocto        | 8251bdad5f |
+++-------------------+------------+
++| meta-secure-core  | 07a99ae241 |
+++-------------------+------------+
++| busybox           | 1.37.0     |
+++-------------------+------------+
++| musl              | 1.2.6      |
+++-------------------+------------+
++| gcc-arm-none-eabi | 15.2.rel1  |
+++-------------------+------------+
++| gcc-cross-aarch64 | 15.2.0     |
+++-------------------+------------+
++| openssl           | 3.5.6      |
+++-------------------+------------+
++
+ ## Version 2025.12 {.reference}
+=20
+ The following changes are present in this release:
+diff --git a/meta-arm-bsp/documentation/corstone1000-a320/topics/release-=
+notes.md b/meta-arm-bsp/documentation/corstone1000-a320/topics/release-no=
+tes.md
+index 7eadc1b2..5c95fae0 100644
+--- a/meta-arm-bsp/documentation/corstone1000-a320/topics/release-notes.m=
+d
++++ b/meta-arm-bsp/documentation/corstone1000-a320/topics/release-notes.m=
+d
+@@ -7,6 +7,18 @@ intended for safety-critical applications. Should your s=
+oftware or hardware
  prove defective, you assume the entire cost of all necessary servicing, =
 repair
  or correction.
 =20
-+***********************
-+Release notes - 2026.05
-+***********************
++## Release notes - 2026.05 {.reference}
 +
-+The same notes as the 2025.05 release still apply.
++The following knowns issues and limitations are present in this release:
 +
- ***********************
- Release notes - 2025.12
- ***********************
-diff --git a/meta-arm-bsp/documentation/corstone1000/user-guide.rst b/met=
-a-arm-bsp/documentation/corstone1000/user-guide.rst
-index 6e4a43a6..72dd37b8 100644
---- a/meta-arm-bsp/documentation/corstone1000/user-guide.rst
-+++ b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
-@@ -51,7 +51,7 @@ The Corstone-1000 software stack can be run on:
- Yocto Stable Branch
- -------------------
-=20
--Corstone-1000 software stack is built on top of Yocto Project's `Whinlat=
-ter release <meta-arm-repository-release-branch_>`__.
-+Corstone-1000 software stack is built on top of Yocto Project's `Wrynose=
- release <meta-arm-repository-release-branch_>`__.
-=20
- Software Components
- -------------------
-@@ -92,7 +92,7 @@ Host Processor Components
- +----------+------------------------------------------------------------=
--------------------------------------------+
- | bbappend | ``${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-bsp/trusted-fi=
-rmware-a/trusted-firmware-a_%.bbappend``   |
- +----------+------------------------------------------------------------=
--------------------------------------------+
--| Recipe   | ``${WORKSPACE}/meta-arm/meta-arm/recipes-bsp/trusted-firmwa=
-re-a/trusted-firmware-a_2.14.0.bb``        |
-+| Recipe   | ``${WORKSPACE}/meta-arm/meta-arm/recipes-bsp/trusted-firmwa=
-re-a/trusted-firmware-a_2.14.1.bb``        |
- +----------+------------------------------------------------------------=
--------------------------------------------+
-=20
- `Trusted Services <https://trusted-services.readthedocs.io/en/latest/ind=
-ex.html>`__
-@@ -132,7 +132,7 @@ Host Processor Components
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
- +----------+------------------------------------------------------------=
-------------------------------+
--| bbappend | ``${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-security/optee=
-/optee-os_4.%.bbappend``      |
-+| bbappend | ``${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-security/optee=
-/optee-os_%.bbappend``        |
- +----------+------------------------------------------------------------=
-------------------------------+
- | Recipe   | ``${WORKSPACE}/meta-arm/meta-arm/recipes-security/optee/opt=
-ee-os_4.9.0.bb``              |
- +----------+------------------------------------------------------------=
-------------------------------+
-@@ -145,7 +145,7 @@ Host Processor Components
- +----------+------------------------------------------------------------=
-----------------------+
- | bbappend | ``${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-bsp/u-boot/u-b=
-oot_%.bbappend``      |
- +----------+------------------------------------------------------------=
-----------------------+
--| Recipe   | ``${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-bsp/u-boot/u-b=
-oot_2025.04.bb``      |
-+| Recipe   | ``${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-bsp/u-boot/u-b=
-oot_2025.10.bb``      |
- +----------+------------------------------------------------------------=
-----------------------+
-=20
- Linux
-@@ -173,7 +173,7 @@ Secure Enclave Components
- +----------+------------------------------------------------------------=
--------------------------------------------+
- | bbappend | ``${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-bsp/trusted-fi=
-rmware-m/trusted-firmware-m_%.bbappend``   |
- +----------+------------------------------------------------------------=
--------------------------------------------+
--| Recipe   | ``${WORKSPACE}/meta-arm/meta-arm/recipes-bsp/trusted-firmwa=
-re-m/trusted-firmware-m_2.2.1.bb``         |
-+| Recipe   | ``${WORKSPACE}/meta-arm/meta-arm/recipes-bsp/trusted-firmwa=
-re-m/trusted-firmware-m_2.2.2.bb``         |
- +----------+------------------------------------------------------------=
--------------------------------------------+
-=20
- ************************************
-@@ -233,7 +233,7 @@ Build
-     .. code-block:: console
-=20
-         cd ${WORKSPACE}
--        git clone https://git.yoctoproject.org/git/meta-arm -b CORSTONE1=
-000-2025.12
-+        git clone https://git.yoctoproject.org/git/meta-arm -b CORSTONE1=
-000-2026.05
-=20
- #. Build a Corstone-1000 image:
-=20
-@@ -282,20 +282,26 @@ Build with SSH
- The ``meta-arm/kas/corstone1000-${TARGET}.yml`` build produces an image =
-for
- booting from flash.
-=20
--To build a bootable mass storage OS image with Dropbear SSH enabled, run=
-:
-+.. important::
++- Crypto isolation is not supported in the Secure world of Corstone-1000=
+. Additionally, clients in
++  the Normal world are not isolated from one another. Therefore, if an e=
+nd user wants to add a new
++  Secure Partition (SP) (such as a software TPM) that accesses the Crypt=
+o service via the SE-Proxy,
++  they are responsible for implementing their own isolation mechanisms t=
+o ensure proper security boundaries.
++- DSTREAM debug probe may experience unreliable USB connectivity when us=
+ed with Arm DS for secure debug.
++  This issue is under active investigation, and we are working to identi=
+fy and resolve compatibility issues in a future update.
++  As a more stable alternative, the ULINKpro debug probe is recommended =
+for use with Corstone-1000 in secure debug scenarios.
 +
-+    The SSH-enabled mass storage image is supported only for the FVP tar=
-get.
-+    It is not supported for the MPS3 target, because it relies on pre-ge=
-nerated
-+    SSH host keys intended for virtual platforms.
-+
-+To build a bootable mass storage OS image with Dropbear SSH enabled for =
-FVP,
-+run:
+ ## Release notes - 2025.12 {.reference}
 =20
- .. code-block:: console
+ The following knowns issues and limitations are present in this release:
+diff --git a/meta-arm-bsp/documentation/corstone1000-a320/topics/tests.md=
+ b/meta-arm-bsp/documentation/corstone1000-a320/topics/tests.md
+index b86d87ca..90cd87c5 100644
+--- a/meta-arm-bsp/documentation/corstone1000-a320/topics/tests.md
++++ b/meta-arm-bsp/documentation/corstone1000-a320/topics/tests.md
+@@ -4,7 +4,7 @@ All the tests in this chapter assume you have already bui=
+lt the software stack a
 =20
--    kas build meta-arm/ci/corstone1000-${TARGET}.yml:meta-arm/kas/corsto=
-ne1000-ssh.yml
-+    kas build meta-arm/ci/corstone1000-fvp.yml:meta-arm/kas/corstone1000=
--ssh.yml
+ ## Reports {.reference}
 =20
--The mass storage OS image can be found at ``${WORKSPACE}/build/tmp/deplo=
-y/images/corstone1000-${TARGET}/core-image-minimal-corstone1000-${TARGET}=
-.wic``
-+The mass storage OS image can be found at
-+``${WORKSPACE}/build/tmp/deploy/images/corstone1000-fvp/core-image-minim=
-al-corstone1000-fvp.wic``
+-Reports for the tests conducted on the [Corstone-1000 software (CORSTONE=
+1000-2025.12)](https://git.yoctoproject.org/meta-arm/tag/?h=3DCORSTONE100=
+0-2025.12) release are available for reference in the [GitLab repo](https=
+://gitlab.arm.com/arm-reference-solutions/arm-reference-solutions-test-re=
+port/-/tree/CORSTONE1000-2025.12/embedded-a/corstone1000/CORSTONE1000-202=
+5.12?ref_type=3Dtags).
++Reports for the tests conducted on the [Corstone-1000 software (CORSTONE=
+1000-2026.05)](https://git.yoctoproject.org/meta-arm/tag/?h=3DCORSTONE100=
+0-2026.05) release are available for reference in the [GitLab repo](https=
+://gitlab.arm.com/arm-reference-solutions/arm-reference-solutions-test-re=
+port/-/tree/CORSTONE1000-2026.05/embedded-a/corstone1000/CORSTONE1000-202=
+6.05?ref_type=3Dtags).
 =20
- .. note::
+ ## SystemReady IR {.reference}
 =20
--    For the FVP, the generated ``core-image-minimal-corstone1000-fvp.fvp=
-conf``
--    configures the mass storage OS image using ``board.msd_mmc.p_mmc_fil=
-e``.
--
--    For the MPS3 platform, write the ``*.wic`` image directly to the mas=
-s storage device.
-+    The generated ``core-image-minimal-corstone1000-fvp.fvpconf`` config=
-ures
-+    the mass storage OS image using ``board.msd_mmc.p_mmc_file``.
+@@ -21,11 +21,11 @@ A storage with EFI System Partition (ESP) must exist =
+in the system for the UEFI-
+ 1. Build an ESP partition for your target
 =20
+    ```
+-   kas build meta-arm/kas/corstone1000-fvp.yml:meta-arm/ci/debug.yml:met=
+a-arm/kas/corstone1000-a320.yml --target corstone1000-esp-image
++   kas build meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug.ym=
+l --target corstone1000-esp-image
+    ```
 =20
- .. _flashing-firmware-images:
-@@ -389,8 +395,8 @@ Flash
+-2. Locate the `corstone1000-esp-image-corstone1000-fvp.wic` build artefa=
+ct
+-   in `${WORKSPACE}/build/tmp/deploy/images/corstone1000-fvp/`
++2. Locate the `corstone1000-esp-image-corstone1000-a320-fvp.wic` build a=
+rtefact
++   in `${WORKSPACE}/build/tmp/deploy/images/corstone1000-a320-fvp/`
 =20
+ ### Use the EFI system partition {.reference}
 =20
- #. Copy ``bl1.bin`` from ``${WORKSPACE}/build/tmp/deploy/images/corstone=
-1000-mps3/trusted-firmware-m/`` to the ``SOFTWARE`` directory of the FPGA=
- bundle.
--#. Copy ``es_flashfw.bin`` from ``${WORKSPACE}/build/tmp/deploy/images/c=
-orstone1000-mps3`` to the ``SOFTWARE`` directory of the FPGA bundle
--   and rename the binary to ``es0.bin``.
-+#. Remove ``ES0.bin`` from the ``SOFTWARE`` directory of the FPGA bundle=
-. Copy ``es_flashfw.bin`` from
-+   ``${WORKSPACE}/build/tmp/deploy/images/corstone1000-mps3`` to the ``S=
-OFTWARE`` directory of the FPGA bundle and rename the binary to ``es0.bin=
-``.
- #. Copy ``corstone1000-flash-firmware-image-corstone1000-mps3.wic`` from=
- ``${WORKSPACE}/build/tmp/deploy/images/corstone1000-mps3`` to the ``SOFT=
-WARE``
-    directory of the FPGA bundle and rename the wic image to ``cs1000.bin=
-``.
+@@ -121,7 +121,7 @@ To build and run ACS tests on Corstone-1000:
+    ```
+    ./meta-arm/scripts/runfvp \
+    --terminals=3Dtmux \
+-   ./build/tmp/deploy/images/corstone1000-fvp/corstone1000-flash-firmwar=
+e-image-corstone1000-fvp.fvpconf \
++   ./build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000-flash-fi=
+rmware-image-corstone1000-a320-fvp.fvpconf \
+    -- -C board.msd_mmc.p_mmc_file=3D${WORKSPACE}/arm-systemready/IR/preb=
+uilt_images/v23.09_2.1.0/ir-acs-live-image-generic-arm64.wic
+    ```
 =20
-@@ -538,8 +544,8 @@ Tests
- Reports
- -------
-=20
--Reports for the tests conducted on the `Corstone-1000 software (CORSTONE=
-1000-2025.12) <https://git.yoctoproject.org/meta-arm/tag/?h=3DCORSTONE100=
-0-2025.12>`__
--release are available for reference `here <https://gitlab.arm.com/arm-re=
-ference-solutions/arm-reference-solutions-test-report/-/tree/CORSTONE1000=
--2025.12/embedded-a/corstone1000/CORSTONE1000-2025.12?ref_type=3Dtags>`__=
-.
-+Reports for the tests conducted on the `Corstone-1000 software (CORSTONE=
-1000-2026.05) <https://git.yoctoproject.org/meta-arm/tag/?h=3DCORSTONE100=
-0-2026.05>`__
-+release are available for reference `here <https://gitlab.arm.com/arm-re=
-ference-solutions/arm-reference-solutions-test-report/-/tree/CORSTONE1000=
--2026.05/embedded-a/corstone1000/CORSTONE1000-2026.05?ref_type=3Dtags>`__=
-.
-=20
-=20
- .. _clean-secure-flash:
-@@ -558,7 +564,7 @@ Clean Secure Flash
-     .. code-block:: console
-=20
-         cd ${WORKSPACE}
--        git clone https://git.gitlab.arm.com/arm-reference-solutions/iot=
--platform-assets.git -b CORSTONE1000-2025.12
-+        git clone https://git.gitlab.arm.com/arm-reference-solutions/iot=
--platform-assets.git -b CORSTONE1000-2026.05
-=20
- #. Copy the secure flash cleaning Git patch file to your copy of `meta-a=
-rm`.
-=20
-@@ -796,7 +802,12 @@ MPS3
-         cd ${WORKSPACE}/arm-systemready/IR/prebuilt_images/v23.09_2.1.0
-         sudo dd if=3Dir-acs-live-image-generic-arm64.wic of=3D/dev/sdc i=
-flag=3Ddirect oflag=3Ddirect bs=3D1M status=3Dprogress; sync
-=20
--#. Plug the USB drive to the MPS3. At this point you should have both th=
-e USB drive with the ESP and the USB drive with the ACS image plugged to =
-the MPS3.
-+#. Unplug the ESP USB drive from the MPS3, if connected.
-+
-+#. Plug only the ACS image USB drive to the MPS3.
-+
-+   The ESP USB drive must remain unplugged while the ACS image is bootin=
-g,
-+   otherwise GRUB might fail to find the bootable partition on the ACS i=
-mage USB drive.
-=20
- #. Reboot the MPS3.
-=20
-@@ -804,12 +815,10 @@ The MPS3 will reset multiple times during the test,=
- and it might take approximat
-=20
- .. important::
-=20
--    Unplug the ESP USB drive from the MPS3 if it is preventing GRUB
--    from finding the bootable partition. Leave only the ACS image USB dr=
-ive
--    plugged in to run the ACS tests.
--
--    The ESP USB drive can be plugged in again after
--    selecting the `Linux Boot` option in the GRUB menu at the end of the=
- ACS tests.
-+    Keep the ESP USB drive unplugged until the GRUB menu is displayed du=
-ring
-+    the Linux boot timeout workaround described below. Plug the ESP USB =
-drive
-+    back in just before selecting the `Linux Boot` option, so it is avai=
-lable
-+    for the remaining ACS tests.
-=20
- .. warning::
-=20
-@@ -820,6 +829,7 @@ The MPS3 will reset multiple times during the test, a=
-nd it might take approximat
-     #. Press Enter at the Linux prompt.
-     #. Open the file `/etc/systemd/system.conf` and set `DefaultDeviceTi=
-meoutSec=3Dinfinity`.
-     #. Reboot the platform using the `reboot` command.
-+    #. When the GRUB menu appears, plug the ESP USB drive back into the =
-MPS3.
-     #. Select the `Linux Boot` option from the GRUB menu.
-     #. Allow Linux to boot and run the remaining ACS tests until complet=
-ion.
-=20
-@@ -864,7 +874,7 @@ If GRUB is not interrupted, the tests are executed au=
-tomatically in the followin
-  - UEFI BSA
-  - FWTS
-=20
--The results can be fetched from the `acs_results` folder in the ``BOOT``=
- partition of the USB drive (for MPS3) or SD Card (for FVP).
-+The results can be fetched from the `acs_results` folder in the ``BOOT``=
- partition of the ACS image USB drive (for MPS3) or SD Card (for FVP).
-=20
- .. note::
-=20
-@@ -936,6 +946,11 @@ Generate Capsules
+@@ -196,6 +196,11 @@ The following payloads can be individually updated:
  for the host machine during the firmware image building process.
- The tool can be found at ``${WORKSPACE}/build/tmp/sysroots-components/aa=
-rch64/edk2-basetools-native/usr/bin/edk2-BaseTools/BinWrappers/PosixLike/=
-GenerateCapsule``.
+ The tool can be found at `${WORKSPACE}/build/tmp/sysroots-components/aar=
+ch64/edk2-basetools-native/usr/bin/edk2-BaseTools/BinWrappers/PosixLike/G=
+enerateCapsule`.
 =20
-+.. note::
-+
-+    The ``aarch64`` part of this path depends on the build host architec=
-ture
-+    and can be different on another host.
++:::note
++The `aarch64` part of this path depends on the build host architecture
++and can be different on another host.
++:::
 +
  A JSON file containing metadata about the capsule payloads needs to be c=
 reated using the script
- found at ``${WORKSPACE}/meta-arm/meta-arm/scripts/generate_capsule_json_=
-multiple.py``.
- This JSON file is required by EDK II's ``GenerateCapsule`` tool to gener=
-ate the capsule.
-@@ -1079,6 +1094,20 @@ Transfer Capsules to Target
- The capsule delivery process described below is the direct method (usage=
- of capsules from the ACS image)
- as opposed to the on-disk method (delivery of capsules using a file on a=
- mass storage device).
+ found at `${WORKSPACE}/meta-arm/meta-arm/scripts/generate_capsule_json_m=
+ultiple.py`.
+ This JSON file is required by EDK II's `GenerateCapsule` tool to generat=
+e the capsule.
+@@ -205,7 +210,7 @@ and `${WORKSPACE}/meta-arm/kas/corstone1000-image-con=
+figuration.yml` files.
 =20
-+MPS3
-+=3D=3D=3D=3D
-+
-+#. Prepare a USB drive as explained in `this <mps3-instructions-for-acs-=
-image_>`_ section.
-+
-+#. Copy the capsule files to the root directory of the ``BOOT`` partitio=
-n in the USB drive.
-+
-+  .. code-block:: console
-+
-+    cp ${WORKSPACE}/build/tmp/deploy/images/corstone1000-mps3/corstone10=
-00-mps3-v6.uefi.capsule /dev/sdc/BOOT/
-+    cp ${WORKSPACE}/corstone1000-mps3-v5.uefi.capsule /dev/sdc/EFI/BOOT/
-+    cp ${WORKSPACE}/corstone1000-mps3-partial-v7.uefi.capsule /dev/sdc/E=
-FI/BOOT/
-+    sync
-+
- .. note::
+ #### Valid full capsule {.reference}
 =20
-     The staging steps below are shared between ``mps3`` and ``fvp``.
-@@ -1140,7 +1169,7 @@ This will be followed by using the invalid capsule =
-to run the rollback protectio
- Positive Full Capsule Update Test
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
+-An automatically generated capsule can be found at `${WORKSPACE}/build/t=
+mp/deploy/images/corstone1000-fvp/corstone1000-fvp-v6.uefi.capsule` after=
+ running a firmware build.
++An automatically generated capsule can be found at `${WORKSPACE}/build/t=
+mp/deploy/images/corstone1000-a320-fvp/corstone1000-a320-fvp-v6.uefi.caps=
+ule` after running a firmware build.
 =20
--#. Run Corstone-1000 with the ACS image containing the two capsule files=
+ The default metadata values are assumed to be correct to generate a vali=
+d capsule.
+=20
+@@ -234,27 +239,27 @@ b57e432b-a250-5c73-93e3-90205e64baba \
+ --lowest_supported_versions 5 5 5 5 5 5 \
+ --monotonic_counts 1  1  1  1  1  1 \
+ --payloads \
+-build/tmp/work/corstone1000_fvp-poky-linux-musl/corstone1000-flash-firmw=
+are-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dummy.bin \
+-build/tmp/deploy/images/corstone1000-fvp/trusted-firmware-m/bl2_signed.b=
+in \
+-build/tmp/deploy/images/corstone1000-fvp/trusted-firmware-m/tfm_s_signed=
+.bin \
+-build/tmp/deploy/images/corstone1000-fvp/signed_fip.bin \
+-build/tmp/deploy/images/corstone1000-fvp/Image.gz-initramfs-corstone1000=
+-fvp.bin \
+-build/tmp/work/corstone1000_fvp-poky-linux-musl/corstone1000-flash-firmw=
+are-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dummy.bin \
++build/tmp/work/corstone1000_a320_fvp-poky-linux-musl/corstone1000-flash-=
+firmware-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dummy.bi=
+n \
++build/tmp/deploy/images/corstone1000-a320-fvp/trusted-firmware-m/bl2_sig=
+ned.bin \
++build/tmp/deploy/images/corstone1000-a320-fvp/trusted-firmware-m/tfm_s_s=
+igned.bin \
++build/tmp/deploy/images/corstone1000-a320-fvp/signed_fip.bin \
++build/tmp/deploy/images/corstone1000-a320-fvp/Image.gz-initramfs-corston=
+e1000-a320-fvp.bin \
++build/tmp/work/corstone1000_a320_fvp-poky-linux-musl/corstone1000-flash-=
+firmware-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dummy.bi=
+n \
+ --update_image_indexes 5  1  2  3  4  6 \
+ --private_keys \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+ --certificates \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+ --output capsule_config.json
+ ```
+=20
+@@ -265,7 +270,7 @@ Run the command below to generate the partial capsule=
 :
-+#. Run Corstone-1000 with the ACS image containing the capsule files:
+ -e \
+ -j capsule_config.json \
+ --capflag PersistAcrossReset \
+--o corstone1000-fvp-partial-v7.uefi.capsule
++-o corstone1000-a320-fvp-partial-v7.uefi.capsule
+ ```
 =20
-     - MPS3:
+ The partial capsule will be located in the `${WORKSPACE}` directory.
+@@ -292,27 +297,27 @@ b57e432b-a250-5c73-93e3-90205e64baba \
+ --lowest_supported_versions 5 5 5 5 5 5 \
+ --monotonic_counts 1  1  1  1  1  1 \
+ --payloads \
+-build/tmp/work/corstone1000_fvp-poky-linux-musl/corstone1000-flash-firmw=
+are-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dummy.bin \
+-build/tmp/deploy/images/corstone1000-fvp/trusted-firmware-m/bl2_signed.b=
+in \
+-build/tmp/deploy/images/corstone1000-fvp/trusted-firmware-m/tfm_s_signed=
+.bin \
+-build/tmp/deploy/images/corstone1000-fvp/signed_fip.bin \
+-build/tmp/deploy/images/corstone1000-fvp/Image.gz-initramfs-corstone1000=
+-fvp.bin \
+-build/tmp/work/corstone1000_fvp-poky-linux-musl/corstone1000-flash-firmw=
+are-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dummy.bin \
++build/tmp/work/corstone1000_a320_fvp-poky-linux-musl/corstone1000-flash-=
+firmware-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dummy.bi=
+n \
++build/tmp/deploy/images/corstone1000-a320-fvp/trusted-firmware-m/bl2_sig=
+ned.bin \
++build/tmp/deploy/images/corstone1000-a320-fvp/trusted-firmware-m/tfm_s_s=
+igned.bin \
++build/tmp/deploy/images/corstone1000-a320-fvp/signed_fip.bin \
++build/tmp/deploy/images/corstone1000-a320-fvp/Image.gz-initramfs-corston=
+e1000-a320-fvp.bin \
++build/tmp/work/corstone1000_a320_fvp-poky-linux-musl/corstone1000-flash-=
+firmware-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dummy.bi=
+n \
+ --update_image_indexes 5  1  2  3  4  6 \
+ --private_keys \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+ --certificates \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt \
+-build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
++build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+ --output capsule_config.json
+ ```
 =20
-@@ -1204,42 +1233,40 @@ Positive Full Capsule Update Test
+@@ -323,7 +328,7 @@ Run the command below to generate the invalid capsule=
+:
+ -e \
+ -j capsule_config.json \
+ --capflag PersistAcrossReset \
+--o corstone1000-fvp-v5.uefi.capsule
++-o corstone1000-a320-fvp-v5.uefi.capsule
+ ```
 =20
-    =20
-     The software stack copies the capsule content to the external flash,=
- which is shared between the Secure Enclave and the Host Processor
--    before rebooting the system.
--
--    After the first reboot, TrustedFirmware-M should apply the valid cap=
-sule and display the following log on the Secure Enclave terminal (``ttyU=
-SB1`` for MPS3)
--    before rebooting the system a second time:
-+    before rebooting the system, and the following logs should be displa=
-yed on the Secure Enclave terminal (``ttyUSB1`` for MPS3):
+ The invalid capsule will be located in the `${WORKSPACE}` directory.
+@@ -363,9 +368,9 @@ as opposed to the on-disk method (delivery of capsule=
+s using a file on a mass st
+ 4. Copy the capsules:
 =20
-     .. code-block:: console
+    ```
+-   sudo cp ${WORKSPACE}/build/tmp/deploy/images/corstone1000-fvp/corston=
+e1000-fvp-v6.uefi.capsule /mnt/ir-acs-live-image-generic-arm64/
+-   sudo cp ${WORKSPACE}/corstone1000-fvp-v5.uefi.capsule /mnt/ir-acs-liv=
+e-image-generic-arm64/
+-   sudo cp ${WORKSPACE}/corstone1000-fvp-partial-v7.uefi.capsule /mnt/ir=
+-acs-live-image-generic-arm64/
++   sudo cp ${WORKSPACE}/build/tmp/deploy/images/corstone1000-a320-fvp/co=
+rstone1000-a320-fvp-v6.uefi.capsule /mnt/ir-acs-live-image-generic-arm64/
++   sudo cp ${WORKSPACE}/corstone1000-a320-fvp-v5.uefi.capsule /mnt/ir-ac=
+s-live-image-generic-arm64/
++   sudo cp ${WORKSPACE}/corstone1000-a320-fvp-partial-v7.uefi.capsule /m=
+nt/ir-acs-live-image-generic-arm64/
+    sync
+    ```
 =20
-       ...
--      SysTick_Handler: counted =3D 10, expiring on =3D 360
--      SysTick_Handler: counted =3D 20, expiring on =3D 360
--      SysTick_Handler: counted =3D 30, expiring on =3D 360
--      ...
-+      fwu_bootloader_install_image: enter
-+      metadata_read: success: active =3D 0, previous =3D 1
-+      fwu_update_metadata: enter
-       metadata_write: success: active =3D 1, previous =3D 0
--      flash_full_capsule: exit
--      corstone1000_fwu_flash_image: exit: ret =3D 0
-+      fwu_update_metadata: exit: ret =3D 0
-+      fwu_bootloader_install_image: exit: ret =3D 0
-       ...
+@@ -388,7 +393,7 @@ This sequence order must be respected as the invalid =
+capsule has a firmware vers
 =20
--    The above log snippet indicates that the new capsule image is succes=
-sfully applied, and the board is booting with the external flash's Bank-1=
-.
-+    The above log snippet indicates that the new capsule image is succes=
-sfully applied.
-+   =20
-+    After the first reboot,=20
+ To run the test:
 =20
--    After a second reboot, the following log should be displayed on on t=
-he Secure Enclave terminal (``ttyUSB1``):
-+#. Interrupt the U-Boot shell.
+-1. Run Corstone-1000 with the ACS image containing the two capsule files=
+:
++1. Run Corstone-1000 with the ACS image containing the capsule files:
 =20
-     .. code-block:: console
+    1. Run `tmux`:
 =20
--      ...
--      fmp_set_image_info:133 Enter
--      FMP image update: image id =3D 0
--      FMP image update: status =3D 0version=3D6 last_attempt_version=3D6=
-.
--      fmp_set_image_info:157 Exit.
--      corstone1000_fwu_host_ack: exit: ret =3D 0
--      ...
--
--#. Interrupt the U-Boot shell.
-+        Hit any key to stop autoboot:
-+   =20
-+    After the first reboot, TrustedFirmware-M should display the followi=
-ng log on the Secure Enclave terminal (``ttyUSB1`` for MPS3):
+@@ -399,7 +404,7 @@ To run the test:
+    2. Run the FVP within `tmux` with the IR prebuilt image which now als=
+o contains the two capsules:
 =20
-     .. code-block:: console
+       ```
+-      kas shell meta-arm/kas/corstone1000-fvp.yml:meta-arm/ci/debug.yml:=
+meta-arm/kas/corstone1000-a320.yml \
++      kas shell meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug=
+.yml \
+       -c "../meta-arm/scripts/runfvp --terminals=3Dtmux \
+       -- -C board.msd_mmc.p_mmc_file=3D${ACS_IMAGE_PATH}/ir-acs-live-ima=
+ge-generic-arm64.wic"
+       ```
+@@ -419,50 +424,56 @@ To run the test:
+ 4. Run the `CapsuleApp` application with the valid capsule file:
 =20
--        Hit any key to stop autoboot:
-+      ...
-+      [INF] Starting TF-M BL1_1
-+      metadata_read: success: active =3D 1, previous =3D 0
-+      get_fwu_agent_state: exit: FWU Agent PSA_FWU_TRIAL (index mismatch=
-)
-+      bl1_get_active_bl2_image: booting from trial bank: 1
-+      bl1_get_active_bl2_image: exit: booting from bank =3D 1, offset =3D=
- 0x1002000
-+      ...
+    ```
+-   EFI/BOOT/app/CapsuleApp.efi corstone1000-fvp-v6.uefi.capsule
++   EFI/BOOT/app/CapsuleApp.efi corstone1000-a320-fvp-v6.uefi.capsule
+    ```
 =20
- #. Run the following commands in order to run the Corstone-1000 Linux ke=
+-   The capsule update will be started. The capsule update takes about 15=
+-30 minutes to complete on FVP. The Corstone-1000 will reset after succes=
+sfully applying the capsule.
++   The capsule update will be started.
+=20
+-   The software stack copies the capsule content to the external flash, =
+which is shared between the Secure Enclave and the Host Processor
+-   before rebooting the system.
++   :::note
++   The capsule update takes about 15-30 minutes to complete on FVP.
+=20
+-   After the first reboot, TrustedFirmware-M should apply the valid caps=
+ule and display the following log on the Secure Enclave terminal
+-   before rebooting the system a second time:
++   The platform will reset after successfully applying the capsule.
++   :::
++
++   The software stack copies the capsule content to the external flash, =
+which is shared between the Secure Enclave and the Host Processor
++   before rebooting the system, and the following logs should be display=
+ed on the Secure Enclave terminal:
+=20
+    ```
+    ...
+-   SysTick_Handler: counted =3D 10, expiring on =3D 360
+-   SysTick_Handler: counted =3D 20, expiring on =3D 360
+-   SysTick_Handler: counted =3D 30, expiring on =3D 360
+-   ...
++   fwu_bootloader_install_image: enter
++   metadata_read: success: active =3D 0, previous =3D 1
++   fwu_update_metadata: enter
+    metadata_write: success: active =3D 1, previous =3D 0
+-   flash_full_capsule: exit
+-   corstone1000_fwu_flash_image: exit: ret =3D 0
++   fwu_update_metadata: exit: ret =3D 0
++   fwu_bootloader_install_image: exit: ret =3D 0
+    ...
+    ```
+=20
+-   The above log snippet indicates that the new capsule image is success=
+fully applied, and the board is booting with the external flash's Bank-1.
++   The above log snippet indicates that the new capsule image is success=
+fully applied.
+=20
+-   After a second reboot, the following log should be displayed on on th=
+e Secure Enclave terminal (`ttyUSB1`):
++5. Interrupt the U-Boot shell.
+=20
+    ```
+-   ...
+-   fmp_set_image_info:133 Enter
+-   FMP image update: image id =3D 0
+-   FMP image update: status =3D 0version=3D6 last_attempt_version=3D6.
+-   fmp_set_image_info:157 Exit.
+-   corstone1000_fwu_host_ack: exit: ret =3D 0
+-   ...
++   Hit any key to stop autoboot:
+    ```
+=20
+-5. Interrupt the U-Boot shell.
++   After the first reboot, TrustedFirmware-M should display the followin=
+g logs on the Secure Enclave terminal:
+=20
+    ```
+-   Hit any key to stop autoboot:
++   ...
++   [INF] Starting TF-M BL1_1
++   metadata_read: success: active =3D 1, previous =3D 0
++   get_fwu_agent_state: exit: FWU Agent PSA_FWU_TRIAL (index mismatch)
++   bl1_get_active_bl2_image: booting from trial bank: 1
++   bl1_get_active_bl2_image: exit: booting from bank =3D 1, offset =3D 0=
+x1002000
++   ...
+    ```
+=20
+-6. Run the following commands in order to run the Corstone-1000 Linux ke=
+rnel, otherwise, the execution ends up in the ACS live image:
++6. Run the following commands in order to run the Corstone-1000 Linux ke=
 rnel.
++
++   :::note
++   Otherwise, the execution ends up in the ACS live image.
++   :::
 =20
-@@ -1252,6 +1279,18 @@ Positive Full Capsule Update Test
-         $ loadm 0x90000000 $kernel_addr_r $filesize
-         $ bootefi $kernel_addr_r $fdtcontroladdr
+    ```
+    $ unzip $kernel_addr 0x90000000
+@@ -470,6 +481,18 @@ To run the test:
+    $ bootefi $kernel_addr_r $fdtcontroladdr
+    ```
 =20
-+    After executing above set of commands, the following log should be d=
-isplayed on the Secure Enclave terminal (``ttyUSB1``):
++   After executing the above set of commands, the following logs should =
+be displayed on the Secure Enclave terminal:
 +
-+    .. code-block:: console
++   ```
++   ...
++   fwu_accept_image: success: fwu state is changed to regular
++   update_nv_counters: success
++   disable_host_ack_timer: timer to reset is disabled
++   FMP image update: status =3D 0version=3D6 last_attempt_version=3D6.
++   fwu_bootloader_mark_image_accepted: exit: ret =3D 0
++   ...
++   ```
 +
-+      ...
-+      fwu_accept_image: success: fwu state is changed to regular
-+      update_nv_counters: success
-+      disable_host_ack_timer: timer to reset is disabled
-+      FMP image update: status =3D 0version=3D6 last_attempt_version=3D6=
-.
-+      fwu_bootloader_mark_image_accepted: exit: ret =3D 0
-+      ...
-+
- #. The first boot after a capsule update is considered the trial stage, =
+ 7. The first boot after a capsule update is considered the trial stage, =
 during which the FWU image is accepted.
     However, to view the updated contents of the EFI System Resource Tabl=
 e (ESRT), an additional reboot is required.
 =20
-@@ -1345,21 +1384,20 @@ Rollback Protection Capsule Update Test
-     .. code-block:: console
+@@ -495,11 +518,15 @@ To run the test:
+    $ bootefi $kernel_addr_r $fdtcontroladdr
+    ```
 =20
-       ...
--        uefi_capsule_retrieve_images: image 0 at 0xa0000070, size=3D1565=
-4928
--        uefi_capsule_retrieve_images: exit
--        flash_full_capsule: enter: image =3D 0x0xa0000070, size =3D 7764=
-541, version =3D 5
--        ERROR: flash_full_capsule: version error
--        private_metadata_write: enter: boot_index =3D 1
--        private_metadata_write: success
--        fmp_set_image_info:133 Enter
--        FMP image update: image id =3D 0
--        FMP image update: status =3D 1version=3D6 last_attempt_version=3D=
-5.
--        fmp_set_image_info:157 Exit.
--        corstone1000_fwu_flash_image: exit: ret =3D -1
--        fmp_get_image_info:232 Enter
--        pack_image_info:207 ImageInfo size =3D 105, ImageName size =3D 3=
-4, ImageVersionName
--        size =3D 36
--        fmp_get_image_info:236 Exit
-+      fwu_bootloader_load_image: enter: block_offset =3D 0
-+      FMP version: 0x5, metadata version : 0x7
-+      private_metadata_write: enter: boot_index =3D 0
-+      private_metadata_write: success
-+      fmp_set_image_info:160 Enter
-+      FMP image update: image id =3D 0
-+      FMP image update: status =3D 1version=3D7 last_attempt_version=3D5=
-.
-+      fmp_set_image_info:184 Exit.
-+      ERROR: fwu_bootloader_load_image: version error
-+      remove_all_stale_partitions: Removed GPT partition 'bl2_secondary'
-+      remove_all_stale_partitions: Removed GPT partition 'tfm_secondary'
-+      remove_all_stale_partitions: Removed GPT partition 'FIP_B'
-+      remove_all_stale_partitions: Removed GPT partition 'kernel_seconda=
-ry'
-+      fwu_bootloader_load_image: exit: ret =3D -248
-       ...
-=20
-     The Secure Enclave tries to load the new image a predetermined numbe=
-r of times
-@@ -1622,7 +1660,7 @@ Corstone-1000 on-board non-volatile storage size is=
- insufficient for installing
-=20
-                 dd if=3D/dev/zero of=3D${WORKSPACE}/fvp_distro_system_dr=
-ive.img \
-                 bs=3D1 count=3D0 seek=3D10G; sync; \
--                parted -s fvp_distro_system_drive.img mklabel gpt
-+                parted -s ${WORKSPACE}/fvp_distro_system_drive.img mklab=
-el gpt
-    =20
-         #. This MMC image will be used as the primary drive to boot the =
-distribution.
-=20
-@@ -1680,6 +1718,10 @@ FVP
-         -C board.msd_mmc.p_mmc_file=3D${WORKSPACE}/fvp_distro_system_dri=
-ve.img \
-         -C board.msd_mmc_2.p_mmc_file=3D${DISTRO_INSTALLER_ISO_PATH}"
-=20
-+    .. note::
+-10. Once the system has fully booted again, read [Verifying firmware ver=
+sions with ESRT] to confirm that the firmware version reflects the update=
+d capsule. Do not terminate FVP between the positive full capsule update =
+and partial capsule update tests.
++10. Once the system has fully booted again, read [Verifying firmware ver=
+sions with ESRT] to confirm that the firmware version reflects the update=
+d capsule.
 +
-+        The FVP distribution installation process can take 6-8 hours to =
-complete.
++:::note
++Do not terminate FVP between the positive full capsule update and partia=
+l capsule update tests.
++:::
+=20
+ #### Positive partial capsule update {.reference}
+=20
+-Follow the steps for the [Positive full capsule update test], ensuring y=
+ou use `corstone1000-fvp-partial-v7.uefi.capsule` instead of `corstone100=
+0-fvp-v6.uefi.capsule`.
++Follow the steps for the [Positive full capsule update test], ensuring y=
+ou use `corstone1000-a320-fvp-partial-v7.uefi.capsule` instead of `corsto=
+ne1000-a320-fvp-v6.uefi.capsule`.
+=20
+ Once the system has fully booted again, read [Verifying firmware version=
+s with ESRT] to confirm that the firmware version reflects the updated ca=
+psule.
+=20
+@@ -534,28 +561,27 @@ To run the rollback protection capsule update test:
+ 4. Run the `CapsuleApp` application with the invalid capsule file:
+=20
+    ```
+-   EFI/BOOT/app/CapsuleApp.efi corstone1000-fvp-v5.uefi.capsule
++   EFI/BOOT/app/CapsuleApp.efi corstone1000-a320-fvp-v5.uefi.capsule
+    ```
+=20
+ 5. TrustedFirmware-M should reject the capsule due to having a lower fir=
+mware version and display the following log on the Secure Enclave termina=
+l:
+=20
+    ```
+    ...
+-     uefi_capsule_retrieve_images: image 0 at 0xa0000070, size=3D1565492=
+8
+-     uefi_capsule_retrieve_images: exit
+-     flash_full_capsule: enter: image =3D 0x0xa0000070, size =3D 7764541=
+, version =3D 5
+-     ERROR: flash_full_capsule: version error
+-     private_metadata_write: enter: boot_index =3D 1
+-     private_metadata_write: success
+-     fmp_set_image_info:133 Enter
+-     FMP image update: image id =3D 0
+-     FMP image update: status =3D 1version=3D6 last_attempt_version=3D5.
+-     fmp_set_image_info:157 Exit.
+-     corstone1000_fwu_flash_image: exit: ret =3D -1
+-     fmp_get_image_info:232 Enter
+-     pack_image_info:207 ImageInfo size =3D 105, ImageName size =3D 34, =
+ImageVersionName
+-     size =3D 36
+-     fmp_get_image_info:236 Exit
++   fwu_bootloader_load_image: enter: block_offset =3D 0
++   FMP version: 0x5, metadata version : 0x7
++   private_metadata_write: enter: boot_index =3D 0
++   private_metadata_write: success
++   fmp_set_image_info:160 Enter
++   FMP image update: image id =3D 0
++   FMP image update: status =3D 1version=3D7 last_attempt_version=3D5.
++   fmp_set_image_info:184 Exit.
++   ERROR: fwu_bootloader_load_image: version error
++   remove_all_stale_partitions: Removed GPT partition 'bl2_secondary'
++   remove_all_stale_partitions: Removed GPT partition 'tfm_secondary'
++   remove_all_stale_partitions: Removed GPT partition 'FIP_B'
++   remove_all_stale_partitions: Removed GPT partition 'kernel_secondary'
++   fwu_bootloader_load_image: exit: ret =3D -248
+    ...
+    ```
+=20
+@@ -816,7 +842,7 @@ Corstone-1000 on-board non-volatile storage size is i=
+nsufficient for installing
+    ```
+    dd if=3D/dev/zero of=3D${WORKSPACE}/fvp_distro_system_drive.img \
+    bs=3D1 count=3D0 seek=3D10G; sync; \
+-   parted -s fvp_distro_system_drive.img mklabel gpt
++   parted -s ${WORKSPACE}/fvp_distro_system_drive.img mklabel gpt
+    ```
+=20
+ 2. This MMC image will be used as the primary drive to boot the distribu=
+tion.
+@@ -834,19 +860,23 @@ To install:
+ 2. Start the FVP within `tmux` with the system drive as the primary driv=
+e and the distro ISO file as the secondary drive:
+=20
+    ```
+-   kas shell meta-arm/kas/corstone1000-fvp.yml:meta-arm/ci/debug.yml:met=
+a-arm/kas/corstone1000-a320.yml \
++   kas shell meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug.ym=
+l \
+    -c "../meta-arm/scripts/runfvp --terminals=3Dtmux -- \
+    -C board.msd_mmc.p_mmc_file=3D${WORKSPACE}/fvp_distro_system_drive.im=
+g \
+    -C board.msd_mmc_2.p_mmc_file=3D${DISTRO_INSTALLER_ISO_PATH}"
+    ```
+=20
++   :::note
++   The FVP distribution installation process can take 6-8 hours to compl=
+ete.
++   :::
 +
-     The Linux distribution will be installed on ``fvp_distro_system_driv=
-e.img``.
+    The Linux distribution will be installed on `fvp_distro_system_drive.=
+img`.
 =20
+ #### Debian installation extra steps {.reference}
 =20
-@@ -1688,7 +1730,7 @@ Debian Installation Extra Steps
+ The Debian installation may need the following extra steps:
 =20
- Debian installation may need some extra steps, that are indicated below:
+-1. Answer `Yes` to the question `Force grub installation to the EFI remo=
+vable media path?`.
++1. Answer `Yes` to the section `Install the GRUB boot loader`.
 =20
--#. Answer ``Yes`` to the question ``Force grub installation to the EFI r=
-emovable media path?``.
-+#. Answer ``Yes`` to the question ``Install the GRUB boot loader``.
+    If the GRUB installation fails, these are the steps to follow on the =
+subsequent
+    popups:
+@@ -890,7 +920,7 @@ cd ${WORKSPACE} && tmux
+ Run the command below to simulate a cold boot:
 =20
-     If the GRUB installation fails, these are the steps to follow on the=
- subsequent
-     popups:
-@@ -1847,8 +1889,7 @@ Generate Keys, Signed Image and Unsigned Image
-         cd ${WORKSPACE}
+ ```
+-kas shell meta-arm/kas/corstone1000-fvp.yml:meta-arm/ci/debug.yml:meta-a=
+rm/kas/corstone1000-a320.yml \
++kas shell meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug.yml \
+ -c "../meta-arm/scripts/runfvp --terminals=3Dtmux -- \
+ -C board.msd_mmc.p_mmc_file=3D${WORKSPACE}/fvp_distro_system_drive.img"
+ ```
+@@ -970,19 +1000,19 @@ To generate keys:
+    cd ${WORKSPACE}
 =20
-         git clone https://gitlab.arm.com/arm-reference-solutions/iot-pla=
-tform-assets \
--
--        -b CORSTONE1000-2025.12
-+        -b CORSTONE1000-2026.05
+    git clone https://gitlab.arm.com/arm-reference-solutions/iot-platform=
+-assets \
+-   -b CORSTONE1000-2025.12
++   -b CORSTONE1000-2026.05
+    ```
 =20
- #. Set the current working directory to build directory's subdirectory c=
+ 3. Set the current working directory to build directory's subdirectory c=
 ontaining the software stack build images.
 =20
-@@ -1892,7 +1933,7 @@ MPS3
+    ```
+-   cd ${WORKSPACE}/build/tmp/deploy/images/corstone1000-fvp/
++   cd ${WORKSPACE}/build/tmp/deploy/images/corstone1000-a320-fvp/
+    ```
 =20
- #. Perform a cold boot of the MPS3.
+ 4. Run the image signing script (without changing the current working di=
+rectory).
 =20
--#. On the Host Processor terminal host side, stop the execution of U-Boo=
-t when prompted to do so with the message ``Press any key to stop``.
-+#. On the Host Processor terminal host side, stop the execution of U-Boo=
-t when prompted to do so with the message ``Hit any key to stop autoboot`=
-`.
+    ```
+-   ./${WORKSPACE}/iot-platform-assets/corstone1000/secureboot/create_key=
+s_and_sign.sh \
++   ${WORKSPACE}/iot-platform-assets/corstone1000/secureboot/create_keys_=
+and_sign.sh \
+    -d fvp \
+    -v ${CERTIFICATE_VALIDITY_DURATION_IN_DAYS}
+    ```
+@@ -991,7 +1021,7 @@ To generate keys:
+    The [efitools](https://github.com/vathpela/efitools/) package is requ=
+ired to execute the script. `${CERTIFICATE_VALIDITY_DURATION_IN_DAYS}` is=
+ an integer that specifies the certificate's validity period in days. Con=
+sult the image signing script help message (`-h`) for more information ab=
+out other optional arguments. The script is interactive and contains comm=
+ands that require `sudo` level permissions.
+    :::
 =20
-     .. warning::
+-   The keys, signed kernel image, and unsigned kernel image will be copi=
+ed to the exisiting ESP image. The modified ESP image can be found at `${=
+WORKSPACE}/build/tmp/deploy/images/corstone1000-fvp/corstone1000-esp-imag=
+e-corstone1000-fvp.wic`.
++   The keys, signed kernel image, and unsigned kernel image will be copi=
+ed to the exisiting ESP image. The modified ESP image can be found at `${=
+WORKSPACE}/build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000-esp=
+-image-corstone1000-a320-fvp.wic`.
 =20
-@@ -1965,7 +2006,7 @@ FVP
+ ### Run unsigned image boot test {.reference}
 =20
- #. Run the software stack as described `here <running-software-stack-fvp=
-_>`__.
+@@ -1001,7 +1031,7 @@ To run an unsigned image boot test:
 =20
--#. On the Host Processor terminal host side, stop the execution of U-Boo=
-t when prompted to do so with the message ``Press any key to stop``.
-+#. On the Host Processor terminal host side, stop the execution of U-Boo=
-t when prompted to do so with the message ``Hit any key to stop autoboot`=
-`.
+ 2. Run the software stack as described in the Running the FVP model sect=
+ion of the Build, Flash and Run chapter.
 =20
-     .. warning::
+-3. On the Host Processor terminal host side, stop the execution of U-Boo=
+t when prompted to do so with the message `Press any key to stop`.
++3. On the Host Processor terminal host side, stop the execution of U-Boo=
+t when prompted to do so with the message `Hit any key to stop autoboot`.
 =20
-@@ -2066,9 +2107,12 @@ As a result, U-Boot reads these variables and veri=
-fies the Linux kernel image be
+    :::note
+    There is a timeout of 3 seconds to stop the execution at the U-Boot p=
+rompt. The U-Boot  prompt looks as follows:
+@@ -1024,19 +1054,19 @@ To run an unsigned image boot test:
+=20
+    ```
+    corstone1000# \
+-   load mmc 1:1 \$loadaddr corstone1000_secureboot_keys/PK.auth && seten=
+v -e -nv -bs -rt -at -i \$loadaddr:\$filesize PK; \
+-   load mmc 1:1 \$loadaddr corstone1000_secureboot_keys/KEK.auth && sete=
+nv -e -nv -bs -rt -at -i \$loadaddr:\$filesize KEK; \
+-   load mmc 1:1 \$loadaddr corstone1000_secureboot_keys/db.auth && seten=
+v -e -nv -bs -rt -at -i \$loadaddr:\$filesize db; \
+-   load mmc 1:1 \$loadaddr corstone1000_secureboot_keys/dbx.auth && sete=
+nv -e -nv -bs -rt -at -i \$loadaddr:\$filesize dbx
++   load mmc 1:1 $loadaddr corstone1000_secureboot_keys/PK.auth && setenv=
+ -e -nv -bs -rt -at -i $loadaddr:$filesize PK; \
++   load mmc 1:1 $loadaddr corstone1000_secureboot_keys/KEK.auth && seten=
+v -e -nv -bs -rt -at -i $loadaddr:$filesize KEK; \
++   load mmc 1:1 $loadaddr corstone1000_secureboot_keys/db.auth && setenv=
+ -e -nv -bs -rt -at -i $loadaddr:$filesize db; \
++   load mmc 1:1 $loadaddr corstone1000_secureboot_keys/dbx.auth && seten=
+v -e -nv -bs -rt -at -i $loadaddr:$filesize dbx
+    ```
+=20
+ 6. Attempt to Load the unsigned kernel image.
+=20
+    ```
+    corstone1000# \
+-   load mmc 1:1 \$loadaddr corstone1000_secureboot_fvp_images/Image_fvp;=
+ \
+-   loadm \$loadaddr \$kernel_addr_r \$filesize; \
+-   bootefi \$kernel_addr_r \$fdtcontroladdr
++   load mmc 1:1 $loadaddr corstone1000_secureboot_fvp_images/Image_fvp; =
+\
++   loadm $loadaddr $kernel_addr_r $filesize; \
++   bootefi $kernel_addr_r $fdtcontroladdr
+=20
+    Booting /MemoryMapped(0x0,0x88200000,0x236aa00)
+    Image not authenticated
+@@ -1053,9 +1083,9 @@ Load the signed kernel image.
+=20
+ ```
+ corstone1000# \
+-load mmc 1:1 \$loadaddr corstone1000_secureboot_fvp_images/Image_fvp.sig=
+ned; \
+-loadm \$loadaddr \$kernel_addr_r $filesize; \
+-bootefi \$kernel_addr_r \$fdtcontroladdr
++load mmc 1:1 $loadaddr corstone1000_secureboot_fvp_images/Image_fvp.sign=
+ed; \
++loadm $loadaddr $kernel_addr_r $filesize; \
++bootefi $kernel_addr_r $fdtcontroladdr
+ ```
+=20
+ The signed Linux kernel image should be booted successfully.
+@@ -1068,14 +1098,17 @@ As a result, U-Boot reads these variables and ver=
+ifies the Linux kernel image be
  In a typical boot scenario, the Linux kernel image is not signed, which =
 will prevent the system from booting due to failed image authentication.
  To resolve this, the Platform Key (one of the UEFI authenticated variabl=
 es for secure boot) needs to be deleted.
 =20
--#. Perform a cold boot of the MPS3.
-+#. For MPS3, perform a cold boot.
+-1. On the Host Processor terminal host side, stop the execution of U-Boo=
+t when prompted to do so with the message `Press any key to stop`.
++For FVP, continue in the same boot cycle in which the UEFI secure boot k=
+eys were enrolled.
++Do not cold boot FVP before deleting the Platform Key, because the secur=
+e flash contents are not preserved across an FVP cold boot.
 +
-+#. For FVP, continue in the same boot cycle in which the UEFI secure boo=
-t keys were enrolled.
-+   Do not cold boot FVP before deleting the Platform Key, because the se=
-cure flash contents are not preserved across an FVP cold boot.
++1. On the Host Processor terminal host side, stop the execution of U-Boo=
+t when prompted to do so with the message `Hit any key to stop autoboot`.
 =20
--#. On the Host Processor terminal host side, stop the execution of U-Boo=
-t when prompted to do so with the message ``Press any key to stop``.
-+#. On the Host Processor terminal host side, stop the execution of U-Boo=
-t when prompted to do so with the message ``Hit any key to stop autoboot`=
-`.
+ 2. On the U-Boot , delete the Platform Key (PK).
 =20
- #. On the U-Boot console, delete the Platform Key (PK).
+    ```
+    corstone1000# \
+    mmc dev 1; \
+-   load mmc 1:1 \$loadaddr corstone1000_secureboot_keys/PK_delete.auth &=
+& setenv -e -nv -bs -rt -at -i \$loadaddr:\$filesize PK; \
++   load mmc 1:1 $loadaddr corstone1000_secureboot_keys/PK_delete.auth &&=
+ setenv -e -nv -bs -rt -at -i $loadaddr:$filesize PK; \
+    boot
+    ```
 =20
-@@ -2269,7 +2313,7 @@ and `Arm Development Studio <arm-ds-website_>`__ ve=
-rsions 2022.2, 2022.c, or 202
- .. _arm-developer-fvp: https://developer.arm.com/tools-and-software/open=
--source-software/arm-platforms-software/arm-ecosystem-fvps
- .. _secure-debug-manager-repo-readme: https://github.com/ARM-software/se=
-cure-debug-manager/tree/master?tab=3Dreadme-ov-file#secure-debug-manager-=
-psa-adac--sdc-600
- .. _secure-debug-manager-armds-integration: https://github.com/ARM-softw=
-are/secure-debug-manager?tab=3Dreadme-ov-file#arm-development-studio-inte=
-gration
--.. _meta-arm-repository-release-branch: https://docs.yoctoproject.org/ne=
-xt/migration-guides/migration-5.3.html
-+.. _meta-arm-repository-release-branch: https://docs.yoctoproject.org/ne=
-xt/migration-guides/migration-6.0.html
- .. _arm-ulink-pro-website: https://www.arm.com/products/development-tool=
-s/debug-probes/ulink-pro
- .. _arm-ds-website: https://www.arm.com/products/development-tools/embed=
-ded-and-software/arm-development-studio
- .. _edk2-repository: https://github.com/tianocore/edk2
+@@ -1107,14 +1140,14 @@ Symmetric multiprocessing (SMP) mode is supported=
+ on the Corstone-1000 with Cort
+ 1. Build the software stack with SMP mode enabled.
+=20
+    ```
+-   kas build meta-arm/kas/corstone1000-fvp.yml:meta-arm/ci/debug.yml:met=
+a-arm/kas/corstone1000-a320.yml:\
++   kas build meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug.ym=
+l:\
+    meta-arm/kas/corstone1000-multicore.yml
+    ```
+=20
+ 2. Run the Corstone-1000 FVP.
+=20
+    ```
+-   kas shell meta-arm/kas/corstone1000-fvp.yml:meta-arm/ci/debug.yml:met=
+a-arm/kas/corstone1000-a320.yml:\
++   kas shell meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug.ym=
+l:\
+    meta-arm/kas/corstone1000-multicore.yml \
+    -c "../meta-arm/scripts/runfvp"
+    ```
+@@ -1135,7 +1168,7 @@ To build on Ethos-U85 NPU:
+    ```
+    cd ${WORKSPACE}
+    git clone https://git.gitlab.arm.com/arm-reference-solutions/iot-plat=
+form-assets.git \
+-   -b CORSTONE1000-2025.12
++   -b CORSTONE1000-2026.05
+    ```
+=20
+ 2. Copy the additional kas configuration file to:
+@@ -1163,14 +1196,14 @@ To build on Ethos-U85 NPU:
+ 5. Re-build the Corstone-1000 FVP software stack as follows:
+=20
+    ```
+-   kas build meta-arm/kas/corstone1000-fvp.yml:meta-arm/ci/debug.yml:met=
+a-arm/kas/corstone1000-a320.yml:\
++   kas build meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug.ym=
+l:\
+    meta-arm/kas/ethos-u85-test.yml
+    ```
+=20
+ 6. Run the Corstone-1000 FVP:
+=20
+    ```
+-   kas shell meta-arm/kas/corstone1000-fvp.yml:meta-arm/ci/debug.yml:met=
+a-arm/kas/corstone1000-a320.yml:\
++   kas shell meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug.ym=
+l:\
+    meta-arm/kas/ethos-u85-test.yml \
+    -c "../meta-arm/scripts/runfvp"
+    ```
+diff --git a/meta-arm-bsp/documentation/corstone1000-a320/topics/user-gui=
+de.md b/meta-arm-bsp/documentation/corstone1000-a320/topics/user-guide.md
+index c0b1e6bc..61387909 100644
+--- a/meta-arm-bsp/documentation/corstone1000-a320/topics/user-guide.md
++++ b/meta-arm-bsp/documentation/corstone1000-a320/topics/user-guide.md
+@@ -1,8 +1,8 @@
+ # Build, flash and run {.chapter permissions=3Dnon-confidential}
+=20
+-The Arm Corstone-1000 software stack uses the Yocto Project to build a t=
+iny Linux distribution suitable for the Arm Corstone-1000 platform (kerne=
+l and initramfs filesystem less than 6 MB on the flash).
++The Arm Corstone-1000 with Cortex-A320 software stack uses the Yocto Pro=
+ject to build a tiny Linux distribution suitable for the Arm Corstone-100=
+0 with Cortex-A320 platform (kernel and initramfs filesystem less than 6 =
+MB on the flash).
+=20
+-The Corstone-1000 software stack can be run on [Arm Corstone-1000 Ecosys=
+tem FVP (Fixed Virtual Platform)](https://developer.arm.com/downloads/-/a=
+rm-ecosystem-fvps) and is built on top of Yocto Project's [Whinlatter rel=
+ease]($meta_arm_repository_release_branch).
++The Corstone-1000 with Cortex-A320 software stack can be run on [Arm Cor=
+stone-1000 with Cortex-A320 FVP (Fixed Virtual Platform)](https://develop=
+er.arm.com/downloads/-/arm-ecosystem-fvps) and is built on top of Yocto P=
+roject's [Wrynose release]($meta_arm_repository_release_branch).
+=20
+ The Yocto Project relies on the [BitBake](https://docs.yoctoproject.org/=
+bitbake.html#bitbake-documentation) tool as its build tool. Please see th=
+e [Yocto Project documentation](https://docs.yoctoproject.org/) for more =
+information.
+=20
+@@ -27,9 +27,9 @@ Please follow the steps described in the Yocto mega man=
+ual:
+=20
+ ## Software components {.reference}
+=20
+-Within the Yocto Project, each component included in the Corstone-1000 s=
+oftware stack is specified as
++Within the Yocto Project, each component included in the Corstone-1000 w=
+ith Cortex-A320 software stack is specified as
+ a [BitBake recipe](https://docs.yoctoproject.org/bitbake/2.2/bitbake-use=
+r-manual/bitbake-user-manual-intro.html#recipes).
+-The recipes specific to the Corstone-1000 BSP are located at:
++The recipes specific to the Corstone-1000 with Cortex-A320 BSP are locat=
+ed at:
+ `${WORKSPACE}/meta-arm/meta-arm-bsp/`.
+=20
+ `${WORKSPACE}` refers to the absolute path to your workspace where the `=
+meta-arm` repository will be cloned. Consider exporting it (e.g., `export=
+ WORKSPACE=3D$(realpath .)`) if you're already in the workspace directory=
+,
+@@ -57,7 +57,7 @@ Table: Trusted Firmware-A components
+ | Type      | Path                                                      =
+                                                       |
+ | --------- | ----------------------------------------------------------=
+------------------------------------------------------ |
+ | bbappend  | `${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-bsp/trusted-fi=
+rmware-a/trusted-firmware-a_%.bbappend`                |
+-| Recipe    | `${WORKSPACE}/meta-arm/meta-arm/recipes-bsp/trusted-firmwa=
+re-a/trusted-firmware-a_2.14.0.bb`                     |
++| Recipe    | `${WORKSPACE}/meta-arm/meta-arm/recipes-bsp/trusted-firmwa=
+re-a/trusted-firmware-a_2.14.1.bb`                     |
+=20
+ #### Trusted Services {.reference}
+=20
+@@ -90,7 +90,7 @@ Table: OP-TEE components
+=20
+ | Type      | Path                                                      =
+                                                       |
+ | --------- | ----------------------------------------------------------=
+------------------------------------------------------ |
+-| bbappend  | `${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-security/optee=
+/optee-os_4.%.bbappend`                               |
++| bbappend  | `${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-security/optee=
+/optee-os_%.bbappend`                                 |
+ | Recipe    | `${WORKSPACE}/meta-arm/meta-arm/recipes-security/optee/opt=
+ee-os_4.9.0.bb`                                       |
+=20
+ #### U-Boot {.reference}
+@@ -103,7 +103,7 @@ Table: U-Boot components
+ | --------- | ----------------------------------------------------------=
+------------------------------------------------------ |
+ | bbappend  | `${WORKSPACE}/meta-arm/meta-arm/recipes-bsp/u-boot/u-boot_=
+%.bbappend`                                           |
+ | bbappend  | `${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-bsp/u-boot/u-b=
+oot_%.bbappend`                                       |
+-| Recipe    | `${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-bsp/u-boot/u-b=
+oot_2025.04.bb`                                       |
++| Recipe    | `${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-bsp/u-boot/u-b=
+oot_2025.10.bb`                                       |
+=20
+ #### Linux {.reference}
+=20
+@@ -135,7 +135,7 @@ Table: Trusted Firmware-M secure enclave components
+ | Type      | Path                                                      =
+                                                       |
+ | --------- | ----------------------------------------------------------=
+------------------------------------------------------ |
+ | bbappend  | `${WORKSPACE}/meta-arm/meta-arm-bsp/recipes-bsp/trusted-fi=
+rmware-m/trusted-firmware-m_%.bbappend`                |
+-| Recipe    | `${WORKSPACE}/meta-arm/meta-arm/recipes-bsp/trusted-firmwa=
+re-m/trusted-firmware-m_2.2.1.bb`                     |
++| Recipe    | `${WORKSPACE}/meta-arm/meta-arm/recipes-bsp/trusted-firmwa=
+re-m/trusted-firmware-m_2.2.2.bb`                     |
+=20
+ ## Build {.reference}
+=20
+@@ -164,19 +164,19 @@ Building binaries natively on Windows and AArch64 L=
+inux is not supported. Use an
+=20
+    ```
+    cd ${WORKSPACE}
+-   git clone https://git.yoctoproject.org/git/meta-arm -b CORSTONE1000-2=
+025.12
++   git clone https://git.yoctoproject.org/git/meta-arm -b CORSTONE1000-2=
+026.05
+    ```
+=20
+-4. Build a Corstone-1000 image:
++4. Accept the EULA on the [Arm Developer](https://developer.arm.com/down=
+loads/-/arm-ecosystem-fvps/eula) site to build a Corstone-1000 with Corte=
+x-A320 image for FVP as follows:
+=20
+    ```
+-   kas build meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug.ym=
+l
++   export ARM_FVP_EULA_ACCEPT=3D"True"
+    ```
+=20
+-5. Accept the EULA on the [Arm Developer](https://developer.arm.com/down=
+loads/-/arm-ecosystem-fvps/eula) site to build a Corstone-1000 image for =
+FVP as follows:
++5. Build a Corstone-1000 with Cortex-A320 image:
+=20
+    ```
+-   export ARM_FVP_EULA_ACCEPT=3D"True"
++   kas build meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug.ym=
+l
+    ```
+=20
+ A clean build takes a significant amount of time given that all of the d=
+evelopment machine utilities are also
+@@ -188,7 +188,7 @@ Once the build succeeds, all output binaries will be =
+placed in `${WORKSPACE}/bui
+ Everything apart from the Secure Enclave ROM firmware is bundled into a =
+single binary, the
+ `corstone1000-flash-firmware-image-corstone1000-a320-fvp.wic` file.
+=20
+-The output binaries run in the Corstone-1000 platform are the following:
++The output binaries run in the Corstone-1000 with Cortex-A320 platform a=
+re the following:
+=20
+ - The Secure Enclave ROM firmware: `${WORKSPACE}/build/tmp/deploy/images=
+/corstone1000-a320-fvp/trusted-firmware-m/bl1.bin`
+ - The internal firmware flash image: `${WORKSPACE}/build/tmp/deploy/imag=
+es/corstone1000-a320-fvp/corstone1000-flash-firmware-image-corstone1000-a=
+320-fvp.wic`
+@@ -218,21 +218,21 @@ on memories and peripherals before bringing the Hos=
+t Processor out of reset.
+=20
+ The Host Processor will boot TrustedFirmware-A, OP-TEE, U-Boot and then =
+Linux before presenting a login prompt.
+=20
+-A Fixed Virtual Platform (FVP) model of the Corstone-1000 platform must =
+be available to run the
+-Corstone-1000 FVP software image.
++A Fixed Virtual Platform (FVP) model of the Corstone-1000 with Cortex-A3=
+20 platform must be available to run the
++Corstone-1000 with Cortex-A320 FVP software image.
+=20
+ A Yocto recipe is provided to download the latest supported FVP version.
+=20
+ The recipe is located at `${WORKSPACE}/meta-arm/meta-arm/recipes-devtool=
+s/fvp/fvp-corstone1000-a320.bb`.
+=20
+-The latest FVP version is `11.30.27` for Corstone-1000, and the model is=
+ automatically downloaded and installed when using the `runfvp` command a=
+s follows:
++The latest FVP version is `11.31.cs1000_a320_2` for Corstone-1000 with C=
+ortex-A320, and the model is automatically downloaded and installed when =
+using the `runfvp` command as follows:
+=20
+ ```
+ kas shell meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug.yml \
+ -c "../meta-arm/scripts/runfvp -- --version"
+ ```
+=20
+-The FVP can also be manually downloaded from [Arm Developer](https://dev=
+eloper.arm.com/downloads/-/arm-ecosystem-fvps) to download the Corstone-1=
+000 platform FVP installer.
++The FVP can also be manually downloaded from [Arm Developer](https://dev=
+eloper.arm.com/downloads/-/arm-ecosystem-fvps) to download the Corstone-1=
+000 with Cortex-A320 FVP package.
+=20
+ To set up the FVP:
+=20
+@@ -262,4 +262,4 @@ To set up the FVP:
+=20
+ ## Security issue reporting {.reference}
+=20
+-To report any security issues identified with Corstone-1000, please send=
+ an email to [psirt@arm.com](mailto:psirt@arm.com).
++To report any security issues identified with Corstone-1000 with Cortex-=
+A320, please send an email to [psirt@arm.com](mailto:psirt@arm.com).
 
