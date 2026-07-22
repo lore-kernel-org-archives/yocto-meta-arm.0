@@ -2,92 +2,70 @@ Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C025FC4453E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECA2C4453D
 	for <webhook@archiver.kernel.org>; Wed, 22 Jul 2026 09:28:27 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.43908.1784712505156732617
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.43909.1784712505673027663
  for <meta-arm@lists.yoctoproject.org>;
  Wed, 22 Jul 2026 02:28:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=oCwn+LDg;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=P+xENQXM;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50C841595
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4809168F
 	for <meta-arm@lists.yoctoproject.org>; Wed, 22 Jul 2026 02:28:20 -0700 (PDT)
 Received: from cesw-amp-gbt-1s-m12830-04.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 31A113F86F
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BE2FA3F86F
 	for <meta-arm@lists.yoctoproject.org>; Wed, 22 Jul 2026 02:28:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784712504; bh=w/Q9cJY5zH93OX9YzZg2Y9iNd9xUQXIi5F+/anAFlhQ=;
-	h=From:To:Subject:Date:From;
-	b=oCwn+LDgey3qwJPTfW+ofw9lX/9VlAHOcZJPxdzF4wD/bZf9MHX4dAiX/cR9E/7JX
-	 eP6kjDSAFIL3LxuDRlhXYO0pPdw9r7BTAPrTh7sAgoSACl05hSQKsrxRPWkJx7IyNt
-	 ObVm8MXNFZJaxSLPC2RSTGVpbUHcaVebxhx4H2T0=
+	t=1784712505; bh=zEzXYm8m6sB0oxSzqvnj8jQTDYqp8Z+Hs4/yTZJPbsk=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=P+xENQXMo/RG7JgeF90pbqTYv8JHyLeXkBAVIfCbHGYhnBnrz+a1REbwMcGgW9e4T
+	 3PFmAbzQrnI+EEd6B4p96b+waj8zO+2KOuTy/ChQ7wha1AkwczHvtpMHOENrcPKLHU
+	 pGzW8DUDAG1zjgNOraVoW6wSX4ad56woZosGgKfI=
 From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/2] arm-toolchain/external-arm-toolchain: fix license
-Date: Wed, 22 Jul 2026 10:28:19 +0100
-Message-ID: <20260722092820.3452299-1-ross.burton@arm.com>
+Subject: [PATCH 2/2] arm/fvp-common: refresh LICENSE statement
+Date: Wed, 22 Jul 2026 10:28:20 +0100
+Message-ID: <20260722092820.3452299-2-ross.burton@arm.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260722092820.3452299-1-ross.burton@arm.com>
+References: <20260722092820.3452299-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 22 Jul 2026 09:28:27 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7125
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7126
 
-Part of the GCC license is -only, not -or-later.  Thanks to Denys
-Dmytriyenko and Joshua Watt for their diligent review.
+Extract the full list of licenses from third_party_licenses.txt.
 
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../external-arm-toolchain/gcc-aarch64-none-elf_15.3.rel1.bb    | 2 +-
- .../external-arm-toolchain/gcc-arm-none-eabi_15.3.rel1.bb       | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ meta-arm/recipes-devtools/fvp/fvp-common.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/g=
-cc-aarch64-none-elf_15.3.rel1.bb b/meta-arm-toolchain/recipes-devtools/ex=
-ternal-arm-toolchain/gcc-aarch64-none-elf_15.3.rel1.bb
-index 05d6a9f952..7bca316daa 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarc=
-h64-none-elf_15.3.rel1.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarc=
-h64-none-elf_15.3.rel1.bb
-@@ -6,7 +6,7 @@ require arm-binary-toolchain.inc
- COMPATIBLE_HOST =3D "(x86_64|aarch64).*-linux"
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-common.inc b/meta-arm/reci=
+pes-devtools/fvp/fvp-common.inc
+index 5059985563..d2b559c238 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-common.inc
++++ b/meta-arm/recipes-devtools/fvp/fvp-common.inc
+@@ -1,7 +1,7 @@
+ HOMEPAGE =3D "https://developer.arm.com/tools-and-software/simulation-mo=
+dels/fixed-virtual-platforms"
 =20
- SUMMARY =3D "Arm GNU Toolchain - AArch64 bare-metal target (aarch64-none=
--elf)"
--LICENSE =3D "GPL-3.0-or-later AND GPL-3.0-or-later WITH GCC-exception-3.=
-1"
-+LICENSE =3D "GPL-3.0-only AND GPL-3.0-or-later WITH GCC-exception-3.1"
+ LICENSE_FLAGS =3D "Arm-FVP-EULA"
+-LICENSE =3D "Apache-2.0 AND BSD-3-Clause AND GPL-3.0-or-later WITH GCC-e=
+xception-3.1 AND LGPL-2.0-or-later AND MIT AND NCSA AND Python-2.0 AND Zl=
+ib AND LicenseRef-Proprietary"
++LICENSE =3D "0BSD AND Apache-2.0 AND Apache-2.0 WITH LLVM-exception AND =
+BSD-3-Clause AND BSL-1.0 AND bzip2-1.0.5 AND GPL-3.0-or-later WITH GCC-ex=
+ception-3.1 AND IJG AND LGPL-2.1-or-later AND MIT AND MIT WITH fmt-except=
+ion AND Python-2.0 AND Unlicense AND Zlib AND LicenseRef-Proprietary"
 =20
- LIC_FILES_CHKSUM:aarch64 =3D "file://share/doc/gcc/Copying.html;md5=3D90=
-014a59d1783b37a10240d4d0002c6e"
- LIC_FILES_CHKSUM:x86-64 =3D "file://share/doc/gcc/Copying.html;md5=3D900=
-14a59d1783b37a10240d4d0002c6e"
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/g=
-cc-arm-none-eabi_15.3.rel1.bb b/meta-arm-toolchain/recipes-devtools/exter=
-nal-arm-toolchain/gcc-arm-none-eabi_15.3.rel1.bb
-index db7a5dffa2..53c29f5f56 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-=
-none-eabi_15.3.rel1.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-=
-none-eabi_15.3.rel1.bb
-@@ -6,7 +6,7 @@ require arm-binary-toolchain.inc
- COMPATIBLE_HOST =3D "(x86_64|aarch64).*-linux"
-=20
- SUMMARY =3D "Arm GNU Toolchain - AArch32 bare-metal target (arm-none-eab=
-i)"
--LICENSE =3D "GPL-3.0-or-later AND GPL-3.0-or-later WITH GCC-exception-3.=
-1"
-+LICENSE =3D "GPL-3.0-only AND GPL-3.0-or-later WITH GCC-exception-3.1"
-=20
- LIC_FILES_CHKSUM:aarch64 =3D "file://share/doc/gcc/Copying.html;md5=3D90=
-014a59d1783b37a10240d4d0002c6e"
- LIC_FILES_CHKSUM:x86-64 =3D "file://share/doc/gcc/Copying.html;md5=3D900=
-14a59d1783b37a10240d4d0002c6e"
+ # FVP has an End User License Agreement. Add Arm-FVP-EULA to
+ # LICENSE_FLAGS_ACCEPTED if the EULA has been accepted, so it can
 --=20
 2.43.0
 
