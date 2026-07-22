@@ -1,580 +1,156 @@
-Return-Path: <denis@denix.org>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EDFC4452D
-	for <webhook@archiver.kernel.org>; Tue, 21 Jul 2026 20:02:02 +0000 (UTC)
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.msgproc01-g2.32501.1784664119940997034
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BFBC44539
+	for <webhook@archiver.kernel.org>; Wed, 22 Jul 2026 09:01:33 +0000 (UTC)
+Received: from AS8PR04CU009.outbound.protection.outlook.com (AS8PR04CU009.outbound.protection.outlook.com [52.101.70.27])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.43712.1784710885583093020
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 21 Jul 2026 13:02:00 -0700
+ Wed, 22 Jul 2026 02:01:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 288CC40CB1;
-	Tue, 21 Jul 2026 20:01:59 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 9UubK02cpjhe; Tue, 21 Jul 2026 20:01:59 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-87-159.washdc.fios.verizon.net [100.15.87.159])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id D628C40BD6;
-	Tue, 21 Jul 2026 20:01:56 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 8C3431769F1; Tue, 21 Jul 2026 16:01:56 -0400 (EDT)
-Date: Tue, 21 Jul 2026 16:01:56 -0400
-From: Denys Dmytriyenko <denis@denix.org>
-To: JPEWhacker@gmail.com
-Cc: ross.burton@arm.com, meta-arm@lists.yoctoproject.org
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=WSCfUkdL;
+ dkim=pass header.i=@arm.com header.s=selector1 header.b=WSCfUkdL;
+ spf=pass (domain: arm.com, ip: 52.101.70.27, mailfrom: ross.burton@arm.com)
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=VWFtDKavg/nGTh1x4XxSx5LMInZf80dwc+EvwucM8BdGjqqQkx415f93OcPd6Geqr85QDfX8L7v7WyLkiUyWrU1CuV2GgVdyR0KsaEu814BqIvK5zTH7cztpqfLBahkO78NUwLsI64H1CPLn79KaIXaY/M2MUX5Leopwj4/iy3YmbuP0iDpiQeJoWROyIgMv0LJxHTWfgg+0WPrcQjIc369xr+SM7QBSPlIlOegz90l5xIKa8wZ9YovEI5DZH8zxHtguCcfIp6DnX+yfzNJrUdD21kOPPvDnNdzrF6xl++EaGOgeR+BFEyWyCAawEIbkOwPCMnBHOKpEh93immp6Ww==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FICbQPloQmrJiGY3d4tLRNNyncCkCLNBSyV0T1zMrT4=;
+ b=P37K5g3FcE+prPLVAOncY9gZSEm39bhdGutLhGbS4RAar54144+5hyVTX5eWC3WK/ALcxUsnpkWZPc1mBVWQdCK/gRN1wyTirSK+6a8ORFsHH4ReMDZGoPKwiLYCilseWtYFjgyJ/nA1qdpy/4j+FsDdKsE1PGnuUNYIngHIwdJD7ImiGzMiivOXPJW8xwmbyEhAK0tW50Qiz7on0/rd7RAYe4HjmeJNl71pUhoDo6/jxmAMur5zlh4xBdM7bomavjOffptcxsmZdrCJRFHLl0njgxgJmlPEJfj2gPy9lp96YRwNlImQzWN4TaObSFccfU91kM+xTJUNDmhBEB3xPg==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=denix.org smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FICbQPloQmrJiGY3d4tLRNNyncCkCLNBSyV0T1zMrT4=;
+ b=WSCfUkdLaGRPCmpPL312lWB3iwW0aayzJPNnskE0PpHeaPKhx/BDBGxdP9Ej+ftwg8rciUpBJJZKQjj7S444caVsVnUzgdX/mlyksRq42fFFdAXyIIIRZ/5SooPoXQpzLXy3C59ai7P/mp/5D2yz0lTVvVvcFzRRd9fzdTL8s/g=
+Received: from DU2PR04CA0347.eurprd04.prod.outlook.com (2603:10a6:10:2b4::27)
+ by PAVPR08MB8821.eurprd08.prod.outlook.com (2603:10a6:102:2fc::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.10; Wed, 22 Jul
+ 2026 09:01:20 +0000
+Received: from DU2PEPF00028D13.eurprd03.prod.outlook.com
+ (2603:10a6:10:2b4:cafe::4) by DU2PR04CA0347.outlook.office365.com
+ (2603:10a6:10:2b4::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.245.10 via Frontend Transport; Wed,
+ 22 Jul 2026 09:01:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DU2PEPF00028D13.mail.protection.outlook.com (10.167.242.27) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.245.5
+ via Frontend Transport; Wed, 22 Jul 2026 09:01:19 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qIRxYaMB7h9jtp2Ai76sg7Isw2TrHlY3hckjiPkOO9TC3fBEgBQmU6JOza3WKl3Y/yjTXijd53NvfK1kQCP4yGQ8WcLbDuVWKkMiVGCLxGY8GC+eb1Buoaa0UCPRCRnagI95kTjaZ8vbFhCXdLmJngJyjMJBxRF7m4rZNarttrJ+838pleMqvvhzt/5SQ6wV1NsqgITxf1iP5Kx67urSAAJW1GhV9magtNkE/CiN2shceGTwkusZiIwpok/nMlNVxlCPLYEWaFGB0BfxqIQFmxU82tHDR1GH2g695eVdxNuHNrWhncKSGqgsyLB31U2uK2kONIiiP1gTNnP6DCLE8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FICbQPloQmrJiGY3d4tLRNNyncCkCLNBSyV0T1zMrT4=;
+ b=ByaSx7A7yQwI1fefCN82N+/J5zN9v9nUGPiHUFGpPgCsG0ZqYfQ9zG9BxCoOwOTpzt9YOxiDsEDVrap3Ih1QFZgvzfQVKfCPD2r4xB6QrDkcLQhDNcMfQYrKtCL3AQ7Nuy2PE5FF0R0pNoydjPwMudLDrqOlfv8z6TmRwhRMbLZpGTgwf27FkvksEqVGoaLg/0KkfoUaYJtbLpj+yUZM86xCm8QIMMknrqD/qGlXRvmDvqHhzo/Ls89VHTq9lNTmLceYkymQf4fVvwglFwrpNsWJNKKkWzN16WyqLLsOFRIX0DCjEsCwPg03CobC3xmQoiVVDR8owMFl88p2CyqTxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FICbQPloQmrJiGY3d4tLRNNyncCkCLNBSyV0T1zMrT4=;
+ b=WSCfUkdLaGRPCmpPL312lWB3iwW0aayzJPNnskE0PpHeaPKhx/BDBGxdP9Ej+ftwg8rciUpBJJZKQjj7S444caVsVnUzgdX/mlyksRq42fFFdAXyIIIRZ/5SooPoXQpzLXy3C59ai7P/mp/5D2yz0lTVvVvcFzRRd9fzdTL8s/g=
+Received: from AM9PR08MB6258.eurprd08.prod.outlook.com (2603:10a6:20b:287::19)
+ by GV2PR08MB8002.eurprd08.prod.outlook.com (2603:10a6:150:aa::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.18; Wed, 22 Jul
+ 2026 09:00:06 +0000
+Received: from AM9PR08MB6258.eurprd08.prod.outlook.com
+ ([fe80::171d:1f8b:720d:7a1b]) by AM9PR08MB6258.eurprd08.prod.outlook.com
+ ([fe80::171d:1f8b:720d:7a1b%6]) with mapi id 15.21.0245.009; Wed, 22 Jul 2026
+ 09:00:06 +0000
+From: Ross Burton <Ross.Burton@arm.com>
+To: Denys Dmytriyenko <denis@denix.org>
+CC: "JPEWhacker@gmail.com" <JPEWhacker@gmail.com>,
+	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
 Subject: Re: [meta-arm] [PATCH] recipes: port LICENSE to SPDX
-Message-ID: <20260721200156.GS10186@denix.org>
+Thread-Topic: [meta-arm] [PATCH] recipes: port LICENSE to SPDX
+Thread-Index: AQHdGUtYSs6OwgB4EkeQW5R/4XBtObZ4ZPkAgADZXoA=
+Date: Wed, 22 Jul 2026 09:00:06 +0000
+Message-ID: <29ADCFE3-B13C-40FD-8618-E6F9D85E5138@arm.com>
 References: <20260721130159.558910-1-ross.burton@arm.com>
  <CAJdd5GYn6LKUOiA+ZXzRL_V+EB0im6OcQUs5t98yskJ-1hRzXA@mail.gmail.com>
+ <20260721200156.GS10186@denix.org>
+In-Reply-To: <20260721200156.GS10186@denix.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3864.600.51.1.1)
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic: 
+	AM9PR08MB6258:EE_|GV2PR08MB8002:EE_|DU2PEPF00028D13:EE_|PAVPR08MB8821:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9ea1e5c1-1014-40d5-3b58-08dee7cfcbb2
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: 
+ BCL:0;ARA:13230040|23010399003|366016|376014|1800799024|38070700021|56012099006|11063799006|10067099003|4143699003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info-Original: 
+ GfTX4bxNQDUjHEaHXKP6Kg98ynmlBGpXMS3BcWdOxJ+HeF6RykdcTITp041x6j2aJvDQ5/Mm6g7cQmVHzWKs91JBsljjfX1Po+lPehNmmgTBTaDXQxVUFST04e6FwvYix/lYRtVuL0PAS5ZpCI1GPXoZF5saZYHB2ph/2tKq+lqjHRLDzCXBo+xv/pS7BEZSELIw4JgrIKC/PXrmwDDdipPQAPkFesTwMUFKJGb+HX32z1GASZh8UXdnsWc/5cEKBHcjp8LEvkNcn4A4yI+CIxOMaA36V5kGwK4YQm9+ix7Uhsa51RaL8rpDgFZhd7nrEvjFMk99QckqLwORGs9XGzKr8a0XfZJSp5r6ye+0fyUDmJdrRSKLksBnxcCI9PxjkpJddX+FVW/zZrqv2stJZ8wxdibWfQq1SRlyR3OEVLClSerriecgwhHVAn7m0yZXESpkc6jvTIxW19sFykb0vYcS9j4Yoes90Kyr4rywP8f3NzAjmBVHoTKcObFlUwDUHOWQOpOUQeRpVx6JG1/auaflSiPKSsYeOb2xSqG2w2xuwpma1TCrY38ZAQAJE99NWdNNidGv4UMfMKnvDVjnCDtO6JZ4+/gPQtkKzJFKDPEm5v2P+T9l9TdkEFkpNErujLWo/mWQdesxWcoVJctwjv1U0RydngBASdAhsrvzDPmHcbYX2t/heFRmsEj20WdvPcmaPNgdzPZAwBKfRYXukPW9dA7NJN2VuQUkch06FSw=
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB6258.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(1800799024)(38070700021)(56012099006)(11063799006)(10067099003)(4143699003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5855E655A188D2459CED39A2B7738E25@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJdd5GYn6LKUOiA+ZXzRL_V+EB0im6OcQUs5t98yskJ-1hRzXA@mail.gmail.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Transfer-Encoding: quoted-printable
+X-Exchange-RoutingPolicyChecked: 
+ bKAiHRHEuCdT+63Qfz7ZPuzmUMi54FuC5Afq6/Jq89cgr6W9L0lFvm6KH8VGBLtRvHhSph6wn6//0QVuvUOA2s45mPly8Ffo5UTp6VXACoeRJyjWkmE/Oj9+9ktS/Rgh+r4KHLF0sFyikO0MpuH+x2Oi4zdqtYEXFW3oR0yQh9LhviUgkE1FV7OcEHwYhVaLMTgwu8R2y1zoxJTvfHQECxqm3zohUS0vYrLV1S8kDTUPucCpTHGxlGtAW92gWpr560e1CbjEmxi7fiMyVp+U5E2Eg/w5II6t2/C2gvHEBoIT/SzGImBK2j/vK8rcmnR7fm+S52DhKMEUnBbahRa5Qg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR08MB8002
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ DU2PEPF00028D13.eurprd03.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	040938ff-98e4-4d2a-3eea-08dee7cf9ffb
+X-Microsoft-Antispam: 
+	BCL:0;ARA:13230040|35042699022|14060799003|376014|23010399003|82310400026|1800799024|36860700016|22082099003|18002099003|11063799006|4143699003|56012099006|10067099003;
+X-Microsoft-Antispam-Message-Info: 
+	4EOQP0ui8TinGOYGDtnY2dbcIdKm93kB+MRgzYgIF01xQ9KHLRk4CR25x9nWTnHJY8rQBB6oY3eMu6lqyMzmJjDnnCWGHv0tDiEsLNvfpzzpoMvvJdD3lJkFNxe0LTrlaexrd0Oi7TAmGqsdN2GqQzJq/L0z2JHQcD73wPVQ1HLSk8/XkSyob+XHelswrpAB3Wr3U/HpYZpN46Z4F+BRjiELZvCQ03bI1t3fP2q50ovGlXKV20JSCkfgaX1vQKc8N1+OleDe1wEZFZsE4OeB0PY8Ayg1YlZbvjDpJVIAoauyQLjyDXz+sqqRVRKiXThflFh39VTTqeQ/Y7gAY5hENxlD/YNBM3lXyssMD7d4Awz2EOpsqRy89GF8NsCAHXcYFP9aqWd+688ImSnG/Oqa2tW/FsPPHpmi+L75lbUiT98H40y/jSj85rTzMYhK0U1Qsk5pua/AbODoinKaqLKl2TbC4c8YYeGfWtm6nmQwjWejwcHDnB8/8UmyPCf1bdfhBYFIglRKKUQNhg5crLrPe5qOAEB7iYdJT/eU5vzlmvy18gy2dh22OIaRiU3HTGVjYjqAeDJsZMg3ikqHe06KaAfVzOmNbnw1ViJMjrf4B3YYLsnBhTMxIL2btE+oPFiuE9/bHP5ECMXr0CA7Rr6wwEMDdIw8Ov92RK0reuQi4XIRXwBts6EqZ8IFqD5pBR8WL3e9rLfphfsQvq6rGP/zgA==
+X-Forefront-Antispam-Report: 
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(35042699022)(14060799003)(376014)(23010399003)(82310400026)(1800799024)(36860700016)(22082099003)(18002099003)(11063799006)(4143699003)(56012099006)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	mdXD3IigeJeyXqL3u4+9pQe63aEA6BGBJu5EdDJaiDO2mzwFiAhOb4CFf5lFJBBrGB4v0cCSuXvqvHrKCjT3QF50Lekm3TgQoU5TL37eo/Q0AM94K3NIJp1kOh/SDYQaXLqn5WPOZXMc/GnV0PKsgfiMHrv1pk6a7CTeBQyO5CxhGdP6puac9TQ82OH4blForjZNZJQaumxXf0Ch1VOvHWZVC+A6dW2gDoX/vz/RXFuaYHdEtzvasc018WUlY2WnfCoJ587lVnsTlq7otblkEpLU7+0ZJsCfLgGSH6gySNauitHvL34OTdkLlLafDNTI0KUVl7CFOvvHyzrsraX4szL08JOoRU4MVB2+3gEdASU7Rexw6pO4lki/yPbyZ0NH9g0DUQhcWd62atWgsAQNF8pMRhnnfRvjjCPU1x+xUH6vJLfvgcb2ob6VAKy8OkGt
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2026 09:01:19.3881
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ea1e5c1-1014-40d5-3b58-08dee7cfcbb2
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DU2PEPF00028D13.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR08MB8821
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 21 Jul 2026 20:02:02 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7123
+ <meta-arm@lists.yoctoproject.org>; Wed, 22 Jul 2026 09:01:33 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7124
 
-On Tue, Jul 21, 2026 at 01:58:49PM -0600, Joshua Watt via lists.yoctoproj=
-ect.org wrote:
-> On Tue, Jul 21, 2026 at 7:02=E2=80=AFAM Ross Burton via lists.yoctoproj=
-ect.org
-> <ross.burton=3Darm.com@lists.yoctoproject.org> wrote:
->=20
-> > openembedded-core now parses the LICENSE field as a SPDX license
-> > expression[1], so convert the license statements.
-> >
-> > This is mostly replacing "&" with "AND", but we can also use "WITH" i=
-n
-> > the GCC recipes.
-> >
-> > [1] oe-core e9d424738d6 ("classes/conf/lib: Parse LICENSE as SPDX
-> > Expression")
-> >
-> > Signed-off-by: Ross Burton <ross.burton@arm.com>
-> > ---
-> >  meta-arm-bsp/recipes-bsp/external-system/external-system_git.bb | 2 =
-+-
-> >  .../recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdn2.inc  | 2 =
-+-
-> >  .../recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdv2.inc  | 2 =
-+-
-> >  .../external-arm-toolchain/gcc-aarch64-none-elf_15.3.rel1.bb    | 2 =
-+-
-> >  .../external-arm-toolchain/gcc-arm-none-eabi_15.3.rel1.bb       | 2 =
-+-
-> >  meta-arm/recipes-bsp/hafnium/hafnium_2.14.0.bb                  | 2 =
-+-
-> >  meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc              | 2 =
-+-
-> >  meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.14.0.bb    | 2 =
-+-
-> >  meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.15.0.bb    | 2 =
-+-
-> >  meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc  | 2 =
-+-
-> >  .../recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.14.2.bb | 2 =
-+-
-> >  .../trusted-firmware-m/trusted-firmware-m-2.2.2-src.inc         | 2 =
-+-
-> >  .../trusted-firmware-m/trusted-firmware-m-2.3.0-src.inc         | 2 =
-+-
-> >  .../trusted-firmware-m/trusted-firmware-m-git-src.inc           | 2 =
-+-
-> >  .../trusted-firmware-rmm/trusted-firmware-rmm_0.6.0.bb          | 2 =
-+-
-> >  meta-arm/recipes-bsp/uefi/sbsa-acs_7.2.2.bb                     | 2 =
-+-
-> >  meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.31.28.bb        | 2 =
-+-
-> >  meta-arm/recipes-devtools/fvp/fvp-common.inc                    | 2 =
-+-
-> >  meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.8.0.bb    | 2 =
-+-
-> >  meta-arm/recipes-security/optee/optee-test.inc                  | 2 =
-+-
-> >  .../recipes-security/trusted-services/trusted-services-src.inc  | 2 =
-+-
-> >  meta-arm/recipes-security/trusted-services/trusted-services.inc | 2 =
-+-
-> >  22 files changed, 22 insertions(+), 22 deletions(-)
-> >
-> > diff --git a/meta-arm-bsp/recipes-bsp/external-system/
-> > external-system_git.bb b/meta-arm-bsp/recipes-bsp/external-system/
-> > external-system_git.bb
-> > index ede5b80a76..87a8a34886 100644
-> > --- a/meta-arm-bsp/recipes-bsp/external-system/external-system_git.bb
-> > +++ b/meta-arm-bsp/recipes-bsp/external-system/external-system_git.bb
-> > @@ -4,7 +4,7 @@ DESCRIPTION =3D "Firmware to be loaded and run in Ext=
-ernal
-> > System Harness in\
-> >  HOMEPAGE =3D "
-> > https://git.linaro.org/landing-teams/working/arm/external-system.git"
-> >  DEPENDS =3D "gcc-arm-none-eabi-native"
-> >  INHIBIT_DEFAULT_DEPS =3D "1"
-> > -LICENSE =3D "BSD-3-Clause & Apache-2.0"
-> > +LICENSE =3D "Apache-2.0 AND BSD-3-Clause"
-> >  LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3De44b2531cd6ffe9dece394dbe=
-988d9a0 \
-> >
-> >  file://cmsis/LICENSE.txt;md5=3De3fc50a88d0a364313df4b21ef20c29e"
-> >
-> > diff --git
-> > a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdn2=
-.inc
-> > b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdn2=
-.inc
-> > index d761a7ae63..c86d4a584e 100644
-> > ---
-> > a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdn2=
-.inc
-> > +++
-> > b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdn2=
-.inc
-> > @@ -38,7 +38,7 @@ LIC_FILES_CHKSUM_MBEDTLS ??=3D ""
-> >  # add MBEDTLS to our sources if activated
-> >  SRC_URI:append =3D " ${@bb.utils.contains('TFA_MBEDTLS', '1',
-> > '${SRC_URI_MBEDTLS}', '', d)}"
-> >  # Update license variables
-> > -LICENSE:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' &
-> > Apache-2.0', '', d)}"
-> > +LICENSE:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' AND
-> > Apache-2.0', '', d)}"
-> >  LIC_FILES_CHKSUM:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1'=
-, '
-> > ${LIC_FILES_CHKSUM_MBEDTLS}', '', d)}"
-> >  # add mbed TLS to version
-> >  SRCREV_FORMAT:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1',
-> > '_mbedtls', '', d)}"
-> > diff --git
-> > a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdv2=
-.inc
-> > b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdv2=
-.inc
-> > index 8010c523e1..408185e388 100644
-> > ---
-> > a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdv2=
-.inc
-> > +++
-> > b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-rdv2=
-.inc
-> > @@ -38,7 +38,7 @@ LIC_FILES_CHKSUM_MBEDTLS ??=3D ""
-> >  # add MBEDTLS to our sources if activated
-> >  SRC_URI:append =3D " ${@bb.utils.contains('TFA_MBEDTLS', '1',
-> > '${SRC_URI_MBEDTLS}', '', d)}"
-> >  # Update license variables
-> > -LICENSE:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' &
-> > Apache-2.0', '', d)}"
-> > +LICENSE:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' AND
-> > Apache-2.0', '', d)}"
-> >  LIC_FILES_CHKSUM:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1'=
-, '
-> > ${LIC_FILES_CHKSUM_MBEDTLS}', '', d)}"
-> >  # add mbed TLS to version
-> >  SRCREV_FORMAT:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1',
-> > '_mbedtls', '', d)}"
-> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolcha=
-in/
-> > gcc-aarch64-none-elf_15.3.rel1.bb
-> > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/
-> > gcc-aarch64-none-elf_15.3.rel1.bb
-> > index 447db59cd4..05d6a9f952 100644
-> > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/
-> > gcc-aarch64-none-elf_15.3.rel1.bb
-> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/
-> > gcc-aarch64-none-elf_15.3.rel1.bb
-> > @@ -6,7 +6,7 @@ require arm-binary-toolchain.inc
-> >  COMPATIBLE_HOST =3D "(x86_64|aarch64).*-linux"
-> >
-> >  SUMMARY =3D "Arm GNU Toolchain - AArch64 bare-metal target
-> > (aarch64-none-elf)"
-> > -LICENSE =3D "GPL-3.0-with-GCC-exception & GPL-3.0-only"
-> > +LICENSE =3D "GPL-3.0-or-later AND GPL-3.0-or-later WITH GCC-exceptio=
-n-3.1"
-> >
->=20
-> Per discussion, this should be "GPL-3.0-only AND GPL-3.0-or-later WITH
-> GCC-exception-3.1"
-
-Was exactly my point.
-
-
-> Ross, did the script auto change this one or did you hand edit it?
-
-The script doesn't change this and I know it for a fact, as I had to make=
- a=20
-similar manual change and was quite confused by Ross' change, which didn'=
-t=20
-look right to me.
-
-
-> >  LIC_FILES_CHKSUM:aarch64 =3D
-> > "file://share/doc/gcc/Copying.html;md5=3D90014a59d1783b37a10240d4d000=
-2c6e"
-> >  LIC_FILES_CHKSUM:x86-64 =3D
-> > "file://share/doc/gcc/Copying.html;md5=3D90014a59d1783b37a10240d4d000=
-2c6e"
-> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolcha=
-in/
-> > gcc-arm-none-eabi_15.3.rel1.bb
-> > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/
-> > gcc-arm-none-eabi_15.3.rel1.bb
-> > index 70a3a37289..db7a5dffa2 100644
-> > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/
-> > gcc-arm-none-eabi_15.3.rel1.bb
-> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/
-> > gcc-arm-none-eabi_15.3.rel1.bb
-> > @@ -6,7 +6,7 @@ require arm-binary-toolchain.inc
-> >  COMPATIBLE_HOST =3D "(x86_64|aarch64).*-linux"
-> >
-> >  SUMMARY =3D "Arm GNU Toolchain - AArch32 bare-metal target (arm-none=
--eabi)"
-> > -LICENSE =3D "GPL-3.0-with-GCC-exception & GPL-3.0-only"
-> > +LICENSE =3D "GPL-3.0-or-later AND GPL-3.0-or-later WITH GCC-exceptio=
-n-3.1"
-> >
-> >  LIC_FILES_CHKSUM:aarch64 =3D
-> > "file://share/doc/gcc/Copying.html;md5=3D90014a59d1783b37a10240d4d000=
-2c6e"
-> >  LIC_FILES_CHKSUM:x86-64 =3D
-> > "file://share/doc/gcc/Copying.html;md5=3D90014a59d1783b37a10240d4d000=
-2c6e"
-> > diff --git a/meta-arm/recipes-bsp/hafnium/hafnium_2.14.0.bb
-> > b/meta-arm/recipes-bsp/hafnium/hafnium_2.14.0.bb
-> > index f8a374b7f0..0dfa2dace6 100644
-> > --- a/meta-arm/recipes-bsp/hafnium/hafnium_2.14.0.bb
-> > +++ b/meta-arm/recipes-bsp/hafnium/hafnium_2.14.0.bb
-> > @@ -2,7 +2,7 @@ SUMMARY =3D "Hafnium"
-> >  DESCRIPTION =3D "A reference Secure Partition Manager (SPM) for syst=
-ems
-> > that implement the Armv8.4-A Secure-EL2 extension"
-> >  DEPENDS =3D "gn-native ninja-native bison-native bc-native dtc-nativ=
-e
-> > openssl-native clang-native lld-native"
-> >
-> > -LICENSE =3D "BSD-3-Clause & GPL-2.0-only"
-> > +LICENSE =3D "BSD-3-Clause AND GPL-2.0-only"
-> >  LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D782b40c14bad5294672c50050=
-1edc103"
-> >
-> >  PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-> > diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
-> > b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
-> > index 032445b3bd..495b0f2905 100644
-> > --- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
-> > +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
-> > @@ -2,7 +2,7 @@ SUMMARY =3D "SCP and MCP Firmware"
-> >  DESCRIPTION =3D "Firmware for SCP and MCP software reference impleme=
-ntation"
-> >  HOMEPAGE =3D "https://gitlab.arm.com/firmware/SCP-firmware"
-> >
-> > -LICENSE =3D "BSD-3-Clause & Apache-2.0"
-> > +LICENSE =3D "Apache-2.0 AND BSD-3-Clause"
-> >  LIC_FILES_CHKSUM =3D
-> > "file://license.md;beginline=3D5;md5=3D9db9e3d2fb8d9300a6c3d15101b197=
-31 \
-> >
-> >  file://contrib/cmsis/git/LICENSE.txt;md5=3De3fc50a88d0a364313df4b21e=
-f20c29e"
-> >
-> > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.14.=
-0.bb
-> > b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.14.0.bb
-> > index a65106f24e..e876bd1eaa 100644
-> > --- a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.14.0.bb
-> > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.14.0.bb
-> > @@ -1,5 +1,5 @@
-> >  DESCRIPTION =3D "Trusted Firmware-A tests(aka TFTF)"
-> > -LICENSE =3D "BSD-3-Clause & NCSA"
-> > +LICENSE =3D "BSD-3-Clause AND NCSA"
-> >
-> >  LIC_FILES_CHKSUM +=3D
-> > "file://docs/license.rst;md5=3D6175cc0aa2e63b6d21a32aa0ee7d1b4a"
-> >
-> > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.15.=
-0.bb
-> > b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.15.0.bb
-> > index 8bd5dd5643..17951766e1 100644
-> > --- a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.15.0.bb
-> > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.15.0.bb
-> > @@ -1,5 +1,5 @@
-> >  DESCRIPTION =3D "Trusted Firmware-A tests(aka TFTF)"
-> > -LICENSE =3D "BSD-3-Clause & NCSA"
-> > +LICENSE =3D "BSD-3-Clause AND NCSA"
-> >
-> >  LIC_FILES_CHKSUM +=3D
-> > "file://docs/license.rst;md5=3D6175cc0aa2e63b6d21a32aa0ee7d1b4a"
-> >
-> > diff --git
-> > a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> > b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> > index 211196b5f8..1e06559ce2 100644
-> > --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> > @@ -1,6 +1,6 @@
-> >  DESCRIPTION =3D "Trusted Firmware-A"
-> >  HOMEPAGE =3D "https://trustedfirmware-a.readthedocs.io/"
-> > -LICENSE =3D "BSD-2-Clause & BSD-3-Clause & MIT & Apache-2.0"
-> > +LICENSE =3D "Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND MIT"
-> >
-> >  inherit firmware
-> >
-> > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/
-> > trusted-firmware-a_2.14.2.bb b/meta-arm/recipes-bsp/trusted-firmware-=
-a/
-> > trusted-firmware-a_2.14.2.bb
-> > index 3d0b80188e..9c70d0b581 100644
-> > --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.14=
-.2.bb
-> > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.14=
-.2.bb
-> > @@ -19,7 +19,7 @@ LIC_FILES_CHKSUM_MBEDTLS ??=3D ""
-> >  # add MBEDTLS to our sources if activated
-> >  SRC_URI:append =3D " ${@bb.utils.contains('TFA_MBEDTLS', '1',
-> > '${SRC_URI_MBEDTLS}', '', d)}"
-> >  # Update license variables
-> > -LICENSE:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' &
-> > Apache-2.0', '', d)}"
-> > +LICENSE:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1', ' AND
-> > Apache-2.0', '', d)}"
-> >  LIC_FILES_CHKSUM:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1'=
-, '
-> > ${LIC_FILES_CHKSUM_MBEDTLS}', '', d)}"
-> >  # add mbed TLS to version
-> >  SRCREV_FORMAT:append =3D "${@bb.utils.contains('TFA_MBEDTLS', '1',
-> > '_mbedtls', '', d)}"
-> > diff --git
-> > a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2.2.2-sr=
-c.inc
-> > b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2.2.2-sr=
-c.inc
-> > index ddaab88e8b..8fb0265e94 100644
-> > ---
-> > a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2.2.2-sr=
-c.inc
-> > +++
-> > b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2.2.2-sr=
-c.inc
-> > @@ -1,6 +1,6 @@
-> >  # Common src definitions for trusted-firmware-m and
-> > trusted-firmware-m-scripts
-> >
-> > -LICENSE =3D "BSD-2-Clause & BSD-3-Clause & Apache-2.0"
-> > +LICENSE =3D "Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause"
-> >
-> >  LIC_FILES_CHKSUM =3D
-> > "file://license.rst;md5=3D07f368487da347f3c7bd0fc3085f3afa \
-> >
-> >  file://external/tf-m-tests/license.rst;md5=3D4481bae2221b0cfca76a69f=
-b3411f390
-> > \
-> > diff --git
-> > a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2.3.0-sr=
-c.inc
-> > b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2.3.0-sr=
-c.inc
-> > index d3ab29d0e2..4ed6d8cb80 100644
-> > ---
-> > a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2.3.0-sr=
-c.inc
-> > +++
-> > b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-2.3.0-sr=
-c.inc
-> > @@ -1,6 +1,6 @@
-> >  # Common src definitions for trusted-firmware-m and
-> > trusted-firmware-m-scripts
-> >
-> > -LICENSE =3D "BSD-2-Clause & BSD-3-Clause & Apache-2.0"
-> > +LICENSE =3D "Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause"
-> >
-> >  LIC_FILES_CHKSUM =3D
-> > "file://license.rst;md5=3D002a64dec64b82c58a203a94bee7b2a1 \
-> >
-> >  file://external/tf-m-tests/license.rst;md5=3D4481bae2221b0cfca76a69f=
-b3411f390
-> > \
-> > diff --git
-> > a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-git-src.=
-inc
-> > b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-git-src.=
-inc
-> > index 7bea317cf3..ffc6200e77 100644
-> > ---
-> > a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-git-src.=
-inc
-> > +++
-> > b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-git-src.=
-inc
-> > @@ -1,6 +1,6 @@
-> >  # Common src definitions for trusted-firmware-m and
-> > trusted-firmware-m-scripts
-> >
-> > -LICENSE =3D "BSD-2-Clause & BSD-3-Clause & Apache-2.0"
-> > +LICENSE =3D "Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause"
-> >
-> >  LIC_FILES_CHKSUM =3D
-> > "file://license.rst;md5=3D07f368487da347f3c7bd0fc3085f3afa \
-> >
-> >  file://external/tf-m-tests/license.rst;md5=3D4481bae2221b0cfca76a69f=
-b3411f390
-> > \
-> > diff --git a/meta-arm/recipes-bsp/trusted-firmware-rmm/
-> > trusted-firmware-rmm_0.6.0.bb b/meta-arm/recipes-bsp/trusted-firmware=
--rmm/
-> > trusted-firmware-rmm_0.6.0.bb
-> > index 60558b6bca..43585982e9 100644
-> > --- a/meta-arm/recipes-bsp/trusted-firmware-rmm/
-> > trusted-firmware-rmm_0.6.0.bb
-> > +++ b/meta-arm/recipes-bsp/trusted-firmware-rmm/
-> > trusted-firmware-rmm_0.6.0.bb
-> > @@ -1,6 +1,6 @@
-> >  SUMMARY =3D "RMM Firmware"
-> >  DESCRIPTION =3D "RMM Firmware for Arm reference platforms"
-> > -LICENSE =3D "BSD-3-Clause & MIT"
-> > +LICENSE =3D "BSD-3-Clause AND MIT"
-> >
-> >  SRC_URI =3D "gitsm://
-> > git.trustedfirmware.org/TF-RMM/tf-rmm.git;protocol=3Dhttps;branch=3Dm=
-ain"
-> >  SRCREV =3D "7f6bc132caef3596fbb88d3a419c2a3cb499cde2"
-> > diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs_7.2.2.bb
-> > b/meta-arm/recipes-bsp/uefi/sbsa-acs_7.2.2.bb
-> > index 6d4422f99a..1c4753cbb2 100644
-> > --- a/meta-arm/recipes-bsp/uefi/sbsa-acs_7.2.2.bb
-> > +++ b/meta-arm/recipes-bsp/uefi/sbsa-acs_7.2.2.bb
-> > @@ -1,7 +1,7 @@
-> >  require recipes-bsp/uefi/edk2-firmware_202605.bb
-> >  PROVIDES:remove =3D "virtual/bootloader"
-> >
-> > -LICENSE +=3D "& Apache-2.0"
-> > +LICENSE +=3D "AND Apache-2.0"
-> >  LIC_FILES_CHKSUM +=3D
-> > "file://ShellPkg/Application/sbsa-acs/LICENSE.md;md5=3D2a944942e1496a=
-f1886903d274dedb13"
-> >
-> >  SRC_URI +=3D "git://
-> > github.com/ARM-software/sbsa-acs;destsuffix=3Dedk2/ShellPkg/Applicati=
-on/sbsa-acs;protocol=3Dhttps;branch=3Dmaster;name=3Dacs
-> > \
-> > diff --git a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.31.28.bb
-> > b/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.31.28.bb
-> > index 3c41d05c54..3a4789c57f 100644
-> > --- a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.31.28.bb
-> > +++ b/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.31.28.bb
-> > @@ -1,6 +1,6 @@
-> >  require fvp-envelope.inc
-> >
-> > -LICENSE:append =3D " & Artistic-2.0 & BSL-1.0 & BSD-2-Clause & Unlic=
-ense"
-> > +LICENSE:append =3D " AND Artistic-2.0 AND BSL-1.0 AND BSD-2-Clause A=
-ND
-> > Unlicense"
-> >
-> >  SUMMARY =3D "Arm Fixed Virtual Platform - Armv-A Base RevC Architect=
-ure
-> > Envelope Model FVP"
-> >  LIC_FILES_CHKSUM =3D
-> > "file://license_terms/license_agreement.txt;md5=3D1a33828e132ba71861c=
-11688dbb0bd16
-> > \
-> > diff --git a/meta-arm/recipes-devtools/fvp/fvp-common.inc
-> > b/meta-arm/recipes-devtools/fvp/fvp-common.inc
-> > index 5d87cef783..5059985563 100644
-> > --- a/meta-arm/recipes-devtools/fvp/fvp-common.inc
-> > +++ b/meta-arm/recipes-devtools/fvp/fvp-common.inc
-> > @@ -1,7 +1,7 @@
-> >  HOMEPAGE =3D "
-> > https://developer.arm.com/tools-and-software/simulation-models/fixed-=
-virtual-platforms
-> > "
-> >
-> >  LICENSE_FLAGS =3D "Arm-FVP-EULA"
-> > -LICENSE =3D "Proprietary & Apache-2.0 & Python-2.0 &
-> > GPL-3.0-with-GCC-exception & Zlib & NCSA & LGPL-2.0-or-later & MIT &
-> > BSD-3-Clause"
-> > +LICENSE =3D "Apache-2.0 AND BSD-3-Clause AND GPL-3.0-or-later WITH
-> > GCC-exception-3.1 AND LGPL-2.0-or-later AND MIT AND NCSA AND Python-2=
-.0 AND
-> > Zlib AND LicenseRef-Proprietary"
-> >
-> >  # FVP has an End User License Agreement. Add Arm-FVP-EULA to
-> >  # LICENSE_FLAGS_ACCEPTED if the EULA has been accepted, so it can
-> > diff --git a/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.8.=
-0.bb
-> > b/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.8.0.bb
-> > index ffd308fa95..84681b1585 100644
-> > --- a/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.8.0.bb
-> > +++ b/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.8.0.bb
-> > @@ -8,7 +8,7 @@ HOMEPAGE =3D "https://github.com/ARM-software/gator"
-> >  # configuration requirement specified here:
-> >  # https://github.com/ARM-software/gator#kernel-configuration
-> >
-> > -LICENSE =3D "GPL-2.0-only & LGPL-2.1-or-later & Apache-2.0"
-> > +LICENSE =3D "Apache-2.0 AND GPL-2.0-only AND LGPL-2.1-or-later"
-> >  LIC_FILES_CHKSUM =3D "file://COPYING;md5=3Db234ee4d69f5fce4486a80fda=
-f4a4263 \
-> >
-> >  file://libsensors/COPYING.LGPL;md5=3D4fbd65380cdd255951079008b364516=
-c \
-> >
-> >  file://mxml/LICENSE;md5=3D86d3f3a95c324c9479bd8986968f4327 \
-> > diff --git a/meta-arm/recipes-security/optee/optee-test.inc
-> > b/meta-arm/recipes-security/optee/optee-test.inc
-> > index bb9471bf88..8786d1bb5a 100644
-> > --- a/meta-arm/recipes-security/optee/optee-test.inc
-> > +++ b/meta-arm/recipes-security/optee/optee-test.inc
-> > @@ -2,7 +2,7 @@ SUMMARY =3D "OP-TEE sanity testsuite"
-> >  DESCRIPTION =3D "Open Portable Trusted Execution Environment - Test =
-suite"
-> >  HOMEPAGE =3D "https://www.op-tee.org/"
-> >
-> > -LICENSE =3D "BSD-2-Clause & GPL-2.0-only"
-> > +LICENSE =3D "BSD-2-Clause AND GPL-2.0-only"
-> >
-> >  inherit python3native ptest
-> >  inherit deploy
-> > diff --git
-> > a/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
-> > b/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
-> > index 22cc76ef25..2519b4c297 100644
-> > --- a/meta-arm/recipes-security/trusted-services/trusted-services-src=
-.inc
-> > +++ b/meta-arm/recipes-security/trusted-services/trusted-services-src=
-.inc
-> > @@ -1,6 +1,6 @@
-> >  # Define sources of Trusted Service and all external dependencies
-> >
-> > -LICENSE =3D "Apache-2.0 & BSD-3-Clause & BSD-2-Clause & Zlib"
-> > +LICENSE =3D "Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND Zlib"
-> >
-> >
-> >  FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files:"
-> > diff --git
-> > a/meta-arm/recipes-security/trusted-services/trusted-services.inc
-> > b/meta-arm/recipes-security/trusted-services/trusted-services.inc
-> > index bdfccc48fd..c40d70bf8a 100644
-> > --- a/meta-arm/recipes-security/trusted-services/trusted-services.inc
-> > +++ b/meta-arm/recipes-security/trusted-services/trusted-services.inc
-> > @@ -1,7 +1,7 @@
-> >  SUMMARY ?=3D "The Trusted Services: framework for developing root-of=
--trust
-> > services"
-> >  HOMEPAGE =3D "https://trusted-services.readthedocs.io/en/latest/inde=
-x.html"
-> >
-> > -LICENSE =3D "Apache-2.0 & BSD-3-Clause & Zlib"
-> > +LICENSE =3D "Apache-2.0 AND BSD-3-Clause AND Zlib"
-> >
-> >  inherit python3native cmake pkgconfig
-> >
-> > --
-> > 2.43.0
+T24gMjEgSnVsIDIwMjYsIGF0IDIxOjAxLCBEZW55cyBEbXl0cml5ZW5rbyA8ZGVuaXNAZGVuaXgu
+b3JnPiB3cm90ZToNCj4gDQo+PiBSb3NzLCBkaWQgdGhlIHNjcmlwdCBhdXRvIGNoYW5nZSB0aGlz
+IG9uZSBvciBkaWQgeW91IGhhbmQgZWRpdCBpdD8NCj4gDQo+IFRoZSBzY3JpcHQgZG9lc24ndCBj
+aGFuZ2UgdGhpcyBhbmQgSSBrbm93IGl0IGZvciBhIGZhY3QsIGFzIEkgaGFkIHRvIG1ha2UgYSAN
+Cj4gc2ltaWxhciBtYW51YWwgY2hhbmdlIGFuZCB3YXMgcXVpdGUgY29uZnVzZWQgYnkgUm9zcycg
+Y2hhbmdlLCB3aGljaCBkaWRuJ3QgDQo+IGxvb2sgcmlnaHQgdG8gbWUuDQoNClRoYXQgd2FzIGVu
+dGlyZWx5IG15IGZhdWx0LiBUaGUgc2NyaXB0IGxlZnQgYSBkZXByZWNhdGVkIGxpY2Vuc2UgYW5k
+IEkgdXNlZCB0aGUgd3JvbmcgbGljZW5zZSB3aGVuIHVwZGF0aW5nIGl0IHRvIHVzZSBXSVRILg0K
+DQpJ4oCZbGwgZml4IHVwIG5vdywgdGhhbmtzIGZvciBub3RpY2luZy4NCg0KUm9zcw==
 
