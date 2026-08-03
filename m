@@ -2,33 +2,33 @@ Return-Path: <alex.chapman@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B874C55184
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C93DC55175
 	for <webhook@archiver.kernel.org>; Mon,  3 Aug 2026 10:14:32 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.40116.1785752071683955145
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.40114.1785752066674227450
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 03 Aug 2026 03:14:31 -0700
+ Mon, 03 Aug 2026 03:14:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=BYewR0SE;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=nGCXf0/L;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: alex.chapman@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BCF5143D;
-	Mon,  3 Aug 2026 03:14:27 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CF1B143D;
+	Mon,  3 Aug 2026 03:14:22 -0700 (PDT)
 Received: from e142474.cambridge.arm.com (e142474.arm.com [10.2.203.50])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A325E3F632;
-	Mon,  3 Aug 2026 03:14:30 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 792043F632;
+	Mon,  3 Aug 2026 03:14:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1785752071; bh=LTYi8oL1AM75LWaEWeegOW1bmEbNHmZyyUwMdxho/wg=;
+	t=1785752066; bh=BjYSDtxnhFS89EbBcxalZrKBFvBDqYyPZzlYxW+lU+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BYewR0SEkKGdimycxS2YJU5+1UVWAuQpISbQsx2hUpMHY68wjHA9lVOMU+i61ZzYB
-	 TwRtFt1Lie/Da+vS6jUyqe6OYVi4Q1bRfuI54mUDycp1rcMEPwPfqd3UxwIiDngMw8
-	 snCtq4zPqANoYsvgfUW3Yyp+N4UPjqs+HCEIgrWM=
+	b=nGCXf0/L68CquLPKfcvp867aO/SziT3BKMjZaZBTdqG+IAdDi/YGdo+xkOxudZAm8
+	 CFGMUKx0KNAEfJZ2ZfMM2rIuaRzQJrkrV3sDHaUmQMCzumDucIx6iAB2Lj2vWaerWn
+	 LmoGA1BaSQl9NBYGotPxIhmXEa/XsqEqN90EoO5s=
 From: Alex Chapman <alex.chapman@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Alex Chapman <alex.chapman@arm.com>
-Subject: [PATCH 2/2] arm-bsp/docs:corstone1000: Clarify secure debug setup
-Date: Mon,  3 Aug 2026 11:14:01 +0100
-Message-ID: <20260803101401.3496378-3-alex.chapman@arm.com>
+Subject: [PATCH 1/2] arm-bsp/docs:corstone1000/a320: Use kas shell for capsule generation
+Date: Mon,  3 Aug 2026 11:14:00 +0100
+Message-ID: <20260803101401.3496378-2-alex.chapman@arm.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260803101401.3496378-1-alex.chapman@arm.com>
 References: <20260803101401.3496378-1-alex.chapman@arm.com>
@@ -38,85 +38,629 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 03 Aug 2026 10:14:32 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7136
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7135
 
-Replace the incomplete Arm Development Studio steps with the configuratio=
-n database and hardware connection flow.
+- Replace manual partial and rollback capsule generation with a kas
+shell command
+- Remove incorrect MPS3 capsule transfer instructions
+- Fix broken MPS3 section header
+- Update incorrect capsule amount in instructions
 
-Initialize the required submodules and document that the Secure Debug Man=
-ager library must be built before importing the configuration.
+Shortens documentation and improves clarity in capsule generation,
+making it easier to see how the partial and rollback capsules differ.
+
+Also correct the capsule count in the test setup instructions.
 
 Signed-off-by: Alex Chapman <alex.chapman@arm.com>
 ---
- .../documentation/corstone1000/user-guide.rst | 33 +++++++++++++++++--
- 1 file changed, 30 insertions(+), 3 deletions(-)
+ .../corstone1000-a320/topics/tests.md         | 138 +++------------
+ .../documentation/corstone1000/user-guide.rst | 161 ++++--------------
+ 2 files changed, 56 insertions(+), 243 deletions(-)
 
+diff --git a/meta-arm-bsp/documentation/corstone1000-a320/topics/tests.md=
+ b/meta-arm-bsp/documentation/corstone1000-a320/topics/tests.md
+index 90cd87c5..c22ff6db 100644
+--- a/meta-arm-bsp/documentation/corstone1000-a320/topics/tests.md
++++ b/meta-arm-bsp/documentation/corstone1000-a320/topics/tests.md
+@@ -192,20 +192,11 @@ The following payloads can be individually updated:
+=20
+ ### Generate capsules {.reference}
+=20
+-[EDK II's]($edk2_repository) `GenerateCapsule` tool is used to generate =
+capsules and is built automatically
+-for the host machine during the firmware image building process.
+-The tool can be found at `${WORKSPACE}/build/tmp/sysroots-components/aar=
+ch64/edk2-basetools-native/usr/bin/edk2-BaseTools/BinWrappers/PosixLike/G=
+enerateCapsule`.
++Capsules are generated by running the `image_uefi_capsule` task for
++`corstone1000-flash-firmware-image`. The task uses EDK II's `GenerateCap=
+sule`
++tool and creates the capsule metadata JSON automatically from the recipe=
+ settings.
+=20
+-:::note
+-The `aarch64` part of this path depends on the build host architecture
+-and can be different on another host.
+-:::
+-
+-A JSON file containing metadata about the capsule payloads needs to be c=
+reated using the script
+-found at `${WORKSPACE}/meta-arm/meta-arm/scripts/generate_capsule_json_m=
+ultiple.py`.
+-This JSON file is required by EDK II's `GenerateCapsule` tool to generat=
+e the capsule.
+-
+-The capsule's default metadata passed can be found in the `${WORKSPACE}/=
+meta-arm/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-imag=
+e.bb`
++The capsule's default metadata can be found in the `${WORKSPACE}/meta-ar=
+m/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.bb`
+ and `${WORKSPACE}/meta-arm/kas/corstone1000-image-configuration.yml` fil=
+es.
+=20
+ #### Valid full capsule {.reference}
+@@ -222,116 +213,39 @@ To generate a capsule that updates only a single c=
+omponent, explicitly set the f
+=20
+ The partial capsule is also valid, but sets the firmware version to 7 on=
+ly for the BL2 component, indicating that no other components should be u=
+pdated.
+=20
+-Use the following commands to generate the `capsule_config.json` file, w=
+hich is required by the EDK2 tool for capsule creation:
+-
+-```
+-cd ${WORKSPACE}
+-
+-python3 meta-arm/meta-arm/scripts/generate_capsule_json_multiple.py \
+---selected_components DUMMY_START  BL2  DUMMY_END \
+---components DUMMY_START  BL2  TFM_S  FIP  INITRAMFS  DUMMY_END \
+---fw_versions 0 7 0 0 0 0 \
+---guids \
+-6f784cbf-7938-5c23-8d6e-24d2f1410fa9  \
+-${BL2_GUID} ${TFM_S_GUID}  ${FIP_GUID}  ${INITRAMFS_GUID} \
+-b57e432b-a250-5c73-93e3-90205e64baba \
+---hardware_instances 1  1  1  1  1  1 \
+---lowest_supported_versions 5 5 5 5 5 5 \
+---monotonic_counts 1  1  1  1  1  1 \
+---payloads \
+-build/tmp/work/corstone1000_a320_fvp-poky-linux-musl/corstone1000-flash-=
+firmware-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dummy.bi=
+n \
+-build/tmp/deploy/images/corstone1000-a320-fvp/trusted-firmware-m/bl2_sig=
+ned.bin \
+-build/tmp/deploy/images/corstone1000-a320-fvp/trusted-firmware-m/tfm_s_s=
+igned.bin \
+-build/tmp/deploy/images/corstone1000-a320-fvp/signed_fip.bin \
+-build/tmp/deploy/images/corstone1000-a320-fvp/Image.gz-initramfs-corston=
+e1000-a320-fvp.bin \
+-build/tmp/work/corstone1000_a320_fvp-poky-linux-musl/corstone1000-flash-=
+firmware-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dummy.bi=
+n \
+---update_image_indexes 5  1  2  3  4  6 \
+---private_keys \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+---certificates \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+---output capsule_config.json
+-```
+-
+ Run the command below to generate the partial capsule:
+=20
+ ```
+-./build/tmp/sysroots-components/aarch64/edk2-basetools-native/usr/bin/ed=
+k2-BaseTools/BinWrappers/PosixLike/GenerateCapsule \
+--e \
+--j capsule_config.json \
+---capflag PersistAcrossReset \
+--o corstone1000-a320-fvp-partial-v7.uefi.capsule
++cd ${WORKSPACE}
++kas shell meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug.yml -=
+c '
++    echo "CAPSULE_VERSION =3D \"7\"" >> conf/local.conf
++    echo "CAPSULE_LOWEST_SUPPORTED_VERSION =3D \"7\"" >> conf/local.conf
++    echo "CAPSULE_SELECTED_COMPONENTS =3D \"BL2\"" >> conf/local.conf
++    bitbake corstone1000-flash-firmware-image -c image_uefi_capsule
++'
+ ```
+=20
+-The partial capsule will be located in the `${WORKSPACE}` directory.
++The partial capsule will be located at
++`${WORKSPACE}/build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000=
+-a320-fvp-v7.uefi.capsule`.
+=20
+-#### Invalid capsule {.reference}
++#### Rollback capsule {.reference}
+=20
+ Generate a capsule with firmware version metadata for all payloads set l=
+ower than that of a valid capsule.
+ The valid capsule has a default firmware version of 6 for all payloads, =
+while the simulated invalid capsule has the firmware version set to 5 for=
+ all payloads.
+=20
+-Use the following commands to generate the `capsule_config.json` file, w=
+hich is required by the EDK2 tool for capsule creation:
++Run the command below to generate the rollback capsule:
+=20
+ ```
+ cd ${WORKSPACE}
+-
+-python3 meta-arm/meta-arm/scripts/generate_capsule_json_multiple.py \
+---selected_components DUMMY_START  BL2  TFM_S  FIP  INITRAMFS  DUMMY_END=
+ \
+---components DUMMY_START  BL2  TFM_S  FIP  INITRAMFS  DUMMY_END \
+---fw_versions 5 5 5 5 5 5 \
+---guids \
+-6f784cbf-7938-5c23-8d6e-24d2f1410fa9  \
+-${BL2_GUID} ${TFM_S_GUID}  ${FIP_GUID}  ${INITRAMFS_GUID} \
+-b57e432b-a250-5c73-93e3-90205e64baba \
+---hardware_instances 1  1  1  1  1  1 \
+---lowest_supported_versions 5 5 5 5 5 5 \
+---monotonic_counts 1  1  1  1  1  1 \
+---payloads \
+-build/tmp/work/corstone1000_a320_fvp-poky-linux-musl/corstone1000-flash-=
+firmware-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dummy.bi=
+n \
+-build/tmp/deploy/images/corstone1000-a320-fvp/trusted-firmware-m/bl2_sig=
+ned.bin \
+-build/tmp/deploy/images/corstone1000-a320-fvp/trusted-firmware-m/tfm_s_s=
+igned.bin \
+-build/tmp/deploy/images/corstone1000-a320-fvp/signed_fip.bin \
+-build/tmp/deploy/images/corstone1000-a320-fvp/Image.gz-initramfs-corston=
+e1000-a320-fvp.bin \
+-build/tmp/work/corstone1000_a320_fvp-poky-linux-musl/corstone1000-flash-=
+firmware-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dummy.bi=
+n \
+---update_image_indexes 5  1  2  3  4  6 \
+---private_keys \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_key.k=
+ey \
+---certificates \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+-build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000_capsule_cert.=
+crt \
+---output capsule_config.json
+-```
+-
+-Run the command below to generate the invalid capsule:
+-
+-```
+-./build/tmp/sysroots-components/aarch64/edk2-basetools-native/usr/bin/ed=
+k2-BaseTools/BinWrappers/PosixLike/GenerateCapsule \
+--e \
+--j capsule_config.json \
+---capflag PersistAcrossReset \
+--o corstone1000-a320-fvp-v5.uefi.capsule
++kas shell meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug.yml -=
+c '
++    echo "CAPSULE_VERSION =3D \"5\"" >> conf/local.conf
++    echo "CAPSULE_LOWEST_SUPPORTED_VERSION =3D \"5\"" >> conf/local.conf
++    bitbake corstone1000-flash-firmware-image -c image_uefi_capsule
++'
+ ```
+=20
+-The invalid capsule will be located in the `${WORKSPACE}` directory.
++The rollback capsule will be located at
++`${WORKSPACE}/build/tmp/deploy/images/corstone1000-a320-fvp/corstone1000=
+-a320-fvp-v5.uefi.capsule`.
+=20
+ ### Transfer capsules to target {.reference}
+=20
+@@ -369,8 +283,8 @@ as opposed to the on-disk method (delivery of capsule=
+s using a file on a mass st
+=20
+    ```
+    sudo cp ${WORKSPACE}/build/tmp/deploy/images/corstone1000-a320-fvp/co=
+rstone1000-a320-fvp-v6.uefi.capsule /mnt/ir-acs-live-image-generic-arm64/
+-   sudo cp ${WORKSPACE}/corstone1000-a320-fvp-v5.uefi.capsule /mnt/ir-ac=
+s-live-image-generic-arm64/
+-   sudo cp ${WORKSPACE}/corstone1000-a320-fvp-partial-v7.uefi.capsule /m=
+nt/ir-acs-live-image-generic-arm64/
++   sudo cp ${WORKSPACE}/build/tmp/deploy/images/corstone1000-a320-fvp/co=
+rstone1000-a320-fvp-v5.uefi.capsule /mnt/ir-acs-live-image-generic-arm64/
++   sudo cp ${WORKSPACE}/build/tmp/deploy/images/corstone1000-a320-fvp/co=
+rstone1000-a320-fvp-v7.uefi.capsule /mnt/ir-acs-live-image-generic-arm64/
+    sync
+    ```
+=20
+@@ -401,7 +315,7 @@ To run the test:
+       cd ${WORKSPACE} && tmux
+       ```
+=20
+-   2. Run the FVP within `tmux` with the IR prebuilt image which now als=
+o contains the two capsules:
++   2. Run the FVP within `tmux` with the IR prebuilt image which now als=
+o contains the three capsules:
+=20
+       ```
+       kas shell meta-arm/kas/corstone1000-a320-fvp.yml:meta-arm/ci/debug=
+.yml \
+@@ -526,7 +440,7 @@ Do not terminate FVP between the positive full capsul=
+e update and partial capsul
+=20
+ #### Positive partial capsule update {.reference}
+=20
+-Follow the steps for the [Positive full capsule update test], ensuring y=
+ou use `corstone1000-a320-fvp-partial-v7.uefi.capsule` instead of `corsto=
+ne1000-a320-fvp-v6.uefi.capsule`.
++Follow the steps for the [Positive full capsule update test], ensuring y=
+ou use `corstone1000-a320-fvp-v7.uefi.capsule` instead of `corstone1000-a=
+320-fvp-v6.uefi.capsule`.
+=20
+ Once the system has fully booted again, read [Verifying firmware version=
+s with ESRT] to confirm that the firmware version reflects the updated ca=
+psule.
+=20
 diff --git a/meta-arm-bsp/documentation/corstone1000/user-guide.rst b/met=
 a-arm-bsp/documentation/corstone1000/user-guide.rst
-index 36c6ae35..640e0c5f 100644
+index 72dd37b8..36c6ae35 100644
 --- a/meta-arm-bsp/documentation/corstone1000/user-guide.rst
 +++ b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
-@@ -2154,8 +2154,10 @@ and `Arm Development Studio <arm-ds-website_>`__ v=
-ersions 2022.2, 2022.c, or 202
+@@ -942,20 +942,11 @@ The following payloads can be individually updated:
+ Generate Capsules
+ *****************
 =20
-         cd ${WORKSPACE}/secure-debug-manager
-         git checkout b30d6496ca749123e86b39b161b9f70ef76106d6
-+        git submodule update --init
+-`EDK II's <edk2-repository_>`__ ``GenerateCapsule`` tool is used to gene=
+rate capsules and is built automatically
+-for the host machine during the firmware image building process.
+-The tool can be found at ``${WORKSPACE}/build/tmp/sysroots-components/aa=
+rch64/edk2-basetools-native/usr/bin/edk2-BaseTools/BinWrappers/PosixLike/=
+GenerateCapsule``.
++Capsules are generated by running the ``image_uefi_capsule`` task for
++``corstone1000-flash-firmware-image``. The task uses EDK II's ``Generate=
+Capsule``
++tool and creates the capsule metadata JSON automatically from the recipe=
+ settings.
 =20
- #. Follow the instructions in the `Secure Debug Manager (PSA-ADAC / SDC-=
-600)'s README <secure-debug-manager-repo-readme_>`__ for the development =
-machine setup.
-+   This setup must include building the Secure Debug Manager because the=
- built library completes the Arm Development Studio configuration.
-=20
- #. Rebuild the software stack with Secure Debug.
-=20
-@@ -2177,9 +2179,34 @@ and `Arm Development Studio <arm-ds-website_>`__ v=
-ersions 2022.2, 2022.c, or 202
-=20
- #. Connect the debug probe to the MPS3 using the 20-pin 1.27mm connector=
- with the ``CS_20W_1.27MM silkscreen`` label.
-=20
--#. Create a debug configuration in Arm Development Studio as described i=
-n the `Secure Debug Manager (PSA-ADAC / SDC-600)'s README <secure-debug-m=
-anager-armds-integration_>`__.
+-.. note::
 -
--#. Connect the debuger to the target using the debug configuration.
-+#. Open a new Arm Development Studio IDE window and add the Secure Debug=
- Manager configuration database.
-+
-+   #. Select ``Window`` > ``Preferences``.
-+   #. Expand ``Arm DS`` and select ``Configuration Database``.
-+   #. Select ``Add``.
-+   #. Enter a descriptive name, such as ``Corstone-1000 Secure Debug``.
-+      The name does not affect the connection.
-+   #. Set ``Location`` to ``${WORKSPACE}/secure-debug-manager/arm_ds/DB`=
-`.
-+   #. Select ``OK`` to close the ``Add configuration database location``=
- dialog.
-+   #. Select ``Rebuild database``.
-+   #. Select ``Apply and Close``.
-+
-+#. Create the Arm Development Studio hardware connection.
-+
-+   #. Select ``Create a debug connection...``.
-+   #. Select ``Hardware Connection``, then select ``Next``.
-+   #. Enter a descriptive debug connection name, then select ``Next``.
-+      The name does not affect the connection.
-+   #. In ``Target Selection``, select ``MPS3_Corstone-1000_ADAC``.
-+   #. Select ``Finish``.
-+
-+#. Configure and start the debug connection.
-+
-+   #. Select ``Arm`` > ``MPS3_Corstone-1000_ADAC`` > ``Bare Metal Debug`=
-` > ``Cortex-A35``.
-+   #. For ``Target Connection``, select ``ULINKpro``.
-+   #. Select ``Browse...``.
-+   #. In the ``Connection Browser``, select the name of the connected UL=
-INKpro probe, then select ``Select``.
-+   #. Select ``Debug``.
+-    The ``aarch64`` part of this path depends on the build host architec=
+ture
+-    and can be different on another host.
+-
+-A JSON file containing metadata about the capsule payloads needs to be c=
+reated using the script
+-found at ``${WORKSPACE}/meta-arm/meta-arm/scripts/generate_capsule_json_=
+multiple.py``.
+-This JSON file is required by EDK II's ``GenerateCapsule`` tool to gener=
+ate the capsule.
+-
+-The capsule's default metadata passed can be found in the ``${WORKSPACE}=
+/meta-arm/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-ima=
+ge.bb``
++The capsule's default metadata can be found in the ``${WORKSPACE}/meta-a=
+rm/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.bb``
+ and ``${WORKSPACE}/meta-arm/kas/corstone1000-image-configuration.yml`` f=
+iles.
 =20
- #. Provide the paths to the private key and trust chain certificate when=
- asked by Arm Development Studio Console.
+ Valid Full Capsule
+@@ -974,118 +965,40 @@ To generate a capsule that updates only a single c=
+omponent, explicitly set the f
 =20
+ The **partial capsule** is also valid, but sets the firmware version to =
+**7** **only** for the **BL2** component, indicating that no other compon=
+ents should be updated.
+=20
+-Use the following commands to generate the `capsule_config.json` file, w=
+hich is required by the EDK2 tool for capsule creation:
+-
+-.. code-block:: console
+-
+-    cd ${WORKSPACE}
+-
+-    python3 meta-arm/meta-arm/scripts/generate_capsule_json_multiple.py =
+\
+-    --selected_components DUMMY_START  BL2  DUMMY_END \
+-    --components DUMMY_START  BL2  TFM_S  FIP  INITRAMFS  DUMMY_END \
+-    --fw_versions 0 7 0 0 0 0 \
+-    --guids \
+-    6f784cbf-7938-5c23-8d6e-24d2f1410fa9  \
+-    ${BL2_GUID} ${TFM_S_GUID}  ${FIP_GUID}  ${INITRAMFS_GUID} \
+-    b57e432b-a250-5c73-93e3-90205e64baba \
+-    --hardware_instances 1  1  1  1  1  1 \
+-    --lowest_supported_versions 5 5 5 5 5 5 \
+-    --monotonic_counts 1  1  1  1  1  1 \
+-    --payloads \
+-    build/tmp/work/corstone1000_${TARGET}-poky-linux-musl/corstone1000-f=
+lash-firmware-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dum=
+my.bin \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/trusted-firmware-m/bl=
+2_signed.bin \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/trusted-firmware-m/tf=
+m_s_signed.bin \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/signed_fip.bin \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/Image.gz-initramfs-co=
+rstone1000-${TARGET}.bin \
+-    build/tmp/work/corstone1000_${TARGET}-poky-linux-musl/corstone1000-f=
+lash-firmware-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dum=
+my.bin \
+-    --update_image_indexes 5  1  2  3  4  6 \
+-    --private_keys \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+key.key \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+key.key \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+key.key \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+key.key \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+key.key \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+key.key \
+-    --certificates \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+cert.crt \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+cert.crt \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+cert.crt \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+cert.crt \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+cert.crt \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+cert.crt \
+-    --output capsule_config.json
+-
+ Run the command below to generate the partial capsule:
+=20
+ .. code-block:: console
+=20
+-    ./build/tmp/sysroots-components/aarch64/edk2-basetools-native/usr/bi=
+n/edk2-BaseTools/BinWrappers/PosixLike/GenerateCapsule \
+-    -e \
+-    -j capsule_config.json \
+-    --capflag PersistAcrossReset \
+-    -o corstone1000-${TARGET}-partial-v7.uefi.capsule
++    cd ${WORKSPACE}
++    kas shell meta-arm/kas/corstone1000-${TARGET}.yml:meta-arm/ci/debug.=
+yml -c '
++        echo "CAPSULE_VERSION =3D \"7\"" >> conf/local.conf
++        echo "CAPSULE_LOWEST_SUPPORTED_VERSION =3D \"7\"" >> conf/local.=
+conf
++        echo "CAPSULE_SELECTED_COMPONENTS =3D \"BL2\"" >> conf/local.con=
+f
++        bitbake corstone1000-flash-firmware-image -c image_uefi_capsule
++    '
+=20
+-The partial capsule will be located in the ``${WORKSPACE}`` directory.
++The partial capsule will be located at
++``${WORKSPACE}/build/tmp/deploy/images/corstone1000-${TARGET}/corstone10=
+00-${TARGET}-v7.uefi.capsule``.
+=20
+-Invalid Capsule
+-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++Rollback Capsule
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+ Generate a capsule with firmware version metadata for all payloads set l=
+ower than that of a valid capsule.
+ The valid capsule has a default firmware version of 6 for all payloads, =
+while the simulated invalid capsule has the firmware version set to 5 for=
+ all payloads.
+=20
+-Use the following commands to generate the `capsule_config.json` file, w=
+hich is required by the EDK2 tool for capsule creation:
++Run the command below to generate the rollback capsule:
+=20
+ .. code-block:: console
+=20
+     cd ${WORKSPACE}
++    kas shell meta-arm/kas/corstone1000-${TARGET}.yml:meta-arm/ci/debug.=
+yml -c '
++        echo "CAPSULE_VERSION =3D \"5\"" >> conf/local.conf
++        echo "CAPSULE_LOWEST_SUPPORTED_VERSION =3D \"5\"" >> conf/local.=
+conf
++        bitbake corstone1000-flash-firmware-image -c image_uefi_capsule
++    '
+=20
+-    python3 meta-arm/meta-arm/scripts/generate_capsule_json_multiple.py =
+\
+-    --selected_components DUMMY_START  BL2  TFM_S  FIP  INITRAMFS  DUMMY=
+_END \
+-    --components DUMMY_START  BL2  TFM_S  FIP  INITRAMFS  DUMMY_END \
+-    --fw_versions 5 5 5 5 5 5 \
+-    --guids \
+-    6f784cbf-7938-5c23-8d6e-24d2f1410fa9  \
+-    ${BL2_GUID} ${TFM_S_GUID}  ${FIP_GUID}  ${INITRAMFS_GUID} \
+-    b57e432b-a250-5c73-93e3-90205e64baba \
+-    --hardware_instances 1  1  1  1  1  1 \
+-    --lowest_supported_versions 5 5 5 5 5 5 \
+-    --monotonic_counts 1  1  1  1  1  1 \
+-    --payloads \
+-    build/tmp/work/corstone1000_${TARGET}-poky-linux-musl/corstone1000-f=
+lash-firmware-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dum=
+my.bin \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/trusted-firmware-m/bl=
+2_signed.bin \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/trusted-firmware-m/tf=
+m_s_signed.bin \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/signed_fip.bin \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/Image.gz-initramfs-co=
+rstone1000-${TARGET}.bin \
+-    build/tmp/work/corstone1000_${TARGET}-poky-linux-musl/corstone1000-f=
+lash-firmware-image/1.0/sources/corstone1000-flash-firmware-image-1.0/dum=
+my.bin \
+-    --update_image_indexes 5  1  2  3  4  6 \
+-    --private_keys \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+key.key \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+key.key \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+key.key \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+key.key \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+key.key \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+key.key \
+-    --certificates \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+cert.crt \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+cert.crt \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+cert.crt \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+cert.crt \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+cert.crt \
+-    build/tmp/deploy/images/corstone1000-${TARGET}/corstone1000_capsule_=
+cert.crt \
+-    --output capsule_config.json
+-
+-
+-Run the command below to generate the invalid capsule:
+-
+-.. code-block:: console
+-
+-    ./build/tmp/sysroots-components/aarch64/edk2-basetools-native/usr/bi=
+n/edk2-BaseTools/BinWrappers/PosixLike/GenerateCapsule \
+-    -e \
+-    -j capsule_config.json \
+-    --capflag PersistAcrossReset \
+-    -o corstone1000-${TARGET}-v5.uefi.capsule
+-
+-The invalid capsule will be located in the ``${WORKSPACE}`` directory.
++The rollback capsule will be located at
++``${WORKSPACE}/build/tmp/deploy/images/corstone1000-${TARGET}/corstone10=
+00-${TARGET}-v5.uefi.capsule``.
+=20
+ ***************************
+ Transfer Capsules to Target
+@@ -1094,20 +1007,6 @@ Transfer Capsules to Target
+ The capsule delivery process described below is the direct method (usage=
+ of capsules from the ACS image)
+ as opposed to the on-disk method (delivery of capsules using a file on a=
+ mass storage device).
+=20
+-MPS3
+-=3D=3D=3D=3D
+-
+-#. Prepare a USB drive as explained in `this <mps3-instructions-for-acs-=
+image_>`_ section.
+-
+-#. Copy the capsule files to the root directory of the ``BOOT`` partitio=
+n in the USB drive.
+-
+-  .. code-block:: console
+-
+-    cp ${WORKSPACE}/build/tmp/deploy/images/corstone1000-mps3/corstone10=
+00-mps3-v6.uefi.capsule /dev/sdc/BOOT/
+-    cp ${WORKSPACE}/corstone1000-mps3-v5.uefi.capsule /dev/sdc/EFI/BOOT/
+-    cp ${WORKSPACE}/corstone1000-mps3-partial-v7.uefi.capsule /dev/sdc/E=
+FI/BOOT/
+-    sync
+-
+ .. note::
+=20
+     The staging steps below are shared between ``mps3`` and ``fvp``.
+@@ -1134,10 +1033,10 @@ MPS3
+         cd ${WORKSPACE}
+         wic cp ${WORKSPACE}/build/tmp/deploy/images/corstone1000-${TARGE=
+T}/corstone1000-${TARGET}-v6.uefi.capsule \
+           ${ACS_STAGED_IMAGE}:1/corstone1000-${TARGET}-v6.uefi.capsule
+-        wic cp ${WORKSPACE}/corstone1000-${TARGET}-v5.uefi.capsule \
++        wic cp ${WORKSPACE}/build/tmp/deploy/images/corstone1000-${TARGE=
+T}/corstone1000-${TARGET}-v5.uefi.capsule \
+           ${ACS_STAGED_IMAGE}:1/corstone1000-${TARGET}-v5.uefi.capsule
+-        wic cp ${WORKSPACE}/corstone1000-${TARGET}-partial-v7.uefi.capsu=
+le \
+-          ${ACS_STAGED_IMAGE}:1/corstone1000-${TARGET}-partial-v7.uefi.c=
+apsule
++        wic cp ${WORKSPACE}/build/tmp/deploy/images/corstone1000-${TARGE=
+T}/corstone1000-${TARGET}-v7.uefi.capsule \
++          ${ACS_STAGED_IMAGE}:1/corstone1000-${TARGET}-v7.uefi.capsule
+=20
+ .. important::
+=20
+@@ -1145,7 +1044,7 @@ MPS3
+     as doing so might inadvertently trigger the on-disk update method.
+=20
+ MPS3
+-=3D=3D=3D
++=3D=3D=3D=3D
+=20
+ #. Write ``${ACS_STAGED_IMAGE}`` to the ACS USB drive by following the
+    `MPS3 ACS image steps <mps3-instructions-for-acs-image_>`_ and replac=
+ing
+@@ -1173,7 +1072,7 @@ Positive Full Capsule Update Test
+=20
+     - MPS3:
+=20
+-      #. Plug the prepared USB drive which has the IR prebuilt image and=
+ two capsules to the MPS3.
++      #. Plug the prepared USB drive which has the IR prebuilt image and=
+ three capsules to the MPS3.
+       #. Power cycle the MPS3.
+=20
+     - FVP:
+@@ -1184,7 +1083,7 @@ Positive Full Capsule Update Test
+=20
+         cd ${WORKSPACE} && tmux
+=20
+-      #. Run the FVP within ``tmux`` with the IR prebuilt image which no=
+w also contains the two capsules:
++      #. Run the FVP within ``tmux`` with the IR prebuilt image which no=
+w also contains the three capsules:
+=20
+       .. code-block:: console
+=20
+@@ -1329,7 +1228,7 @@ Positive Partial Capsule Update Test
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+ Follow the steps for the `positive full capsule update test <positive-fu=
+ll-capsule-update-test_>`__ ensuring you use
+-``corstone1000-${TARGET}-partial-v7.uefi.capsule`` instead of ``corstone=
+1000-${TARGET}-v6.uefi.capsule``.
++``corstone1000-${TARGET}-v7.uefi.capsule`` instead of ``corstone1000-${T=
+ARGET}-v6.uefi.capsule``.
+=20
+ Once the system has fully booted again, `read the ESRT <verifying-firmwa=
+re-versions-via-esrt_>`__ to
+ confirm that the firmware version reflects the updated capsule.
 
