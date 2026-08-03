@@ -1,73 +1,52 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <alex.chapman@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DFAC531F9
-	for <webhook@archiver.kernel.org>; Sun, 26 Jul 2026 18:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25297C55175
+	for <webhook@archiver.kernel.org>; Mon,  3 Aug 2026 10:14:22 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15590.1785091040600084959
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.40112.1785752060638055050
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 26 Jul 2026 11:37:21 -0700
+ Mon, 03 Aug 2026 03:14:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=b5Dtgrk8;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ dkim=pass header.i=@arm.com header.s=foss header.b=lpMkDu/r;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: alex.chapman@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0E761476
-	for <meta-arm@lists.yoctoproject.org>; Sun, 26 Jul 2026 11:37:15 -0700 (PDT)
-Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F08D43FA21
-	for <meta-arm@lists.yoctoproject.org>; Sun, 26 Jul 2026 11:37:19 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AD991476;
+	Mon,  3 Aug 2026 03:14:16 -0700 (PDT)
+Received: from e142474.cambridge.arm.com (e142474.arm.com [10.2.203.50])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 99DC13F632;
+	Mon,  3 Aug 2026 03:14:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1785091040; bh=QhaPFYwEEq5gzwR3eUg3YtSUeMq4mOhmzNK5by2nE6o=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=b5Dtgrk8hzRg1ZV3lsAew1hCIRHUwdwLn8ZPOTaurhdyTEm0a+ofGBwVMBAhhewtH
-	 SRC6GM3aUlA/VkaYaQNtLYC6nhZnXMwqo4zM93WO/FyH+l+/yE7I/p68pKoV5e8giT
-	 3bP++BC0mp5KMosskS5YYf1Tqv2+xnlJH+9NCf30=
-From: Jon Mason <jon.mason@arm.com>
+	t=1785752060; bh=UWRNNnQ5NnMQaWxJQhy3JN3WwPmwqwzQuD+wYAPXEeQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lpMkDu/rpXxKnAdhzLjJfyhwuR/u0BgCCSbif2tkHSrNsa3QQb+vvfUZtcdRhq8hw
+	 E4R7oaYqC8pNt2/esjuxNoBjBmfYRsiEzWGvyAa4vT6Y0j17BOj9Kj58+/QTks9KaR
+	 r33H+OONOBV2OdrVq4cLQV4hbo4UedAUhRmTKjc8=
+From: Alex Chapman <alex.chapman@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/3] arm-bsp/corstone1000-external-sys-tests: update HOMEPAGE
-Date: Sun, 26 Jul 2026 14:37:17 -0400
-Message-ID: <20260726183718.76060-2-jon.mason@arm.com>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20260726183718.76060-1-jon.mason@arm.com>
-References: <20260726183718.76060-1-jon.mason@arm.com>
+Cc: Alex Chapman <alex.chapman@arm.com>
+Subject: [PATCH 0/2] arm-bsp/docs: Improve Corstone1000 documentation
+Date: Mon,  3 Aug 2026 11:13:59 +0100
+Message-ID: <20260803101401.3496378-1-alex.chapman@arm.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sun, 26 Jul 2026 18:37:30 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7131
+ <meta-arm@lists.yoctoproject.org>; Mon, 03 Aug 2026 10:14:22 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7134
 
-The HOMEPAGE variable was not updated when the SRC_URI was and it no
-longer points to a valid webpage.
+Simplify manual capsule generation by using a kas shell command.
+Add armDS steps to Secure debug documentation.
+Correct several related documentation issues.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- .../corstone1000-external-sys-tests_git.bb                      | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Alex Chapman (2):
+  arm-bsp/docs:corstone1000/a320: Use kas shell for capsule generation
+  arm-bsp/docs:corstone1000: Clarify secure debug setup
 
-diff --git a/meta-arm-bsp/recipes-test/corstone1000-external-sys-tests/co=
-rstone1000-external-sys-tests_git.bb b/meta-arm-bsp/recipes-test/corstone=
-1000-external-sys-tests/corstone1000-external-sys-tests_git.bb
-index c14dfc4d7f74..229affc8ecea 100644
---- a/meta-arm-bsp/recipes-test/corstone1000-external-sys-tests/corstone1=
-000-external-sys-tests_git.bb
-+++ b/meta-arm-bsp/recipes-test/corstone1000-external-sys-tests/corstone1=
-000-external-sys-tests_git.bb
-@@ -1,6 +1,6 @@
- SUMMARY =3D "CORSTONE1000 external systems communications tests"
- DESCRIPTION =3D "This is a Linux userspace tool to test the communicatio=
-n between Corstone1000 cores"
--HOMEPAGE =3D "https://git.linaro.org/landing-teams/working/arm/test-apps=
-.git"
-+HOMEPAGE =3D "https://gitlab.arm.com/arm-reference-solutions/corstone100=
-0/applications"
- LICENSE =3D "BSD-3-Clause"
- LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3De44b2531cd6ffe9dece394dbe988d=
-9a0"
-=20
---=20
-2.50.1 (Apple Git-155)
-
+ .../corstone1000-a320/topics/tests.md         | 138 +++----------
+ .../documentation/corstone1000/user-guide.rst | 194 ++++++------------
+ 2 files changed, 86 insertions(+), 246 deletions(-)
 
