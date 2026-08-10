@@ -2,171 +2,185 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551D3C5B572
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A1AC5B573
 	for <webhook@archiver.kernel.org>; Mon, 10 Aug 2026 17:48:24 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.35391.1786384098976178228
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.35844.1786384099749008756
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 10 Aug 2026 10:48:19 -0700
+ Mon, 10 Aug 2026 10:48:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=WOxYPCdd;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=sXri1c7T;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A1E314BF
-	for <meta-arm@lists.yoctoproject.org>; Mon, 10 Aug 2026 10:48:14 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BAD01655
+	for <meta-arm@lists.yoctoproject.org>; Mon, 10 Aug 2026 10:48:15 -0700 (PDT)
 Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3FC693F632
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DCB6B3FAB1
 	for <meta-arm@lists.yoctoproject.org>; Mon, 10 Aug 2026 10:48:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1786384098; bh=reKRwqWAHYWDnAuPpgYzKXwpsFt38ANjZWC9RkU3P+w=;
-	h=From:To:Subject:Date:From;
-	b=WOxYPCdd7gtuksSYR9gNzJDxgs9bp02/ttdt8kkl5UpO7S5CT4/ltwjgbYVa1Sw5P
-	 1KbtsPuUL6PS84+bP8QD9mKJJ1HhI8m6fRA+V43Q2zx1jvu5D1FBq1xhwEGkI1Lyz8
-	 h1gUpnswOStNpuHwJNYq8hTKbtaqu+Dd2vRaxNAA=
+	t=1786384099; bh=CrbJtN21bG9o25Ek4QnMZ/DkbllXFt/5sscoZFxLV8Y=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=sXri1c7T/FbgJVRYeex9vFzGbL3CCRvrPfhf3zz9S8G39ETPYc2ATs+81Z3hvXVDa
+	 xN9nb2r9vQHJPvaoUH8MWVeVa87c2mCxyJU9vXGpAVQOmYr+Z0IKRR23MiU/rSdNJh
+	 xIj7vmQ6Br3qyb2uvvAR9+R5fFp89C8gXBBZL95Y=
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/3] arm/fvp: Update FVP Base to 11.32.19
-Date: Mon, 10 Aug 2026 13:48:15 -0400
-Message-ID: <20260810174817.89440-1-jon.mason@arm.com>
+Subject: [PATCH 3/3] arm/fvps: change COMPATIBLE_HOST default
+Date: Mon, 10 Aug 2026 13:48:17 -0400
+Message-ID: <20260810174817.89440-3-jon.mason@arm.com>
 X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20260810174817.89440-1-jon.mason@arm.com>
+References: <20260810174817.89440-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 10 Aug 2026 17:48:24 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7137
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7139
 
-Update the fvp-base model recipe to version 11.32.19.
-
-The new release changes the package layout and installation process,
-requiring updates to the license checksums, source checksums, install
-procedure, and FVP binary linking.
+Make the COMPATIBLE_HOST in fvp-common.inc be both x86 and arm64, since
+that is the large majority of the FVPs available.
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../fvp/fvp-base-a-aem_11.31.28.bb            | 20 -------
- .../fvp/fvp-base-a-aem_11.32.19.bb            | 59 +++++++++++++++++++
- 2 files changed, 59 insertions(+), 20 deletions(-)
- delete mode 100644 meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.31.28=
-.bb
- create mode 100644 meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.32.19=
-.bb
+ meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.32.19.bb | 2 --
+ meta-arm/recipes-devtools/fvp/fvp-common.inc             | 2 +-
+ meta-arm/recipes-devtools/fvp/fvp-corstone1000-a320.bb   | 2 --
+ meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb        | 2 --
+ meta-arm/recipes-devtools/fvp/fvp-rd1-ae.bb              | 2 --
+ meta-arm/recipes-devtools/fvp/fvp-rdn2.bb                | 2 --
+ meta-arm/recipes-devtools/fvp/fvp-rdv2.bb                | 2 --
+ meta-arm/recipes-devtools/fvp/fvp-rdv3-r1.bb             | 2 --
+ meta-arm/recipes-devtools/fvp/fvp-tc3.bb                 | 2 ++
+ 9 files changed, 3 insertions(+), 15 deletions(-)
 
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.31.28.bb b/m=
-eta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.31.28.bb
-deleted file mode 100644
-index 3a4789c57f4e..000000000000
---- a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.31.28.bb
-+++ /dev/null
-@@ -1,20 +0,0 @@
--require fvp-envelope.inc
--
--LICENSE:append =3D " AND Artistic-2.0 AND BSL-1.0 AND BSD-2-Clause AND U=
-nlicense"
--
--SUMMARY =3D "Arm Fixed Virtual Platform - Armv-A Base RevC Architecture =
-Envelope Model FVP"
--LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
-a33828e132ba71861c11688dbb0bd16 \
--                    file://license_terms/third_party_licenses/third_part=
-y_licenses.txt;md5=3D5e3a194978d88188b5a0eebd263f2ca8 \
--                    file://license_terms/third_party_licenses/arm_licens=
-e_management_utilities/third_party_licenses.txt;md5=3D4f61d2f0d834d5c29d5=
-3d828572fb6fc"
--
--SRC_URI[fvp-aarch64.sha256sum] =3D "38cfb5244fe898bed5c3ba46ec6e3654638e=
-29085ef597b9ed92f36be08adf1d"
--SRC_URI[fvp-x86_64.sha256sum] =3D "527920d1873472de045c844fa6f5b8679511a=
-d4f9996058eb9e075b0f0eada10"
--
--# The CSS used in the FVP homepage make it too difficult to query with t=
-he tooling currently in Yocto
--UPSTREAM_VERSION_UNKNOWN =3D "1"
--
--MODEL_CODE =3D "FVP_Base_RevC_AEMvA"
--
--COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
--
--INSANE_SKIP:${PN} +=3D "dev-so"
 diff --git a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.32.19.bb b/m=
 eta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.32.19.bb
-new file mode 100644
-index 000000000000..26557769a577
---- /dev/null
+index 26557769a577..59c1ead938ae 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.32.19.bb
 +++ b/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.32.19.bb
-@@ -0,0 +1,59 @@
-+require fvp-ecosystem.inc
-+
-+LICENSE:append =3D " AND Artistic-2.0 AND BSL-1.0 AND BSD-2-Clause AND U=
-nlicense"
-+
-+FVP_ARCH:aarch64 =3D "Linux_armv8"
-+FVP_ARCH:x86-64 =3D "Linux_x86"
-+
-+SUMMARY =3D "Arm Fixed Virtual Platform - Armv-A Base RevC Architecture =
-Envelope Model FVP"
-+SRC_URI =3D "https://developer.arm.com/-/cdn-downloads/permalink/FVPs-Ar=
-chitecture/${PV_URL_SHORT}/${MODEL_CODE}_${PV_URL}_${FVP_ARCH}.tar.gz;sub=
-dir=3D${BP};name=3Dfvp-${HOST_ARCH}"
-+
-+LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3Da=
-c2215fd2c35830a4a52f9f910c6a552 \
-+                    file://license_terms/third_party_licenses/third_part=
-y_licenses.txt;md5=3Dda95c9d79488fe4b6115bb7f9900b505 \
-+                    file://license_terms/third_party_licenses/arm_licens=
-e_management_utilities/third_party_licenses.txt;md5=3D4f61d2f0d834d5c29d5=
-3d828572fb6fc"
-+
-+SRC_URI[fvp-aarch64.sha256sum] =3D "c01a1450ee2adee499183026b01f4c31f760=
-081ffdefd5c9a9788ae58d8542ce"
-+SRC_URI[fvp-x86_64.sha256sum] =3D "b6835fd07cb390c7a32f84fe1cead84bde992=
-813b49679137b3a7a0a026e92de"
-+
-+# The CSS used in the FVP homepage make it too difficult to query with t=
-he tooling currently in Yocto
-+UPSTREAM_VERSION_UNKNOWN =3D "1"
-+
-+MODEL_CODE =3D "FVP_Base_RevC_AEMvA"
-+SHELL_SCRIPT_NAME =3D "${MODEL_CODE}_11.32_19_${FVP_ARCH}.sh"
-+
+@@ -21,8 +21,6 @@ UPSTREAM_VERSION_UNKNOWN =3D "1"
+ MODEL_CODE =3D "FVP_Base_RevC_AEMvA"
+ SHELL_SCRIPT_NAME =3D "${MODEL_CODE}_11.32_19_${FVP_ARCH}.sh"
+=20
+-COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
+-
+ INSANE_SKIP:${PN} +=3D "dev-so"
+=20
+ do_install() {
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-common.inc b/meta-arm/reci=
+pes-devtools/fvp/fvp-common.inc
+index 7f7d4ef5126a..7021036f99b9 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-common.inc
++++ b/meta-arm/recipes-devtools/fvp/fvp-common.inc
+@@ -15,7 +15,7 @@ Please refer to 'https://developer.arm.com/downloads/-/=
+arm-ecosystem-fvps/eula'\
+ ${@bb.utils.contains('BB_ENV_PASSTHROUGH_ADDITIONS', 'ARM_FVP_EULA_ACCEP=
+T', ' and export ARM_FVP_EULA_ACCEPT to 1', '', d)}.\
+ "
+=20
+-COMPATIBLE_HOST =3D "x86_64.*-linux"
 +COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
+=20
+ # The architecture-specific download filename suffix
+ FVP_ARCH:aarch64 =3D "Linux64_armv8l"
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-corstone1000-a320.bb b/met=
+a-arm/recipes-devtools/fvp/fvp-corstone1000-a320.bb
+index 1c2e49338395..37f44eb2b1d4 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-corstone1000-a320.bb
++++ b/meta-arm/recipes-devtools/fvp/fvp-corstone1000-a320.bb
+@@ -40,6 +40,4 @@ do_install() {
+     done
+ }
+=20
+-COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
+-
+ INSANE_SKIP:${PN} +=3D "dev-so"
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb b/meta-arm=
+/recipes-devtools/fvp/fvp-corstone1000.bb
+index b4288275c8fd..9618bf75f2c8 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb
++++ b/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb
+@@ -18,5 +18,3 @@ LIC_FILES_CHKSUM =3D "\
+     file://license_terms/license_agreement.txt;md5=3D1a33828e132ba71861c=
+11688dbb0bd16 \
+     file://license_terms/third_party_licenses/third_party_licenses.txt;m=
+d5=3D0c32ac6f58ebff83065105042ab98211 \
+ "
+-
+-COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-rd1-ae.bb b/meta-arm/recip=
+es-devtools/fvp/fvp-rd1-ae.bb
+index e305afae96c4..c9a1c529a734 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-rd1-ae.bb
++++ b/meta-arm/recipes-devtools/fvp/fvp-rd1-ae.bb
+@@ -13,5 +13,3 @@ UPSTREAM_VERSION_UNKNOWN =3D "1"
+=20
+ LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
+a33828e132ba71861c11688dbb0bd16 \
+                     file://license_terms/third_party_licenses/third_part=
+y_licenses.txt;md5=3D92ea58bb219213dfdc48111b693019b6"
+-
+-COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-rdn2.bb b/meta-arm/recipes=
+-devtools/fvp/fvp-rdn2.bb
+index 73848bfbc4cf..17330974b801 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-rdn2.bb
++++ b/meta-arm/recipes-devtools/fvp/fvp-rdn2.bb
+@@ -14,7 +14,5 @@ UPSTREAM_VERSION_UNKNOWN =3D "1"
+ LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
+a33828e132ba71861c11688dbb0bd16 \
+                     file://license_terms/third_party_licenses/third_part=
+y_licenses.txt;md5=3Db9005e55057311e41efe02ccfea8ea72"
+=20
+-COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
+-
+ require remove-execstack.inc
+ REMOVE_EXECSTACKS:x86-64 =3D "${FVPDIR}/models/${FVP_ARCH_DIR}*/libarmct=
+model.so"
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-rdv2.bb b/meta-arm/recipes=
+-devtools/fvp/fvp-rdv2.bb
+index 3da7075abcd0..3ac06880af02 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-rdv2.bb
++++ b/meta-arm/recipes-devtools/fvp/fvp-rdv2.bb
+@@ -14,7 +14,5 @@ UPSTREAM_VERSION_UNKNOWN =3D "1"
+ LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
+a33828e132ba71861c11688dbb0bd16 \
+                     file://license_terms/third_party_licenses/third_part=
+y_licenses.txt;md5=3Db9005e55057311e41efe02ccfea8ea72"
+=20
+-COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
+-
+ require remove-execstack.inc
+ REMOVE_EXECSTACKS:x86-64 =3D "${FVPDIR}/models/${FVP_ARCH_DIR}*/libarmct=
+model.so"
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-rdv3-r1.bb b/meta-arm/reci=
+pes-devtools/fvp/fvp-rdv3-r1.bb
+index e54f31903147..a7e03e3522b5 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-rdv3-r1.bb
++++ b/meta-arm/recipes-devtools/fvp/fvp-rdv3-r1.bb
+@@ -13,5 +13,3 @@ UPSTREAM_VERSION_UNKNOWN =3D "1"
+=20
+ LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
+a33828e132ba71861c11688dbb0bd16 \
+                     file://license_terms/third_party_licenses/third_part=
+y_licenses.txt;md5=3D41f1533ebfbd4f1d32cfc82b55f6729a"
+-
+-COMPATIBLE_HOST =3D "(aarch64|x86_64).*-linux"
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-tc3.bb b/meta-arm/recipes-=
+devtools/fvp/fvp-tc3.bb
+index 2b0f257db6db..1f91d4419f4c 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-tc3.bb
++++ b/meta-arm/recipes-devtools/fvp/fvp-tc3.bb
+@@ -12,3 +12,5 @@ UPSTREAM_VERSION_UNKNOWN =3D "1"
+=20
+ LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
+a33828e132ba71861c11688dbb0bd16 \
+                     file://license_terms/third_party_licenses/third_part=
+y_licenses.txt;md5=3D58b552b918d097a8ba802168312d76b2"
 +
-+INSANE_SKIP:${PN} +=3D "dev-so"
-+
-+do_install() {
-+    mkdir --parents ${D}${FVPDIR}/models/${FVP_ARCH} ${D}${bindir}
-+
-+    ${S}/${SHELL_SCRIPT_NAME} \
-+        --i-agree-to-the-contained-eula \
-+        --no-interactive \
-+        --allow-existing-dir \
-+        --skip-platform-check \
-+        --destination ${D}${FVPDIR}
-+
-+    fvp_link_binaries
-+}
-+# The new version no longer has any files expect the README and install
-+# script.  So, we have to run install before checking the license files
-+# for them to be present.
-+do_populate_lic[depends] +=3D "${PN}:do_install"
-+
-+# The files are located in a different directory that expected in
-+# fvp-common.inc.  So, doing it uniquely in here
-+fvp_link_binaries() {
-+    DIR=3D"${D}${FVPDIR}/bin/"
-+
-+    stat $DIR/FVP_* >/dev/null 2>&1 || bbfatal Cannot find FVP binaries =
-in $DIR
-+
-+    for FVP in $DIR/FVP_*; do
-+        ln -rs $FVP ${D}${bindir}/$(basename $FVP)
-+    done
-+    # But not the .so files too
-+    rm -f ${D}${bindir}/*.so
-+
-+    cp -r ${D}${FVPDIR}/license_terms ${S}
-+}
++COMPATIBLE_HOST =3D "x86_64.*-linux"
 --=20
 2.50.1 (Apple Git-155)
 
