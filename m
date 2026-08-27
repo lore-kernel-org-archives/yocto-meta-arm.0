@@ -1,172 +1,234 @@
-Return-Path: <rasmus.villemoes@prevas.dk>
+Return-Path: <jan.kiszka@siemens.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AD8C61DC6
-	for <webhook@archiver.kernel.org>; Thu, 27 Aug 2026 13:37:55 +0000 (UTC)
-Received: from PA4PR04CU001.outbound.protection.outlook.com (PA4PR04CU001.outbound.protection.outlook.com [40.107.162.38])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.36303.1787837869150001288
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BE3C61DB9
+	for <webhook@archiver.kernel.org>; Thu, 27 Aug 2026 17:01:01 +0000 (UTC)
+Received: from AS8PR04CU009.outbound.protection.outlook.com (AS8PR04CU009.outbound.protection.outlook.com [52.101.70.60])
+ by mx.groups.io with SMTP id smtpd.msgproc01-g2.102.1787850057476260097
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 27 Aug 2026 06:37:51 -0700
+ Thu, 27 Aug 2026 10:00:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@prevas.dk header.s=selector1 header.b=Xgoo4Kwe;
- spf=pass (domain: prevas.dk, ip: 40.107.162.38, mailfrom: rasmus.villemoes@prevas.dk)
+ dkim=pass header.i=@siemens.com header.s=selector2 header.b=RyVsIa9l;
+ spf=pass (domain: siemens.com, ip: 52.101.70.60, mailfrom: jan.kiszka@siemens.com)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=B0hzT6gHTaNCJn6CBkX9Rk15ihxonA/z6+gpHBjyHxCTxzSorwJkP8DKAckTDKBr/qYg2zugC2uYXEx3YPqNLV7DaE6xMUC5gaFHaQrXp3xllYgri3w21EHVZ/9KFmBvGzpnKDkY9MuJ9Dyj0DJsA9bnL1iGikJu77X0+Wj/QUctumlXnfGZlHg5RwB47saoDLEQ29/h9L7SYw5s4tDMv0ndcxcp4jarbjaEQIMuedMOpn8nY3HmcvYtUBYFhRsWz0WQqpBZpQJuQCeyHPHF5sDJwx1ugbqWPMtVCaQ5UI9/EoXHcY93+yP/i6B9leM8bM6yoYRKLSv/63VjdEqwLQ==
+ b=kv7r2AYt3OGoHQwRi24mGVBNYAzL1WXMlwIwY844No46EtkB+ZB1DetwPQ0tRw8K4bcPe9DABfiaUMqClJ+Q0k7qZYEU+JeHiQ9wMXMRBgOhPI30VJALsDRgvZz3rek0azdnXjoCCmqouzH2/RkpxcI2EwcVZq30EOXWx4PVOhF5e+6vAdpdo4CU61BEseTNQF4mQ8y9HkCw6q+mllubvK/41muLs+TD5opfiCIyv12sXQmXdOubiHuGr9tjo2cKvhBRKchGBy5XtDN/fG0mmJM/m6KybQtzaTokprCqJBY2gFiMxgnMk7yzQlIDiheEN4FXUT3vXCC4wIxan/VvMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x8p6hYUemQIpUk08Jovdbm1eSEOfvQyK+jBe5HaXk4Y=;
- b=vtRWxB+KoqeEqCrfLH125av8bSuv1iNzBSySTeZkgZqnE72rK5+QO/wOEwHX+q4tSQ1mLgLGdcsiDajiWMSiyQ9Z5T8kZX/bxdRNHZRoIKkSxSGNB3P0mDb6AhiHZqrzt61V7XgGGWGfXDszF0FtgoMuyRJnvLv35F3QJkyeVRWXjPxnrKpJzUlWYr5E31OFusxRJKsM8vgqO5hTiwflBArYtgko4ozBdUP5xpUG/K35WMRgwuizjFKIv1ObAxZCrEV5OITaNhRxuiO3Q/HI6ThFgMU0wNF0PP03UwSFX1suohH0/FwjVchu/qEaqj3LVD8NkeQIKaenTWuTTyIohw==
+ bh=FB9UztP83pXn1KP0ndq2+UbmiNRFJ3UanuHZ5TELrp8=;
+ b=dJwv2sxVnvJ0rnmgofq9epDdG2MD1qOtJ/lLc1QXgsjiU+a/Vp9U9hAB+jg7zBGa0jDPnP/+hoy20NuQpztCpWe+qqxr8/9q9KSf/emDRM8vVDob/cQkNwYOAU7Sy+xoxo2Ne8RI6bR3aavvWLoG2vNro6VgpidaCYejEHlAG4uTFabFgKA0SILXAdnDOTmNGDXz5kjA7ExS/CbmYwiDiM+jzb/FnvBnIJD1O1fOOSkJshs/ub8uHSaauDgGxw0JqKxVRK0VdAhsrm+SW69Hwyn982Il5GisDmDTnd9upFQeRpymoaY/mJcybOwZQw0F2FjPnuCXmD4WNZ4VDtChTQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
- dkim=pass header.d=prevas.dk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
- s=selector1;
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x8p6hYUemQIpUk08Jovdbm1eSEOfvQyK+jBe5HaXk4Y=;
- b=Xgoo4Kwelu5Y5KfvQO/GS3xJcMi+HAMNVNRO5Fwkzcuohm3yOMotO+gsX7HvvGOJ/Jh19PXiwrXXzmk0gzMANOe+2QG8eowrNjZistlZlJ/aHgNoC2WmpgPLZZvSf4LoisDieU3XLAXL0L2ZZLQ8vSqsrDJVjlUqiAcZ5ow/MIU=
+ bh=FB9UztP83pXn1KP0ndq2+UbmiNRFJ3UanuHZ5TELrp8=;
+ b=RyVsIa9lZeedUvBu4gnftDcfJdmcIWu42LwHgWfBy8OHErgZhpZRTBqsBXBKMvcTVQQ1D+NyGcjBwQOT20rVPsssEyJ/1PMh3HfKFQvdtO6lOt9ZmU0R7vXic72Lk9wiuQXUs79w0G2qNCmyaCk/Hf+GTX1ksy070mwNPEuZGAUzsCvTPXMWD54QMANJHpjKFebJWECXWb90rrr+e2bcnOKC9WQHatdAjtwjMhNXG2vTybhdmnP9O5EYvKgL7ednUDXWWmt0TAVaVSGzn2i2NeEeqaj4rOeGJ0fIys5y6tq54U3RmSimQLa7AhTKfxv/6fDpx5yLtYLc/8bQZIAOUg==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=prevas.dk;
-Received: from AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:681::18)
- by VI0PR10MB8487.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:214::13) with
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:588::19)
+ by DB9PR10MB9912.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:603::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.10; Thu, 27 Aug
- 2026 13:37:43 +0000
-Received: from AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ebc6:4e0d:5d6b:95d8]) by AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ebc6:4e0d:5d6b:95d8%3]) with mapi id 15.21.0360.008; Thu, 27 Aug 2026
- 13:37:43 +0000
-From: Rasmus Villemoes <ravi@prevas.dk>
-To: meta-arm@lists.yoctoproject.org
-CC: Jon Mason <jon.mason@arm.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Jan Luebbe <jlu@pengutronix.de>,
-	Rasmus Villemoes <ravi@prevas.dk>
-Subject: [PATCH 1/2] optee-os: make early TAs more convenient to add for .bbappends
-Date: Thu, 27 Aug 2026 15:37:19 +0200
-Message-ID: <20260827133720.3246210-1-ravi@prevas.dk>
-X-Mailer: git-send-email 2.55.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: CPBP307CA0001.DNKP307.PROD.OUTLOOK.COM
- (2603:10a6:380:1::11) To AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:681::18)
+ 2026 17:00:53 +0000
+Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::be9f:e8ca:ee9:83e1]) by AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::be9f:e8ca:ee9:83e1%2]) with mapi id 15.21.0360.006; Thu, 27 Aug 2026
+ 17:00:53 +0000
+Message-ID: <c3832035-67e3-4883-b420-771a9d074c34@siemens.com>
+Date: Thu, 27 Aug 2026 19:00:50 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] optee-ftpm: rewrite its optee-os bbappend to use
+ EARLY_TA_PATHS bitbake variable
+To: Rasmus Villemoes <ravi@prevas.dk>, meta-arm@lists.yoctoproject.org
+Cc: Jon Mason <jon.mason@arm.com>, Jan Luebbe <jlu@pengutronix.de>
+References: <20260827133720.3246210-1-ravi@prevas.dk>
+ <20260827133720.3246210-2-ravi@prevas.dk>
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Content-Language: en-US
+Autocrypt: addr=jan.kiszka@siemens.com; keydata=
+ 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
+In-Reply-To: <20260827133720.3246210-2-ravi@prevas.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0022.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:c9::17) To AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:20b:588::19)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS5PR10MB8243:EE_|VI0PR10MB8487:EE_
-X-MS-Office365-Filtering-Correlation-Id: f7436ea9-d7b9-457e-272a-08df04405f12
+X-MS-TrafficTypeDiagnostic: AS4PR10MB6181:EE_|DB9PR10MB9912:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8032ba0f-547c-4c60-7a62-08df045cc0d7
+X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|10067099003|18002099003|11063799006|56012099006;
+	BCL:0;ARA:13230040|376014|1800799024|23010399003|366016|6133799003|10067099003|56012099006|4143699003|5023799004|11063799006|55112099003|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info: 
-	XUYlEBQ1IyzJco2iVOxw6acitBJQ55hg/Ou1VcikmUvrk37/5t5WOdbml9Lp8hV1Tw6C82C/kCcmjhpzT3v3xgwrT3FVG9jA7R+sbWqpsGG8Ho3C8JkyyfHe4LuaXLrasCPnguO7DKKv1Y8KyMqJ6udB6udPojM0KBJMVpImAcmDwaDFMYNNBuquEjjxvNTtwoDmKRqe7naZl1OHLSVCa9jInPgyueX+LcjNLn7HSTsg+tpnkTx3H/rEMhetzuIZPDPkdKRWrT7832RG67T1Z48nHUWYntvKifVtMhMWBZr49onDi38OcvvtfirKlAZA8jOIL2ESvUE420hx7X6JfciVnOViuzWATlgZM6PuBl6/gbJQSFcbGGWYHMxGlUIy9Sc75Kxv8ZsW2ID/r6uvBWkeisLjbG6iNzFVMiicgI3cHGyaK0D6kK30+x9JQfddj4b6NqlO5Gz+0mIOQkVBKjKtxhQQwc+FnPd3llX/7UF29wsYuiIrFiRnBbbkuVGxcPJA0hjx5w5NXZ0A9+hCiLXpYWVxx2G4FhsI4jvZl4gWH8Ev7gWMW/zsGHnKo6F8w3tt50YDv03g0N2ZoZhabdMdRTWbWgWb5pUmvX56Jx0CSTKIxnzCCIHwLijQlWFvSIob0lDCturdn6+G7ns3ulc/H9jZ+KOoYX3bhsakJyA=
+	iAR3UDDa7EtSvD/JYNjCxeUqGSSgTD9m+rXoEGxbKJoXyShUtmvb+I9O4gV+JWIEVk8MjX9YsDrsUIGRD8wsyxC/hAUzSaWSiR4M7I6kNwCUvkvu4tcZibdCYPtvqALiGM1CO+VSTPvkKRXPA9dypOTqeXu0joWGmxzxXOYLLOfP64VemEoVXrjPMinnzQ2sIxFcD9Ido3Nl6UGk+WtJ7xGDf+oAutEUwcgCAmF1ywg30FqaY/JRCHfJdBuYBHS+iGUfGQIkJpNTrSTRgv7SLjAe3zOL4eo03+oYmh/zLRLNTe5oWiYYsW60GrfiyFbgIqnLiD/0bGIzaY7dEZqWp/eEKQcd5qiZCYfwJ9Q//FLwANd9E76rCbjOKEOTiLE9a6Q9/ZtVU9AFVtdv5WF4B++aP9IZRk7f6fpuc+tID1GKmCVZOSIvdU89XIuCJQ/NZUiKtGishJoaGu18mLZb3Lg6Ic3NPFFCm+eu/q13oNDzo4nWkHWeCcaK+ZRGUTKooSAoNeHhZaPDQnvxBDwZZnr0tzllThimTx9H7auSBsLEkHrTErjPmkOO+mbZpE3mE5fBNg20C/IEutXCzoaF3gEd0GZxHdzFD+jTTOVkBUTz3qox5yYaQiJ7YICHu6F3iXzaKDSUL5KPI3/L4hkHcxGJf3p5s/mzI4Kg+iDbYFM=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(10067099003)(18002099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(23010399003)(366016)(6133799003)(10067099003)(56012099006)(4143699003)(5023799004)(11063799006)(55112099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?cbqP25XNZEDFlhA7/FWfP7eD37aXH8d+qlIYEE8FzcgX9W4Gbk7LFwTXst+y?=
- =?us-ascii?Q?4Dks2Ji3Q0PLP06vN5qKyUBQU77G1/a31hYoPiB1hG7O2T7PcxFvDS2yftz6?=
- =?us-ascii?Q?gyBlCfAzV2xaYiMoVaT//xfBiDGvMFvn/mR/J1eq7WmlpCQX2FZgBP80vY5B?=
- =?us-ascii?Q?XWsAM2GKqimOlFYke4U7LZ/CfrNcOA3S5gC0HasURL/iRb7MbSJTTCPHMz3t?=
- =?us-ascii?Q?atQFs6rviS5neeuPPT51TigY09Ftr+hpN6e2F3hr8BqWTFCfVY5qLMHXjqRs?=
- =?us-ascii?Q?SKmjLBziljwG1wp6+8VN6X2wb4JwwDdtURiymspTGyoCyaKFzgew0MuAlE3j?=
- =?us-ascii?Q?WWT5xP0yCDd9ROWp7MUxhtrxpTqHx5NyOH2MDmr/G9zV5teavAUOhOf4s+/e?=
- =?us-ascii?Q?wqa9imYiTEjz3/xZPlyq8g+FjQ2SNFLQ5dB7sdY1eZZ/smxAL2c0jNCXuRfK?=
- =?us-ascii?Q?ubw+RDkC35hbzPBewHBWogVk7TZbudHPhKtUWpjoEyXHMdcE/NaLLp1Vis3w?=
- =?us-ascii?Q?QyAU8XTxiHa7G1/ozckMf0nc/tw7OMCT0Mu2h7JWqwp4gnuysWIVyMsb40O3?=
- =?us-ascii?Q?tpCtTjlIEYeIUlqoqwM2MK39uVN4X2zJtVBQrtLG0WrPYqgiAT78Io+s5mAW?=
- =?us-ascii?Q?x3Q4ny8X8p2ymPOL47WgObvMPNV/QTmBzVj7A+dzMj8pFrjQ+bP5eBMTr+bH?=
- =?us-ascii?Q?lWE5eeFqKte9tGQsilVJGJ9n+K6EL0Me6eW5jwCFIfMJgWeLu8OyMEtGoOMN?=
- =?us-ascii?Q?O2+Dk0P3IqpniSyfa7s2d5uZ9owtqRMuUgQxG5SqSWDBZuxRkWFcEa35Jhcw?=
- =?us-ascii?Q?IGd6Wo48BBfv6ns3W7iFOMIhrQ11PcZAsTZ2aD5wgUSQeFEiH02GPiakh9Gg?=
- =?us-ascii?Q?EKGOM3yHxD6gzdBLrVP3xmJnF0Ca7C3ycJ/uSLUOTbpUnP7fRYpZEehCySUS?=
- =?us-ascii?Q?z+7E4hjzbq4R6tVpReHIBA5M4lVYplDG8JVQ6RPV+WkYNr2Z6NKhjldeDUoG?=
- =?us-ascii?Q?2FVgTmMiAL7ao61RI2busN+4SSU+6V0FIjW1HGu2ZtCLdAQyhQRZspZ+7V+z?=
- =?us-ascii?Q?bIVb7E8ztWW2gryBl1/t8Ev/0qMikI/W+PlG6gQFgjdfI+m+4SoiNbSNpYJ+?=
- =?us-ascii?Q?iSzt/5B0DHCYTuLdEdJ+mm8EkZ6L/M5XzWN9qQI+5jbRax/BVTaNGrImea4U?=
- =?us-ascii?Q?c89z91zMok/wAEB/i2lu8WATdnJsXD9JKkiPD4LrVLEsKOboWLxwkskBbIyb?=
- =?us-ascii?Q?NeWLR7FvCYC6oCGGX8VwT6sQ4IqAYN6p/CsubsiJsSE0W0keQkMoJUiBFv/R?=
- =?us-ascii?Q?cxAaA783zVTtOk1nMf1qxzrwP0lBjo1YpOJsiSZ0VvqpWxqJDkQxTSFK1/6+?=
- =?us-ascii?Q?9skE/pBc9+NiayLk6xeMrGpruI9qF88ssV7D/YSrZmTIVW4y2/mzElKYNRWf?=
- =?us-ascii?Q?gO245U4EBYxDKquFPbeahxTQ7BYPzx219pMdt7Epk1vaKbralF36Zh3+yN8D?=
- =?us-ascii?Q?gBlIElW9CVHa5Kw8WDEGGPXxWm7y7Ixj28hvNYdy0ydGUJKbxmhQW27+W8ct?=
- =?us-ascii?Q?HYg6K6pXS3Dnmn+DLobwR88ZdIhlZ9tDUcdnPXGHz//L0okUxXsymzAF5wWF?=
- =?us-ascii?Q?xjQXCQXZmyFfFYdaSG+R2WtnXdUVlV0lGAUV0/EtsHhcuoiS5+ZgNg8j4Jmr?=
- =?us-ascii?Q?vLVpMtn5w7FK6FqX6z6b8mmdcNz1DFTU0pznz0J2ldHCGX3yyskcqItwafQd?=
- =?us-ascii?Q?jwnOc8MJ6Uyw5apC44sN+od/oZHhaUY=3D?=
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7436ea9-d7b9-457e-272a-08df04405f12
-X-MS-Exchange-CrossTenant-AuthSource: AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM
+	=?utf-8?B?WklxaWRIVDg2b0piOEVPbHBXM2ErMElXK3o0NGFTL0hFYkR5QTNjS0hpS0pn?=
+ =?utf-8?B?eWJiTWJCZkRESWRnNGIveEY2d2IwT1dabURxdEV1VXdaejlPOEJWczVKd3NB?=
+ =?utf-8?B?WUV3bmJDVFBERkgwWkhmN3RDSG5ObTF5c21jN3pXb0VXbTAyS3lJNlp4ZWhS?=
+ =?utf-8?B?SFFwOUIzdVpoNWZhK2xrL1JBRmh1SnZENUR6eDJjVEhwOWZHQm5oRzRuc2dt?=
+ =?utf-8?B?ODFaTVFOb2NQVllXanJqeW5tUk01dmx3d1RWdldFSU4yNFpoN3lIZjF1aGdv?=
+ =?utf-8?B?enppaHlsaFF3ZlVRUnF4MitPWEtSYkt4R3hrMzlBS3BEUUd5YmpFaW54dGts?=
+ =?utf-8?B?b3d1WVIrTHZVbnh6UnlRRTU0ZmtsM3liY2RyZUtJeUtHRUtMaEZnQ3VtWmI2?=
+ =?utf-8?B?Q2FIYVJSQTR1cVFBVXIyUVpPOU0yMC9id0hZaElaMllHQjQ1cmZka2ZGVzlZ?=
+ =?utf-8?B?SytDMjdNZW5icFUzKzlzcHBjaEI0RG5ibndFTk12YnR3L2hLM2FuQXFwcTZu?=
+ =?utf-8?B?TUx6dzgyUWtiUGtHMCt1bmROOVlTVktrdEo2NlZMdDlsajZZQnNwTkNGay9J?=
+ =?utf-8?B?OU1oSk5NUndaTmJ6czlEdERmWTNqNnFKU1FpN1cxc0hrR0p1WEdyc0pRRWFl?=
+ =?utf-8?B?aEdHSkxTbEkzRW53VEVIT1FQV2NJU0E2QWJZanpFcm0zZ2N0aU9sL3E1ODFz?=
+ =?utf-8?B?aTdiWHd1UVVVSGZzUGRZNnUrcm1EQUUwVkp4SlFhRlNnMytGRGhyZzdIa2NS?=
+ =?utf-8?B?eCtONmZRWXFZc1p0NmJEdG9DZENMbEJ2bS9UOUxjMXdvb2dva2xyN2RVbnY0?=
+ =?utf-8?B?T0F6c2pOSzNPUWRjb09iVVJwaXdPUDF5d25qa3Y4U3hzMUpaU1V0NE5wL1or?=
+ =?utf-8?B?NWdzeXF6RlllRmg5RmF1VDlid2dUaURvZk5ORDJxRlVrS2RDMThRK0V6UjJO?=
+ =?utf-8?B?NXJnMmYyRWFZSlBMcjVybzlBbmczU2tGb3FOUFcwRnFuVkd5c2syeWxsamlS?=
+ =?utf-8?B?U1VnMThmNDlIMDVSK01QWi9HUEZPMkp0YWVIUTd0a2VUa0ovdWdCS0dpNkFQ?=
+ =?utf-8?B?NC9zWjlVVFNxekJ5bUkrSlRCY05uTk02WU9vOEVxbVVzVjhjUThPYi9tL3Fi?=
+ =?utf-8?B?U3cxM1h2ZWJEV3BjVWZHaGMveFpyRVZWWUtSM0ZhZG5KMHJOOE4zSTVlRENL?=
+ =?utf-8?B?VC9obG1jRXd1YzVZTjJ5SFc3QmFzTFNRaisySnFLRkh5Q0xPMVNmZkFtN29J?=
+ =?utf-8?B?M0hBYzNaLy9iUHBLUzlsNlB2QzRYdFB3eVhUcy83VE83V1c0WDNMcCs1NXIr?=
+ =?utf-8?B?YStHeFJ0YW9RbXRtOFlBZ3A1WWRtT3BUY3ZWcDZzNkR1V0hLbm1qV3BPV082?=
+ =?utf-8?B?TVVmeWplT1VNWFlIb0gya1NuZ2FKNGIwbFZ5TkZUQmF6c0RMOXpwSVJlcHZo?=
+ =?utf-8?B?S1R5bHZqd3k4MU1aenZJUkxXM0owZWVKeDJpRE9QbXIvKzFrSmdvampYd1lH?=
+ =?utf-8?B?b2FZWElSSU41UTI2MUxWOHZsbXIrQ2VpQ2ZTc0Y0YUVXK1crc1B6K2lEVm0w?=
+ =?utf-8?B?MzJkZG9lb2xNS2dhMC9sTmQ3cERKZWxTd0trRE5raTVpWTBoQlhwZ3IxTkRa?=
+ =?utf-8?B?azJOZ2ZrRytlTUFkNHFpTzJhK2pnaHh1cEdIVTRWcThISVhFS2VUS0Z4TFox?=
+ =?utf-8?B?NjdNV2tZaGhHb3IySzdzMnk0S0xKMGpGWFFWdXFhS0NoNTV1TXo5ZU9iM3dY?=
+ =?utf-8?B?MTlQVGJjU1lqaFN0Y0NBRno1YTRSNUM0d1NVeEU1TmRzNnhPYmUwanVlUnpB?=
+ =?utf-8?B?Sy9wQTUxVitpNnAvZ3lBVUxFTCtNVWVYa1dKaEt4M1lwTEhWRFY4dDdoM3ph?=
+ =?utf-8?B?OVVJTmNIQnFIQmZaS2o1UUdiRnJZN2hwK3ZJVVVTbk1pRnJhWnZPOFBrZ0NK?=
+ =?utf-8?B?Mzh4V3lkcVVJdU5zb1hWMVJUR3BvdjB1ejNDOU1LczZFT3NCQUhMbFJmc3pk?=
+ =?utf-8?B?UnMyT0ZNMVJnbEFKakl1bEpSMTR0UEJxOEVBQklydzFwVlRvVld4Vk1vSEwx?=
+ =?utf-8?B?Zkl4NU9jbEVRK3dWcFE3aHFNeGJxR0xCamt2OXhlMGFhNXRyYkR0aXlESTdB?=
+ =?utf-8?B?TVhLWmNMMXZ1b0tGb05IZVZmK0EvRjhTcjlpbUovOFZJbGFOeUFoazZ2KzJP?=
+ =?utf-8?B?VEdLS0FmRUR3akhqREJEZlljNTJYNFNQaTZJbzdFR1dvbzMwdGl3RlpzVi9N?=
+ =?utf-8?B?a1RxOFl6aGFlcjVWUERDbzJZWmxxcy96QW5CTzBSR29rRG5kYlYxajBzSFc2?=
+ =?utf-8?B?eEo5KzBuTFdURCsyMWgrWjJxeDZ6RGM1Znh3VWEraDdTaysrOWNwQT09?=
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8032ba0f-547c-4c60-7a62-08df045cc0d7
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2026 13:37:43.1099
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2026 17:00:53.0005
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: L0/MnHwoYUzCEryHhUijzPtSHbcoVI5FXe44HGkIFz+yw4ZY+TPkpCNRNcq4iKG8Xt+Lgs82VxcEavZgQBHYOSk+sxIjVgaXd5VftL5G/UI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR10MB8487
+X-MS-Exchange-CrossTenant-UserPrincipalName: x8WLOXsHTK0qo0HA89cN9lHixcjh7BUMUL4rxRycdCetCm92YJfNn7NLufW6ZnGBV3avGRq0sLxCzVYjvDmIdQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR10MB9912
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 27 Aug 2026 13:37:55 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7145
+ <meta-arm@lists.yoctoproject.org>; Thu, 27 Aug 2026 17:01:01 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7147
 
-From: Rasmus Villemoes <ravi@prevas.dk>
+On 27.08.26 15:37, Rasmus Villemoes wrote:
+> From: Rasmus Villemoes <ravi@prevas.dk>
+> 
+> If anything else in the BSP also wants or needs to add an early TA to
+> optee, that will conflict with this .bbappend adding its own
+> EARLY_TA_PATHS="..." argument to EXTRA_OEMAKE.
+> 
+> Instead, add the path to the ftpm TA to the newly introduced
+> EARLY_TA_PATHS bitbake variable, which the main recipe will use to
+> produce the make argument.
+> 
+> Passing CFG_EARLY_TA=y explicitly is not needed, as optee-os' build
+> system sets that automatically if the EARLY_TA_PATHS list is
+> non-empty.
+> 
+> CFG_CORE_HEAP_SIZE is somewhat harder to make play along nicely with
+> other .bbappends that might have an opinion on its proper (minimum)
+> value. For now, keep adding it explicitly to EXTRA_OEMAKE.
+> 
+> Signed-off-by: Rasmus Villemoes <ravi@prevas.dk>
+> ---
+>  .../recipes-security/optee-ftpm/optee-os_%.bbappend    | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend b/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
+> index 92c11157..74bde25e 100644
+> --- a/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
+> +++ b/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
+> @@ -4,8 +4,8 @@ DEPENDS:append = "\
+>      ${@bb.utils.contains('MACHINE_FEATURES', 'optee-ftpm', 'optee-ftpm', '' , d)} \
+>  "
+>  
+> -EXTRA_OEMAKE:append = "\
+> -    ${@bb.utils.contains('MACHINE_FEATURES', 'optee-ftpm', \
+> -        'CFG_CORE_HEAP_SIZE=131072 CFG_EARLY_TA=y EARLY_TA_PATHS="${STAGING_DIR_TARGET}/${base_libdir}/optee_armtz/${FTPM_UUID}.stripped.elf"', \
+> -        '', d)} \
+> -"
+> +python() {
+> +    if bb.utils.contains('MACHINE_FEATURES', 'optee-ftpm', True, False, d):
+> +        d.appendVar('EARLY_TA_PATHS', ' ${STAGING_DIR_TARGET}/${base_libdir}/optee_armtz/${FTPM_UUID}.stripped.elf')
+> +        d.appendVar('EXTRA_OEMAKE', ' CFG_CORE_HEAP_SIZE=131072')
+> +}
 
-If two different .bbappends both try to add an "early TA" by appending
-an EARLY_TA_PATHS=3D"..." to EXTRA_OEMAKE, only one of them will
-actually take effect.
+Both patches look good to me, but I currently have no nothing in place 
+to test.
 
-For example, meta-arm itself has a .bbappend in optee-ftpm which adds
-the ftpm TA if optee-ftpm is in MACHINE_FEATURES. If the BSP developer
-wants to add another early TA, he has to take that into account and
-very carefully ensure to create an EARLY_TA_PATHS=3D"..." argument which
-contains both the ftpm value as well as his desired extra TA.
+Also good to know that CFG_EARLY_TA=y can be dropped - I have it 
+elsewhere redundantly in use as well.
 
-Instead, let the main recipe define a variable which can simply be
-appended to in the normal way, and which is used for deriving the
-single EARLY_TA_PATHS=3D"" argument in the make command line.
+In case you are currently using optee_ftpm, I hope you are aware that
+this layer probably needs more updates. See [1] and [2] for what we did 
+in isar-cip-core to update the TPM core and add recent CVE fixes. If all 
+goes well, at least optee_ftpm patch will become part of the next optee 
+release. But there is more.
 
-Handle the in-tree TAs similarly.
+Jan
 
-Signed-off-by: Rasmus Villemoes <ravi@prevas.dk>
----
- meta-arm/recipes-security/optee/optee-os.inc | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+[1] https://gitlab.com/cip-project/cip-core/isar-cip-core/-/commit/d233084880dffef3fd5037b3159c88e3b35259ac
+[2] https://gitlab.com/cip-project/cip-core/isar-cip-core/-/commit/77f75df8c69868f335ffa36f671fe06b1f983247
 
-diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipe=
-s-security/optee/optee-os.inc
-index 95c41fb1..b90e379a 100644
---- a/meta-arm/recipes-security/optee/optee-os.inc
-+++ b/meta-arm/recipes-security/optee/optee-os.inc
-@@ -35,6 +35,21 @@ EXTRA_OEMAKE +=3D " CROSS_COMPILE64=3D${HOST_PREFIX}"
- # Enable BTI in optee
- EXTRA_OEMAKE +=3D "${@bb.utils.contains('MACHINE_FEATURES', 'arm-branch-pr=
-otection', ' CFG_TA_BTI=3D1 CFG_CORE_PAUTH=3Dy CFG_TA_PAUTH=3Dy', '', d)}"
-=20
-+# If several .bbappends wants to add an early TA, and they both do
-+# EXTRA_OEMAKE +=3D 'EARLY_TA_PATHS=3D"..."', only one of them will take
-+# effect. Instead, create a bitbake variable holding the entire list,
-+# which the .bbappends can append to, and add a single EARLY_TA_PATHS=3D
-+# to the make cmdline here. Similarly for the in-tree ones.
-+#
-+# Note that it is not necessary to explicitly pass CFG_EARLY_TA=3Dy as
-+# the build systems sets that itself if either list is non-empty (and
-+# errors out if CFG_EARLY_TA was explicitly set to n).
-+EARLY_TA_PATHS =3D ""
-+CFG_IN_TREE_EARLY_TAS =3D ""
-+
-+EXTRA_OEMAKE +=3D "${@'EARLY_TA_PATHS=3D"' + d.getVar('EARLY_TA_PATHS') + =
-'"' if d.getVar('EARLY_TA_PATHS') else ''}"
-+EXTRA_OEMAKE +=3D "${@'CFG_IN_TREE_EARLY_TAS=3D"' + d.getVar('CFG_IN_TREE_=
-EARLY_TAS') + '"' if d.getVar('CFG_IN_TREE_EARLY_TAS') else ''}"
-+
- LDFLAGS[unexport] =3D "1"
- CPPFLAGS[unexport] =3D "1"
- AS[unexport] =3D "1"
---=20
-2.55.0
-
+-- 
+Siemens AG, Foundational Technologies
+Linux Expert Center
 
