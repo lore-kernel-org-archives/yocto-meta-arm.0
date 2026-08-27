@@ -2,165 +2,170 @@ Return-Path: <rasmus.villemoes@prevas.dk>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A9BC61DC4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AD8C61DC6
 	for <webhook@archiver.kernel.org>; Thu, 27 Aug 2026 13:37:55 +0000 (UTC)
 Received: from PA4PR04CU001.outbound.protection.outlook.com (PA4PR04CU001.outbound.protection.outlook.com [40.107.162.38])
  by mx.groups.io with SMTP id smtpd.msgproc02-g2.36303.1787837869150001288
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 27 Aug 2026 06:37:52 -0700
+ Thu, 27 Aug 2026 06:37:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@prevas.dk header.s=selector1 header.b=QzD0Cgq1;
+ dkim=fail reason="dkim: body hash did not verify" header.i=@prevas.dk header.s=selector1 header.b=Xgoo4Kwe;
  spf=pass (domain: prevas.dk, ip: 40.107.162.38, mailfrom: rasmus.villemoes@prevas.dk)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NRwP+iuSNDgVNpBSGOF3KEWmkZWZrid3kTWz/eqR/BHYhqc85OIp5xPNwNHwuUe29i58GD0/oq4MQnGPN03HyUWR9R+nCtmoCrob6Ptd0NzwRwzHVmSQ9MPVxe0onlQ+XeTR2RBiNqYhAaQsRkpy6F3QgtKXgXCznz72jf2YmwF6E6BN/nlQJdCZG2S/071Xg1HRDeKMubqHUm6nIFfbF7LB5oveIHG5uLuLYHYFVWl/OMjKHtnTpCedCXA5QqcjhzRuiLv9ilmYAnkJykIq689Hrg0Ww7YwtLEyHgfapGeZm4KQ8F8MSMseSgCyEPo1+9kYpK0s61mXScFcRhbH3Q==
+ b=B0hzT6gHTaNCJn6CBkX9Rk15ihxonA/z6+gpHBjyHxCTxzSorwJkP8DKAckTDKBr/qYg2zugC2uYXEx3YPqNLV7DaE6xMUC5gaFHaQrXp3xllYgri3w21EHVZ/9KFmBvGzpnKDkY9MuJ9Dyj0DJsA9bnL1iGikJu77X0+Wj/QUctumlXnfGZlHg5RwB47saoDLEQ29/h9L7SYw5s4tDMv0ndcxcp4jarbjaEQIMuedMOpn8nY3HmcvYtUBYFhRsWz0WQqpBZpQJuQCeyHPHF5sDJwx1ugbqWPMtVCaQ5UI9/EoXHcY93+yP/i6B9leM8bM6yoYRKLSv/63VjdEqwLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LXL/aD7oKsXW4AK6Krf6xjvuxIAZ9Hu6E/tBq5AGN+I=;
- b=sYMFe0YoQKZs0vHpMzRCxgvR18i2JoP6gEPa1UWJUW+IwOehTvaTgxetojKnPKrJheKe4xK39+ASTAZK7N2YrspFA+mX2Fw3G9IbBbD5FRDAgC1wOhkEdNkEFrxrJQ+lKFS7hYSZgp4gzUIQIqRgu3ip54aZ1mcah7Fov+LjbDoR6wmS2F+2MUWt65qq+2IhlyQyFWqpswriIjSRK2kRztwCVOLdRRiFG4r5h8Seby2iKoi4AymTg9YECXbLeNsBxN8cs625Y5xPNkdGdjKi4IcL6FEwnEWTFhXnHdXG53IwZbO7EsPZvKGauwodUEZD5luj5hyKSiPIzu5AeZAelw==
+ bh=x8p6hYUemQIpUk08Jovdbm1eSEOfvQyK+jBe5HaXk4Y=;
+ b=vtRWxB+KoqeEqCrfLH125av8bSuv1iNzBSySTeZkgZqnE72rK5+QO/wOEwHX+q4tSQ1mLgLGdcsiDajiWMSiyQ9Z5T8kZX/bxdRNHZRoIKkSxSGNB3P0mDb6AhiHZqrzt61V7XgGGWGfXDszF0FtgoMuyRJnvLv35F3QJkyeVRWXjPxnrKpJzUlWYr5E31OFusxRJKsM8vgqO5hTiwflBArYtgko4ozBdUP5xpUG/K35WMRgwuizjFKIv1ObAxZCrEV5OITaNhRxuiO3Q/HI6ThFgMU0wNF0PP03UwSFX1suohH0/FwjVchu/qEaqj3LVD8NkeQIKaenTWuTTyIohw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
  dkim=pass header.d=prevas.dk; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LXL/aD7oKsXW4AK6Krf6xjvuxIAZ9Hu6E/tBq5AGN+I=;
- b=QzD0Cgq1qGUns83S7+ydovn5RdM7n1PyV0uQ0eOmVzXnJHF8q6qfBWJ/zU/akDt3sk9kDcIgy12kiX8662ZlSSyFxRmHtLXH8x0CTpAhi1HyjDI5m08Fdxb2tIDTF7jkCk0baRU+W3bV5ueOXCaVy9s1sNl9purvKclPMlEXTQE=
+ bh=x8p6hYUemQIpUk08Jovdbm1eSEOfvQyK+jBe5HaXk4Y=;
+ b=Xgoo4Kwelu5Y5KfvQO/GS3xJcMi+HAMNVNRO5Fwkzcuohm3yOMotO+gsX7HvvGOJ/Jh19PXiwrXXzmk0gzMANOe+2QG8eowrNjZistlZlJ/aHgNoC2WmpgPLZZvSf4LoisDieU3XLAXL0L2ZZLQ8vSqsrDJVjlUqiAcZ5ow/MIU=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=prevas.dk;
 Received: from AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:681::18)
  by VI0PR10MB8487.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:214::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.10; Thu, 27 Aug
- 2026 13:37:44 +0000
+ 2026 13:37:43 +0000
 Received: from AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::ebc6:4e0d:5d6b:95d8]) by AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::ebc6:4e0d:5d6b:95d8%3]) with mapi id 15.21.0360.008; Thu, 27 Aug 2026
- 13:37:44 +0000
+ 13:37:43 +0000
 From: Rasmus Villemoes <ravi@prevas.dk>
 To: meta-arm@lists.yoctoproject.org
 CC: Jon Mason <jon.mason@arm.com>,
 	Jan Kiszka <jan.kiszka@siemens.com>,
 	Jan Luebbe <jlu@pengutronix.de>,
 	Rasmus Villemoes <ravi@prevas.dk>
-Subject: [PATCH 2/2] optee-ftpm: rewrite its optee-os bbappend to use EARLY_TA_PATHS bitbake variable
-Date: Thu, 27 Aug 2026 15:37:20 +0200
-Message-ID: <20260827133720.3246210-2-ravi@prevas.dk>
+Subject: [PATCH 1/2] optee-os: make early TAs more convenient to add for .bbappends
+Date: Thu, 27 Aug 2026 15:37:19 +0200
+Message-ID: <20260827133720.3246210-1-ravi@prevas.dk>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260827133720.3246210-1-ravi@prevas.dk>
-References: <20260827133720.3246210-1-ravi@prevas.dk>
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-X-ClientProxiedBy: CPBP307CA0005.DNKP307.PROD.OUTLOOK.COM (2603:10a6:380:1::8)
- To AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:681::18)
+X-ClientProxiedBy: CPBP307CA0001.DNKP307.PROD.OUTLOOK.COM
+ (2603:10a6:380:1::11) To AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:20b:681::18)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AS5PR10MB8243:EE_|VI0PR10MB8487:EE_
-X-MS-Office365-Filtering-Correlation-Id: 92e05a5b-6de3-44c3-bace-08df04405fba
+X-MS-Office365-Filtering-Correlation-Id: f7436ea9-d7b9-457e-272a-08df04405f12
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 
-	BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|10067099003|18002099003|22082099003|11063799006|56012099006;
+	BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|10067099003|18002099003|11063799006|56012099006;
 X-Microsoft-Antispam-Message-Info: 
-	21uaK34XUYkQbwt872c+YjMnhvTdp6b7bw8E9jdLhRFwFBxgkNOP3eItUvB0xI8xp9BU7Za0gIZcnnzLxCbFoRc+gpiSpR9Iqhwn1ZlAAlnfsZKzHiTCiCAl2BJaGDmGZLtwzscK/em4O9e6nuaHX0B0QTQzcSU7HitoxGeKOhOL9cNfH2AZv8XHSRRlRgzztCc9rcrdNAYDWPBskHOtRdjbG7meFGnq/yqLAIRf7AS4Aa0c+yEzva5yvJA7rkYVT88x6edysQ2spyjKIJ4JR80PcFO2vs/m67T49P8OHMA3FfB2usF5wMaiPeS/woU5VGGxzW2aLAD6DgpHZM5YB9wYw3B5ujSq4F5tZQ1GbYSTDyRF0tX6DIXWFzw6jZwZ4ng4gp52vGo5N2ffcXECTblpe3DzhtZbL7PQjBFoA8Et2BWm4IRPrWM6hVEWKODFBbNFyRPWOTuJYpjm+SZANCfPHR+zVO977Ow2lJS0idFdcJmq++Jidm2LO/4+uPIWfwHT1Mh7bPpCHsImw1jFZeoWwjJuH6waYCo20JnmwmHTR88B8CbxKWl1qm0pvJ3xVPacIssNZCTVTQ7C5MajgfLjCCGJznpH3+GRvbqyEbJY4tKQxF8PDkOiXrDNzN1AdGL3iQezNQ+gjndszByN1sr1PzLaNdj0U4mDUexNSeE=
+	XUYlEBQ1IyzJco2iVOxw6acitBJQ55hg/Ou1VcikmUvrk37/5t5WOdbml9Lp8hV1Tw6C82C/kCcmjhpzT3v3xgwrT3FVG9jA7R+sbWqpsGG8Ho3C8JkyyfHe4LuaXLrasCPnguO7DKKv1Y8KyMqJ6udB6udPojM0KBJMVpImAcmDwaDFMYNNBuquEjjxvNTtwoDmKRqe7naZl1OHLSVCa9jInPgyueX+LcjNLn7HSTsg+tpnkTx3H/rEMhetzuIZPDPkdKRWrT7832RG67T1Z48nHUWYntvKifVtMhMWBZr49onDi38OcvvtfirKlAZA8jOIL2ESvUE420hx7X6JfciVnOViuzWATlgZM6PuBl6/gbJQSFcbGGWYHMxGlUIy9Sc75Kxv8ZsW2ID/r6uvBWkeisLjbG6iNzFVMiicgI3cHGyaK0D6kK30+x9JQfddj4b6NqlO5Gz+0mIOQkVBKjKtxhQQwc+FnPd3llX/7UF29wsYuiIrFiRnBbbkuVGxcPJA0hjx5w5NXZ0A9+hCiLXpYWVxx2G4FhsI4jvZl4gWH8Ev7gWMW/zsGHnKo6F8w3tt50YDv03g0N2ZoZhabdMdRTWbWgWb5pUmvX56Jx0CSTKIxnzCCIHwLijQlWFvSIob0lDCturdn6+G7ns3ulc/H9jZ+KOoYX3bhsakJyA=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(10067099003)(18002099003)(22082099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(10067099003)(18002099003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?/YgZBn54RxLiMxfXPVTBWkiKRCEDvmtX3SRo86bxmLvu3CtjgIkoLBIBqYxs?=
- =?us-ascii?Q?xnddil5qYR+siiCTISE1ZFfOKCwTH/YH1ZkpRT7OK7uy9nx5nQtzN6ijqPEh?=
- =?us-ascii?Q?qjdJ5KUekMdflDZ3GPRYC8uhvEaUh1CQpYZsh0nnmazxYyE5hUEhUTbNSwj/?=
- =?us-ascii?Q?BBbH8O00aQXlh1kYKvFetElw5603n4PpAiLeCXETwOMTwlhdsQg/Y3GJyjsm?=
- =?us-ascii?Q?nksSg1fMUdX5wXggds8TACZZnbaPdjV+8Hz/RGNwH5at1pZtJPRPF6JYS2fm?=
- =?us-ascii?Q?nd8ICeCIYIlhxYeT9FJ7BRtA0CRX6k4J8DMgevpF0PT2Ww0vq/DTOWyLyL9v?=
- =?us-ascii?Q?zUFpcYow1F0Cyiyb6/0gfCnKHL8ggXhPj4ikmWxX5hI1l6MQzSvqZTRCHw3m?=
- =?us-ascii?Q?aCUWZ2UJ7gm8JiMB3bIAkDWe63oLmZYXLHrna+AnmhAH9y0WzGO5/eGCVcJt?=
- =?us-ascii?Q?Mgu8vI4GjGpKE4m4gDs0YWdnOte9vCxgX+EeuvlOO9lXpEsHSGuYbH0zoPUD?=
- =?us-ascii?Q?VgHOY0jjXULGVjwKtNhJ8GLeYZYfAzL2dDtgmqZACJtWRB/utfKBxKyRgueh?=
- =?us-ascii?Q?ptBPk4bWg6vWE6j1EsxA93h3NQevs//WaoYJQmYl+9V/P9uEeRzGijvyYggq?=
- =?us-ascii?Q?MbcwkemrdHkL4+RYVPR9HnK/NnBH9EN/WBPqIzfcH5WPOb3yHAnln5ng7eCy?=
- =?us-ascii?Q?cjVbfPu7qddfDBdeNmPowpqkcv/FOo5bnUgfwtXb7zHRw9nhIViiGJNdBF2U?=
- =?us-ascii?Q?PlyJPeOWVl2RLYOjDmsnUISywAYX0REwt6woU1g9LCoQgZoUYaHCOMnwflUR?=
- =?us-ascii?Q?YFnLboWJHCNty8ZdYDYotNZEb0LS8t35Wthgfgd/3CtOWar1tMm5Wk5k8tpp?=
- =?us-ascii?Q?v2HfUT+OQkg0QwFa84Nw2Vse6HpMqyApS26c1pF6Aqr1/ml4HAOyH1LlxzdO?=
- =?us-ascii?Q?WCuXUsEGWohcuhLVBjyOgRa2Cuh35jt2gb0TKiA+mfwPC3jBfAbDgZbPtxZZ?=
- =?us-ascii?Q?Eacr8G1/m8jdkcRBzCmDi4SZymlDZ7cyWrS7KoJ4q0hdrLLlzqbB6RkY3GgC?=
- =?us-ascii?Q?ABOvT5iw6SeuvbHOvKDWrHn+u1sZKfZPC+RbuobS/btVFLl66XS+2vvwTpO7?=
- =?us-ascii?Q?SEYzotRyrYFZ4rFrPVAXiCIWJfp5leOmxV9+Ggl/88AFZUDT650x+1Hrqvf0?=
- =?us-ascii?Q?PiQGFw/TmPCChl7KX/avnq/1ik43xx4374Tj38gf+Rbto+Yx55SOTysDLJHz?=
- =?us-ascii?Q?2qmzPTnTOoiUZzSVueIku/zVqFtpX1LMWMw2nQ7eNRQY/EynwVCh5ztOZZhS?=
- =?us-ascii?Q?r+CL3gRIwS7N2//vYEphxQztJVLaoRfqfg0EyMPK4gB2Q+7QwZlvYvRZ0N4X?=
- =?us-ascii?Q?OyixSXfWqHD9J3/NJIQwoUKz0lBe1f12lYmM1QMKQVaFwrN7CHLMylkDDZOo?=
- =?us-ascii?Q?XcXASBZACGD8lIdCWsf9q3pyKXGvpTICkPVwEtFG94zKk0w4emkXUQawvgIN?=
- =?us-ascii?Q?gaqZaUFHzLIFfDOYVwcN7jQ1+aSYp4rtbJ++dagt9TKupCij01ZCttu6f8vK?=
- =?us-ascii?Q?e1YtLO519MDPvgrR91cDbeN0dKqU+NxN+kxYQdNVYVnoFpP4R1imspwg+vN+?=
- =?us-ascii?Q?mKSFuR0NHaebs+u7CGg3OGqneKSJSnATgNXdPdWr3QcQ8+1Iyyo6mtM6Ur1p?=
- =?us-ascii?Q?9OUGdbwv9o6IJxuBXC5t7GnzO6rb1sjS7VwtUjaKkTpHG6ca9zWMTwrT0CyZ?=
- =?us-ascii?Q?/3PwZ7IcbNwa9CJJ6ucn3ndEJvXpe7o=3D?=
+	=?us-ascii?Q?cbqP25XNZEDFlhA7/FWfP7eD37aXH8d+qlIYEE8FzcgX9W4Gbk7LFwTXst+y?=
+ =?us-ascii?Q?4Dks2Ji3Q0PLP06vN5qKyUBQU77G1/a31hYoPiB1hG7O2T7PcxFvDS2yftz6?=
+ =?us-ascii?Q?gyBlCfAzV2xaYiMoVaT//xfBiDGvMFvn/mR/J1eq7WmlpCQX2FZgBP80vY5B?=
+ =?us-ascii?Q?XWsAM2GKqimOlFYke4U7LZ/CfrNcOA3S5gC0HasURL/iRb7MbSJTTCPHMz3t?=
+ =?us-ascii?Q?atQFs6rviS5neeuPPT51TigY09Ftr+hpN6e2F3hr8BqWTFCfVY5qLMHXjqRs?=
+ =?us-ascii?Q?SKmjLBziljwG1wp6+8VN6X2wb4JwwDdtURiymspTGyoCyaKFzgew0MuAlE3j?=
+ =?us-ascii?Q?WWT5xP0yCDd9ROWp7MUxhtrxpTqHx5NyOH2MDmr/G9zV5teavAUOhOf4s+/e?=
+ =?us-ascii?Q?wqa9imYiTEjz3/xZPlyq8g+FjQ2SNFLQ5dB7sdY1eZZ/smxAL2c0jNCXuRfK?=
+ =?us-ascii?Q?ubw+RDkC35hbzPBewHBWogVk7TZbudHPhKtUWpjoEyXHMdcE/NaLLp1Vis3w?=
+ =?us-ascii?Q?QyAU8XTxiHa7G1/ozckMf0nc/tw7OMCT0Mu2h7JWqwp4gnuysWIVyMsb40O3?=
+ =?us-ascii?Q?tpCtTjlIEYeIUlqoqwM2MK39uVN4X2zJtVBQrtLG0WrPYqgiAT78Io+s5mAW?=
+ =?us-ascii?Q?x3Q4ny8X8p2ymPOL47WgObvMPNV/QTmBzVj7A+dzMj8pFrjQ+bP5eBMTr+bH?=
+ =?us-ascii?Q?lWE5eeFqKte9tGQsilVJGJ9n+K6EL0Me6eW5jwCFIfMJgWeLu8OyMEtGoOMN?=
+ =?us-ascii?Q?O2+Dk0P3IqpniSyfa7s2d5uZ9owtqRMuUgQxG5SqSWDBZuxRkWFcEa35Jhcw?=
+ =?us-ascii?Q?IGd6Wo48BBfv6ns3W7iFOMIhrQ11PcZAsTZ2aD5wgUSQeFEiH02GPiakh9Gg?=
+ =?us-ascii?Q?EKGOM3yHxD6gzdBLrVP3xmJnF0Ca7C3ycJ/uSLUOTbpUnP7fRYpZEehCySUS?=
+ =?us-ascii?Q?z+7E4hjzbq4R6tVpReHIBA5M4lVYplDG8JVQ6RPV+WkYNr2Z6NKhjldeDUoG?=
+ =?us-ascii?Q?2FVgTmMiAL7ao61RI2busN+4SSU+6V0FIjW1HGu2ZtCLdAQyhQRZspZ+7V+z?=
+ =?us-ascii?Q?bIVb7E8ztWW2gryBl1/t8Ev/0qMikI/W+PlG6gQFgjdfI+m+4SoiNbSNpYJ+?=
+ =?us-ascii?Q?iSzt/5B0DHCYTuLdEdJ+mm8EkZ6L/M5XzWN9qQI+5jbRax/BVTaNGrImea4U?=
+ =?us-ascii?Q?c89z91zMok/wAEB/i2lu8WATdnJsXD9JKkiPD4LrVLEsKOboWLxwkskBbIyb?=
+ =?us-ascii?Q?NeWLR7FvCYC6oCGGX8VwT6sQ4IqAYN6p/CsubsiJsSE0W0keQkMoJUiBFv/R?=
+ =?us-ascii?Q?cxAaA783zVTtOk1nMf1qxzrwP0lBjo1YpOJsiSZ0VvqpWxqJDkQxTSFK1/6+?=
+ =?us-ascii?Q?9skE/pBc9+NiayLk6xeMrGpruI9qF88ssV7D/YSrZmTIVW4y2/mzElKYNRWf?=
+ =?us-ascii?Q?gO245U4EBYxDKquFPbeahxTQ7BYPzx219pMdt7Epk1vaKbralF36Zh3+yN8D?=
+ =?us-ascii?Q?gBlIElW9CVHa5Kw8WDEGGPXxWm7y7Ixj28hvNYdy0ydGUJKbxmhQW27+W8ct?=
+ =?us-ascii?Q?HYg6K6pXS3Dnmn+DLobwR88ZdIhlZ9tDUcdnPXGHz//L0okUxXsymzAF5wWF?=
+ =?us-ascii?Q?xjQXCQXZmyFfFYdaSG+R2WtnXdUVlV0lGAUV0/EtsHhcuoiS5+ZgNg8j4Jmr?=
+ =?us-ascii?Q?vLVpMtn5w7FK6FqX6z6b8mmdcNz1DFTU0pznz0J2ldHCGX3yyskcqItwafQd?=
+ =?us-ascii?Q?jwnOc8MJ6Uyw5apC44sN+od/oZHhaUY=3D?=
 X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92e05a5b-6de3-44c3-bace-08df04405fba
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7436ea9-d7b9-457e-272a-08df04405f12
 X-MS-Exchange-CrossTenant-AuthSource: AS5PR10MB8243.EURPRD10.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2026 13:37:44.3385
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2026 13:37:43.1099
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UzE4gJuT5luIAanaNy6SsNGTX6ZGxZnMQ9fSAhHMFIZUTiNYvZLKs/plptzWZCWylkarixaoAL0WpETbxMRo0k7O9UNEdhRQX15DcnlrV1Q=
+X-MS-Exchange-CrossTenant-UserPrincipalName: L0/MnHwoYUzCEryHhUijzPtSHbcoVI5FXe44HGkIFz+yw4ZY+TPkpCNRNcq4iKG8Xt+Lgs82VxcEavZgQBHYOSk+sxIjVgaXd5VftL5G/UI=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR10MB8487
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 27 Aug 2026 13:37:55 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7146
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7145
 
 From: Rasmus Villemoes <ravi@prevas.dk>
 
-If anything else in the BSP also wants or needs to add an early TA to
-optee, that will conflict with this .bbappend adding its own
-EARLY_TA_PATHS=3D"..." argument to EXTRA_OEMAKE.
+If two different .bbappends both try to add an "early TA" by appending
+an EARLY_TA_PATHS=3D"..." to EXTRA_OEMAKE, only one of them will
+actually take effect.
 
-Instead, add the path to the ftpm TA to the newly introduced
-EARLY_TA_PATHS bitbake variable, which the main recipe will use to
-produce the make argument.
+For example, meta-arm itself has a .bbappend in optee-ftpm which adds
+the ftpm TA if optee-ftpm is in MACHINE_FEATURES. If the BSP developer
+wants to add another early TA, he has to take that into account and
+very carefully ensure to create an EARLY_TA_PATHS=3D"..." argument which
+contains both the ftpm value as well as his desired extra TA.
 
-Passing CFG_EARLY_TA=3Dy explicitly is not needed, as optee-os' build
-system sets that automatically if the EARLY_TA_PATHS list is
-non-empty.
+Instead, let the main recipe define a variable which can simply be
+appended to in the normal way, and which is used for deriving the
+single EARLY_TA_PATHS=3D"" argument in the make command line.
 
-CFG_CORE_HEAP_SIZE is somewhat harder to make play along nicely with
-other .bbappends that might have an opinion on its proper (minimum)
-value. For now, keep adding it explicitly to EXTRA_OEMAKE.
+Handle the in-tree TAs similarly.
 
 Signed-off-by: Rasmus Villemoes <ravi@prevas.dk>
 ---
- .../recipes-security/optee-ftpm/optee-os_%.bbappend    | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ meta-arm/recipes-security/optee/optee-os.inc | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend b/met=
-a-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
-index 92c11157..74bde25e 100644
---- a/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
-+++ b/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
-@@ -4,8 +4,8 @@ DEPENDS:append =3D "\
-     ${@bb.utils.contains('MACHINE_FEATURES', 'optee-ftpm', 'optee-ftpm', '=
-' , d)} \
- "
+diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipe=
+s-security/optee/optee-os.inc
+index 95c41fb1..b90e379a 100644
+--- a/meta-arm/recipes-security/optee/optee-os.inc
++++ b/meta-arm/recipes-security/optee/optee-os.inc
+@@ -35,6 +35,21 @@ EXTRA_OEMAKE +=3D " CROSS_COMPILE64=3D${HOST_PREFIX}"
+ # Enable BTI in optee
+ EXTRA_OEMAKE +=3D "${@bb.utils.contains('MACHINE_FEATURES', 'arm-branch-pr=
+otection', ' CFG_TA_BTI=3D1 CFG_CORE_PAUTH=3Dy CFG_TA_PAUTH=3Dy', '', d)}"
 =20
--EXTRA_OEMAKE:append =3D "\
--    ${@bb.utils.contains('MACHINE_FEATURES', 'optee-ftpm', \
--        'CFG_CORE_HEAP_SIZE=3D131072 CFG_EARLY_TA=3Dy EARLY_TA_PATHS=3D"${=
-STAGING_DIR_TARGET}/${base_libdir}/optee_armtz/${FTPM_UUID}.stripped.elf"',=
- \
--        '', d)} \
--"
-+python() {
-+    if bb.utils.contains('MACHINE_FEATURES', 'optee-ftpm', True, False, d)=
-:
-+        d.appendVar('EARLY_TA_PATHS', ' ${STAGING_DIR_TARGET}/${base_libdi=
-r}/optee_armtz/${FTPM_UUID}.stripped.elf')
-+        d.appendVar('EXTRA_OEMAKE', ' CFG_CORE_HEAP_SIZE=3D131072')
-+}
++# If several .bbappends wants to add an early TA, and they both do
++# EXTRA_OEMAKE +=3D 'EARLY_TA_PATHS=3D"..."', only one of them will take
++# effect. Instead, create a bitbake variable holding the entire list,
++# which the .bbappends can append to, and add a single EARLY_TA_PATHS=3D
++# to the make cmdline here. Similarly for the in-tree ones.
++#
++# Note that it is not necessary to explicitly pass CFG_EARLY_TA=3Dy as
++# the build systems sets that itself if either list is non-empty (and
++# errors out if CFG_EARLY_TA was explicitly set to n).
++EARLY_TA_PATHS =3D ""
++CFG_IN_TREE_EARLY_TAS =3D ""
++
++EXTRA_OEMAKE +=3D "${@'EARLY_TA_PATHS=3D"' + d.getVar('EARLY_TA_PATHS') + =
+'"' if d.getVar('EARLY_TA_PATHS') else ''}"
++EXTRA_OEMAKE +=3D "${@'CFG_IN_TREE_EARLY_TAS=3D"' + d.getVar('CFG_IN_TREE_=
+EARLY_TAS') + '"' if d.getVar('CFG_IN_TREE_EARLY_TAS') else ''}"
++
+ LDFLAGS[unexport] =3D "1"
+ CPPFLAGS[unexport] =3D "1"
+ AS[unexport] =3D "1"
 --=20
 2.55.0
 
