@@ -2,111 +2,106 @@ Return-Path: <floss@jetm.me>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51586C624D4
-	for <webhook@archiver.kernel.org>; Wed,  2 Sep 2026 22:03:35 +0000 (UTC)
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.7159.1788386613958499567
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7613AC624D4
+	for <webhook@archiver.kernel.org>; Wed,  2 Sep 2026 22:03:45 +0000 (UTC)
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.7165.1788386616702052479
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 02 Sep 2026 15:03:34 -0700
+ Wed, 02 Sep 2026 15:03:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@peridio.com header.s=google header.b=SOG3UEy1;
- spf=pass (domain: peridio.com, ip: 209.85.221.174, mailfrom: javier@peridio.com)
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-5bf88d3fc8fso68705e0c.0
-        for <meta-arm@lists.yoctoproject.org>; Wed, 02 Sep 2026 15:03:33 -0700 (PDT)
+ dkim=pass header.i=@peridio.com header.s=google header.b=xD1Coip1;
+ spf=pass (domain: peridio.com, ip: 209.85.221.182, mailfrom: javier@peridio.com)
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-5c6652323adso96300e0c.3
+        for <meta-arm@lists.yoctoproject.org>; Wed, 02 Sep 2026 15:03:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=peridio.com; s=google; t=1788386613; x=1788991413; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=+R2Li2DC1U81cwJiHLbjw2tyFcdkLfEtjK1ccnbseSA=;
-        b=SOG3UEy1AH4gWeS1d9yVsAd/EG6W9xQgiH+YSNET7xkgo0lAJhOv6mkiTJRUn4QQUU
-         c3MFaupSLb3Lvo8Jpues2vBJ/fh7wU4chyaH2vuaGIJxlPgiIF8OC1Rc4s6FX6jzLixS
-         inmyt7J8b9eE2ZISVfMPPpzOvplVs2GlMZJREcQpMvVZWpBEaRqvyyjh5vkcMNWDRusI
-         jUWy+wJLsbCD3h1+8iMjmcSDw/d9lVtcgyaejZDRXRmdx1KyBRoez283YyKDnWzVz1Yu
-         tiCop6tERxt7B60gFEuceYd0MnzlUQuUmzQudHDb2Y7EBv712W1KRpYjitDg3NJqP8/k
-         2qrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788386613; x=1788991413;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=peridio.com; s=google; t=1788386615; x=1788991415; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=+R2Li2DC1U81cwJiHLbjw2tyFcdkLfEtjK1ccnbseSA=;
-        b=AoCe+7iYfDC01ozgxF0uKDapibGGX6hUQ0yVKN4BdnKfR5wXw4LpccYtZqLfgFljX5
-         RwOuWy32RZDLSv2ua5iiWAJg1SLzLaFKk9vO0vOYv1m9dduodGNSh27Cw9K9XZrpAtAy
-         5FrR1ioeymQGsKRclh7VSYL7oE/BIitfMLvmYApiEbXDWoUUxbLCB8GPjfrdDJAINuGq
-         ysccmW/EQYa2JcRFCuWGIRrMV9/wYmLlfBKAr/hzc3Gla/S7m5T3gq1N4T1vafBXSow0
-         gdz6JDy7HR5WbzlGQ+dQI+f/tQm6lRbBqPRXVCvMOWAS8qMMhaVcggnZbLLbJS/hohYu
-         RGuA==
-X-Gm-Message-State: AFuF++nbggKqGjWu6p+o7IsopzP17O7H96dBmUgiWvgC0s4TIJiAocLY
-	OesVozl5siupFtN33G0BJRm6zpVE6gRMS9byLcSPmMjDrLaClLA17ywuVVKVVh1DZEYAq+QUYLg
-	Zom6jqx8=
-X-Gm-Gg: AYBFou3kgtEh0bE5zzwU9HKLP2iyRauKJFOzPs6UK1ZLXQuLuFEFEujXRoC2Ts5q+QY
-	137AFiK4crl0EEoRyOotyeo4N9fahYak/st2U4RZHDNb18q01ecB4y9i5oLs4zPOn10sBUgbnWt
-	ybHPQag/VwBqfWiYfqF1hO1oiLGtw59m+lHoWzMt6IoTR9tLVgsuj0btXgkh9Te+O0o1W82MjBM
-	5bYwa7AM6OQUyufpNDJtiy2z4muOkabpAlAhDxEu8f2U7YgwTYY/ytDCwG0Zk/5cCZbbICcs7tO
-	Y5e1s+KvWVyxSZ5La5FIY5yvkddc5kvv5u5eKnEAAB7oztfXSDUQndsPboBtUdKpMVICRkYUAx3
-	nN1cpk4/klPd7uhKeLW4UeyImx0hguPzqXSWXYlD40vKYzZdUPT/4w0NizA8cbZZdoNDWC2c01z
-	8iQS9LbhTkti93bTxg+Vy7FzYSFE9zvNiTn38IZHKsw3zoxuYHrdt3JwY=
-X-Received: by 2002:a05:6122:861a:b0:5bd:9cbc:93c6 with SMTP id 71dfb90a1353d-5c7d23a7284mr1512596e0c.0.1788386607854;
-        Wed, 02 Sep 2026 15:03:27 -0700 (PDT)
+        bh=3mQo2S2alymy8IlTtLGT/Fgg1WLaKuRJVzXs/47Qu3E=;
+        b=xD1Coip1/P1KWdJO9DwWDEY/WAqFep6+rGDWh35LkgATSHuSKVOWf6oFz4yIc7ubpy
+         S80Eq8QxQcY8TGPdCEabGXGxqOLhxM1vMXcGUjNyxu2PatNv0XWvdbvxN5U4W+EcMhZP
+         EYvD+0JRRUGG80OrcS0mfySK7Ekm4x6LEcLWJ8inz4iEZfodTNPZ6Zbb6q3PT6CaNpvp
+         y9KZxZoxBY4Hy4O5n+SRQgTicYDan6rnzB1hiDHHqVcCWWt/DDfV/P5E3CRVGTmtpnic
+         OCnfgjYK7d4trySqIspQh/BGsQGffQjdECHCISE19pfJsQNlRJJO95+ObbSL+/5V23n4
+         6yaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788386616; x=1788991416;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=3mQo2S2alymy8IlTtLGT/Fgg1WLaKuRJVzXs/47Qu3E=;
+        b=nISSn4vX43Ee/hLEBtq/DAkiSMX6hudcyx/zdK6mmLHHYu+itizDIQzsAfqfLpN1qm
+         IhRYyGJsF7LntIvMFYCtNIpr5H51c+kDV/mdP6fOavtEu9BoVlQCVobEcVHSUooYFdfr
+         xx9O7rEnPIgCd3xifhE97l1QaUAu2HDrO79R0i0t3+9x6HYvuc6KHNZOCOR8fWNzYQtn
+         RHZiF/DqMFBsvLLBkwF8XNBXmP1+fJPquN/w+U/kgrDdvb4fEI+T4Rc++b5ZpuQKTKSw
+         +etLmLFmXlj1FMught0ByahjQcHzitQ9Em74Idm6zT7N0FMhWBQpgQDU10FSZeTa+IqQ
+         ROog==
+X-Gm-Message-State: AFuF++mdRQyhjvWqBXPsdzPtAbKE4cUBh0arjxbXf8v99sUfk1MCTDGy
+	iyKX3tb67yCzGzDdmyc9SOiWqb4AD7QZppTyL1sq16RAtUBu6uie8AsmujYBoyxUYHRYmTklblu
+	eKVVT/7s=
+X-Gm-Gg: AYBFou3eEQ5vj4aOdxHdyAV22a81lO1C27Ai3JEIuQdMpQ3pgsewMSzFR4xDtbPZzNN
+	K54TfqKC2e4g2DiLumzbcW3V/9FK25WhuafNO0kBrLoyJ0JgxIGnbNGB4z9HyoSGLsH9by2+CsQ
+	vKCjzG3Xj0kUJfp7tS/lq2WPkWczoCnMt26a1pWJs78VhBsTbdql2tYhuM6LXJHcZ5e0wbJVD+J
+	0dEs6wW480VDf3A6fh+Ut/6+hxKVyeWuF+/EN62lX+7xl0aVmNBlTk6H838EADYCVqNNQjfAssN
+	GKx6NXqkUoP37wAWzmwh88IlENjw6k7D8jsipRFmLHsu60rXeZUX4546Z6oEHG3pO6b+CsNMBHk
+	nzbDqlKd+NLDx3a3jbL8bLLzs9egoUzsez9R3s95SBH7lGS5wnFKrSpe9swB6sRhAx5F7+o7Nwt
+	kPb6n5kpCCLHOXvt8bPtVZwY25hzSaQmSWh10aW0QR/DuOVj6c8Ut9ku1E4PcxMqoCe/ytuJJa2
+	Otspw==
+X-Received: by 2002:a05:6102:149c:b0:787:74cc:2b68 with SMTP id ada2fe7eead31-78a1f5dd312mr1255038137.1.1788386610644;
+        Wed, 02 Sep 2026 15:03:30 -0700 (PDT)
 Received: from localhost ([190.113.101.40])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-9806714fd39sm3392041241.0.2026.09.02.15.03.27
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-980672f9fc1sm3388962241.7.2026.09.02.15.03.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2026 15:03:27 -0700 (PDT)
+        Wed, 02 Sep 2026 15:03:30 -0700 (PDT)
 From: Javier Tia <javier@peridio.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Javier Tia <javier@peridio.com>
-Subject: [scarthgap PATCH 0/3] backport the CVE_PRODUCT fixes from master
-Date: Wed,  2 Sep 2026 16:03:23 -0600
-Message-ID: <20260902220326.2780674-1-javier@peridio.com>
+Cc: Jon Mason <jon.mason@arm.com>,
+	Javier Tia <javier@peridio.com>
+Subject: [scarthgap PATCH 1/3] arm/optee: modify CVE_PRODUCT
+Date: Wed,  2 Sep 2026 16:03:24 -0600
+Message-ID: <20260902220326.2780674-2-javier@peridio.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260902220326.2780674-1-javier@peridio.com>
+References: <20260902220326.2780674-1-javier@peridio.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 02 Sep 2026 22:03:35 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7148
+ <meta-arm@lists.yoctoproject.org>; Wed, 02 Sep 2026 22:03:45 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7150
 
-The four CVE_PRODUCT commits from 2026-06-10 never reached the release
-branches, so cve-check on scarthgap still scans these recipes under names
-that match nothing in NVD. A recipe that matches nothing reports zero
-CVEs, which is indistinguishable from a recipe that was scanned and found
-clean.
+From: Jon Mason <jon.mason@arm.com>
 
-Three of the four apply here; the fourth is scp-firmware, whose shared
-meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc does not exist on
-scarthgap (only the per-board meta-arm-bsp variants do), so it is sent
-for wrynose only.
+Per https://nvd.nist.gov/products/cpe/detail/EB42962B-24FD-4716-B3E2-69F3258A57CF
+adding "trustedfirmware:op-tee"
 
-Measured against the NVD 2.0 API, replaying each CPE version range through
-oe.cve_check.Version at the PVs that ship:
+We can probably remove "linaro:op-tee", since it has been depreciated.
+Fearing unintended issues, leaving it in for now.
 
-  trustedfirmware:trusted_firmware-a   7 records, none reachable today
-  arm:arm-trusted-firmware             0 records
-  arm:arm_trusted_firmware             0 records
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+(cherry picked from commit 81f5a92193d37027670f2c9b767ccbcd29d1e78c)
+Signed-off-by: Javier Tia <javier@peridio.com>
+---
+ meta-arm/recipes-security/optee/optee-os.inc | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-For trusted-firmware-a that turns a silent zero into a real scan: TF-A
-2.10 gains one genuine unpatched finding (CVE-2023-31339), while 2.12 and
-2.14 gain the scan and no finding.
-
-Note this makes affected recipes start reporting CVEs where they reported
-none, which will look like a regression to anyone gating CI on a count.
-That is the intended effect rather than a side effect.
-
-Cherry-picked from master with no changes; each patch carries its
-(cherry picked from commit ...) line. Found while auditing CVE_PRODUCT
-coverage on an i.MX BSP built from scarthgap.
-
-Jon Mason (3):
-  arm/optee: modify CVE_PRODUCT
-  arm/trusted-firmware-a: modify CVE_PRODUCT
-  arm/trusted-firmware-m: add CVE_PRODUCT
-
- .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc     | 3 ++-
- .../recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc     | 2 ++
- meta-arm/recipes-security/optee/optee-os.inc                  | 4 +++-
- 3 files changed, 7 insertions(+), 2 deletions(-)
-
+diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
+index 80ac0097..09ce79de 100644
+--- a/meta-arm/recipes-security/optee/optee-os.inc
++++ b/meta-arm/recipes-security/optee/optee-os.inc
+@@ -8,7 +8,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=c1f21c4f72f372ef38a5a4aee55ec173"
+ inherit deploy python3native
+ require optee.inc
+ 
+-CVE_PRODUCT = "linaro:op-tee op-tee:op-tee_os"
++CVE_PRODUCT = "linaro:op-tee \
++               op-tee:op-tee_os \
++               trustedfirmware:op-tee"
+ 
+ DEPENDS = "python3-pyelftools-native python3-cryptography-native"
+ 
 -- 
 Javier Tia
 
