@@ -1,101 +1,85 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.10790.1793803914009720019
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.10857.1793804107283788042
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 04 Nov 2026 06:51:54 -0800
+ Wed, 04 Nov 2026 06:55:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20260707.gappssmtp.com header.s=20260707 header.b=NB5AuW6C;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.182, mailfrom: jdmason@kudzu.us)
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-8b10d24345dso7183167b3.3
-        for <meta-arm@lists.yoctoproject.org>; Wed, 04 Nov 2026 06:51:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20260707.gappssmtp.com; s=20260707; t=1793803913; x=1794408713; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=tpV+vXKXsvENwBDy4Ip8vVUku/IVjBciqw60akKuRv8=;
-        b=NB5AuW6CTSYLMHfHZyjsOZhpcyQcVPBLJlnsp8gglzQpvydqdk8P79/K3j8ngURXct
-         Y76Ry9R7/LFEJeHBWNY5IJIuBPGoySz2IOM5cpBguKoBfymz+S9Aasguojl3oxpr/mU0
-         zjEKtwwXeeyV9K9XWBmcqak4CVfXJyHpqJgrLOVCGWJEUdrCKaVnv0zRgdLeYTvSQG8B
-         ZWljfd63JC2OVHwpJseLmmXwKiZKnhWrz4XeyzLqtG3EQ8G75j3nxsWyg6Aa7Rj9hwLV
-         PQdPXe7clwrnSHACrsVSvgPtgN/eJ7LcqbFOCmarEimpIgPxdgD2WyJRwPgVcxIJSMR6
-         kvpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1793803913; x=1794408713;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=tpV+vXKXsvENwBDy4Ip8vVUku/IVjBciqw60akKuRv8=;
-        b=biXuYeokeHfyjaIbUA+foGmrA7Ob/6f44+cL6/BJwTq5/Tr2BxQ37RWaRsCPYCAomU
-         ttz/0toTBei1ET5O4aWvJd58bYrf9CBSV0VyBbhTGP2VuqR8S60bX/00mAbuWOuqmOzK
-         6rGh7aQLoD6yyX2vKQoxbbd8X6erElOYN7CEs3jboe+l+rkxoVx1rLtC3lgvW5DkqdGi
-         tGzNBrDrDrR4vSuLYGtipguJF6DIFmrTdVxKCAB85m9o5rhSbGxWvc0e4v60stMja0ak
-         BoWZEpcz0caOVY3+LdqZ/I4lpYrFwf3ZMwDRLa53P2JXAVz2fmLiAYYxfFn7gEaR5Ksf
-         +v4w==
-X-Gm-Message-State: APuU4Z/rVNjN/OuAyqU35AARWBwZY86MpvEOnhnLIK9BJ18K3oq69pza
-	6qS4aLcy76WtP/37ccUQMlqL7YclSyv6ND4lIVNoi+XQD6/j8Nt+/PwBW85ARBAZn1zaJ9h0ybq
-	39Ng=
-X-Gm-Gg: AYBFou24/twqVZUAbjfcSP9/88I4quYddbK65RzKzuTaxKa37aY29bP/Vv0jyRgl1R6
-	MwYHdLAkPel32JMjqli7Ld+C/E6CckzMBjv5nMJTZgSXsd40DJZHO7gmaxrELHDhtUeTO+pme0N
-	969pMUkB/G3RU0QTbM6u+hMOCFb0Bguohnd+SFVXjzHmQJnT4vYxD4GrMarlDH507q7TYVdiRKc
-	LOcTbloTTI1QeweLPRjOqkUvTSwiURLauEytU2ss01OTpStclyNbfLuw+QfptEh6B8ISw5E3Fw3
-	oMw/4ZQE6i5/yAi6m2o9DwmsboD69KjCfENPy/H/qEeyIwmp4TF7kF5zk57/osqSTkzSBansMKJ
-	cJtIe5L6ZaGFxcgaexSQ0hD9f0lE1mQieclKZ8+u93ZQVPPAF8qBQkQg1ULa3+tks1HxRT6ca4o
-	GksUHiA+JymFSZaCgcPegPEzqncSoNmTlFiSoDwZI6cvzf+dRsb72L2asiWHUSzpZATduevGw0m
-	8usvR52P68Jkg5UIfbxAwvtY8Qvm6h8mu+Ct7MDUUCTGwQbORlXHMZ3SS4/VNGj4BLh1JQ8EQ6u
-	gBlSTWkZVthU1hQHLw==
-X-Received: by 2002:a05:690c:7482:b0:8b0:e238:2719 with SMTP id 00721157ae682-8b2b675b923mr130888857b3.31.1793803908140;
-        Wed, 04 Nov 2026 06:51:48 -0800 (PST)
-Return-Path: <jdmason@kudzu.us>
-Received: from localhost ([136.56.27.188])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8b309bbb4f7sm19838837b3.41.2026.11.04.06.51.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Nov 2026 06:51:47 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ricardo Salveti <ricardo.salveti@oss.qualcomm.com>
-Cc: Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH 0/2] arm/optee: update to 4.11.0
-Date: Wed,  4 Nov 2026 09:49:12 -0500
-Message-Id: <179380375285.3829190.15198203219794001404.b4-ty@arm.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20261104003624.3008551-1-ricardo.salveti@oss.qualcomm.com>
-References: <20261104003624.3008551-1-ricardo.salveti@oss.qualcomm.com>
+ dkim=fail reason="dkim: body hash did not verify" header.i=@arm.com header.s=foss header.b=fzDg4lNV;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79D091516
+	for <meta-arm@lists.yoctoproject.org>; Wed,  4 Nov 2026 06:55:03 -0800 (PST)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6399E3FA7A
+	for <meta-arm@lists.yoctoproject.org>; Wed,  4 Nov 2026 06:55:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1793804106; bh=uA7w8/Ta0MgjeETQXMJAbZ4dq7mj7ZqKS43/7YCm2TQ=;
+	h=From:To:Subject:Date:From;
+	b=fzDg4lNVIG0SLJzSTMw2JK1AOiGzlxf+JJywJnEu4cf7O0vBeyNZ/xSI+9bttpecq
+	 a+Z1kvSgqChba0BRnw5oToJHQ+G1kuloPNYT1IdHSm4q5+Ix2CsO5L3NJmOOOdo086
+	 QTjtdzpPpdUdWNnNfnB3d48Wub+lLhT3Jl/SoVVs=
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] CI: build TF-RMM in a dedicated qemuarm64 job
+Date: Wed,  4 Nov 2026 09:55:05 -0500
+Message-ID: <20261104145505.12441-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.54.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
-X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <meta-arm@lists.yoctoproject.org>; Wed, 04 Nov 2026 14:52:03 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7204
+X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by lin-tor-korg-lkml-alma10-1 with HTTPS for <meta-arm@lists.yoctoproject.org>; Wed, 04 Nov 2026 14:55:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/7205
+Content-Type: text/plain; charset="utf-8"
 
+The poky-tiny fragment overrides the qemuarm64 target list, so RMM
+is not built by the existing matrix jobs. Move RMM into a separate kas
+fragment and add a matrix entry that selects it explicitly.
 
-On Wed, 04 Nov 2026 00:36:21 +0000, Ricardo Salveti wrote:
-> Update OP-TEE (os, tadevkit, client, test, examples) and the fTPM TA
-> to the 4.11.0 release.  corstone1000 stays on 4.10.0 through the
-> recipes moved to meta-arm-bsp.
-> 
-> Tested with the meta-arm CI configurations:
-> - qemuarm64-secureboot + testimage (gcc and clang): optee
->   (xtest -t regression) and ftpm suites pass
-> - qemuarm-secureboot + testimage: optee and ftpm suites pass
-> - qemuarm64-secureboot + qemuarm64-secureboot-ts + testimage: optee,
->   ftpm and trusted_services suites pass
-> - corstone1000-fvp: optee-os and optee-client build at 4.10.0 from
->   meta-arm-bsp
-> - git recipes build at the 4.11.0 revisions
-> - yocto-check-layer passes for meta-arm, meta-arm-bsp and
->   meta-arm-toolchain
-> 
-> [...]
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ .gitlab-ci.yml   | 1 +
+ ci/qemuarm64.yml | 4 ----
+ ci/tf-rmm.yml    | 7 +++++++
+ 3 files changed, 8 insertions(+), 4 deletions(-)
+ create mode 100644 ci/tf-rmm.yml
 
-Applied, thanks!
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index b6ee135330a8..98414f9fc83e 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -284,6 +284,7 @@ qemuarm64:
+       - DISTRO: poky-tiny
+         FIRMWARE: [u-boot, edk2]
+         TESTING: testimage
++      - TF: tf-rmm
+=20
+ qemuarm-secureboot:
+   extends: .build
+diff --git a/ci/qemuarm64.yml b/ci/qemuarm64.yml
+index 8e394c7f5258..9c696365c05b 100644
+--- a/ci/qemuarm64.yml
++++ b/ci/qemuarm64.yml
+@@ -6,7 +6,3 @@ header:
+     - ci/base.yml
+=20
+ machine: qemuarm64
+-
+-target:
+-  - core-image-minimal
+-  - trusted-firmware-rmm
+diff --git a/ci/tf-rmm.yml b/ci/tf-rmm.yml
+new file mode 100644
+index 000000000000..76b95fc936cd
+--- /dev/null
++++ b/ci/tf-rmm.yml
+@@ -0,0 +1,7 @@
++# yaml-language-server: $schema=3Dhttps://raw.githubusercontent.com/siem=
+ens/kas/master/kas/schema-kas.json
++
++header:
++  version: 14
++
++target:
++ - trusted-firmware-rmm
+--=20
+2.54.0 (Apple Git-157)
 
-[1/2] arm/optee: update to 4.11.0
-      commit: 2fb4a73c2179ab855d250aed7e54ab83b4b5694f
-[2/2] arm/optee-ftpm: update to 4.11.0
-      commit: 2d339424072f7d86dc6e7f00f91e81ecf0290d42
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
